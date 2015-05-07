@@ -29,6 +29,40 @@ namespace MetadataConverter.Modules.Import
         private const int _initPayload = 7; // Conventional value reflecting the init payload - feel free to put any reasonable value
 
         /// <summary>
+        /// Legacy convention for tonalities
+        /// </summary>
+        private readonly Dictionary<String, Key> _shortenedKeys =
+            new Dictionary<String, Key>()
+            {
+                {"Ab", Key.AFlatMajor},
+                {"A", Key.AMajor},
+                {"a", Key.AMinor},
+                {"Bb", Key.BFlatMajor},
+                {"bb", Key.BFlatMinor},
+                {"B", Key.BMajor},
+                {"b", Key.BMinor},
+                {"C", Key.CMajor},
+                {"c", Key.CMinor},
+                {"c#", Key.CSharpMinor},
+                {"Db", Key.DFlatMajor},
+                {"D", Key.DMajor},
+                {"d", Key.DMinor},
+                {"d#", Key.DSharpMinor},
+                {"Eb", Key.EFlatMajor},
+                {"eb", Key.EFlatMinor},
+                {"E", Key.EMajor},
+                {"e", Key.EMinor},
+                {"F", Key.FMajor},
+                {"f", Key.FMinor},
+                {"F#", Key.FSharpMajor},
+                {"f#", Key.FSharpMinor},
+                {"Gb", Key.GFlatMajor},
+                {"G", Key.GMajor},
+                {"g", Key.GMinor},
+                {"g#", Key.GSharpMinor},
+            };
+
+        /// <summary>
         /// Worksheet nodes
         /// </summary>
         private Dictionary<String, XmlNode> _worksheets;
@@ -274,7 +308,7 @@ namespace MetadataConverter.Modules.Import
                 {
                     index = Convert.ToInt32(cell.Attributes[OfficeXml.CellIndex].InnerText);
                 }
-                map.Add(index, cell);
+                map[index] = cell;
                 index++;
             }
             return map;
@@ -347,9 +381,7 @@ namespace MetadataConverter.Modules.Import
             if (exists && !String.IsNullOrEmpty(worksheetName) && _worksheetColumns[worksheetName] != null)
             {
                 Int32 index = ((KeyValuePair<Int32, XmlNode>)element).Key;
-                // Erase previous value, if any
-                _worksheetColumns[worksheetName].Remove(cellValue);
-                _worksheetColumns[worksheetName].Add(cellValue, index);
+                _worksheetColumns[worksheetName][cellValue] = index;
                 
             }
 
@@ -394,8 +426,8 @@ namespace MetadataConverter.Modules.Import
             if  (exists)
             {
                 // Add table element of the worksheet
-                _worksheets.Add(worksheetName, table);
-                _worksheetColumns.Add(worksheetName, new Dictionary<String, Int32>());
+                _worksheets[worksheetName] = table;
+                _worksheetColumns[worksheetName] = new Dictionary<String, Int32>();
             }
 
             return exists;
@@ -406,6 +438,11 @@ namespace MetadataConverter.Modules.Import
         /// </summary>
         private void ParseLangs()
         {
+            if (_langs == null)
+            {
+                return;
+            }
+
             foreach (XmlNode row in _langs)
             {
                 Dictionary<Int32, XmlNode> cells = CellMapByRow(row);
@@ -413,14 +450,17 @@ namespace MetadataConverter.Modules.Import
                 {
                     Lang lang = new Lang();
                     List<Int32> keys = cells.Keys.ToList();
+
                     if (keys.Contains(_worksheetColumns["lang"]["long_name"]))
                     {
                         lang.LongName = cells.FirstOrDefault(c => c.Key == _worksheetColumns["lang"]["long_name"]).Value.InnerText.Trim().ToLower();
                     }
+
                     if (keys.Contains(_worksheetColumns["lang"]["short_name"]))
                     {
                         lang.ShortName = cells.FirstOrDefault(c => c.Key == _worksheetColumns["lang"]["short_name"]).Value.InnerText.Trim().ToLower();
                     }
+
                     if (keys.Contains(_worksheetColumns["lang"]["default"]))
                     {
                         lang.IsDefault = cells.FirstOrDefault(c => c.Key == _worksheetColumns["lang"]["default"]).Value.InnerText.Trim().ToLower().CompareTo("yes") == 0;
@@ -432,11 +472,6 @@ namespace MetadataConverter.Modules.Import
                         CatalogContext.Instance.Langs.Add(lang);
                     }
                 }
-
-                if (_mainFormViewModel != null)
-                {
-                    _mainFormViewModel.InputProgressBarValue++;
-                }
             }
         }
 
@@ -446,8 +481,25 @@ namespace MetadataConverter.Modules.Import
             {
                 return;
             }
+
             foreach (XmlNode row in _tags)
             {
+                Dictionary<Int32, XmlNode> cells = CellMapByRow(row);
+                if (cells != null && cells.Count > 0)
+                {
+                    Tag tag = new Tag();
+                    List<Int32> keys = cells.Keys.ToList();
+
+                    if (keys.Contains(_worksheetColumns["tag"]["tag_name"]))
+                    {
+                        tag.Name = cells.FirstOrDefault(c => c.Key == _worksheetColumns["tag"]["tag_name"]).Value.InnerText.Trim();
+                    }
+
+                    if (!String.IsNullOrEmpty(tag.Name))
+                    {
+                        CatalogContext.Instance.Tags.Add(tag);
+                    }
+                }
 
                 if (_mainFormViewModel != null)
                 {
@@ -462,8 +514,25 @@ namespace MetadataConverter.Modules.Import
             {
                 return;
             }
+
             foreach (XmlNode row in _roles)
             {
+                Dictionary<Int32, XmlNode> cells = CellMapByRow(row);
+                if (cells != null && cells.Count > 0)
+                {
+                    Role role = new Role();
+                    List<Int32> keys = cells.Keys.ToList();
+
+                    if (keys.Contains(_worksheetColumns["role"]["role_name"]))
+                    {
+                        role.Name = cells.FirstOrDefault(c => c.Key == _worksheetColumns["role"]["role_name"]).Value.InnerText.Trim();
+                    }
+
+                    if (!String.IsNullOrEmpty(role.Name))
+                    {
+                        CatalogContext.Instance.Roles.Add(role);
+                    }
+                }
 
                 if (_mainFormViewModel != null)
                 {
@@ -478,8 +547,73 @@ namespace MetadataConverter.Modules.Import
             {
                 return;
             }
+
             foreach (XmlNode row in _artists)
             {
+                Dictionary<Int32, XmlNode> cells = CellMapByRow(row);
+                if (cells != null && cells.Count > 0)
+                {
+                    Artist artist = new Artist();
+                    List<Int32> keys = cells.Keys.ToList();
+
+                    // Id is mandatory and > 0
+                    if (keys.Contains(_worksheetColumns["artist"]["id"]))
+                    {
+                        artist.Id = Convert.ToInt32(cells.FirstOrDefault(c => c.Key == _worksheetColumns["artist"]["id"]).Value.InnerText.Trim());
+                        if (artist == null || artist.Id <= 0)
+                        {
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        continue;
+                    }
+
+                    if (keys.Contains(_worksheetColumns["artist"]["birth"]))
+                    {
+                        artist.Birth = Convert.ToInt16(cells.FirstOrDefault(c => c.Key == _worksheetColumns["artist"]["birth"]).Value.InnerText.Trim());
+                        if (artist.Birth != null && artist.Birth < 0) { artist.Birth = null; }
+                    }
+
+                    if (keys.Contains(_worksheetColumns["artist"]["death"]))
+                    {
+                        artist.Death = Convert.ToInt16(cells.FirstOrDefault(c => c.Key == _worksheetColumns["artist"]["death"]).Value.InnerText.Trim());
+                        if (artist.Death != null && artist.Death < 0) { artist.Death = null; }
+                    }
+
+                    artist.LastName = new Dictionary<Lang,String>();
+                    artist.FirstName = new Dictionary<Lang,String>();
+                    // Object may have several lang-dependent field sets
+                    foreach (Lang lang in CatalogContext.Instance.Langs)
+                    {
+                        String last = String.Empty;
+                        String first = String.Empty;
+
+                        if (keys.Contains(_worksheetColumns["artist"]["lastname_" + lang.ShortName]))
+                        {
+                            last = cells.FirstOrDefault(c => c.Key == _worksheetColumns["artist"]["lastname_" + lang.ShortName]).Value.InnerText.Trim();
+                        }
+
+                        if (keys.Contains(_worksheetColumns["artist"]["firstname_" + lang.ShortName]))
+                        {
+                            first = cells.FirstOrDefault(c => c.Key == _worksheetColumns["artist"]["firstname_" + lang.ShortName]).Value.InnerText.Trim();
+                        }
+
+                        // If, at least, last name is not empty, record both fields
+                        if (!String.IsNullOrEmpty(last))
+                        {
+                            artist.LastName[lang] = last;
+                            artist.FirstName[lang] = first;
+                        }
+                    }
+
+                    // If, at least, one language set is available (default or not), save the entry 
+                    if (artist.LastName.Count > 0)
+                    {
+                        CatalogContext.Instance.Artists.Add(artist);
+                    }
+                }
 
                 if (_mainFormViewModel != null)
                 {
@@ -494,8 +628,116 @@ namespace MetadataConverter.Modules.Import
             {
                 return;
             }
+
             foreach (XmlNode row in _works)
             {
+                Dictionary<Int32, XmlNode> cells = CellMapByRow(row);
+                if (cells != null && cells.Count > 0)
+                {
+                    Work work = new Work();
+                    List<Int32> keys = cells.Keys.ToList();
+
+                    // Id is mandatory and > 0
+                    if (keys.Contains(_worksheetColumns["work"]["id"]))
+                    {
+                        work.Id = Convert.ToInt32(cells.FirstOrDefault(c => c.Key == _worksheetColumns["work"]["id"]).Value.InnerText.Trim());
+                        if (work == null || work.Id <= 0)
+                        {
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        continue;
+                    }
+
+                    // Parent work id
+                    if (keys.Contains(_worksheetColumns["work"]["id_parent"]))
+                    {
+                        Int32 parent = Convert.ToInt32(cells.FirstOrDefault(c => c.Key == _worksheetColumns["work"]["id_parent"]).Value.InnerText.Trim());
+                        if (parent > 0)
+                        {
+                            work.Parent = parent;
+                        }
+                    }
+
+                    if (keys.Contains(_worksheetColumns["work"]["catalog_number"]))
+                    {
+                        work.ClassicalCatalog = cells.FirstOrDefault(c => c.Key == _worksheetColumns["work"]["catalog_number"]).Value.InnerText.Trim();
+                    }
+
+                    if (keys.Contains(_worksheetColumns["work"]["key"]))
+                    {
+                        String shortKey = cells.FirstOrDefault(c => c.Key == _worksheetColumns["work"]["key"]).Value.InnerText.Trim();
+                        if (_shortenedKeys.ContainsKey(shortKey))
+                        {
+                            work.Key = _shortenedKeys[shortKey];
+                        }
+                    }
+
+                    if (keys.Contains(_worksheetColumns["work"]["year"]))
+                    {
+                        work.Year = Convert.ToInt16(cells.FirstOrDefault(c => c.Key == _worksheetColumns["work"]["year"]).Value.InnerText.Trim());
+                        if (work.Year != null && work.Year < 0) { work.Year = null; }
+                    }
+
+                    work.Contributors = new Dictionary<Int32, Role>();
+                    int i = 1;
+                    while   (
+                                (_worksheetColumns["work"].ContainsKey("id_contributor" + i.ToString()))
+                                && (_worksheetColumns["work"].ContainsKey("role_contributor" + i.ToString()))
+                            )
+                    {
+                        Int32 idContributor = 0;
+                        Role roleContributor = null;
+
+                        if (keys.Contains(_worksheetColumns["work"]["id_contributor" + i.ToString()]))
+                        {
+                            idContributor = Convert.ToInt32(cells.FirstOrDefault(c => c.Key == _worksheetColumns["work"]["id_contributor" + i.ToString()]).Value.InnerText.Trim());
+                        }
+
+                        if (keys.Contains(_worksheetColumns["work"]["role_contributor" + i.ToString()]))
+                        {
+                            String roleContributorName = cells.FirstOrDefault(c => c.Key == _worksheetColumns["work"]["role_contributor" + i.ToString()]).Value.InnerText.Trim();
+                            if (!String.IsNullOrEmpty(roleContributorName))
+                            {
+                                roleContributor = CatalogContext.Instance.Roles.FirstOrDefault(
+                                    c => c.Name.CompareTo(roleContributorName) == 0
+                                );
+                            }
+                        }
+
+                        // Contributor valid
+                        if (idContributor > 0 && roleContributor != null)
+                        {
+                            work.Contributors[idContributor] = roleContributor;
+                        }
+
+                        i++;
+                    }
+
+                    work.Title = new Dictionary<Lang, String>();
+                    // Object may have several lang-dependent field sets
+                    foreach (Lang lang in CatalogContext.Instance.Langs)
+                    {
+                        String title = String.Empty;
+                        if (keys.Contains(_worksheetColumns["work"]["title_" + lang.ShortName]))
+                        {
+                            title = cells.FirstOrDefault(c => c.Key == _worksheetColumns["work"]["title_" + lang.ShortName]).Value.InnerText.Trim();
+                        }
+
+                        if (!String.IsNullOrEmpty(title))
+                        {
+                            work.Title[lang] = title;
+                        }
+                    }
+
+                    // If at least one language set (default or not) and one contributor is available, save the entry 
+                    if (work.Contributors.Count > 0 && work.Title.Count > 0)
+                    {
+                        CatalogContext.Instance.Works.Add(work);
+                    }
+                }
 
                 if (_mainFormViewModel != null)
                 {

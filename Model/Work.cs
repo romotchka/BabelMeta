@@ -14,11 +14,11 @@ namespace MetadataConverter.Model
 {
     public class Work
     {
-        public int Id { get; set; }
+        public Int32 Id { get; set; }
 
-        public Work Parent { get; set; }
+        public Int32 Parent { get; set; }
 
-        public int? MovementNumber { get; set; }
+        public Int16? MovementNumber { get; set; }
 
         /// <summary>
         /// The field name is singular because it represents the same entry in different languages available
@@ -28,12 +28,12 @@ namespace MetadataConverter.Model
         /// <summary>
         /// Work Contributor is e.g. the Composer or Arranger
         /// </summary>
-        public Dictionary<Artist, Role> Contributors { get; set; }
+        public Dictionary<Int32, Role> Contributors { get; set; }
 
         public String ClassicalCatalog { get; set; }
 
         public Key? Key { get; set; }
 
-        public int? Year { get; set; }
+        public Int16? Year { get; set; }
     }
 }

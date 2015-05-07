@@ -14,21 +14,16 @@ namespace MetadataConverter.Model
 {
     public class Artist
     {
-        public int Id { get; set; }
+        public Int32 Id { get; set; }
 
-        public int? Birth { get; set; }
+        public Int16? Birth { get; set; }
 
-        public int? Death { get; set; }
+        public Int16? Death { get; set; }
 
         /// <summary>
         /// The field name is singular because it represents the same entry in different languages available
         /// </summary>
         public Dictionary<Lang, String> FirstName { get; set; }
-
-        /// <summary>
-        /// The field name is singular because it represents the same entry in different languages available
-        /// </summary>
-        public Dictionary<Lang, String> MidName { get; set; }
 
         /// <summary>
         /// The field name is singular because it represents the same entry in different languages available
