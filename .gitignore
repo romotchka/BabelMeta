@@ -1,0 +1,9 @@
+obj/
+bin/
+*.suo
+*.user
+*.db
+*.exe
+Backup/
+UpgradeLog.htm
+BuildOutput/
