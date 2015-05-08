@@ -55,6 +55,7 @@
     <Compile Include="Model\Artist.cs" />
     <Compile Include="Model\CatalogContext.cs" />
     <Compile Include="Model\Isrc.cs" />
+    <Compile Include="Model\Quality.cs" />
     <Compile Include="Model\Role.cs" />
     <Compile Include="Model\Lang.cs" />
     <Compile Include="Model\Tag.cs" />

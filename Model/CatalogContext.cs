@@ -33,6 +33,7 @@ namespace MetadataConverter.Model
 
                     _instance.Langs = new List<Lang>();
                     _instance.Roles = new List<Role>();
+                    _instance.Qualities = new List<Quality>();
                     _instance.Tags = new List<Tag>();
                     _instance.Artists = new List<Artist>();
                     _instance.Works = new List<Work>();
@@ -46,6 +47,8 @@ namespace MetadataConverter.Model
         internal List<Lang> Langs;
 
         internal List<Role> Roles;
+
+        internal List<Quality> Qualities;
 
         internal List<Tag> Tags;
 
@@ -61,6 +64,7 @@ namespace MetadataConverter.Model
         {
             _instance.Langs.Clear();
             _instance.Roles.Clear();
+            _instance.Qualities.Clear();
             _instance.Tags.Clear();
             _instance.Artists.Clear();
             _instance.Works.Clear();

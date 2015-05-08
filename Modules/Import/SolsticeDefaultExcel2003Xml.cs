@@ -75,6 +75,7 @@ namespace MetadataConverter.Modules.Import
         private List<XmlNode> _langs;
         private List<XmlNode> _tags;
         private List<XmlNode> _roles;
+        private List<XmlNode> _qualities;
         private List<XmlNode> _artists;
         private List<XmlNode> _works;
         private List<XmlNode> _isrcs;
@@ -137,6 +138,7 @@ namespace MetadataConverter.Modules.Import
                 if (_langs != null) _mainFormViewModel.InputProgressBarMax += _langs.Count;
                 if (_tags != null) _mainFormViewModel.InputProgressBarMax += _tags.Count;
                 if (_roles != null) _mainFormViewModel.InputProgressBarMax += _roles.Count;
+                if (_qualities != null) _mainFormViewModel.InputProgressBarMax += _qualities.Count;
                 if (_artists != null) _mainFormViewModel.InputProgressBarMax += _artists.Count;
                 if (_works != null) _mainFormViewModel.InputProgressBarMax += _works.Count;
                 if (_isrcs != null) _mainFormViewModel.InputProgressBarMax += _isrcs.Count;
@@ -153,6 +155,7 @@ namespace MetadataConverter.Modules.Import
 
             ParseTags();
             ParseRoles();
+            ParseQualities();
             ParseArtists();
             ParseWorks();
             ParseIsrcs();
@@ -171,6 +174,7 @@ namespace MetadataConverter.Modules.Import
             if (!ExistsWorksheet("lang")) return false;
             if (!ExistsWorksheet("tag")) return false;
             if (!ExistsWorksheet("role")) return false;
+            if (!ExistsWorksheet("quality")) return false;
             if (!ExistsWorksheet("artist")) return false;
             if (!ExistsWorksheet("work")) return false;
             if (!ExistsWorksheet("isrc")) return false;
@@ -205,6 +209,12 @@ namespace MetadataConverter.Modules.Import
             if (!ExistsCellValueInRow("partner_db", map, "role")) return false;
             if (!ExistsCellValueInRow("role_name", map, "role")) return false;
             _roles = WorksheetActiveRows("role");
+
+            map = CellMapByRow(_worksheets["quality"].ChildNodes.Cast<XmlNode>().FirstOrDefault(n => n.Name.CompareTo(OfficeXml.WorksheetRow) == 0));
+            if (!ExistsCellValueInRow("local_db", map, "quality")) return false;
+            if (!ExistsCellValueInRow("partner_db", map, "quality")) return false;
+            if (!ExistsCellValueInRow("quality_name", map, "quality")) return false;
+            _qualities = WorksheetActiveRows("quality");
 
             map = CellMapByRow(_worksheets["artist"].ChildNodes.Cast<XmlNode>().FirstOrDefault(n => n.Name.CompareTo(OfficeXml.WorksheetRow) == 0));
             if (!ExistsCellValueInRow("local_db", map, "artist")) return false;
@@ -541,6 +551,39 @@ namespace MetadataConverter.Modules.Import
             }
         }
 
+        private void ParseQualities()
+        {
+            if (_qualities == null)
+            {
+                return;
+            }
+
+            foreach (XmlNode row in _qualities)
+            {
+                Dictionary<Int32, XmlNode> cells = CellMapByRow(row);
+                if (cells != null && cells.Count > 0)
+                {
+                    Quality quality = new Quality();
+                    List<Int32> keys = cells.Keys.ToList();
+
+                    if (keys.Contains(_worksheetColumns["quality"]["quality_name"]))
+                    {
+                        quality.Name = cells.FirstOrDefault(c => c.Key == _worksheetColumns["quality"]["quality_name"]).Value.InnerText.Trim();
+                    }
+
+                    if (!String.IsNullOrEmpty(quality.Name))
+                    {
+                        CatalogContext.Instance.Qualities.Add(quality);
+                    }
+                }
+
+                if (_mainFormViewModel != null)
+                {
+                    _mainFormViewModel.InputProgressBarValue++;
+                }
+            }
+        }
+
         private void ParseArtists()
         {
             if (_artists == null)
@@ -752,8 +795,105 @@ namespace MetadataConverter.Modules.Import
             {
                 return;
             }
+
             foreach (XmlNode row in _isrcs)
             {
+                Dictionary<Int32, XmlNode> cells = CellMapByRow(row);
+                if (cells != null && cells.Count > 0)
+                {
+                    Isrc isrc = new Isrc();
+                    List<Int32> keys = cells.Keys.ToList();
+
+                    // Id is mandatory and has a minimal standardized length
+                    if (keys.Contains(_worksheetColumns["isrc"]["isrc_id"]))
+                    {
+                        isrc.Id = cells.FirstOrDefault(c => c.Key == _worksheetColumns["isrc"]["isrc_id"]).Value.InnerText.Trim();
+                        if (isrc == null || isrc.Id.Length < 12 || isrc.Id.Length > 15)
+                        {
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        continue;
+                    }
+
+                    // Work id, mandatory
+                    if (keys.Contains(_worksheetColumns["isrc"]["work_id"]))
+                    {
+                        Int32 workId = Convert.ToInt32(cells.FirstOrDefault(c => c.Key == _worksheetColumns["isrc"]["work_id"]).Value.InnerText.Trim());
+                        if (workId > 0)
+                        {
+                            isrc.Work = workId;
+                        }
+                        else
+                        {
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        continue;
+                    }
+
+                    isrc.Contributors = new Dictionary<Int32, Dictionary<Role, Quality>>();
+                    int i = 1;
+                    while (
+                                (_worksheetColumns["isrc"].ContainsKey("id_contributor" + i.ToString()))
+                                && (_worksheetColumns["isrc"].ContainsKey("role_contributor" + i.ToString()))
+                                && (_worksheetColumns["isrc"].ContainsKey("quality_contributor" + i.ToString()))
+                            )
+                    {
+                        Int32 idContributor = 0;
+                        Role roleContributor = null;
+                        Quality qualityContributor = null;
+
+                        if (keys.Contains(_worksheetColumns["isrc"]["id_contributor" + i.ToString()]))
+                        {
+                            idContributor = Convert.ToInt32(cells.FirstOrDefault(c => c.Key == _worksheetColumns["isrc"]["id_contributor" + i.ToString()]).Value.InnerText.Trim());
+                        }
+
+                        if (keys.Contains(_worksheetColumns["isrc"]["role_contributor" + i.ToString()]))
+                        {
+                            String roleContributorName = cells.FirstOrDefault(c => c.Key == _worksheetColumns["isrc"]["role_contributor" + i.ToString()]).Value.InnerText.Trim();
+                            if (!String.IsNullOrEmpty(roleContributorName))
+                            {
+                                roleContributor = CatalogContext.Instance.Roles.FirstOrDefault(
+                                    c => c.Name.CompareTo(roleContributorName) == 0
+                                );
+                            }
+                        }
+
+                        if (keys.Contains(_worksheetColumns["isrc"]["quality_contributor" + i.ToString()]))
+                        {
+                            String qualityContributorName = cells.FirstOrDefault(c => c.Key == _worksheetColumns["isrc"]["quality_contributor" + i.ToString()]).Value.InnerText.Trim();
+                            if (!String.IsNullOrEmpty(qualityContributorName))
+                            {
+                                qualityContributor = CatalogContext.Instance.Qualities.FirstOrDefault(
+                                    c => c.Name.CompareTo(qualityContributorName) == 0
+                                );
+                            }
+                        }
+
+                        // Contributor valid
+                        if (idContributor > 0 && roleContributor != null && qualityContributor != null)
+                        {
+                            if (!isrc.Contributors.ContainsKey(idContributor))
+                            {
+                                isrc.Contributors[idContributor] = new Dictionary<Role, Quality>();
+                            }
+                            isrc.Contributors[idContributor][roleContributor] = qualityContributor;
+                        }
+
+                        i++;
+                    }
+
+                    // If at least isrc has one contributor, record entry
+                    if (isrc.Contributors.Count > 0)
+                    {
+                        CatalogContext.Instance.Isrcs.Add(isrc);
+                    }
+                }
 
                 if (_mainFormViewModel != null)
                 {

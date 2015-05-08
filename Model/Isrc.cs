@@ -16,9 +16,11 @@ namespace MetadataConverter.Model
     {
         public String Id { get; set; }
 
-        public Work Work { get; set; }
+        public Int32 Work { get; set; }
 
+        /// <summary>
         /// Isrc Contributor is e.g. the Performer or Musical Director or Sound Engineer
-        public Dictionary<Artist, Role> Contributors { get; set; }
+        /// </summary>
+        public Dictionary<Int32, Dictionary<Role, Quality>> Contributors { get; set; }
     }
 }
