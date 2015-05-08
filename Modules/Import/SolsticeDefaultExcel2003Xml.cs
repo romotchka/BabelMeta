@@ -908,8 +908,97 @@ namespace MetadataConverter.Modules.Import
             {
                 return;
             }
+
             foreach (XmlNode row in _albums)
             {
+                Dictionary<Int32, XmlNode> cells = CellMapByRow(row);
+                if (cells != null && cells.Count > 0)
+                {
+                    Album album = new Album();
+                    List<Int32> keys = cells.Keys.ToList();
+
+                    // Id is mandatory and > 0
+                    if (keys.Contains(_worksheetColumns["album"]["album_id"]))
+                    {
+                        album.Id = Convert.ToInt32(cells.FirstOrDefault(c => c.Key == _worksheetColumns["album"]["album_id"]).Value.InnerText.Trim());
+                        if (album == null || album.Id <= 0)
+                        {
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        continue;
+                    }
+
+                    if (keys.Contains(_worksheetColumns["album"]["label"]))
+                    {
+                        String label = cells.FirstOrDefault(c => c.Key == _worksheetColumns["album"]["label"]).Value.InnerText.Trim();
+                        if (!String.IsNullOrEmpty(label)) 
+                        {
+                            album.Owner = label;
+                            album.CopyrightCLabel = label;
+                            album.CopyrightPLabel = label;
+                        }
+                    }
+
+                    if (keys.Contains(_worksheetColumns["album"]["reference"]))
+                    {
+                        String reference = cells.FirstOrDefault(c => c.Key == _worksheetColumns["album"]["reference"]).Value.InnerText.Trim();
+                        if (!String.IsNullOrEmpty(reference))
+                        {
+                            album.CatalogReference = reference;
+                        }
+                    }
+
+                    if (keys.Contains(_worksheetColumns["album"]["ean"]))
+                    {
+                        album.Ean = Convert.ToInt64(cells.FirstOrDefault(c => c.Key == _worksheetColumns["album"]["ean"]).Value.InnerText.Trim());
+                        if (album.Ean != null && album.Ean < 0) { album.Ean = null; }
+                    }
+
+                    if (keys.Contains(_worksheetColumns["album"]["genre"]))
+                    {
+                        String tagName = cells.FirstOrDefault(c => c.Key == _worksheetColumns["album"]["genre"]).Value.InnerText.Trim();
+                        if (!String.IsNullOrEmpty(tagName) && CatalogContext.Instance.Tags.Exists(t => t.Name.CompareTo(tagName) == 0))
+                        {
+                            album.Genre = CatalogContext.Instance.Tags.FirstOrDefault(t => t.Name.CompareTo(tagName) == 0);
+                        }
+                    }
+
+                    if (keys.Contains(_worksheetColumns["album"]["subgenre"]))
+                    {
+                        String tagName = cells.FirstOrDefault(c => c.Key == _worksheetColumns["album"]["subgenre"]).Value.InnerText.Trim();
+                        if (!String.IsNullOrEmpty(tagName) && CatalogContext.Instance.Tags.Exists(t => t.Name.CompareTo(tagName) == 0))
+                        {
+                            album.Subgenre = CatalogContext.Instance.Tags.FirstOrDefault(t => t.Name.CompareTo(tagName) == 0);
+                        }
+                    }
+
+                    album.Title = new Dictionary<Lang, String>();
+                    // Object may have several lang-dependent field sets
+                    foreach (Lang lang in CatalogContext.Instance.Langs)
+                    {
+                        String title = String.Empty;
+
+                        if (keys.Contains(_worksheetColumns["album"]["title_" + lang.ShortName]))
+                        {
+                            title = cells.FirstOrDefault(c => c.Key == _worksheetColumns["album"]["title_" + lang.ShortName]).Value.InnerText.Trim();
+                        }
+
+                        // If, at least, last name is not empty, record both fields
+                        if (!String.IsNullOrEmpty(title))
+                        {
+                            album.Title[lang] = title;
+                        }
+                    }
+
+                    // If, at least, one language set is available (default or not), save the entry 
+                    if (album.Title.Count > 0)
+                    {
+                        CatalogContext.Instance.Albums.Add(album);
+                    }
+                }
 
                 if (_mainFormViewModel != null)
                 {
@@ -924,8 +1013,77 @@ namespace MetadataConverter.Modules.Import
             {
                 return;
             }
+
             foreach (XmlNode row in _assets)
             {
+                Dictionary<Int32, XmlNode> cells = CellMapByRow(row);
+                if (cells != null && cells.Count > 0)
+                {
+                    Int32 albumId = 0;
+                    Int16 volumeIndex = 0;
+                    Int16 trackIndex = 0;
+                    String isrcId = String.Empty;
+                    Album album = null;
+                    List<Int32> keys = cells.Keys.ToList();
+
+                    // Id is mandatory and referential integrity is checked
+                    if (keys.Contains(_worksheetColumns["asset"]["album_id"]))
+                    {
+                        albumId = Convert.ToInt32(cells.FirstOrDefault(c => c.Key == _worksheetColumns["asset"]["album_id"]).Value.InnerText.Trim());
+                        if (!CatalogContext.Instance.Albums.Exists(a => a.Id == albumId))
+                        {
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        continue;
+                    }
+
+                    album = CatalogContext.Instance.Albums.FirstOrDefault(a => a.Id == albumId);
+                    album.Assets = new Dictionary<Int16, Dictionary<Int16, string>>();
+
+                    if (keys.Contains(_worksheetColumns["asset"]["volume_index"]))
+                    {
+                        volumeIndex = Convert.ToInt16(cells.FirstOrDefault(c => c.Key == _worksheetColumns["asset"]["volume_index"]).Value.InnerText.Trim());
+                        if (volumeIndex <= 0)
+                        { 
+                            continue; 
+                        }
+
+                        if (!album.Assets.ContainsKey(volumeIndex))
+                        {
+                            album.Assets[volumeIndex] = new Dictionary<Int16, String>();
+                        }
+                    }
+
+                    if (keys.Contains(_worksheetColumns["asset"]["track_index"]))
+                    {
+                        trackIndex = Convert.ToInt16(cells.FirstOrDefault(c => c.Key == _worksheetColumns["asset"]["track_index"]).Value.InnerText.Trim());
+                        if (trackIndex <= 0 || trackIndex > 99)
+                        {
+                            continue;
+                        }
+                    }
+
+                    // Id is mandatory and has a minimal standardized length
+                    if (keys.Contains(_worksheetColumns["asset"]["isrc_id"]))
+                    {
+                        isrcId = cells.FirstOrDefault(c => c.Key == _worksheetColumns["asset"]["isrc_id"]).Value.InnerText.Trim();
+                        if (String.IsNullOrEmpty(isrcId) || isrcId.Length < 12 || isrcId.Length > 15)
+                        {
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        continue;
+                    }
+
+                    // Conditions ok to add asset to album
+                    album.Assets[volumeIndex][trackIndex] = isrcId;
+                }
+
 
                 if (_mainFormViewModel != null)
                 {

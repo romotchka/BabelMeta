@@ -14,34 +14,35 @@ namespace MetadataConverter.Model
 {
     public class Album
     {
-        public int Id { get; set; }
+        public Int32 Id { get; set; }
 
-        public long Ean { get; set; }
+        public Int64? Ean { get; set; }
 
         /// <summary>
         /// The field name is singular because it represents the same entry in different languages available
         /// </summary>
         public Dictionary<Lang, String> Title { get; set; }
 
-        public List<Tag> Genres { get; set; }
+        public Tag Genre { get; set; }
 
-        public List<Tag> SubGenres { get; set; }
+        public Tag Subgenre { get; set; }
 
         public String Owner { get; set; }
 
         public String CatalogReference { get; set; }
 
-        public int CopyrightPYear { get; set; }
+        public Int16 CopyrightPYear { get; set; }
 
         public String CopyrightPLabel { get; set; }
 
-        public int CopyrightCYear { get; set; }
-
+        public Int16 CopyrightCYear { get; set; }
+        
         public String CopyrightCLabel { get; set; }
 
         /// <summary>
-        /// Nested Dictionaries correspond to Volume index & Track index
+        /// Nested Dictionaries correspond to Volume index & Track index.
+        /// The String value is an Isrc id.
         /// </summary>
-        public Dictionary<int, Dictionary<int, Isrc>> Assets { get; set; }
+        public Dictionary<Int16, Dictionary<Int16, String>> Assets { get; set; }
     }
 }
