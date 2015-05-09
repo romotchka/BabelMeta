@@ -111,9 +111,14 @@ namespace MetadataConverter
 
         private void checkIntegrityToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if  (
+            DoCheckIntegrity();
+        }
+
+        private void DoCheckIntegrity()
+        {
+            if (
                     (CatalogContext.Instance.RedundantKeysChecked = ModelIntgrityChecker.Instance.CheckRedundantKeys()) == true
-                    && (CatalogContext.Instance.ReferentialIntegrityChecked = ModelIntgrityChecker.Instance.CheckReferentialIntegrity()) == true                
+                    && (CatalogContext.Instance.ReferentialIntegrityChecked = ModelIntgrityChecker.Instance.CheckReferentialIntegrity()) == true
                 )
             {
                 Notify("The imported model is valid.");
@@ -127,7 +132,7 @@ namespace MetadataConverter
                 }
                 if (!CatalogContext.Instance.ReferentialIntegrityChecked)
                 {
-                    message += " Foreign keys are corrupted.";
+                    message += " Some foreign keys are invalid.";
                 }
                 Notify(message);
             }
@@ -162,8 +167,15 @@ namespace MetadataConverter
         {
             if (!CatalogContext.Instance.Initialized)
             {
+                Notify("Catalog not present.");
                 return;
             }
+            DoCheckIntegrity();
+            if (!CatalogContext.Instance.IntegrityChecked)
+            {
+                return;
+            }
+
             FolderBrowserDialog fbd = new FolderBrowserDialog();
 
             fbd.Description = "Select a root folder for output sub-folders and XML files";

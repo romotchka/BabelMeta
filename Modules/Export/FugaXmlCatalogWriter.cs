@@ -19,11 +19,7 @@ namespace MetadataConverter.Modules.Export
 {
     public class FugaXmlCatalogWriter : ICatalogWriter
     {
-        private String _folder = String.Empty;
-
         MainFormViewModel _viewModel = null;
-
-        ingestion _ingestion = null;
 
         private static FugaXmlCatalogWriter _instance;
 
@@ -45,50 +41,75 @@ namespace MetadataConverter.Modules.Export
             }
         }
 
-        public ReturnCodes Generate(String folder, MainFormViewModel viewModel = null)
+        public ReturnCodes Generate(String rootFolder, MainFormViewModel viewModel = null)
         {
-            if (String.IsNullOrEmpty(folder))
+            if (String.IsNullOrEmpty(rootFolder))
             {
                 return ReturnCodes.ModulesExportFugaXmlGenerateNullFolderName;
             }
-            _folder = folder;
+
+            if ((rootFolder.ToCharArray())[rootFolder.Length-1] != '\\')
+            {
+                rootFolder += "\\";
+            }
+
             _viewModel = viewModel;
 
             foreach (Album album in CatalogContext.Instance.Albums)
             {
-                _ingestion = null;
-                _ingestion = new ingestion();
-                _ingestion.album = new ingestionAlbum();
-                _ingestion.album.tracks = new ingestionAlbumTracks();
+                ingestion i = null;
+                i = new ingestion();
+                i.album = new ingestionAlbum();
+                i.album.tracks = new ingestionAlbumTracks();
 
-                GenerateAlbumWiseData();
+                GenerateAlbumWiseData(album,i);
 
                 foreach (KeyValuePair<Int16, Dictionary<Int16, String>> volume in album.Assets)
                 {
-                    GenerateTrackWiseData(volume);
+                    GenerateTrackWiseData(album, volume, i);
                 }
 
-                //String s = i.Serialize();
-                //byte[] b = Encoding.UTF8.GetBytes(s);
+                // There MUST be a subfolder for each album
+                if (String.IsNullOrEmpty(i.album.upc_code))
+                {
+                    continue;
+                }
+                String subfolder = rootFolder + i.album.upc_code;
+                if (!Directory.Exists(subfolder))
+                {
+                    Directory.CreateDirectory(subfolder);
+                }
+                subfolder += "\\";
+
+                TextWriter tw = new StreamWriter(subfolder + i.album.upc_code + ".xml", false, Encoding.UTF8);
+                tw.Write(i.Serialize());
+                tw.Close();
 
             }      
 
             return ReturnCodes.Ok;
         }
 
-        private void GenerateAlbumWiseData()
+        private void GenerateAlbumWiseData(Album album, ingestion i)
         {
-
+            if (album == null || i == null)
+            {
+                return;
+            }
+            i.album.upc_code = album.Ean.ToString();
         }
 
-        private void GenerateTrackWiseData(KeyValuePair<Int16, Dictionary<Int16, String>> volume)
+        private void GenerateTrackWiseData(Album album, KeyValuePair<Int16, Dictionary<Int16, String>> volume, ingestion i)
         {
-            if (_ingestion == null || _ingestion.album == null)
+            if (album == null || i == null)
             {
                 return;
             }
             Int16 volumeIndex = volume.Key;
             Dictionary<Int16, String> volumeTracks = volume.Value;
+
+            List<Artist> artistsBuffer = new List<Artist>();
+
             foreach (KeyValuePair<Int16, String> track in volumeTracks)
             {
                 Int16 trackIndex = track.Key;
@@ -109,10 +130,7 @@ namespace MetadataConverter.Modules.Export
                 asset.on_disc = volumeIndex.ToString();
                 asset.sequence_number = trackIndex.ToString();
 
-                _ingestion.album.tracks.Items.Add(asset);
-
-
-                // File generation
+                i.album.tracks.Items.Add(asset);
 
             }
         }

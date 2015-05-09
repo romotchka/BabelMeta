@@ -1038,7 +1038,14 @@ namespace MetadataConverter.Modules.Import
                     }
 
                     album = CatalogContext.Instance.Albums.FirstOrDefault(a => a.Id == albumId);
-                    album.Assets = new Dictionary<Int16, Dictionary<Int16, string>>();
+                    if (album == null)
+                    {
+                        continue;
+                    }
+                    if (album.Assets == null)
+                    {
+                        album.Assets = new Dictionary<Int16, Dictionary<Int16, String>>();
+                    }
 
                     if (keys.Contains(_worksheetColumns["asset"]["volume_index"]))
                     {

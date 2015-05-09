@@ -46,9 +46,41 @@ namespace MetadataConverter.Model
 
         internal bool Initialized = false;
 
-        internal bool RedundantKeysChecked = false;
+        internal bool _redundantKeysChecked = false;
 
-        internal bool ReferentialIntegrityChecked = false;
+        internal bool RedundantKeysChecked 
+        {
+            get 
+            { 
+                return _redundantKeysChecked; 
+            }
+            set
+            {
+                _redundantKeysChecked = value;
+            }
+        }
+
+        internal bool _referentialIntegrityChecked = false;
+
+        internal bool ReferentialIntegrityChecked
+        {
+            get
+            {
+                return _referentialIntegrityChecked;
+            }
+            set
+            {
+                _referentialIntegrityChecked = value;
+            }
+        }
+
+        public bool IntegrityChecked
+        {
+            get
+            {
+                return RedundantKeysChecked && ReferentialIntegrityChecked;
+            }
+        }
 
         internal List<Lang> Langs;
 
