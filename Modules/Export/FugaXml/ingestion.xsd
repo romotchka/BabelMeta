@@ -1,0 +1,2115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright (C) 2007-2013 by IndependentIP BV
+
+     The standard defined by the XML schema in this file is the property
+     of IndependentIP BV. License is granted to freely
+     distribute the schema and to implement the standard, provided that
+     you: 1) Retain this copyright notice and license unchanged. 2) Clearly
+     identify any modifications to the schema as your own
+
+-->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" version="1.2" xmlns:iso3166a2="http://fugamusic.com/docs/ingestion/iso3166"
+            elementFormDefault="qualified">
+    <xsd:import namespace="http://fugamusic.com/docs/ingestion/iso3166" schemaLocation="http://fugamusic.com/docs/ingestion/iso3166.xsd" />
+
+  <xsd:element name="ingestion">
+    <xsd:complexType>
+      <xsd:annotation>
+        <xsd:documentation>
+          The top-level element. It contains the required action and the album metadata.
+        </xsd:documentation>
+      </xsd:annotation>      
+      <xsd:all>
+        <xsd:element name="action">
+          <xsd:annotation>
+            <xsd:documentation>
+              Action to be performed with the album. Can be either insert or update.
+            </xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:enumeration value="INSERT"></xsd:enumeration>
+              <xsd:enumeration value="UPDATE"></xsd:enumeration>
+              </xsd:restriction>
+           </xsd:simpleType>    
+        </xsd:element>        
+        <xsd:element name="album">
+          <xsd:complexType>
+            <xsd:all>
+                <xsd:element name="album_notes" type="xsd:string" maxOccurs="1" minOccurs="0">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            Additional information included with the album, such as recording notes etc.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="alternate_genre" type="genre_type" maxOccurs="1" minOccurs="0">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            Alternate genre associated with the album. This needs to be different from the main genre.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+            <xsd:element name="alternate_subgenre" type="xsd:string" maxOccurs="1" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        An additional qualifier to alternate genre.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="attachments" maxOccurs="1" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>
+                  The list of the attachments belonging to this album. Attachments are any files that the content owner 
+                  wants to distribute with the product, such as artist's biography, banners, etc.
+                </xsd:documentation>
+              </xsd:annotation>
+              <xsd:complexType>
+                <xsd:sequence>
+                  <xsd:element name="attachment" type="attachment_type" maxOccurs="unbounded"/>
+                </xsd:sequence>
+              </xsd:complexType>              
+            </xsd:element>
+            <xsd:element name="c_line_text" type="xsd:string" maxOccurs="1" minOccurs="1">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            The text of the copyright notice indicating the owner of the copy rights of the album.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="c_line_year" type="year" maxOccurs="1" minOccurs="1">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            The year of the copyright notice for this album.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="catalog_number" maxOccurs="1" minOccurs="1">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            The label's unique identifier for the release.
+                        </xsd:documentation>
+                    </xsd:annotation>
+      			<xsd:simpleType>
+      				<xsd:restriction base="xsd:string">
+      					<xsd:minLength value="0" />
+      				</xsd:restriction> 
+      			</xsd:simpleType>
+                </xsd:element>
+                <xsd:element name="supplier" maxOccurs="1" minOccurs="1">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            Name of the supplier of this release
+                        </xsd:documentation>
+                    </xsd:annotation>
+      			<xsd:simpleType>
+      				<xsd:restriction base="xsd:string">
+      					<xsd:minLength value="1" />
+      				</xsd:restriction> 
+      			</xsd:simpleType>
+                </xsd:element>
+                <xsd:element name="cover_art" maxOccurs="1" minOccurs="1">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            An element containing details about the artwork of this album.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                    <xsd:complexType>
+                        <xsd:all>
+                            <xsd:element name="image" maxOccurs="1" minOccurs="1">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="file" type="file_type" maxOccurs="1" minOccurs="1"/>
+                            </xsd:sequence>
+                        </xsd:complexType>                  
+                    </xsd:element>
+                        </xsd:all>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="consumer_release_date" type="xsd:date" maxOccurs="1" minOccurs="1">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            The date the release may be sold to the public. When there is a schedule tag, this date is ignored and the one from the schedule tag is taken.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>                
+                <xsd:element name="fuga_id" type="xsd:integer" maxOccurs="1" minOccurs="0">
+                  <xsd:annotation>
+                      <xsd:documentation>
+                          ID of the album in FUGA that should be updated (leave out if this is an insert).
+                      </xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="label" type="xsd:string" maxOccurs="1" minOccurs="1">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            The Label that put out the release.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="main_genre" type="genre_type" maxOccurs="1" minOccurs="1">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            Main genre associated with the album.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="main_subgenre" type="xsd:string" maxOccurs="1" minOccurs="0">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            Additional qualifier to the main genre.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+              <xsd:element name="display_artist" type="xsd:string" maxOccurs="1" minOccurs="0">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    The display artist, only to be used for non-standard display artists like 'A vs. B'
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+                <xsd:element name="name" type="xsd:string" maxOccurs="1" minOccurs="1">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            The title of the album.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="p_line_text" type="xsd:string" maxOccurs="1" minOccurs="1">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            The text indicating the owner of the publishing rights.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="p_line_year" type="year" maxOccurs="1" minOccurs="1">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            The year of the publishing rights of this release.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="catalog_tier" maxOccurs="1" minOccurs="0">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                          The catalog tier of the product
+                        </xsd:documentation>
+                    </xsd:annotation>
+                  <xsd:simpleType>
+                      <xsd:restriction base="xsd:string">
+                          <xsd:enumeration value="BUDGET"></xsd:enumeration>
+                          <xsd:enumeration value="BACK"></xsd:enumeration>
+                          <xsd:enumeration value="MID"></xsd:enumeration>
+                          <xsd:enumeration value="FRONT"></xsd:enumeration>
+                          <xsd:enumeration value="PREMIUM"></xsd:enumeration>
+                      </xsd:restriction>
+                  </xsd:simpleType>
+
+                </xsd:element>
+              <xsd:element name="language" maxOccurs="1" minOccurs="0">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    The language of the metadata of the product, defaults to EN
+                  </xsd:documentation>
+                </xsd:annotation>
+                <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="EN"></xsd:enumeration>
+                    <xsd:enumeration value="FR"></xsd:enumeration>
+                    <xsd:enumeration value="DE"></xsd:enumeration>
+                    <xsd:enumeration value="AR"></xsd:enumeration>
+                    <xsd:enumeration value="YUE_HANT"></xsd:enumeration>
+                    <xsd:enumeration value="CA"></xsd:enumeration>
+                    <xsd:enumeration value="CMN_HANS"></xsd:enumeration>
+                    <xsd:enumeration value="CMN_HANT"></xsd:enumeration>
+                    <xsd:enumeration value="HR"></xsd:enumeration>
+                    <xsd:enumeration value="CS"></xsd:enumeration>
+                    <xsd:enumeration value="DA"></xsd:enumeration>
+                    <xsd:enumeration value="NL"></xsd:enumeration>
+                    <xsd:enumeration value="ET"></xsd:enumeration>
+                    <xsd:enumeration value="FI"></xsd:enumeration>
+                    <xsd:enumeration value="EL"></xsd:enumeration>
+                    <xsd:enumeration value="HE"></xsd:enumeration>
+                    <xsd:enumeration value="HU"></xsd:enumeration>
+                    <xsd:enumeration value="IS"></xsd:enumeration>
+                    <xsd:enumeration value="ID"></xsd:enumeration>
+                    <xsd:enumeration value="IT"></xsd:enumeration>
+                    <xsd:enumeration value="JA"></xsd:enumeration>
+                    <xsd:enumeration value="KO"></xsd:enumeration>
+                    <xsd:enumeration value="LO"></xsd:enumeration>
+                    <xsd:enumeration value="LV"></xsd:enumeration>
+                    <xsd:enumeration value="LT"></xsd:enumeration>
+                    <xsd:enumeration value="MS"></xsd:enumeration>
+                    <xsd:enumeration value="NO"></xsd:enumeration>
+                    <xsd:enumeration value="PL"></xsd:enumeration>
+                    <xsd:enumeration value="PT"></xsd:enumeration>
+                    <xsd:enumeration value="RO"></xsd:enumeration>
+                    <xsd:enumeration value="RU"></xsd:enumeration>
+                    <xsd:enumeration value="SK"></xsd:enumeration>
+                    <xsd:enumeration value="ES"></xsd:enumeration>
+                    <xsd:enumeration value="SV"></xsd:enumeration>
+                    <xsd:enumeration value="TL"></xsd:enumeration>
+                    <xsd:enumeration value="TH"></xsd:enumeration>
+                    <xsd:enumeration value="TR"></xsd:enumeration>
+                    <xsd:enumeration value="UK"></xsd:enumeration>
+                    <xsd:enumeration value="VI"></xsd:enumeration>
+                  </xsd:restriction>
+                </xsd:simpleType>
+              </xsd:element>
+              <xsd:element name="original_release_date" type="xsd:date" maxOccurs="1" minOccurs="0">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    The date the release was originally released to the public.
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+                <xsd:element ref="parental_advisory" maxOccurs="1" minOccurs="0">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            Set to 'true' if the album has sensitive content.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="pricings" maxOccurs="1" minOccurs="0">
+                  <xsd:annotation>
+                    <xsd:documentation>
+                      The list of the pricing information for a specific DSP and territory.
+                    </xsd:documentation>
+                  </xsd:annotation>
+                  <xsd:complexType>
+                    <xsd:sequence>
+                      <xsd:element name="pricing" type="pricing_type" maxOccurs="unbounded"/>
+                    </xsd:sequence>
+                  </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="pricing_intervals" maxOccurs="1" minOccurs="0">
+                  <xsd:annotation>
+                    <xsd:documentation>
+                      The list of the pricing interval information for a specific DSP and territory.
+                    </xsd:documentation>
+                  </xsd:annotation>
+                  <xsd:complexType>
+                    <xsd:sequence>
+                      <xsd:element name="pricing_interval" type="pricing_interval_type" maxOccurs="unbounded"/>
+                    </xsd:sequence>
+                  </xsd:complexType>
+                </xsd:element>
+                <xsd:element ref="primary_artist" maxOccurs="1" minOccurs="1">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            An element containing details of the primary artist for this album.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+      		<xsd:element name="additional_artists" minOccurs="0" maxOccurs="1">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            An element containing any additional artists (primary or featuring).
+                        </xsd:documentation>
+                    </xsd:annotation>
+      			<xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element ref="artist" maxOccurs="unbounded" />
+                		</xsd:sequence>
+      			</xsd:complexType>
+      		</xsd:element>
+                <xsd:element name="recording_year" type="year" minOccurs="0" maxOccurs="1">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            The year this albums has been recorded.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+                <xsd:element ref="recording_location" maxOccurs="1" minOccurs="0">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            The location where this album has been recorded.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="redeliveries" type="redeliveries_type" maxOccurs="1" minOccurs="0">
+                  <xsd:annotation>
+                    <xsd:documentation>
+                      An element containing details about whether the product should be redelivered and to which organizations.
+                      Only valid for an update.
+                    </xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="release_format_type" maxOccurs="1" minOccurs="1">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            The format of the digital recording.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                    <xsd:simpleType>
+                        <xsd:restriction base="xsd:string">
+                            <xsd:enumeration value="ALBUM"></xsd:enumeration>
+                            <xsd:enumeration value="SINGLE"></xsd:enumeration>
+                            <xsd:enumeration value="EP"></xsd:enumeration>
+                            <xsd:enumeration value="BOXSET"></xsd:enumeration>
+                        </xsd:restriction>
+                    </xsd:simpleType>
+                </xsd:element>
+                <xsd:element name="release_version" type="xsd:string" minOccurs="0">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            Special information about the release, for
+                            example information about the exclusivity, territory
+                            or pre-release version information.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="territories" maxOccurs="1" minOccurs="1">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            A Composite containing the information about the
+                            territories a release is licensed for.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="territory" type="iso3166a2:territory_code" maxOccurs="unbounded" minOccurs="1">
+                                <xsd:annotation>
+                                    <xsd:documentation>
+                                        A Territory in which the release is licensed
+                                        for (represented by an ISO 3166-1 territory
+                                        code). -- Note; the territory AN is obsolete.
+                                    </xsd:documentation>
+                                </xsd:annotation>
+                            </xsd:element>
+                        </xsd:sequence>
+                    </xsd:complexType>              
+                </xsd:element>
+                <xsd:element name="total_discs" type="xsd:nonNegativeInteger" maxOccurs="1" minOccurs="1">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            Number of discs this album consists of.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+              <xsd:element name="extra1" type="xsd:string" minOccurs="0">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    An extra field
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element name="extra2" type="xsd:string" minOccurs="0">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    An extra field
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element name="extra3" type="xsd:string" minOccurs="0">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    An extra field
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element name="extra4" type="xsd:string" minOccurs="0">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    An extra field
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element name="extra5" type="xsd:string" minOccurs="0">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    An extra field
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element name="extra6" type="xsd:string" minOccurs="0">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    An extra field
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element name="extra7" type="xsd:string" minOccurs="0">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    An extra field
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element name="extra8" type="xsd:string" minOccurs="0">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    An extra field
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element name="extra9" type="xsd:date" minOccurs="0">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    An extra field
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element name="extra10" type="xsd:date" minOccurs="0">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    An extra field
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+                <xsd:element name="tracks" maxOccurs="1" minOccurs="1">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            The list of the tracks belonging to this album.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                    <xsd:complexType>
+                        <xsd:sequence>
+                          <xsd:choice maxOccurs="unbounded">
+                            <xsd:element name="track" >
+                            <xsd:complexType>
+                                <xsd:annotation>
+                                    <xsd:documentation>Element describing one track of an album.</xsd:documentation>
+                                </xsd:annotation>
+                                <xsd:all>
+                                    <xsd:element name="allow_preorder_preview" type="xsd:boolean" maxOccurs="1" minOccurs="0">
+                                        <xsd:annotation>
+                                            <xsd:documentation>
+                                                Allow previews during the pre-order period
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                    </xsd:element>
+                                    <xsd:element name="alternate_genre" type="genre_type" maxOccurs="1" minOccurs="0">
+                                        <xsd:annotation>
+                                            <xsd:documentation>
+                                                Alternate genre associated with the track. This needs to be different from the main genre.
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                    </xsd:element>
+                                    <xsd:element name="alternate_subgenre" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                        <xsd:annotation>
+                                            <xsd:documentation>
+                                                Additional qualifier to alternate genre of the track.
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                    </xsd:element>
+                                    <xsd:element name="available_separately" type="xsd:boolean" maxOccurs="1" minOccurs="1">
+                                        <xsd:annotation>
+                                            <xsd:documentation>
+                                                Set to 'true' if and only if the track may be sold as a single.
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                    </xsd:element>
+                                    <xsd:element name="contributors" minOccurs="0">
+                                        <xsd:annotation>
+                                            <xsd:documentation>
+                                                List of contributing artists of this track.
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                        <xsd:complexType>
+                                            <xsd:sequence>
+                                                <xsd:element ref="contributor" minOccurs="1" maxOccurs="unbounded">
+                                                </xsd:element>                                                
+                                            </xsd:sequence>
+                                        </xsd:complexType>
+                                    </xsd:element>
+                                    <xsd:element name="isrc_code" maxOccurs="1" minOccurs="1">
+                                        <xsd:annotation>
+                                            <xsd:documentation>
+                                                The unique ISRC code assigned to the track.
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                        <xsd:simpleType>
+                                            <xsd:restriction base="xsd:string">
+                                                <xsd:pattern value="[A-Z]{2}[A-Z0-9]{3}[0-9]{7}"/>
+                                            </xsd:restriction>
+                                        </xsd:simpleType>
+                                    </xsd:element>
+                                    <xsd:element name="lyrics" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                        <xsd:annotation>
+                                            <xsd:documentation>
+                                                Multi-line lyrics.
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                    </xsd:element>
+                                    <xsd:element name="main_genre" type="genre_type" maxOccurs="1" minOccurs="1">
+                                        <xsd:annotation>
+                                            <xsd:documentation>
+                                                Main genre of the track.
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                    </xsd:element>
+                                    <xsd:element name="main_subgenre" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                        <xsd:annotation>
+                                            <xsd:documentation>
+                                                An additional qualifier to main genre of the track.
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                    </xsd:element>
+                                    <xsd:element name="name" type="xsd:string" maxOccurs="1" minOccurs="1">
+                                        <xsd:annotation>
+                                            <xsd:documentation>
+                                                The title of the track.
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                    </xsd:element>
+                                    <xsd:element name="on_disc" type="xsd:nonNegativeInteger" maxOccurs="1" minOccurs="1">
+                                        <xsd:annotation>
+                                            <xsd:documentation>
+                                                Indicates on which disc this track is located on.
+                                            </xsd:documentation>
+                                        </xsd:annotation></xsd:element>
+                                    <xsd:element ref="parental_advisory" maxOccurs="1" minOccurs="1">
+                                        <xsd:annotation>
+                                            <xsd:documentation>
+                                                Set to 'true' if the track contains sensitive content.
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                    </xsd:element>
+                                    <xsd:element ref="preorder_type" maxOccurs="1" minOccurs="0">
+                                        <xsd:annotation>
+                                            <xsd:documentation>
+                                                Designates the pre-order type. See the documentation of this type for more info.
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                    </xsd:element>
+                                    <xsd:element name="preview_length"
+                                        type="xsd:nonNegativeInteger" maxOccurs="1" minOccurs="0">
+                                        <xsd:annotation>
+                                            <xsd:documentation>
+                                                The duration of the preview given in seconds.
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                    </xsd:element>
+                                    <xsd:element name="preview_start"
+                                        type="xsd:nonNegativeInteger" maxOccurs="1" minOccurs="0">
+                                        <xsd:annotation>
+                                            <xsd:documentation>
+                                                The number of seconds into the track at which to
+                                                start the preview.
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                    </xsd:element>
+                                    <xsd:element ref="primary_artist" maxOccurs="1" minOccurs="1">
+                                        <xsd:annotation>
+                                            <xsd:documentation>
+                                                Details of the primary artist for this track.
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                    </xsd:element>
+      							<xsd:element name="additional_artists" minOccurs="0" maxOccurs="1">
+      				                <xsd:annotation>
+      				                    <xsd:documentation>
+      				                        An element containing any additional artists (primary or featuring).
+      				                    </xsd:documentation>
+      				                </xsd:annotation>
+      								<xsd:complexType>
+      				                    <xsd:sequence>
+      				                        <xsd:element ref="artist" maxOccurs="unbounded" />
+      				            		</xsd:sequence>
+      								</xsd:complexType>
+      							</xsd:element>
+                                    <xsd:element name="publishers" maxOccurs="1" minOccurs="0">
+                                        <xsd:annotation>
+                                            <xsd:documentation>
+                                                List of publishers of this track.
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                        <xsd:complexType>
+                                            <xsd:sequence minOccurs="0">
+                                                <xsd:element ref="publisher" maxOccurs="unbounded"/> 
+                                            </xsd:sequence>
+                                        </xsd:complexType>
+                                    </xsd:element>
+                                    <xsd:element name="recording_year" type="year" minOccurs="0" maxOccurs="1">
+                                        <xsd:annotation>
+                                            <xsd:documentation>
+                                                The recording year for the track.
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                    </xsd:element>
+                                    <xsd:element ref="recording_location" maxOccurs="1" minOccurs="0">
+                                        <xsd:annotation>
+                                            <xsd:documentation>
+                                                The recording location for the track.
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                    </xsd:element>
+                                    <xsd:element name="redeliveries_of_associated" type="redeliveries_type" maxOccurs="1" minOccurs="0">
+                                      <xsd:annotation>
+                                        <xsd:documentation>
+                                          An element containing details about whether other products associated with this track 
+                                          should be redelivered and to which organizations.
+                                          Only valid for an update.
+                                        </xsd:documentation>
+                                      </xsd:annotation>
+                                    </xsd:element>                                    
+                                  <xsd:element name="rights_contract_begin_date" type="xsd:date" maxOccurs="1" minOccurs="0">
+                                    <xsd:annotation>
+                                      <xsd:documentation>
+                                        The date at which the rights to the track began.
+                                      </xsd:documentation>
+                                    </xsd:annotation>
+                                  </xsd:element>
+                                  <xsd:element name="rights_holder_name" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                    <xsd:annotation>
+                                      <xsd:documentation>
+                                        The name of the party that exclusively control the rights to the track.
+                                      </xsd:documentation>
+                                    </xsd:annotation>
+                                  </xsd:element>
+                                  <xsd:element name="rights_ownership_name" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                    <xsd:annotation>
+                                      <xsd:documentation>
+                                        The name of the party that own the rights to the track.
+                                      </xsd:documentation>
+                                    </xsd:annotation>
+                                  </xsd:element>
+                                  <xsd:element name="country_of_commissioning" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                    <xsd:annotation>
+                                      <xsd:documentation>
+                                        The country in which the Original Copyright Owner (the party that made the recording of the track) is principally established.
+                                      </xsd:documentation>
+                                    </xsd:annotation>
+                                  </xsd:element>
+                                  <xsd:element name="country_of_recording" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                    <xsd:annotation>
+                                      <xsd:documentation>
+                                        The name of the country the  track was recorded in.
+                                      </xsd:documentation>
+                                    </xsd:annotation>
+                                  </xsd:element>
+                                  <xsd:element name="p_line_text" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                    <xsd:annotation>
+                                      <xsd:documentation>
+                                        The text indicating the owner of the publishing rights.
+                                      </xsd:documentation>
+                                    </xsd:annotation>
+                                  </xsd:element>
+                                  <xsd:element name="p_line_year" type="year" maxOccurs="1" minOccurs="0">
+                                    <xsd:annotation>
+                                      <xsd:documentation>
+                                        The year of the publishing rights of this track.
+                                      </xsd:documentation>
+                                    </xsd:annotation>
+                                  </xsd:element>
+                                  <xsd:element name="catalog_tier" maxOccurs="1" minOccurs="0">
+                                    <xsd:annotation>
+                                      <xsd:documentation>
+                                        The catalog tier of the track
+                                      </xsd:documentation>
+                                    </xsd:annotation>
+                                    <xsd:simpleType>
+                                      <xsd:restriction base="xsd:string">
+                                        <xsd:enumeration value="FREE"></xsd:enumeration>
+                                        <xsd:enumeration value="BACK"></xsd:enumeration>
+                                        <xsd:enumeration value="MID"></xsd:enumeration>
+                                        <xsd:enumeration value="FRONT"></xsd:enumeration>
+                                      </xsd:restriction>
+                                    </xsd:simpleType>
+
+                                  </xsd:element>
+                                    <xsd:element ref="resources" maxOccurs="1" minOccurs="0">
+                                        <xsd:annotation>
+                                            <xsd:documentation>
+                                                A complex type describing physical resources made during a FUGA delivery.
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                    </xsd:element>
+                                  <xsd:element name="extra1" type="xsd:string" minOccurs="0">
+                                    <xsd:annotation>
+                                      <xsd:documentation>
+                                        An extra field
+                                      </xsd:documentation>
+                                    </xsd:annotation>
+                                  </xsd:element>
+                                  <xsd:element name="extra2" type="xsd:string" minOccurs="0">
+                                    <xsd:annotation>
+                                      <xsd:documentation>
+                                        An extra field
+                                      </xsd:documentation>
+                                    </xsd:annotation>
+                                  </xsd:element>
+                                  <xsd:element name="extra3" type="xsd:string" minOccurs="0">
+                                    <xsd:annotation>
+                                      <xsd:documentation>
+                                        An extra field
+                                      </xsd:documentation>
+                                    </xsd:annotation>
+                                  </xsd:element>
+                                  <xsd:element name="extra4" type="xsd:string" minOccurs="0">
+                                    <xsd:annotation>
+                                      <xsd:documentation>
+                                        An extra field
+                                      </xsd:documentation>
+                                    </xsd:annotation>
+                                  </xsd:element>
+                                  <xsd:element name="extra5" type="xsd:string" minOccurs="0">
+                                    <xsd:annotation>
+                                      <xsd:documentation>
+                                        An extra field
+                                      </xsd:documentation>
+                                    </xsd:annotation>
+                                  </xsd:element>
+                                  <xsd:element name="extra6" type="xsd:string" minOccurs="0">
+                                    <xsd:annotation>
+                                      <xsd:documentation>
+                                        An extra field
+                                      </xsd:documentation>
+                                    </xsd:annotation>
+                                  </xsd:element>
+                                  <xsd:element name="extra7" type="xsd:string" minOccurs="0">
+                                    <xsd:annotation>
+                                      <xsd:documentation>
+                                        An extra field
+                                      </xsd:documentation>
+                                    </xsd:annotation>
+                                  </xsd:element>
+                                  <xsd:element name="extra8" type="xsd:string" minOccurs="0">
+                                    <xsd:annotation>
+                                      <xsd:documentation>
+                                        An extra field
+                                      </xsd:documentation>
+                                    </xsd:annotation>
+                                  </xsd:element>
+                                  <xsd:element name="extra9" type="xsd:date" minOccurs="0">
+                                    <xsd:annotation>
+                                      <xsd:documentation>
+                                        An extra field
+                                      </xsd:documentation>
+                                    </xsd:annotation>
+                                  </xsd:element>
+                                  <xsd:element name="extra10" type="xsd:date" minOccurs="0">
+                                    <xsd:annotation>
+                                      <xsd:documentation>
+                                        An extra field
+                                      </xsd:documentation>
+                                    </xsd:annotation>
+                                  </xsd:element>
+                                    <xsd:element name="sequence_number"
+                                        type="xsd:nonNegativeInteger" maxOccurs="1" minOccurs="1">
+                                        <xsd:annotation>
+                                            <xsd:documentation>
+                                                The sequence number of the track within the album.
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                    </xsd:element>
+                                    <xsd:element name="track_notes" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                        <xsd:annotation>
+                                            <xsd:documentation>
+                                                Multi-line description of the track.
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                    </xsd:element>
+                                    <xsd:element name="track_version" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                        <xsd:annotation>
+                                            <xsd:documentation>
+                                                The version of the track when released in more
+                                                than one version. For example, Dance Mix or
+                                                Radio Edit.
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                    </xsd:element>
+                                    <xsd:element name="usage_rights" maxOccurs="1" minOccurs="0">
+                                      <xsd:annotation>
+                                        <xsd:documentation>
+                                          The list of the usage rights for this track.
+                                        </xsd:documentation>
+                                      </xsd:annotation>
+                                      <xsd:complexType>
+                                        <xsd:sequence>
+                                          <xsd:element name="usage_right" type="usage_right_type" maxOccurs="unbounded"/>
+                                        </xsd:sequence>
+                                      </xsd:complexType>
+                                    </xsd:element>
+                                </xsd:all>
+                            </xsd:complexType>
+                        </xsd:element>                        
+                        <xsd:element name="classical_track" >
+                            <xsd:complexType>
+                                <xsd:annotation>
+                                    <xsd:documentation>Element describing one classical track of an album.</xsd:documentation>
+                                </xsd:annotation>
+                                <xsd:all>
+                                    <xsd:element name="allow_preorder_preview" type="xsd:boolean" maxOccurs="1" minOccurs="0">
+                                        <xsd:annotation>
+                                            <xsd:documentation>
+                                                Allow previews during the pre-order period
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                    </xsd:element>
+                                    <xsd:element name="alternate_genre" type="genre_type" maxOccurs="1" minOccurs="0">
+                                        <xsd:annotation>
+                                            <xsd:documentation>
+                                                Alternate genre associated with the track. This needs to be different from the main genre.
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                    </xsd:element>
+                                    <xsd:element name="alternate_subgenre" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                        <xsd:annotation>
+                                            <xsd:documentation>
+                                                Additional qualifier to alternate genre of the track.
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                    </xsd:element>
+                                    <xsd:element name="available_separately" type="xsd:boolean" maxOccurs="1" minOccurs="1">
+                                        <xsd:annotation>
+                                            <xsd:documentation>
+                                                Set to 'true' if and only if the track may be sold as a single.
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                    </xsd:element>
+                                  <xsd:element name="classical_catalog" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                    <xsd:annotation>
+                                      <xsd:documentation>
+                                        The classical catalog designation for this track
+                                      </xsd:documentation>
+                                    </xsd:annotation>
+                                  </xsd:element>
+                                    <xsd:element name="contributors" minOccurs="0">
+                                        <xsd:annotation>
+                                            <xsd:documentation>
+                                                List of contributing artists of this track.
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                        <xsd:complexType>
+                                            <xsd:sequence>
+                                              <xsd:element ref="contributor" minOccurs="1" maxOccurs="unbounded">
+                                              </xsd:element>
+                                            </xsd:sequence>
+                                        </xsd:complexType>
+                                    </xsd:element>
+                                  <xsd:element name="display_title" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                    <xsd:annotation>
+                                      <xsd:documentation>
+                                        The optional display title. Use only if you want to override the standard one which is based on
+                                        work and movement.
+                                      </xsd:documentation>
+                                    </xsd:annotation>
+                                  </xsd:element>
+                                    <xsd:element name="isrc_code" maxOccurs="1" minOccurs="1">
+                                        <xsd:annotation>
+                                            <xsd:documentation>
+                                                The unique ISRC code assigned to the track.
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                        <xsd:simpleType>
+                                            <xsd:restriction base="xsd:string">
+                                                <xsd:pattern value="[A-Z]{2}[A-Z0-9]{3}[0-9]{7}"/>
+                                            </xsd:restriction>
+                                        </xsd:simpleType>
+                                    </xsd:element>
+                                    <xsd:element name="lyrics" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                        <xsd:annotation>
+                                            <xsd:documentation>
+                                                Multi-line lyrics.
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                    </xsd:element>
+                                    <xsd:element name="main_subgenre" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                        <xsd:annotation>
+                                            <xsd:documentation>
+                                                An additional qualifier to main genre of the track.
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                    </xsd:element>
+                                    <xsd:element name="movement" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                        <xsd:annotation>
+                                            <xsd:documentation>
+                                                The movement title of the track.
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                    </xsd:element>
+                                  <xsd:element name="movement_number"
+                                               type="xsd:nonNegativeInteger" maxOccurs="1" minOccurs="0">
+                                    <xsd:annotation>
+                                      <xsd:documentation>
+                                        The optional sequence number of the movement within the work.
+                                      </xsd:documentation>
+                                    </xsd:annotation>
+                                  </xsd:element>
+                                  <xsd:element name="key" maxOccurs="1" minOccurs="0">
+                                    <xsd:annotation>
+                                      <xsd:documentation>The key of this classical track.</xsd:documentation>
+                                    </xsd:annotation>
+                                    <xsd:simpleType>
+                                      <xsd:restriction base="xsd:string">
+                                        <xsd:enumeration value="A_MAJOR"/>
+                                        <xsd:enumeration value="A_MINOR"/>
+                                        <xsd:enumeration value="A_FLAT_MAJOR"/>
+                                        <xsd:enumeration value="B_FLAT_MAJOR"/>
+                                        <xsd:enumeration value="B_FLAT_MINOR"/>
+                                        <xsd:enumeration value="B_MAJOR"/>
+                                        <xsd:enumeration value="B_MINOR"/>
+                                        <xsd:enumeration value="C_MAJOR"/>
+                                        <xsd:enumeration value="C_MINOR"/>
+                                        <xsd:enumeration value="C_SHARP_MINOR"/>
+                                        <xsd:enumeration value="D_MAJOR"/>
+                                        <xsd:enumeration value="D_MINOR"/>
+                                        <xsd:enumeration value="D_SHARP_MINOR"/>
+                                        <xsd:enumeration value="D_FLAT_MAJOR"/>
+                                        <xsd:enumeration value="E_FLAT_MAJOR"/>
+                                        <xsd:enumeration value="E_FLAT_MINOR"/>
+                                        <xsd:enumeration value="E_MAJOR"/>
+                                        <xsd:enumeration value="E_MINOR"/>
+                                        <xsd:enumeration value="F_MAJOR"/>
+                                        <xsd:enumeration value="F_MINOR"/>
+                                        <xsd:enumeration value="F_SHARP_MAJOR"/>
+                                        <xsd:enumeration value="F_SHARP_MINOR"/>
+                                        <xsd:enumeration value="G_MAJOR"/>
+                                        <xsd:enumeration value="G_MINOR"/>
+                                        <xsd:enumeration value="G_FLAT_MAJOR"/>
+                                        <xsd:enumeration value="G_SHARP_MINOR"/>
+                                      </xsd:restriction>
+                                    </xsd:simpleType>
+                                  </xsd:element>
+                                  <xsd:element name="always_send_display_title" type="xsd:boolean" maxOccurs="1" minOccurs="0">
+                                    <xsd:annotation>
+                                      <xsd:documentation>
+                                        When set to true; the work and movement information will not be sent as separated entities, default; false
+                                      </xsd:documentation>
+                                    </xsd:annotation>
+                                  </xsd:element>
+                                  <xsd:element name="on_disc" type="xsd:nonNegativeInteger" maxOccurs="1" minOccurs="1">
+                                    <xsd:annotation>
+                                        <xsd:documentation>
+                                            Indicates on which disc this track is located on.
+                                        </xsd:documentation>
+                                    </xsd:annotation>
+                                  </xsd:element>
+                                    <xsd:element ref="parental_advisory" maxOccurs="1" minOccurs="1">
+                                        <xsd:annotation>
+                                            <xsd:documentation>
+                                                Set to 'true' if the track contains sensitive content.
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                    </xsd:element>
+                                    <xsd:element ref="preorder_type" maxOccurs="1" minOccurs="0">
+                                        <xsd:annotation>
+                                            <xsd:documentation>
+                                                Designates the pre-order type. See the documentation of this type for more info.
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                    </xsd:element>
+                                    <xsd:element name="preview_length"
+                                        type="xsd:nonNegativeInteger" maxOccurs="1" minOccurs="0">
+                                        <xsd:annotation>
+                                            <xsd:documentation>
+                                                The duration of the preview given in seconds.
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                    </xsd:element>
+                                    <xsd:element name="preview_start"
+                                        type="xsd:nonNegativeInteger" maxOccurs="1" minOccurs="0">
+                                        <xsd:annotation>
+                                            <xsd:documentation>
+                                                The number of seconds into the track at which to
+                                                start the preview.
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                    </xsd:element>
+                                    <xsd:element ref="primary_artist" maxOccurs="1" minOccurs="1">
+                                        <xsd:annotation>
+                                            <xsd:documentation>
+                                                Details of the primary artist for this track.
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                    </xsd:element>
+      							<xsd:element name="additional_artists" minOccurs="0" maxOccurs="1">
+      				                <xsd:annotation>
+      				                    <xsd:documentation>
+      				                        An element containing any additional artists (primary or featuring).
+      				                    </xsd:documentation>
+      				                </xsd:annotation>
+      								<xsd:complexType>
+      				                    <xsd:sequence>
+      				                        <xsd:element ref="artist" maxOccurs="unbounded" />
+      				            		</xsd:sequence>
+      								</xsd:complexType>
+      							</xsd:element>
+                                    <xsd:element name="publishers" maxOccurs="1" minOccurs="0">
+                                        <xsd:annotation>
+                                            <xsd:documentation>
+                                                List of publishers of this track.
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                        <xsd:complexType>
+                                            <xsd:sequence minOccurs="0">
+                                                <xsd:element ref="publisher" maxOccurs="unbounded"/>
+                                            </xsd:sequence>
+                                        </xsd:complexType>
+                                    </xsd:element>
+                                    <xsd:element name="recording_year" type="year" minOccurs="0" maxOccurs="1">
+                                        <xsd:annotation>
+                                            <xsd:documentation>
+                                                The recording year for the track.
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                    </xsd:element>
+                                    <xsd:element ref="recording_location" maxOccurs="1" minOccurs="0">
+                                        <xsd:annotation>
+                                            <xsd:documentation>
+                                                The recording location for the track.
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                    </xsd:element>
+                                    <xsd:element name="redeliveries_of_associated" type="redeliveries_type" maxOccurs="1" minOccurs="0">
+                                      <xsd:annotation>
+                                        <xsd:documentation>
+                                          An element containing details about whether other products associated with this track 
+                                          should be redelivered and to which organizations.
+                                          Only valid for an update.
+                                        </xsd:documentation>
+                                      </xsd:annotation>
+                                    </xsd:element>
+                                  <xsd:element name="rights_contract_begin_date" type="xsd:date" maxOccurs="1" minOccurs="0">
+                                    <xsd:annotation>
+                                      <xsd:documentation>
+                                        The date at which the rights to the track began.
+                                      </xsd:documentation>
+                                    </xsd:annotation>
+                                  </xsd:element>
+                                  <xsd:element name="rights_holder_name" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                    <xsd:annotation>
+                                      <xsd:documentation>
+                                        The name of the party that exclusively control the rights to the track.
+                                      </xsd:documentation>
+                                    </xsd:annotation>
+                                  </xsd:element>
+                                  <xsd:element name="rights_ownership_name" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                    <xsd:annotation>
+                                      <xsd:documentation>
+                                        The name of the party that own the rights to the track.
+                                      </xsd:documentation>
+                                    </xsd:annotation>
+                                  </xsd:element>
+                                  <xsd:element name="country_of_commissioning" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                    <xsd:annotation>
+                                      <xsd:documentation>
+                                        The country in which the Original Copyright Owner (the party that made the recording of the track) is principally established.
+                                      </xsd:documentation>
+                                    </xsd:annotation>
+                                  </xsd:element>
+                                  <xsd:element name="country_of_recording" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                    <xsd:annotation>
+                                      <xsd:documentation>
+                                        The name of the country the  track was recorded in.
+                                      </xsd:documentation>
+                                    </xsd:annotation>
+                                  </xsd:element>
+                                  <xsd:element name="p_line_text" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                    <xsd:annotation>
+                                      <xsd:documentation>
+                                        The text indicating the owner of the publishing rights.
+                                      </xsd:documentation>
+                                    </xsd:annotation>
+                                  </xsd:element>
+                                  <xsd:element name="p_line_year" type="year" maxOccurs="1" minOccurs="0">
+                                    <xsd:annotation>
+                                      <xsd:documentation>
+                                        The year of the publishing rights of this track.
+                                      </xsd:documentation>
+                                    </xsd:annotation>
+                                  </xsd:element>
+                                  <xsd:element name="catalog_tier" maxOccurs="1" minOccurs="0">
+                                    <xsd:annotation>
+                                      <xsd:documentation>
+                                        The catalog tier of the track
+                                      </xsd:documentation>
+                                    </xsd:annotation>
+                                    <xsd:simpleType>
+                                      <xsd:restriction base="xsd:string">
+                                        <xsd:enumeration value="FREE"></xsd:enumeration>
+                                        <xsd:enumeration value="BACK"></xsd:enumeration>
+                                        <xsd:enumeration value="MID"></xsd:enumeration>
+                                        <xsd:enumeration value="FRONT"></xsd:enumeration>
+                                      </xsd:restriction>
+                                    </xsd:simpleType>
+
+                                  </xsd:element>
+                                  <xsd:element name="extra1" type="xsd:string" minOccurs="0">
+                                    <xsd:annotation>
+                                      <xsd:documentation>
+                                        An extra field
+                                      </xsd:documentation>
+                                    </xsd:annotation>
+                                  </xsd:element>
+                                  <xsd:element name="extra2" type="xsd:string" minOccurs="0">
+                                    <xsd:annotation>
+                                      <xsd:documentation>
+                                        An extra field
+                                      </xsd:documentation>
+                                    </xsd:annotation>
+                                  </xsd:element>
+                                  <xsd:element name="extra3" type="xsd:string" minOccurs="0">
+                                    <xsd:annotation>
+                                      <xsd:documentation>
+                                        An extra field
+                                      </xsd:documentation>
+                                    </xsd:annotation>
+                                  </xsd:element>
+                                  <xsd:element name="extra4" type="xsd:string" minOccurs="0">
+                                    <xsd:annotation>
+                                      <xsd:documentation>
+                                        An extra field
+                                      </xsd:documentation>
+                                    </xsd:annotation>
+                                  </xsd:element>
+                                  <xsd:element name="extra5" type="xsd:string" minOccurs="0">
+                                    <xsd:annotation>
+                                      <xsd:documentation>
+                                        An extra field
+                                      </xsd:documentation>
+                                    </xsd:annotation>
+                                  </xsd:element>
+                                  <xsd:element name="extra6" type="xsd:string" minOccurs="0">
+                                    <xsd:annotation>
+                                      <xsd:documentation>
+                                        An extra field
+                                      </xsd:documentation>
+                                    </xsd:annotation>
+                                  </xsd:element>
+                                  <xsd:element name="extra7" type="xsd:string" minOccurs="0">
+                                    <xsd:annotation>
+                                      <xsd:documentation>
+                                        An extra field
+                                      </xsd:documentation>
+                                    </xsd:annotation>
+                                  </xsd:element>
+                                  <xsd:element name="extra8" type="xsd:string" minOccurs="0">
+                                    <xsd:annotation>
+                                      <xsd:documentation>
+                                        An extra field
+                                      </xsd:documentation>
+                                    </xsd:annotation>
+                                  </xsd:element>
+                                  <xsd:element name="extra9" type="xsd:date" minOccurs="0">
+                                    <xsd:annotation>
+                                      <xsd:documentation>
+                                        An extra field
+                                      </xsd:documentation>
+                                    </xsd:annotation>
+                                  </xsd:element>
+                                  <xsd:element name="extra10" type="xsd:date" minOccurs="0">
+                                    <xsd:annotation>
+                                      <xsd:documentation>
+                                        An extra field
+                                      </xsd:documentation>
+                                    </xsd:annotation>
+                                  </xsd:element>
+                                    <xsd:element ref="resources" maxOccurs="1" minOccurs="0">
+                                        <xsd:annotation>
+                                            <xsd:documentation>
+                                                A complex type describing physical resources made during a FUGA delivery.
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                    </xsd:element>
+                                    <xsd:element name="sequence_number"
+                                        type="xsd:nonNegativeInteger" maxOccurs="1" minOccurs="1">
+                                        <xsd:annotation>
+                                            <xsd:documentation>
+                                                The sequence number of the track within the album.
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                    </xsd:element>
+                                    <xsd:element name="track_notes" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                        <xsd:annotation>
+                                            <xsd:documentation>
+                                                Multi-line description of the track.
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                    </xsd:element>
+                                    <xsd:element name="track_version" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                        <xsd:annotation>
+                                            <xsd:documentation>
+                                                The version of the track when released in more
+                                                than one version. For example, Dance Mix or
+                                                Radio Edit.
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                    </xsd:element>
+                                    <xsd:element name="usage_rights" maxOccurs="1" minOccurs="0">
+                                      <xsd:annotation>
+                                        <xsd:documentation>
+                                          The list of the usage rights for this track.
+                                        </xsd:documentation>
+                                      </xsd:annotation>
+                                      <xsd:complexType>
+                                        <xsd:sequence>
+                                          <xsd:element name="usage_right" type="usage_right_type" maxOccurs="unbounded"/>
+                                        </xsd:sequence>
+                                      </xsd:complexType>
+                                    </xsd:element>
+                              <xsd:element name="work" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                <xsd:annotation>
+                                  <xsd:documentation>
+                                    The title of the work the track belongs to.
+                                  </xsd:documentation>
+                                </xsd:annotation>
+                              </xsd:element>
+                            </xsd:all>
+                        </xsd:complexType>
+                        </xsd:element>
+                              <xsd:element name="video" maxOccurs="unbounded">
+                                  <xsd:complexType>
+                                      <xsd:annotation>
+                                          <xsd:documentation>Element describing a video of an album.</xsd:documentation>
+                                      </xsd:annotation>
+                                      <xsd:all>
+                                          <xsd:element name="name" type="xsd:string" maxOccurs="1" minOccurs="1">
+                                              <xsd:annotation>
+                                                  <xsd:documentation>
+                                                      The name of the video.
+                                                  </xsd:documentation>
+                                              </xsd:annotation>
+                                          </xsd:element>
+                                          <xsd:element name="isrc_code" maxOccurs="1" minOccurs="1">
+                                              <xsd:annotation>
+                                                  <xsd:documentation>
+                                                      The unique ISRC code assigned to the video.
+                                                  </xsd:documentation>
+                                              </xsd:annotation>
+                                              <xsd:simpleType>
+                                                  <xsd:restriction base="xsd:string">
+                                                      <xsd:pattern value="[A-Z]{2}[A-Z0-9]{3}[0-9]{7}"/>
+                                                  </xsd:restriction>
+                                              </xsd:simpleType>
+                                          </xsd:element>
+                                          <xsd:element name="main_genre" type="genre_type" maxOccurs="1" minOccurs="1">
+                                              <xsd:annotation>
+                                                  <xsd:documentation>
+                                                      Main genre of the video.
+                                                  </xsd:documentation>
+                                              </xsd:annotation>
+                                          </xsd:element>
+                                          <xsd:element ref="primary_artist" maxOccurs="1" minOccurs="1">
+                                              <xsd:annotation>
+                                                  <xsd:documentation>
+                                                      Details of the primary artist for this video.
+                                                  </xsd:documentation>
+                                              </xsd:annotation>
+                                          </xsd:element>
+                                          <xsd:element name="additional_artists" minOccurs="0" maxOccurs="1">
+                                              <xsd:annotation>
+                                                  <xsd:documentation>
+                                                      An element containing any additional artists (primary or featuring) of this video.
+                                                  </xsd:documentation>
+                                              </xsd:annotation>
+                                              <xsd:complexType>
+                                                  <xsd:sequence>
+                                                      <xsd:element ref="artist" maxOccurs="unbounded" />
+                                                  </xsd:sequence>
+                                              </xsd:complexType>
+                                          </xsd:element>
+                                          <xsd:element name="display_artist" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                              <xsd:annotation>
+                                                  <xsd:documentation>
+                                                      The display artist, only to be used for non-standard display artists like 'A vs. B'
+                                                  </xsd:documentation>
+                                              </xsd:annotation>
+                                          </xsd:element>
+                                          <xsd:element name="contributors" minOccurs="0">
+                                              <xsd:annotation>
+                                                  <xsd:documentation>
+                                                      List of contributing artists of this video.
+                                                  </xsd:documentation>
+                                              </xsd:annotation>
+                                              <xsd:complexType>
+                                                  <xsd:sequence>
+                                                      <xsd:element ref="contributor" minOccurs="1" maxOccurs="unbounded"/>
+                                                  </xsd:sequence>
+                                              </xsd:complexType>
+                                          </xsd:element>
+                                          <xsd:element name="sequence_number" type="xsd:nonNegativeInteger" maxOccurs="1" minOccurs="1">
+                                              <xsd:annotation>
+                                                  <xsd:documentation>
+                                                      The sequence number of the video within the album.
+                                                  </xsd:documentation>
+                                              </xsd:annotation>
+                                          </xsd:element>
+                                          <xsd:element name="video_version" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                              <xsd:annotation>
+                                                  <xsd:documentation>
+                                                      The version of the video when released in more than one version.
+                                                  </xsd:documentation>
+                                              </xsd:annotation>
+                                          </xsd:element>
+                                          <xsd:element name="catalog_tier" maxOccurs="1" minOccurs="0">
+                                              <xsd:annotation>
+                                                  <xsd:documentation>
+                                                      The catalog tier of the video.
+                                                  </xsd:documentation>
+                                              </xsd:annotation>
+                                              <xsd:simpleType>
+                                                  <xsd:restriction base="xsd:string">
+                                                      <xsd:enumeration value="FREE"></xsd:enumeration>
+                                                      <xsd:enumeration value="BACK"></xsd:enumeration>
+                                                      <xsd:enumeration value="MID"></xsd:enumeration>
+                                                      <xsd:enumeration value="FRONT"></xsd:enumeration>
+                                                  </xsd:restriction>
+                                              </xsd:simpleType>
+                                          </xsd:element>
+                                          <xsd:element name="on_disc" type="xsd:nonNegativeInteger" maxOccurs="1" minOccurs="1">
+                                              <xsd:annotation>
+                                                  <xsd:documentation>
+                                                      Indicates on which disc this video is located on.
+                                                  </xsd:documentation>
+                                              </xsd:annotation>
+                                          </xsd:element>
+                                          <xsd:element name="available_separately" type="xsd:boolean" maxOccurs="1" minOccurs="1">
+                                              <xsd:annotation>
+                                                  <xsd:documentation>
+                                                      Set to 'true' if the video may be sold separately.
+                                                  </xsd:documentation>
+                                              </xsd:annotation>
+                                          </xsd:element>
+                                          <xsd:element ref="parental_advisory" maxOccurs="1" minOccurs="0">
+                                              <xsd:annotation>
+                                                  <xsd:documentation>
+                                                      Set to 'true' if the video has sensitive content.
+                                                  </xsd:documentation>
+                                              </xsd:annotation>
+                                          </xsd:element>
+                                          <xsd:element name="p_line_text" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                              <xsd:annotation>
+                                                  <xsd:documentation>
+                                                      The text indicating the owner of the publishing rights.
+                                                  </xsd:documentation>
+                                              </xsd:annotation>
+                                          </xsd:element>
+                                          <xsd:element name="p_line_year" type="year" maxOccurs="1" minOccurs="0">
+                                              <xsd:annotation>
+                                                  <xsd:documentation>
+                                                      The year of the publishing rights of this video.
+                                                  </xsd:documentation>
+                                              </xsd:annotation>
+                                          </xsd:element>
+                                          <xsd:element name="publishers" maxOccurs="1" minOccurs="0">
+                                              <xsd:annotation>
+                                                  <xsd:documentation>
+                                                      List of publishers of this video.
+                                                  </xsd:documentation>
+                                              </xsd:annotation>
+                                              <xsd:complexType>
+                                                  <xsd:sequence>
+                                                      <xsd:element ref="publisher" maxOccurs="unbounded"/>
+                                                  </xsd:sequence>
+                                              </xsd:complexType>
+                                          </xsd:element>
+                                          <xsd:element ref="preorder_type" maxOccurs="1" minOccurs="0">
+                                              <xsd:annotation>
+                                                  <xsd:documentation>
+                                                      Designates the pre-order type. See the documentation of this type for more info.
+                                                  </xsd:documentation>
+                                              </xsd:annotation>
+                                          </xsd:element>
+                                          <xsd:element name="allow_preorder_preview" type="xsd:boolean" maxOccurs="1" minOccurs="0">
+                                              <xsd:annotation>
+                                                  <xsd:documentation>
+                                                      Allow previews during the pre-order period.
+                                                  </xsd:documentation>
+                                              </xsd:annotation>
+                                          </xsd:element>
+                                          <xsd:element name="recording_year" type="year" minOccurs="0" maxOccurs="1">
+                                              <xsd:annotation>
+                                                  <xsd:documentation>
+                                                      The recording year for the video.
+                                                  </xsd:documentation>
+                                              </xsd:annotation>
+                                          </xsd:element>
+                                          <xsd:element ref="recording_location" maxOccurs="1" minOccurs="0">
+                                              <xsd:annotation>
+                                                  <xsd:documentation>
+                                                      The recording location for the video.
+                                                  </xsd:documentation>
+                                              </xsd:annotation>
+                                          </xsd:element>
+                                          <xsd:element name="rights_contract_begin_date" type="xsd:date" maxOccurs="1" minOccurs="0">
+                                              <xsd:annotation>
+                                                  <xsd:documentation>
+                                                      The date at which the rights to the video began.
+                                                  </xsd:documentation>
+                                              </xsd:annotation>
+                                          </xsd:element>
+                                          <xsd:element name="rights_holder_name" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                              <xsd:annotation>
+                                                  <xsd:documentation>
+                                                      The name of the party that exclusively control the rights to the video.
+                                                  </xsd:documentation>
+                                              </xsd:annotation>
+                                          </xsd:element>
+                                          <xsd:element name="rights_ownership_name" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                              <xsd:annotation>
+                                                  <xsd:documentation>
+                                                      The name of the party that own the rights to the video.
+                                                  </xsd:documentation>
+                                              </xsd:annotation>
+                                          </xsd:element>
+                                          <xsd:element name="country_of_commissioning" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                              <xsd:annotation>
+                                                  <xsd:documentation>
+                                                      The country in which the Original Copyright Owner (the party that made the recording of the video) is principally established.
+                                                  </xsd:documentation>
+                                              </xsd:annotation>
+                                          </xsd:element>
+                                          <xsd:element name="country_of_recording" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                              <xsd:annotation>
+                                                  <xsd:documentation>
+                                                      The name of the country the video was recorded in.
+                                                  </xsd:documentation>
+                                              </xsd:annotation>
+                                          </xsd:element>
+                                          <xsd:element name="preview_length" type="xsd:nonNegativeInteger" maxOccurs="1" minOccurs="0">
+                                              <xsd:annotation>
+                                                  <xsd:documentation>
+                                                      The duration of the preview given in seconds.
+                                                  </xsd:documentation>
+                                              </xsd:annotation>
+                                          </xsd:element>
+                                          <xsd:element name="preview_start" type="xsd:nonNegativeInteger" maxOccurs="1" minOccurs="0">
+                                              <xsd:annotation>
+                                                  <xsd:documentation>
+                                                      The number of seconds into the video at which to start the preview.
+                                                  </xsd:documentation>
+                                              </xsd:annotation>
+                                          </xsd:element>
+                                          <xsd:element name="resources" maxOccurs="1" minOccurs="0">
+                                              <xsd:annotation>
+                                                  <xsd:documentation>
+                                                      A complex type describing physical resources to be associated with this video.
+                                                  </xsd:documentation>
+                                              </xsd:annotation>
+                                              <xsd:complexType>
+                                                  <xsd:all>
+                                                      <xsd:element name="video" maxOccurs="1" minOccurs="0">
+                                                          <xsd:complexType>
+                                                              <xsd:annotation>
+                                                                  <xsd:documentation>Details of a video file.</xsd:documentation>
+                                                              </xsd:annotation>
+                                                              <xsd:all>
+                                                                  <xsd:element name="file" type="file_type" maxOccurs="1" minOccurs="1"/>
+                                                              </xsd:all>
+                                                          </xsd:complexType>
+                                                      </xsd:element>
+                                                      <xsd:element name="video_preview_image" maxOccurs="1" minOccurs="0">
+                                                          <xsd:complexType>
+                                                              <xsd:annotation>
+                                                                  <xsd:documentation>Details of the video file preview image.</xsd:documentation>
+                                                              </xsd:annotation>
+                                                              <xsd:all>
+                                                                  <xsd:element name="file" type="file_type" maxOccurs="1" minOccurs="1"/>
+                                                              </xsd:all>
+                                                          </xsd:complexType>
+                                                      </xsd:element>
+                                                  </xsd:all>
+                                              </xsd:complexType>
+                                          </xsd:element>
+                                          <xsd:element name="submit_itunes_video_encoding" type="xsd:boolean" maxOccurs="1" minOccurs="0">
+                                              <xsd:annotation>
+                                                  <xsd:documentation>
+                                                      Set to 'true' if the video should be submitted to iTunes for encoding.
+                                                  </xsd:documentation>
+                                              </xsd:annotation>
+                                          </xsd:element>
+                                      </xsd:all>
+                                  </xsd:complexType>
+                              </xsd:element>
+                          </xsd:choice>
+                        </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="upc_code" maxOccurs="1" minOccurs="1">
+                <xsd:annotation>
+                        <xsd:documentation>
+                            The UPC or EAN code assigned to the album.
+                        </xsd:documentation>
+                    </xsd:annotation>
+      			<xsd:simpleType>
+      				<xsd:restriction base="xsd:string">
+      					<xsd:minLength value="12" />
+      					<xsd:maxLength value="13" />
+      				</xsd:restriction>
+      			</xsd:simpleType>
+                </xsd:element>
+      					<xsd:element ref="schedule" maxOccurs="1" minOccurs="0">
+      							<xsd:annotation>
+      									<xsd:documentation>
+      											Publishing and Delivery scheduling data
+      									</xsd:documentation>
+      							</xsd:annotation>
+      					</xsd:element>
+                <xsd:element name="usage_rights" maxOccurs="1" minOccurs="0">
+                  <xsd:annotation>
+                    <xsd:documentation>
+                      The list of the usage rights for this product.
+                    </xsd:documentation>
+                  </xsd:annotation>
+                  <xsd:complexType>
+                    <xsd:sequence>
+                      <xsd:element name="usage_right" type="usage_right_type" maxOccurs="unbounded"/>
+                    </xsd:sequence>
+                  </xsd:complexType>
+                </xsd:element>
+            </xsd:all>            
+          </xsd:complexType>
+        </xsd:element>        
+      </xsd:all>
+      <xsd:attribute name="noNamespaceSchemaLocation" type="xsd:string" />
+    </xsd:complexType>
+  </xsd:element>
+  
+  <!-- Type definitions follow -->
+    <xsd:element name="schedule">
+      <xsd:complexType>
+          <xsd:annotation>
+              <xsd:documentation>Data to specify automatic delivery.</xsd:documentation>
+          </xsd:annotation>
+          <xsd:all>
+              <xsd:element name="consumer_release_date" type="xsd:date" minOccurs="1" maxOccurs="1">
+                  <xsd:annotation>
+                      <xsd:documentation>The product's release date.</xsd:documentation>
+                  </xsd:annotation>
+              </xsd:element>
+            <xsd:element name="preorder_date" type="xsd:date" maxOccurs="1" minOccurs="0">
+              <xsd:annotation>
+                <xsd:documentation>The preorder date that should be set for this product</xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+              <xsd:element name="deliver_by_default" type="xsd:boolean" minOccurs="0" maxOccurs="1">
+                  <xsd:annotation>
+                      <xsd:documentation>Wether or not the product should be delivered to all connected DSPs by default.</xsd:documentation>
+                  </xsd:annotation>
+              </xsd:element>
+              <xsd:element name="activate" type="xsd:boolean" minOccurs="0" maxOccurs="1">
+                  <xsd:annotation>
+                      <xsd:documentation>When set to true, this will immediately activate the schedule for delivery after successful ingestion.</xsd:documentation>
+                  </xsd:annotation>
+              </xsd:element>
+              <xsd:element name="deliveries" maxOccurs="1" minOccurs="0">
+                  <xsd:annotation>
+                      <xsd:documentation>
+                          The list of DSPs to deliver to.
+                      </xsd:documentation>
+                  </xsd:annotation>
+                  <xsd:complexType>
+                      <xsd:sequence>
+                          <xsd:element name="delivery" maxOccurs="unbounded">
+                              <xsd:complexType>
+                                  <xsd:annotation>
+                                      <xsd:documentation>Meta-data for delivery to a specific DSP.</xsd:documentation>
+                                  </xsd:annotation>
+                                  <xsd:all>
+                                      <xsd:element name="consumer_release_date" type="xsd:date" maxOccurs="1" minOccurs="0" />
+                                      <xsd:element name="lead_time" minOccurs="0">
+                                          <xsd:simpleType>
+                                              <xsd:restriction base="xsd:string">
+                                                  <xsd:enumeration value="NEVER_DELIVER"></xsd:enumeration>
+                                                  <xsd:enumeration value="IMMEDIATELY"></xsd:enumeration>
+                                                  <xsd:enumeration value="ZERO_DAYS"></xsd:enumeration>
+                                                  <xsd:enumeration value="ONE_DAY"></xsd:enumeration>
+                                                  <xsd:enumeration value="TWO_DAYS"></xsd:enumeration>
+                                                  <xsd:enumeration value="ONE_WEEK"></xsd:enumeration>
+                                                  <xsd:enumeration value="TWO_WEEKS"></xsd:enumeration>
+                                                  <xsd:enumeration value="THREE_WEEKS"></xsd:enumeration>
+                                                  <xsd:enumeration value="FOUR_WEEKS"></xsd:enumeration>
+                                              </xsd:restriction>
+                                          </xsd:simpleType>
+                                      </xsd:element>
+                                      <xsd:element name="organization" type="organization_type" minOccurs="1" maxOccurs="1"/>                                      
+                                  </xsd:all>
+                              </xsd:complexType>
+                          </xsd:element>
+                      </xsd:sequence>
+                  </xsd:complexType>
+              </xsd:element>
+              <xsd:element name="exclusions" maxOccurs="1" minOccurs="0">
+                  <xsd:annotation>
+                      <xsd:documentation>
+                          The list of DSPs to exclude from delivery.
+                      </xsd:documentation>
+                  </xsd:annotation>
+                  <xsd:complexType>
+                      <xsd:sequence>
+                          <xsd:element name="exclusion" maxOccurs="unbounded">
+                              <xsd:complexType>
+                                  <xsd:annotation>
+                                      <xsd:documentation>Meta-data to exclude a specific DSP from delivery.</xsd:documentation>
+                                  </xsd:annotation>
+                                  <xsd:all>
+                                    <xsd:element name="organization" type="organization_type" minOccurs="1" maxOccurs="1"/>                                      
+                                  </xsd:all>
+                              </xsd:complexType>
+                          </xsd:element>
+                      </xsd:sequence>
+                  </xsd:complexType>
+              </xsd:element>
+              <xsd:element name="territory_release_dates" maxOccurs="1" minOccurs="0">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    The list of territory based release dates for this product.
+                  </xsd:documentation>
+                </xsd:annotation>
+                <xsd:complexType>
+                  <xsd:sequence>
+                    <xsd:element name="territory_release_date" type="territory_release_date_type" maxOccurs="unbounded"/>
+                  </xsd:sequence>
+                </xsd:complexType>
+              </xsd:element>
+          </xsd:all>
+      </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="primary_artist">
+        <xsd:complexType>
+            <xsd:annotation>
+                <xsd:documentation>Details of an artist.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:all>
+                <xsd:element name="biography" type="xsd:string" minOccurs="0">
+                    <xsd:annotation>
+                        <xsd:documentation>Multi-line text describing the artist.</xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="name">
+                    <xsd:annotation>
+                        <xsd:documentation>The artist's name.</xsd:documentation>
+                    </xsd:annotation>
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:string">
+							<xsd:minLength value="1" />
+						</xsd:restriction>
+					</xsd:simpleType>
+                </xsd:element>
+                <xsd:element name="website" type="xsd:string" minOccurs="0">
+                    <xsd:annotation>
+                        <xsd:documentation>A consumer oriented website related to the artist.</xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+            </xsd:all>
+        </xsd:complexType>
+    </xsd:element>
+
+	<xsd:element name="artist">
+        <xsd:complexType>
+            <xsd:annotation>
+                <xsd:documentation>Details of an artist.</xsd:documentation>
+            </xsd:annotation>
+            <xsd:all>
+                <xsd:element name="biography" type="xsd:string" minOccurs="0">
+                    <xsd:annotation>
+                        <xsd:documentation>Multi-line text describing the artist.</xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="name">
+                    <xsd:annotation>
+                        <xsd:documentation>The artist's name.</xsd:documentation>
+                    </xsd:annotation>
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:string">
+							<xsd:minLength value="1" />
+						</xsd:restriction>
+					</xsd:simpleType>
+                </xsd:element>
+                <xsd:element name="website" type="xsd:string" minOccurs="0">
+                    <xsd:annotation>
+                        <xsd:documentation>A consumer oriented website related to the artist.</xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+				<xsd:element name="primary_artist" type="xsd:boolean" minOccurs="1" maxOccurs="1">
+					<xsd:annotation>
+                        <xsd:documentation>If set to 'true' this is a primary artist, featuring otherwise.</xsd:documentation>
+                    </xsd:annotation>
+				</xsd:element>
+            </xsd:all>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:simpleType name="genre_type">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="Alternative"></xsd:enumeration>
+            <xsd:enumeration value="Audiobooks"></xsd:enumeration>
+            <xsd:enumeration value="Blues"></xsd:enumeration>
+            <xsd:enumeration value="Children's Music"></xsd:enumeration>
+            <xsd:enumeration value="Classical"></xsd:enumeration>
+            <xsd:enumeration value="Comedy"></xsd:enumeration>
+            <xsd:enumeration value="Country"></xsd:enumeration>
+            <xsd:enumeration value="Dance"></xsd:enumeration>
+            <xsd:enumeration value="Electronic"></xsd:enumeration>
+            <xsd:enumeration value="Folk"></xsd:enumeration>
+            <xsd:enumeration value="Hip Hop/Rap"></xsd:enumeration>
+            <xsd:enumeration value="Holiday"></xsd:enumeration>
+            <xsd:enumeration value="Inspirational"></xsd:enumeration>
+            <xsd:enumeration value="Jazz"></xsd:enumeration>
+            <xsd:enumeration value="Latin"></xsd:enumeration>
+            <xsd:enumeration value="New Age"></xsd:enumeration>
+            <xsd:enumeration value="Opera"></xsd:enumeration>
+            <xsd:enumeration value="Pop"></xsd:enumeration>
+            <xsd:enumeration value="Rock"></xsd:enumeration>
+            <xsd:enumeration value="R&amp;B/Soul"></xsd:enumeration>
+            <xsd:enumeration value="Reggae"></xsd:enumeration>
+            <xsd:enumeration value="Soundtrack"></xsd:enumeration>
+            <xsd:enumeration value="Spoken Word"></xsd:enumeration>
+            <xsd:enumeration value="Vocal"></xsd:enumeration>
+            <xsd:enumeration value="World"></xsd:enumeration>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="year">
+        <xsd:annotation>
+            <xsd:documentation>The definition of a year.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:integer">
+            <xsd:minInclusive value="1900"/>
+            <xsd:maxInclusive value="2099"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:element name="recording_location">
+		<xsd:annotation>
+            <xsd:documentation>The definition of a recording location.</xsd:documentation>
+        </xsd:annotation>
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:minLength value="1" />
+			</xsd:restriction>
+	    </xsd:simpleType>
+    </xsd:element>
+    <xsd:element name="resources">
+        <xsd:annotation>
+            <xsd:documentation>
+                A complex type describing physical resources made during a FUGA delivery.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence maxOccurs="unbounded" minOccurs="0">
+                <xsd:element name="audio" maxOccurs="unbounded" minOccurs="0">
+                    <xsd:complexType>
+                        <xsd:annotation>
+                            <xsd:documentation>Details of an audio file.</xsd:documentation>
+                        </xsd:annotation>
+                        <xsd:sequence>
+                            <xsd:element name="file" type="file_type" maxOccurs="1" minOccurs="1"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>            
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:complexType name="file_type">
+        <xsd:annotation>
+            <xsd:documentation>
+                Details of a physical file.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence maxOccurs="1" minOccurs="1">
+            <xsd:element name="name" type="xsd:string" maxOccurs="1" minOccurs="1">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        This is the file name.
+                    </xsd:documentation>
+                </xsd:annotation></xsd:element>
+            <xsd:element name="crc32_checksum" type="xsd:string" maxOccurs="1" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        A CRC32 checksum so the receiver of the file can
+                        verify that the file is unchanged after network
+                        transfer. Note that the checksum is, at time of writing, not checked by Fuga.
+                    </xsd:documentation>
+                </xsd:annotation></xsd:element>
+            <xsd:element name="size" type="xsd:unsignedLong" maxOccurs="1" minOccurs="1">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        The size in bytes of the file.
+                    </xsd:documentation>
+                </xsd:annotation></xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="organization_type">
+        <xsd:choice>
+            <xsd:element name="id" type="xsd:integer">
+              <xsd:annotation>
+                  <xsd:documentation>
+                      This is the ID of the organization in fuga, not to confuse with the contract ID.
+                  </xsd:documentation>
+              </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="name" type="xsd:string" />
+        </xsd:choice>
+    </xsd:complexType>
+    <xsd:complexType name="redeliveries_type">
+      <xsd:annotation>
+        <xsd:documentation>
+          An element containing details about whether the item should be redelivered and to which organizations.
+          Only valid for an update.
+        </xsd:documentation>
+      </xsd:annotation>
+      <xsd:all>
+        <xsd:element name="redeliver" type="xsd:boolean" maxOccurs="1" minOccurs="1">
+          <xsd:annotation>
+            <xsd:documentation>
+              Set to true if this product should be redelivered after an update.
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="only_to_organizations" maxOccurs="1" minOccurs="0">
+          <xsd:complexType>
+            <xsd:annotation>
+              <xsd:documentation>
+                Only redeliver to organizations in this list. Will redeliver to all if this element is missing.
+              </xsd:documentation>
+            </xsd:annotation>
+            <xsd:sequence>
+              <xsd:element name="organization" type="organization_type" maxOccurs="unbounded" minOccurs="1"/>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:all>
+    </xsd:complexType>
+    <xsd:complexType name="pricing_type">
+      <xsd:annotation>
+        <xsd:documentation>Element describing one pricing schema.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:all>
+        <xsd:element name="organization" type="organization_type" maxOccurs="1" minOccurs="1">
+          <xsd:annotation>
+            <xsd:documentation>The DSP organization this pricing is for.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="territory" type="iso3166a2:territory_code" maxOccurs="1" minOccurs="1">
+          <xsd:annotation>
+            <xsd:documentation>The territory where to apply this pricing. -- Note; the territory AN is obsolete.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="tier" type="xsd:string" maxOccurs="1" minOccurs="0">
+          <xsd:annotation>
+            <xsd:documentation>The tier of this pricing.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="price" type="xsd:double" maxOccurs="1" minOccurs="0">
+          <xsd:annotation>
+            <xsd:documentation>The wholesale price.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+      </xsd:all>
+    </xsd:complexType>
+    <xsd:complexType name="pricing_interval_type">
+      <xsd:annotation>
+        <xsd:documentation>Element describing one pricing interval.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:all>
+        <xsd:element name="organization" type="organization_type" maxOccurs="1" minOccurs="1">
+          <xsd:annotation>
+            <xsd:documentation>The DSP organization this pricing interval is for.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="territory" type="iso3166a2:territory_code" maxOccurs="1" minOccurs="1">
+          <xsd:annotation>
+            <xsd:documentation>The territory where to apply this pricing interval. -- Note; the territory AN is obsolete.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="tier" type="xsd:string" maxOccurs="1" minOccurs="1">
+          <xsd:annotation>
+            <xsd:documentation>The tier of this pricing interval.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="start_date" type="xsd:date" maxOccurs="1" minOccurs="1">
+          <xsd:annotation>
+            <xsd:documentation>The start date of this pricing interval.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="end_date" type="xsd:date" maxOccurs="1" minOccurs="0">
+          <xsd:annotation>
+            <xsd:documentation>The end date of this pricing interval.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+      </xsd:all>
+    </xsd:complexType>
+    <xsd:complexType name="usage_right_type">
+      <xsd:annotation>
+        <xsd:documentation>Element describing one usage right configuration.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:all>
+        <xsd:element name="organization" type="organization_type" maxOccurs="1" minOccurs="0">
+          <xsd:annotation>
+            <xsd:documentation>
+              The DSP organization this usage right configuration is for. If left out, the configuration becomes the default one.
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="rights" maxOccurs="1" minOccurs="1">
+          <xsd:annotation>
+            <xsd:documentation>
+              The list of the rights allowed in this configuration.
+            </xsd:documentation>
+          </xsd:annotation>
+          <xsd:complexType>
+            <xsd:sequence>                  
+              <xsd:element name="right" maxOccurs="unbounded" minOccurs="1">
+                <xsd:annotation>
+                  <xsd:documentation>The right that should be enabled.</xsd:documentation>
+                </xsd:annotation>
+                <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="Subscription streaming"></xsd:enumeration>
+                    <xsd:enumeration value="Ad supported streaming"></xsd:enumeration>
+                    <xsd:enumeration value="Subscription download"></xsd:enumeration>
+                    <xsd:enumeration value="Permanent download"></xsd:enumeration>
+                    <xsd:enumeration value="User generated audio"></xsd:enumeration>
+                    <xsd:enumeration value="User generated video"></xsd:enumeration>
+                    <xsd:enumeration value="User generated ringtone"></xsd:enumeration>
+                    <xsd:enumeration value="Burn CD"></xsd:enumeration>
+                  </xsd:restriction>
+                </xsd:simpleType>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:all>
+    </xsd:complexType>
+    <xsd:complexType name="territory_release_date_type">
+      <xsd:annotation>
+        <xsd:documentation>Element describing one territory based release date.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:all>
+        <xsd:element name="territory_group" type="xsd:string" maxOccurs="1" minOccurs="1">
+          <xsd:annotation>
+            <xsd:documentation>The territory group name for which to set this release date. It must already exist as a template.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="release_date" type="xsd:date" maxOccurs="1" minOccurs="1">
+          <xsd:annotation>
+            <xsd:documentation>The release date that should be set for this territory group.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="preorder_date" type="xsd:date" maxOccurs="1" minOccurs="0">
+          <xsd:annotation>
+            <xsd:documentation>The preorder date that should be set for this territory group.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+      </xsd:all>
+    </xsd:complexType>
+    <xsd:complexType name="attachment_type">
+      <xsd:annotation>
+        <xsd:documentation>Element describing one attachment of the product.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:all>
+        <xsd:element name="name" type="xsd:string" maxOccurs="1" minOccurs="0">
+          <xsd:annotation>
+            <xsd:documentation>Name of the attachment.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="description" type="xsd:string" maxOccurs="1" minOccurs="0">
+          <xsd:annotation>
+            <xsd:documentation>Description of the attachment.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="attachment_type" maxOccurs="1" minOccurs="1">
+          <xsd:annotation>
+            <xsd:documentation>
+              Type of the attachment. Either a booklet, or any other different attachment.
+            </xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:enumeration value="REGULAR"/>
+              <xsd:enumeration value="BOOKLET"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:element>
+        <xsd:element name="file" type="file_type" maxOccurs="1" minOccurs="1"/>
+      </xsd:all>
+    </xsd:complexType>
+    <xsd:element name="preorder_type">
+        <xsd:annotation>
+            <xsd:documentation>Designates the pre-order type of the asset. Be aware that not all stores honour this setting. Stores not honouring this will get all assets as normal, except pre-order only, which will not get delivered to stores that do not support it</xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:enumeration value="NONE">
+                    <xsd:annotation>
+                        <xsd:documentation>Designates no pre-order type. Assets will go live on the standard release date.</xsd:documentation>
+                    </xsd:annotation>
+                </xsd:enumeration>
+                <xsd:enumeration value="STANDARD">
+                    <xsd:annotation>
+                        <xsd:documentation>Designates standard pre-order type. Assets will be available for pre-order starting on the pre-order date. Fulfillment will occur on the standard release date. After the standard release date the asset is available for sale.</xsd:documentation>
+                    </xsd:annotation>
+                </xsd:enumeration>
+                <xsd:enumeration value="PREORDER_ONLY">
+                    <xsd:annotation>
+                        <xsd:documentation>Designates 'pre-order only' pre-order type. May only occur on the last assets. Assets will be available for pre-order starting on the pre-order date. Fulfillment will occur on the standard release date. After the standard release date the asset is NOT available for sale.</xsd:documentation>
+                    </xsd:annotation>
+                </xsd:enumeration>
+                <xsd:enumeration value="INSTANT_GRATIFICATION">
+                    <xsd:annotation>
+                        <xsd:documentation>Designates 'instant gratification' pre-order type. May occur on at most half of the assets. Assets will be available for pre-order starting on the pre-order date. Fulfillment will occur immediately. After the standard release date the asset is available for sale.</xsd:documentation>
+                    </xsd:annotation>
+                </xsd:enumeration>
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+    <xsd:element name="parental_advisory">
+        <xsd:annotation>
+            <xsd:documentation>Designates if the item has explicit content, clean meaning this is a cleaned version of content that was originally explicit</xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:enumeration value="true"/>
+                <xsd:enumeration value="false"/>
+                <xsd:enumeration value="clean"/>
+                <xsd:enumeration value="0"/>
+                <xsd:enumeration value="1"/>
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+    <xsd:element name="contributor">
+        <xsd:complexType>
+            <xsd:all>
+                <xsd:element name="name" type="xsd:string">
+                    <xsd:annotation>
+                        <xsd:documentation>The contributor's name.</xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="role">
+                    <xsd:annotation>
+                        <xsd:documentation>The contributor's role.</xsd:documentation>
+                    </xsd:annotation>
+                    <xsd:simpleType>
+                        <xsd:restriction base="xsd:string">
+                            <xsd:enumeration value="Arranger"></xsd:enumeration>
+                            <xsd:enumeration value="Choir"></xsd:enumeration>
+                            <xsd:enumeration value="Composer"></xsd:enumeration>
+                            <xsd:enumeration value="Conductor"></xsd:enumeration>
+                            <xsd:enumeration value="Contributing Artist"></xsd:enumeration>
+                            <xsd:enumeration value="Engineer"></xsd:enumeration>
+                            <xsd:enumeration value="Ensemble"></xsd:enumeration>
+                            <xsd:enumeration value="Featuring"></xsd:enumeration>
+                            <xsd:enumeration value="Lyricist"></xsd:enumeration>
+                            <xsd:enumeration value="Mixer"></xsd:enumeration>
+                            <xsd:enumeration value="Orchestra"></xsd:enumeration>
+                            <xsd:enumeration value="Performer"></xsd:enumeration>
+                            <xsd:enumeration value="Producer"></xsd:enumeration>
+                            <xsd:enumeration value="Remixer"></xsd:enumeration>
+                            <xsd:enumeration value="Soloist"></xsd:enumeration>
+                            <xsd:enumeration value="Writer"></xsd:enumeration>
+                        </xsd:restriction>
+                     </xsd:simpleType>
+                </xsd:element>
+            </xsd:all>
+        </xsd:complexType>
+    </xsd:element>    
+    <xsd:element name="publisher">
+        <xsd:complexType>
+            <xsd:all>
+                <xsd:element name="publisher_name" type="xsd:string" minOccurs="1" maxOccurs="1">
+                    <xsd:annotation>
+                        <xsd:documentation>The publisher's legal name.</xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="writer_name" type="xsd:string" minOccurs="1" maxOccurs="1">
+                    <xsd:annotation>
+                        <xsd:documentation>The writer's legal name.</xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+            </xsd:all>
+        </xsd:complexType>                              
+    </xsd:element>    
+</xsd:schema>

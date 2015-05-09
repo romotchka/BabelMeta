@@ -61,11 +61,15 @@
     <Compile Include="Model\Tag.cs" />
     <Compile Include="Model\Key.cs" />
     <Compile Include="Model\Work.cs" />
+    <Compile Include="Modules\Export\FugaXmlCatalogWriter.cs" />
+    <Compile Include="Modules\Export\FugaXml\ingestion.designer.cs" />
+    <Compile Include="Modules\Export\ICatalogWriter.cs" />
+    <Compile Include="Modules\Import\DefaultCatalogReader.cs" />
     <Compile Include="Modules\Import\ICatalogReader.cs" />
-    <Compile Include="Modules\Import\SolsticeDefaultExcel2003Xml.cs" />
     <Compile Include="Modules\OfficeXml.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings\ReturnCodes.cs" />
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -96,7 +100,11 @@
   <ItemGroup>
     <Folder Include="Assets\" />
     <Folder Include="Helpers\" />
-    <Folder Include="Modules\Export\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Modules\Export\FugaXml\ingestion.xsd">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

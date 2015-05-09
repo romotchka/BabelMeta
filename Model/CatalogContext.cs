@@ -44,6 +44,8 @@ namespace MetadataConverter.Model
             }
         }
 
+        internal bool Initialized = false;
+
         internal List<Lang> Langs;
 
         internal List<Role> Roles;

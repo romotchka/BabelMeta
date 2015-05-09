@@ -5,6 +5,7 @@
  */
 
 using MetadataConverter.Model;
+using MetadataConverter.Settings;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,7 +21,7 @@ namespace MetadataConverter.Modules.Import
     /// This default Input format consists in a Excel 2003 XML export of worksheets:
     /// lang, role, tag, artist, work, isrc, featuring, album, asset
     /// </summary>
-    public class SolsticeDefaultExcel2003Xml : ICatalogReader
+    public class DefaultCatalogReader : ICatalogReader
     {
         private XmlDocument _document;
 
@@ -70,7 +71,7 @@ namespace MetadataConverter.Modules.Import
         /// <summary>
         /// Column indexes by worksheets (permits flexibility in the worksheet structure)
         /// </summary>
-        private Dictionary<String,Dictionary<String,Int32>> _worksheetColumns;
+        private Dictionary<String, Dictionary<String, Int32>> _worksheetColumns;
 
         private List<XmlNode> _langs;
         private List<XmlNode> _tags;
@@ -82,38 +83,34 @@ namespace MetadataConverter.Modules.Import
         private List<XmlNode> _albums;
         private List<XmlNode> _assets;
 
-        private static SolsticeDefaultExcel2003Xml _instance;
+        private static DefaultCatalogReader _instance;
 
-        private SolsticeDefaultExcel2003Xml() 
+        private DefaultCatalogReader()
         {
-            _worksheets = new Dictionary<String,XmlNode>();
+            _worksheets = new Dictionary<String, XmlNode>();
             _worksheetColumns = new Dictionary<String, Dictionary<String, Int32>>();
         }
 
-        public static SolsticeDefaultExcel2003Xml Instance
+        public static DefaultCatalogReader Instance
         {
-            get 
+            get
             {
                 if (_instance == null)
                 {
-                    _instance = new SolsticeDefaultExcel2003Xml();
+                    _instance = new DefaultCatalogReader();
 
                 }
                 return _instance;
             }
         }
 
-        public void Parse(Stream s, MainFormViewModel viewModel = null)
+        public ReturnCodes Parse(Stream s, MainFormViewModel viewModel = null)
         {
             if (s == null)
             {
-                if (_mainFormViewModel != null)
-                {
-                    _mainFormViewModel.InputProgressBarMax = 100;
-                    _mainFormViewModel.InputProgressBarValue = 100;
-                }
-                return;
+                return ReturnCodes.ModulesImportDefaultParseEmptyStream;
             }
+
             _document = new XmlDocument();
             _document.Load(s);
 
@@ -121,16 +118,12 @@ namespace MetadataConverter.Modules.Import
             {
                 _mainFormViewModel = viewModel;
                 _mainFormViewModel.InputProgressBarValue = 0;
-                _mainFormViewModel.InputProgressBarMax = _initPayload; 
+                _mainFormViewModel.InputProgressBarMax = _initPayload + 1; // initial payload and 'symbolic' last bit of payload before last return 
             }
 
             if (!IsValidWorkbook())
             {
-                if (_mainFormViewModel != null)
-                {
-                    _mainFormViewModel.InputProgressBarValue = _mainFormViewModel.InputProgressBarMax;
-                }
-                return;
+                return ReturnCodes.ModulesImportDefaultParseInvalidWorkbook;
             }
 
             if (_mainFormViewModel != null)
@@ -161,6 +154,10 @@ namespace MetadataConverter.Modules.Import
             ParseIsrcs();
             ParseAlbums();
             ParseAssets();
+
+            CatalogContext.Instance.Initialized = true;
+            _mainFormViewModel.InputProgressBarValue = _mainFormViewModel.InputProgressBarMax;
+            return ReturnCodes.Ok;
         }
 
         private bool IsValidWorkbook()
@@ -238,12 +235,12 @@ namespace MetadataConverter.Modules.Import
             if (!ExistsCellValueInRow("key", map, "work")) return false;
             if (!ExistsCellValueInRow("year", map, "work")) return false;
             i = 1;
-            while   (
+            while (
                         ExistsCellValueInRow("id_contributor" + i.ToString(), map, "work")
                         && ExistsCellValueInRow("role_contributor" + i.ToString(), map, "work")
-                    ) 
-            { 
-                i++; 
+                    )
+            {
+                i++;
             }
             if (i == 1)
             {
@@ -302,7 +299,7 @@ namespace MetadataConverter.Modules.Import
             return true;
         }
 
-        private Dictionary<Int32,XmlNode> CellMapByRow(XmlNode row)
+        private Dictionary<Int32, XmlNode> CellMapByRow(XmlNode row)
         {
             if (row == null)
             {
@@ -351,14 +348,14 @@ namespace MetadataConverter.Modules.Import
                 .Where(r => r.Name.CompareTo(OfficeXml.WorksheetRow) == 0)
                 .ToList();
             List<XmlNode> filteredRows = new List<XmlNode>();
-            
+
             foreach (XmlNode row in rows)
             {
                 Dictionary<Int32, XmlNode> map = CellMapByRow(row);
                 // Filtering active rows only
                 bool local = map.ContainsKey(_worksheetColumns[worksheetName]["local_db"]) && map[_worksheetColumns[worksheetName]["local_db"]].InnerText.CompareTo("active") == 0;
                 bool partner = map.ContainsKey(_worksheetColumns[worksheetName]["partner_db"]) && map[_worksheetColumns[worksheetName]["partner_db"]].InnerText.CompareTo("active") == 0;
-                if  (
+                if (
                         (localActive && partnerActive && local && partner)
                         || (localActive && !partnerActive && local)
                         || (!localActive && partnerActive && partner)
@@ -392,7 +389,7 @@ namespace MetadataConverter.Modules.Import
             {
                 Int32 index = ((KeyValuePair<Int32, XmlNode>)element).Key;
                 _worksheetColumns[worksheetName][cellValue] = index;
-                
+
             }
 
             return exists;
@@ -417,8 +414,8 @@ namespace MetadataConverter.Modules.Import
 
             XmlNode worksheet = _document.DocumentElement.ChildNodes.Cast<XmlNode>()
                 .FirstOrDefault(
-                    n => 
-                    n.Name == OfficeXml.Worksheet 
+                    n =>
+                    n.Name == OfficeXml.Worksheet
                     && n.Attributes[OfficeXml.WorksheetName] != null
                     && n.Attributes[OfficeXml.WorksheetName].InnerText.CompareTo(worksheetName) == 0
                 );
@@ -433,7 +430,7 @@ namespace MetadataConverter.Modules.Import
 
             bool exists = table != null;
 
-            if  (exists)
+            if (exists)
             {
                 // Add table element of the worksheet
                 _worksheets[worksheetName] = table;
@@ -625,8 +622,8 @@ namespace MetadataConverter.Modules.Import
                         if (artist.Death != null && artist.Death < 0) { artist.Death = null; }
                     }
 
-                    artist.LastName = new Dictionary<Lang,String>();
-                    artist.FirstName = new Dictionary<Lang,String>();
+                    artist.LastName = new Dictionary<Lang, String>();
+                    artist.FirstName = new Dictionary<Lang, String>();
                     // Object may have several lang-dependent field sets
                     foreach (Lang lang in CatalogContext.Instance.Langs)
                     {
@@ -726,7 +723,7 @@ namespace MetadataConverter.Modules.Import
 
                     work.Contributors = new Dictionary<Int32, Role>();
                     int i = 1;
-                    while   (
+                    while (
                                 (_worksheetColumns["work"].ContainsKey("id_contributor" + i.ToString()))
                                 && (_worksheetColumns["work"].ContainsKey("role_contributor" + i.ToString()))
                             )
@@ -934,7 +931,7 @@ namespace MetadataConverter.Modules.Import
                     if (keys.Contains(_worksheetColumns["album"]["label"]))
                     {
                         String label = cells.FirstOrDefault(c => c.Key == _worksheetColumns["album"]["label"]).Value.InnerText.Trim();
-                        if (!String.IsNullOrEmpty(label)) 
+                        if (!String.IsNullOrEmpty(label))
                         {
                             album.Owner = label;
                             album.CopyrightCLabel = label;
@@ -1047,8 +1044,8 @@ namespace MetadataConverter.Modules.Import
                     {
                         volumeIndex = Convert.ToInt16(cells.FirstOrDefault(c => c.Key == _worksheetColumns["asset"]["volume_index"]).Value.InnerText.Trim());
                         if (volumeIndex <= 0)
-                        { 
-                            continue; 
+                        {
+                            continue;
                         }
 
                         if (!album.Assets.ContainsKey(volumeIndex))

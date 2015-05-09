@@ -47,6 +47,17 @@ namespace MetadataConverter
                 }
                 _inputProgressBarValue = value;
                 RaisePropertyChanged("InputProgressBarValue");
+                if (_inputProgressBarValue == 0)
+                {
+                    WarningPictoVisibility = false;
+                    CheckedPictoVisibility = false;
+                }
+                else
+                if (_inputProgressBarValue == _inputProgressBarMax)
+                {
+                    WarningPictoVisibility = false;
+                    CheckedPictoVisibility = true;
+                }
             }
         }
 
@@ -85,9 +96,37 @@ namespace MetadataConverter
             }
         }
 
-        public bool CheckedPictoVisibility { get; set; }
+        private bool _checkedPictoVisibility = false;
 
-        public bool WarningPictoVisibility { get; set; }
+        public bool CheckedPictoVisibility 
+        {
+            get { return _checkedPictoVisibility; } 
+            set
+            {
+                if (_checkedPictoVisibility == value)
+                {
+                    return;
+                }
+                _checkedPictoVisibility = value;
+                RaisePropertyChanged("CheckedPictoVisibility");
+            }
+        }
+
+        private bool _warningPictoVisibility = false;
+
+        public bool WarningPictoVisibility
+        {
+            get { return _warningPictoVisibility; }
+            set
+            {
+                if (_warningPictoVisibility == value)
+                {
+                    return;
+                }
+                _warningPictoVisibility = value;
+                RaisePropertyChanged("WarningPictoVisibility");
+            }
+        }
 
 
         #region PropertyChanged

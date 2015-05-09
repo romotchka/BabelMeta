@@ -4,7 +4,10 @@
  * romain.carbou@solstice-music.com
  */
 
+using MetadataConverter.Model;
+using MetadataConverter.Modules.Export;
 using MetadataConverter.Modules.Import;
+using MetadataConverter.Settings;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -28,6 +31,9 @@ namespace MetadataConverter
 
             this.InputProgressBar.DataBindings.Add(new Binding("Maximum", _viewModel, "InputProgressBarMax"));
             this.InputProgressBar.DataBindings.Add(new Binding("Value", _viewModel, "InputProgressBarValue"));
+
+            this.CheckedPicto.DataBindings.Add(new Binding("Visible", _viewModel, "CheckedPictoVisibility"));
+            this.WarningPicto.DataBindings.Add(new Binding("Visible", _viewModel, "WarningPictoVisibility"));
     
         }
 
@@ -46,6 +52,7 @@ namespace MetadataConverter
             OpenFileDialog openFileDialog = new OpenFileDialog();
 
             openFileDialog.InitialDirectory = "c:\\";
+            openFileDialog.Title = "Open a default XML file";
             openFileDialog.RestoreDirectory = true;
             switch (this.InputFormat.TabIndex)
             {
@@ -70,13 +77,17 @@ namespace MetadataConverter
 
                     this.NotificationZone.Text += "Opening file stream.\n";
 
+                    CatalogContext.Instance.Init();
+                    CatalogContext.Instance.Initialized = false;
+
                     // Call appropriate parser, depending on input format
                     switch (this.InputFormat.TabIndex)
                     {
                         case 0:
+                            this.InputProgressBar.Value = 0;
                             this.InputProgressBar.Visible = true;
                             this.OutputProgressBar.Visible = false;
-                            SolsticeDefaultExcel2003Xml.Instance.Parse(stream, _viewModel);
+                            ReturnCodes r =  DefaultCatalogReader.Instance.Parse(stream, _viewModel);
                             break;
                     }
                 }
@@ -123,8 +134,20 @@ namespace MetadataConverter
         /// <param name="e"></param>
         private void fugaToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
+            if (!CatalogContext.Instance.Initialized)
+            {
+                return;
+            }
+            FolderBrowserDialog fbd = new FolderBrowserDialog();
 
+            fbd.Description = "Select a root folder for output sub-folders and XML files";
+            fbd.ShowDialog();
+
+            if (String.IsNullOrEmpty(fbd.SelectedPath))
+            {
+                return;
+            }
+            ReturnCodes r = FugaXmlCatalogWriter.Instance.Generate(fbd.SelectedPath, _viewModel);
         }
-
     }
 }

@@ -280,7 +280,7 @@ namespace MetadataConverter
             // 
             this.InputFormat.FormattingEnabled = true;
             this.InputFormat.Items.AddRange(new object[] {
-            "Solstice Default Excel 2003 XML"});
+            "Default XML"});
             this.InputFormat.Location = new System.Drawing.Point(6, 19);
             this.InputFormat.Name = "InputFormat";
             this.InputFormat.Size = new System.Drawing.Size(209, 17);

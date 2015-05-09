@@ -12,13 +12,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MetadataConverter.Modules.Import
+namespace MetadataConverter.Modules.Export
 {
-    public interface ICatalogReader
+    public interface ICatalogWriter
     {
         /// <summary>
-        /// The Parse method refreshes the CatalogContext according to the Input data
+        /// The Generate method generates a set of output folders and files from CatalogContext.Albums
         /// </summary>
-        ReturnCodes Parse(Stream s, MainFormViewModel viewModel = null);
+        ReturnCodes Generate(String folder, MainFormViewModel viewModel = null);
     }
 }
