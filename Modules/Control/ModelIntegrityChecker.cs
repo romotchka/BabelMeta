@@ -111,8 +111,22 @@ namespace MetadataConverter.Modules.Control
             if  (
                     CatalogContext.Instance.Works.Exists(w => 
                         w.Contributors.Keys.ToList().Exists(c => 
-                            !CatalogContext.Instance.Artists.Exists(a => 
-                                a.Id == c
+                            !CatalogContext.Instance.Artists.Exists(e => 
+                                e.Id == c
+                            )
+                        )
+                    )
+                )
+            {
+                return false;
+            }
+
+            // Works -> Role
+            if (
+                    CatalogContext.Instance.Works.Exists(w =>
+                        w.Contributors.Values.ToList().Exists(r =>
+                            !CatalogContext.Instance.Roles.Exists(e =>
+                                e.Name.CompareTo(r.Name) == 0
                             )
                         )
                     )
