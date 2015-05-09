@@ -118,6 +118,19 @@ namespace MetadataConverter
             {
                 Notify("The imported model is valid.");
             }
+            else
+            {
+                String message = "The imported model is corrupted:";
+                if (!CatalogContext.Instance.RedundantKeysChecked)
+                {
+                    message += " Redundant keys exist.";
+                }
+                if (!CatalogContext.Instance.ReferentialIntegrityChecked)
+                {
+                    message += " Foreign keys are corrupted.";
+                }
+                Notify(message);
+            }
         }
 
         /// <summary>
@@ -163,6 +176,10 @@ namespace MetadataConverter
             ReturnCodes r = FugaXmlCatalogWriter.Instance.Generate(fbd.SelectedPath, _viewModel);
         }
 
+        /// <summary>
+        /// Append message on top of Notification Zone
+        /// </summary>
+        /// <param name="message"></param>
         private void Notify(String message)
         {
             if (String.IsNullOrEmpty(message))

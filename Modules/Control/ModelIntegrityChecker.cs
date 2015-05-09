@@ -135,6 +135,80 @@ namespace MetadataConverter.Modules.Control
                 return false;
             }
 
+            // Isrc -> Work
+            if (
+                    CatalogContext.Instance.Isrcs.Exists(i =>
+                        !CatalogContext.Instance.Works.Exists(e =>
+                            e.Id == i.Work
+                        )
+                    )
+                )
+            {
+                return false;
+            }
+
+            // Isrc -> Contributor
+            if (
+                    CatalogContext.Instance.Isrcs.Exists(i =>
+                        i.Contributors.Keys.ToList().Exists(c =>
+                            !CatalogContext.Instance.Artists.Exists(e =>
+                                e.Id == c
+                            )
+                        )
+                    )
+                )
+            {
+                return false;
+            }
+
+            // Isrc -> Role
+            if (
+                    CatalogContext.Instance.Isrcs.Exists(i =>
+                        i.Contributors.Values.ToList().Exists(rq =>
+                                rq.Keys.ToList().Exists(r =>
+                                    !CatalogContext.Instance.Roles.Exists(e =>
+                                        e.Name.CompareTo(r.Name) == 0                                
+                                )
+                            )
+                        )
+                    )
+                )
+            {
+                return false;
+            }
+
+            // Isrc -> Quality
+            if (
+                    CatalogContext.Instance.Isrcs.Exists(i =>
+                        i.Contributors.Values.ToList().Exists(rq =>
+                                rq.Values.ToList().Exists(q =>
+                                    !CatalogContext.Instance.Qualities.Exists(e =>
+                                        e.Name.CompareTo(q.Name) == 0
+                                )
+                            )
+                        )
+                    )
+                )
+            {
+                return false;
+            }
+
+            // Album -> Isrc
+            if (
+                    CatalogContext.Instance.Albums.Exists(a =>
+                        a.Assets.Values.ToList().Exists(t =>
+                            t.Values.ToList().Exists(i =>
+                                !CatalogContext.Instance.Isrcs.Exists(e =>
+                                    e.Id.CompareTo(i) == 0
+                                )
+                            )
+                        )
+                    )
+                )
+            {
+                return false;
+            }
+
             return true;
         }
     }
