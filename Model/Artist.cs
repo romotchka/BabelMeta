@@ -1,5 +1,5 @@
 ﻿/*
- * Classical Metadata Converter
+ * Metadata Converter
  * Copyright 2015 - Romain Carbou
  * romain.carbou@solstice-music.com
  */

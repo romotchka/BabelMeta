@@ -1,5 +1,5 @@
 ﻿/*
- * Classical Metadata Converter
+ * Metadata Converter
  * Copyright 2015 - Romain Carbou
  * romain.carbou@solstice-music.com
  */
@@ -19,6 +19,11 @@ namespace MetadataConverter.Modules.Export
 {
     public class FugaXmlCatalogWriter : ICatalogWriter
     {
+        private String _folder = String.Empty;
+
+        MainFormViewModel _viewModel = null;
+
+        ingestion _ingestion = null;
 
         private static FugaXmlCatalogWriter _instance;
 
@@ -46,57 +51,71 @@ namespace MetadataConverter.Modules.Export
             {
                 return ReturnCodes.ModulesExportFugaXmlGenerateNullFolderName;
             }
+            _folder = folder;
+            _viewModel = viewModel;
 
             foreach (Album album in CatalogContext.Instance.Albums)
             {
-                ingestion i = new ingestion();
-                i.album = new ingestionAlbum();
-                i.album.tracks = new ingestionAlbumTracks();
+                _ingestion = null;
+                _ingestion = new ingestion();
+                _ingestion.album = new ingestionAlbum();
+                _ingestion.album.tracks = new ingestionAlbumTracks();
 
-                GenerateAlbumWiseData(i.album);
+                GenerateAlbumWiseData();
 
                 foreach (KeyValuePair<Int16, Dictionary<Int16, String>> volume in album.Assets)
                 {
-                    GenerateVolumeWiseData(i.album, volume);
+                    GenerateTrackWiseData(volume);
                 }
 
-                String s = i.Serialize();
-                byte[] b = Encoding.UTF8.GetBytes(s);
+                //String s = i.Serialize();
+                //byte[] b = Encoding.UTF8.GetBytes(s);
 
             }      
 
             return ReturnCodes.Ok;
         }
 
-        private void GenerateAlbumWiseData(ingestionAlbum album)
+        private void GenerateAlbumWiseData()
         {
 
         }
 
-        private void GenerateVolumeWiseData(ingestionAlbum album, KeyValuePair<Int16, Dictionary<Int16, String>> volume)
+        private void GenerateTrackWiseData(KeyValuePair<Int16, Dictionary<Int16, String>> volume)
         {
+            if (_ingestion == null || _ingestion.album == null)
+            {
+                return;
+            }
             Int16 volumeIndex = volume.Key;
             Dictionary<Int16, String> volumeTracks = volume.Value;
             foreach (KeyValuePair<Int16, String> track in volumeTracks)
             {
-                GenerateTrackWiseData(album, track);
+                Int16 trackIndex = track.Key;
+                String isrcId = track.Value;
+                Isrc isrc = CatalogContext.Instance.Isrcs.FirstOrDefault(e => e.Id.CompareTo(isrcId) == 0);
+                if (isrc == null)
+                {
+                    return;
+                }
+                Work work = CatalogContext.Instance.Works.FirstOrDefault(e => e.Id == isrc.Work);
+                if (work == null)
+                {
+                    return;
+                }
+
+                ingestionAlbumTracksClassical_track asset = new ingestionAlbumTracksClassical_track();
+
+                asset.on_disc = volumeIndex.ToString();
+                asset.sequence_number = trackIndex.ToString();
+
+                _ingestion.album.tracks.Items.Add(asset);
+
+
+                // File generation
+
             }
         }
 
-        private void GenerateTrackWiseData(ingestionAlbum album, KeyValuePair<Int16, String> track)
-        {
-            Int16 trackIndex = track.Key;
-            String isrcId = track.Value;
-            Isrc isrc = CatalogContext.Instance.Isrcs.FirstOrDefault(e => e.Id.CompareTo(isrcId) == 0);
-            if (isrc == null)
-            {
-                return;
-            }
-            Work work = CatalogContext.Instance.Works.FirstOrDefault(e => e.Id == isrc.Work);
-            if (work == null)
-            {
-                return;
-            }
-        }
     }
 }

@@ -1,5 +1,5 @@
 ﻿/*
- * Classical Metadata Converter
+ * Metadata Converter
  * Copyright 2015 - Romain Carbou
  * romain.carbou@solstice-music.com
  */
@@ -45,6 +45,10 @@ namespace MetadataConverter.Model
         }
 
         internal bool Initialized = false;
+
+        internal bool RedundantKeysChecked = false;
+
+        internal bool ReferentialIntegrityChecked = false;
 
         internal List<Lang> Langs;
 

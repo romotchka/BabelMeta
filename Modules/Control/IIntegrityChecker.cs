@@ -10,16 +10,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MetadataConverter.Settings
+namespace MetadataConverter.Modules.Control
 {
-    public enum ReturnCodes
+    public interface IIntegrityChecker
     {
-        Ok,
+        bool CheckRedundantKeys();
 
-        ModulesImportDefaultParseEmptyStream,
-        ModulesImportDefaultParseInvalidWorkbook,
-
-        ModulesExportFugaXmlGenerateNullFolderName,
-
+        bool CheckReferentialIntegrity();
     }
 }

@@ -42,7 +42,7 @@ namespace MetadataConverter.Modules.Export.FugaXml
 
         public ingestion()
         {
-            this.albumField = new ingestionAlbum();
+            albumField = new ingestionAlbum();
         }
 
         private static System.Xml.Serialization.XmlSerializer Serializer
@@ -491,17 +491,17 @@ namespace MetadataConverter.Modules.Export.FugaXml
 
         public ingestionAlbum()
         {
-            this.usage_rightsField = new List<usage_right_type>();
-            this.scheduleField = new schedule();
-            this.tracksField = new ingestionAlbumTracks();
-            this.territoriesField = new List<territory_code>();
-            this.redeliveriesField = new redeliveries_type();
-            this.additional_artistsField = new List<artist>();
-            this.primary_artistField = new primary_artist();
-            this.pricing_intervalsField = new List<pricing_interval_type>();
-            this.pricingsField = new List<pricing_type>();
-            this.cover_artField = new ingestionAlbumCover_art();
-            this.attachmentsField = new List<attachment_type>();
+            usage_rightsField = new List<usage_right_type>();
+            scheduleField = new schedule();
+            tracksField = new ingestionAlbumTracks();
+            territoriesField = new List<territory_code>();
+            redeliveriesField = new redeliveries_type();
+            additional_artistsField = new List<artist>();
+            primary_artistField = new primary_artist();
+            pricing_intervalsField = new List<pricing_interval_type>();
+            pricingsField = new List<pricing_type>();
+            cover_artField = new ingestionAlbumCover_art();
+            attachmentsField = new List<attachment_type>();
         }
 
         [System.Xml.Serialization.XmlArrayItemAttribute("attachment", IsNullable = false)]
@@ -509,11 +509,11 @@ namespace MetadataConverter.Modules.Export.FugaXml
         {
             get
             {
-                return this.attachmentsField;
+                return attachmentsField;
             }
             set
             {
-                this.attachmentsField = value;
+                attachmentsField = value;
             }
         }
 
@@ -522,11 +522,11 @@ namespace MetadataConverter.Modules.Export.FugaXml
         {
             get
             {
-                return this.pricingsField;
+                return pricingsField;
             }
             set
             {
-                this.pricingsField = value;
+                pricingsField = value;
             }
         }
 
@@ -535,11 +535,11 @@ namespace MetadataConverter.Modules.Export.FugaXml
         {
             get
             {
-                return this.pricing_intervalsField;
+                return pricing_intervalsField;
             }
             set
             {
-                this.pricing_intervalsField = value;
+                pricing_intervalsField = value;
             }
         }
 
@@ -548,11 +548,11 @@ namespace MetadataConverter.Modules.Export.FugaXml
         {
             get
             {
-                return this.additional_artistsField;
+                return additional_artistsField;
             }
             set
             {
-                this.additional_artistsField = value;
+                additional_artistsField = value;
             }
         }
 
@@ -561,11 +561,11 @@ namespace MetadataConverter.Modules.Export.FugaXml
         {
             get
             {
-                return this.territoriesField;
+                return territoriesField;
             }
             set
             {
-                this.territoriesField = value;
+                territoriesField = value;
             }
         }
 
@@ -574,11 +574,11 @@ namespace MetadataConverter.Modules.Export.FugaXml
         {
             get
             {
-                return this.usage_rightsField;
+                return usage_rightsField;
             }
             set
             {
-                this.usage_rightsField = value;
+                usage_rightsField = value;
             }
         }
 
@@ -909,7 +909,7 @@ namespace MetadataConverter.Modules.Export.FugaXml
 
         public attachment_type()
         {
-            this.fileField = new file_type();
+            fileField = new file_type();
         }
 
         private static System.Xml.Serialization.XmlSerializer Serializer
@@ -1636,8 +1636,8 @@ namespace MetadataConverter.Modules.Export.FugaXml
 
         public usage_right_type()
         {
-            this.rightsField = new List<usage_right_typeRight>();
-            this.organizationField = new organization_type();
+            rightsField = new List<usage_right_typeRight>();
+            organizationField = new organization_type();
         }
 
         [System.Xml.Serialization.XmlArrayItemAttribute("right", IsNullable = false)]
@@ -1645,11 +1645,11 @@ namespace MetadataConverter.Modules.Export.FugaXml
         {
             get
             {
-                return this.rightsField;
+                return rightsField;
             }
             set
             {
-                this.rightsField = value;
+                rightsField = value;
             }
         }
 
@@ -2170,7 +2170,7 @@ namespace MetadataConverter.Modules.Export.FugaXml
 
         public redeliveries_type()
         {
-            this.only_to_organizationsField = new List<organization_type>();
+            only_to_organizationsField = new List<organization_type>();
         }
 
         [System.Xml.Serialization.XmlArrayItemAttribute("organization", IsNullable = false)]
@@ -2178,11 +2178,11 @@ namespace MetadataConverter.Modules.Export.FugaXml
         {
             get
             {
-                return this.only_to_organizationsField;
+                return only_to_organizationsField;
             }
             set
             {
-                this.only_to_organizationsField = value;
+                only_to_organizationsField = value;
             }
         }
 
@@ -2436,7 +2436,7 @@ namespace MetadataConverter.Modules.Export.FugaXml
 
         public pricing_interval_type()
         {
-            this.organizationField = new organization_type();
+            organizationField = new organization_type();
         }
 
         private static System.Xml.Serialization.XmlSerializer Serializer
@@ -3443,7 +3443,7 @@ namespace MetadataConverter.Modules.Export.FugaXml
 
         public pricing_type()
         {
-            this.organizationField = new organization_type();
+            organizationField = new organization_type();
         }
 
         private static System.Xml.Serialization.XmlSerializer Serializer
@@ -4433,7 +4433,7 @@ namespace MetadataConverter.Modules.Export.FugaXml
 
         public ingestionAlbumCover_art()
         {
-            this.imageField = new ingestionAlbumCover_artImage();
+            imageField = new ingestionAlbumCover_artImage();
         }
 
         private static System.Xml.Serialization.XmlSerializer Serializer
@@ -4666,7 +4666,7 @@ namespace MetadataConverter.Modules.Export.FugaXml
 
         public ingestionAlbumCover_artImage()
         {
-            this.fileField = new file_type();
+            fileField = new file_type();
         }
 
         private static System.Xml.Serialization.XmlSerializer Serializer
@@ -5321,7 +5321,7 @@ namespace MetadataConverter.Modules.Export.FugaXml
 
         public ingestionAlbumTracks()
         {
-            this.itemsField = new List<object>();
+            itemsField = new List<object>();
         }
 
         [System.Xml.Serialization.XmlElementAttribute("classical_track", typeof(ingestionAlbumTracksClassical_track), Order = 0)]
@@ -5331,11 +5331,11 @@ namespace MetadataConverter.Modules.Export.FugaXml
         {
             get
             {
-                return this.itemsField;
+                return itemsField;
             }
             set
             {
-                this.itemsField = value;
+                itemsField = value;
             }
         }
 
@@ -5795,13 +5795,13 @@ namespace MetadataConverter.Modules.Export.FugaXml
 
         public ingestionAlbumTracksClassical_track()
         {
-            this.usage_rightsField = new List<usage_right_type>();
-            this.resourcesField = new List<resourcesAudio>();
-            this.redeliveries_of_associatedField = new redeliveries_type();
-            this.publishersField = new List<publisher>();
-            this.additional_artistsField = new List<artist>();
-            this.primary_artistField = new primary_artist();
-            this.contributorsField = new List<contributor>();
+            usage_rightsField = new List<usage_right_type>();
+            resourcesField = new List<resourcesAudio>();
+            redeliveries_of_associatedField = new redeliveries_type();
+            publishersField = new List<publisher>();
+            additional_artistsField = new List<artist>();
+            primary_artistField = new primary_artist();
+            contributorsField = new List<contributor>();
         }
 
         [System.Xml.Serialization.XmlArrayItemAttribute("contributor", IsNullable = false)]
@@ -5809,11 +5809,11 @@ namespace MetadataConverter.Modules.Export.FugaXml
         {
             get
             {
-                return this.contributorsField;
+                return contributorsField;
             }
             set
             {
-                this.contributorsField = value;
+                contributorsField = value;
             }
         }
 
@@ -5822,11 +5822,11 @@ namespace MetadataConverter.Modules.Export.FugaXml
         {
             get
             {
-                return this.additional_artistsField;
+                return additional_artistsField;
             }
             set
             {
-                this.additional_artistsField = value;
+                additional_artistsField = value;
             }
         }
 
@@ -5835,11 +5835,11 @@ namespace MetadataConverter.Modules.Export.FugaXml
         {
             get
             {
-                return this.publishersField;
+                return publishersField;
             }
             set
             {
-                this.publishersField = value;
+                publishersField = value;
             }
         }
 
@@ -5848,11 +5848,11 @@ namespace MetadataConverter.Modules.Export.FugaXml
         {
             get
             {
-                return this.resourcesField;
+                return resourcesField;
             }
             set
             {
-                this.resourcesField = value;
+                resourcesField = value;
             }
         }
 
@@ -5861,11 +5861,11 @@ namespace MetadataConverter.Modules.Export.FugaXml
         {
             get
             {
-                return this.usage_rightsField;
+                return usage_rightsField;
             }
             set
             {
-                this.usage_rightsField = value;
+                usage_rightsField = value;
             }
         }
 
@@ -6223,7 +6223,7 @@ namespace MetadataConverter.Modules.Export.FugaXml
 
         public resourcesAudio()
         {
-            this.fileField = new file_type();
+            fileField = new file_type();
         }
 
         private static System.Xml.Serialization.XmlSerializer Serializer
@@ -6651,13 +6651,13 @@ namespace MetadataConverter.Modules.Export.FugaXml
 
         public ingestionAlbumTracksTrack()
         {
-            this.usage_rightsField = new List<usage_right_type>();
-            this.resourcesField = new List<resourcesAudio>();
-            this.redeliveries_of_associatedField = new redeliveries_type();
-            this.publishersField = new List<publisher>();
-            this.additional_artistsField = new List<artist>();
-            this.primary_artistField = new primary_artist();
-            this.contributorsField = new List<contributor>();
+            usage_rightsField = new List<usage_right_type>();
+            resourcesField = new List<resourcesAudio>();
+            redeliveries_of_associatedField = new redeliveries_type();
+            publishersField = new List<publisher>();
+            additional_artistsField = new List<artist>();
+            primary_artistField = new primary_artist();
+            contributorsField = new List<contributor>();
         }
 
         [System.Xml.Serialization.XmlArrayItemAttribute("contributor", IsNullable = false)]
@@ -6665,11 +6665,11 @@ namespace MetadataConverter.Modules.Export.FugaXml
         {
             get
             {
-                return this.contributorsField;
+                return contributorsField;
             }
             set
             {
-                this.contributorsField = value;
+                contributorsField = value;
             }
         }
 
@@ -6678,11 +6678,11 @@ namespace MetadataConverter.Modules.Export.FugaXml
         {
             get
             {
-                return this.additional_artistsField;
+                return additional_artistsField;
             }
             set
             {
-                this.additional_artistsField = value;
+                additional_artistsField = value;
             }
         }
 
@@ -6691,11 +6691,11 @@ namespace MetadataConverter.Modules.Export.FugaXml
         {
             get
             {
-                return this.publishersField;
+                return publishersField;
             }
             set
             {
-                this.publishersField = value;
+                publishersField = value;
             }
         }
 
@@ -6704,11 +6704,11 @@ namespace MetadataConverter.Modules.Export.FugaXml
         {
             get
             {
-                return this.resourcesField;
+                return resourcesField;
             }
             set
             {
-                this.resourcesField = value;
+                resourcesField = value;
             }
         }
 
@@ -6717,11 +6717,11 @@ namespace MetadataConverter.Modules.Export.FugaXml
         {
             get
             {
-                return this.usage_rightsField;
+                return usage_rightsField;
             }
             set
             {
-                this.usage_rightsField = value;
+                usage_rightsField = value;
             }
         }
 
@@ -7108,11 +7108,11 @@ namespace MetadataConverter.Modules.Export.FugaXml
 
         public ingestionAlbumTracksVideo()
         {
-            this.resourcesField = new ingestionAlbumTracksVideoResources();
-            this.publishersField = new List<publisher>();
-            this.contributorsField = new List<contributor>();
-            this.additional_artistsField = new List<artist>();
-            this.primary_artistField = new primary_artist();
+            resourcesField = new ingestionAlbumTracksVideoResources();
+            publishersField = new List<publisher>();
+            contributorsField = new List<contributor>();
+            additional_artistsField = new List<artist>();
+            primary_artistField = new primary_artist();
         }
 
         [System.Xml.Serialization.XmlArrayItemAttribute("artist", IsNullable = false)]
@@ -7120,11 +7120,11 @@ namespace MetadataConverter.Modules.Export.FugaXml
         {
             get
             {
-                return this.additional_artistsField;
+                return additional_artistsField;
             }
             set
             {
-                this.additional_artistsField = value;
+                additional_artistsField = value;
             }
         }
 
@@ -7133,11 +7133,11 @@ namespace MetadataConverter.Modules.Export.FugaXml
         {
             get
             {
-                return this.contributorsField;
+                return contributorsField;
             }
             set
             {
-                this.contributorsField = value;
+                contributorsField = value;
             }
         }
 
@@ -7146,11 +7146,11 @@ namespace MetadataConverter.Modules.Export.FugaXml
         {
             get
             {
-                return this.publishersField;
+                return publishersField;
             }
             set
             {
-                this.publishersField = value;
+                publishersField = value;
             }
         }
 
@@ -7406,8 +7406,8 @@ namespace MetadataConverter.Modules.Export.FugaXml
 
         public ingestionAlbumTracksVideoResources()
         {
-            this.video_preview_imageField = new ingestionAlbumTracksVideoResourcesVideo_preview_image();
-            this.videoField = new ingestionAlbumTracksVideoResourcesVideo();
+            video_preview_imageField = new ingestionAlbumTracksVideoResourcesVideo_preview_image();
+            videoField = new ingestionAlbumTracksVideoResourcesVideo();
         }
 
         private static System.Xml.Serialization.XmlSerializer Serializer
@@ -7639,7 +7639,7 @@ namespace MetadataConverter.Modules.Export.FugaXml
 
         public ingestionAlbumTracksVideoResourcesVideo()
         {
-            this.fileField = new file_type();
+            fileField = new file_type();
         }
 
         private static System.Xml.Serialization.XmlSerializer Serializer
@@ -7871,7 +7871,7 @@ namespace MetadataConverter.Modules.Export.FugaXml
 
         public ingestionAlbumTracksVideoResourcesVideo_preview_image()
         {
-            this.fileField = new file_type();
+            fileField = new file_type();
         }
 
         private static System.Xml.Serialization.XmlSerializer Serializer
@@ -8139,9 +8139,9 @@ namespace MetadataConverter.Modules.Export.FugaXml
 
         public schedule()
         {
-            this.territory_release_datesField = new List<territory_release_date_type>();
-            this.exclusionsField = new List<scheduleExclusion>();
-            this.deliveriesField = new List<scheduleDelivery>();
+            territory_release_datesField = new List<territory_release_date_type>();
+            exclusionsField = new List<scheduleExclusion>();
+            deliveriesField = new List<scheduleDelivery>();
         }
 
         [System.Xml.Serialization.XmlArrayItemAttribute("delivery", IsNullable = false)]
@@ -8149,11 +8149,11 @@ namespace MetadataConverter.Modules.Export.FugaXml
         {
             get
             {
-                return this.deliveriesField;
+                return deliveriesField;
             }
             set
             {
-                this.deliveriesField = value;
+                deliveriesField = value;
             }
         }
 
@@ -8162,11 +8162,11 @@ namespace MetadataConverter.Modules.Export.FugaXml
         {
             get
             {
-                return this.exclusionsField;
+                return exclusionsField;
             }
             set
             {
-                this.exclusionsField = value;
+                exclusionsField = value;
             }
         }
 
@@ -8175,11 +8175,11 @@ namespace MetadataConverter.Modules.Export.FugaXml
         {
             get
             {
-                return this.territory_release_datesField;
+                return territory_release_datesField;
             }
             set
             {
-                this.territory_release_datesField = value;
+                territory_release_datesField = value;
             }
         }
 
@@ -8429,7 +8429,7 @@ namespace MetadataConverter.Modules.Export.FugaXml
 
         public scheduleDelivery()
         {
-            this.organizationField = new organization_type();
+            organizationField = new organization_type();
         }
 
         private static System.Xml.Serialization.XmlSerializer Serializer
@@ -8695,7 +8695,7 @@ namespace MetadataConverter.Modules.Export.FugaXml
 
         public scheduleExclusion()
         {
-            this.organizationField = new organization_type();
+            organizationField = new organization_type();
         }
 
         private static System.Xml.Serialization.XmlSerializer Serializer
@@ -8925,7 +8925,7 @@ namespace MetadataConverter.Modules.Export.FugaXml
 
         public resources()
         {
-            this.audioField = new List<resourcesAudio>();
+            audioField = new List<resourcesAudio>();
         }
 
         [System.Xml.Serialization.XmlElementAttribute("audio", Order = 0)]
@@ -8933,11 +8933,11 @@ namespace MetadataConverter.Modules.Export.FugaXml
         {
             get
             {
-                return this.audioField;
+                return audioField;
             }
             set
             {
-                this.audioField = value;
+                audioField = value;
             }
         }
 

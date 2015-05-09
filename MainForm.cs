@@ -1,10 +1,11 @@
 ﻿/*
- * Classical Metadata Converter
+ * Metadata Converter
  * Copyright 2015 - Romain Carbou
  * romain.carbou@solstice-music.com
  */
 
 using MetadataConverter.Model;
+using MetadataConverter.Modules.Control;
 using MetadataConverter.Modules.Export;
 using MetadataConverter.Modules.Import;
 using MetadataConverter.Settings;
@@ -29,15 +30,16 @@ namespace MetadataConverter
 
             _viewModel = new MainFormViewModel();
 
-            this.InputProgressBar.DataBindings.Add(new Binding("Maximum", _viewModel, "InputProgressBarMax"));
-            this.InputProgressBar.DataBindings.Add(new Binding("Value", _viewModel, "InputProgressBarValue"));
+            InputProgressBar.DataBindings.Add(new Binding("Maximum", _viewModel, "InputProgressBarMax"));
+            InputProgressBar.DataBindings.Add(new Binding("Value", _viewModel, "InputProgressBarValue"));
 
-            this.CheckedPicto.DataBindings.Add(new Binding("Visible", _viewModel, "CheckedPictoVisibility"));
-            this.WarningPicto.DataBindings.Add(new Binding("Visible", _viewModel, "WarningPictoVisibility"));
+            CheckedPicto.DataBindings.Add(new Binding("Visible", _viewModel, "CheckedPictoVisibility"));
+            WarningPicto.DataBindings.Add(new Binding("Visible", _viewModel, "WarningPictoVisibility"));
     
         }
 
         private MainFormViewModel _viewModel;
+
 
         /* FILE MENU */
 
@@ -54,7 +56,7 @@ namespace MetadataConverter
             openFileDialog.InitialDirectory = "c:\\";
             openFileDialog.Title = "Open a default XML file";
             openFileDialog.RestoreDirectory = true;
-            switch (this.InputFormat.TabIndex)
+            switch (InputFormat.TabIndex)
             {
                 case 0:
                     openFileDialog.Filter = "XML files (*.xml)|*.xml";
@@ -71,41 +73,52 @@ namespace MetadataConverter
                 {
                     if ((stream = openFileDialog.OpenFile()) == null)
                     {
-                        this.NotificationZone.Text += "Error: Null file stream.\n";
+                        Notify("Error: Null file stream.");
                         return;
                     }
 
-                    this.NotificationZone.Text += "Opening file stream.\n";
+                    Notify("Opening file stream.");
 
                     CatalogContext.Instance.Init();
                     CatalogContext.Instance.Initialized = false;
 
                     // Call appropriate parser, depending on input format
-                    switch (this.InputFormat.TabIndex)
+                    switch (InputFormat.TabIndex)
                     {
                         case 0:
-                            this.InputProgressBar.Value = 0;
-                            this.InputProgressBar.Visible = true;
-                            this.OutputProgressBar.Visible = false;
+                            InputProgressBar.Value = 0;
+                            InputProgressBar.Visible = true;
+                            OutputProgressBar.Visible = false;
                             ReturnCodes r =  DefaultCatalogReader.Instance.Parse(stream, _viewModel);
                             break;
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
+                    Notify("Error: Could not read file from disk. Original error: " + ex.Message);
                 }
             }
         }
 
         private void quitToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
-            this.Close();
+            Close();
         }
         
 
 
         /* ACTION MENU */
+
+        private void checkIntegrityToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if  (
+                    (CatalogContext.Instance.RedundantKeysChecked = ModelIntgrityChecker.Instance.CheckRedundantKeys()) == true
+                    && (CatalogContext.Instance.ReferentialIntegrityChecked = ModelIntgrityChecker.Instance.CheckReferentialIntegrity()) == true                
+                )
+            {
+                Notify("The imported model is valid.");
+            }
+        }
 
         /// <summary>
         /// Action -> Convert to SQL -> Solstice Legacy
@@ -148,6 +161,18 @@ namespace MetadataConverter
                 return;
             }
             ReturnCodes r = FugaXmlCatalogWriter.Instance.Generate(fbd.SelectedPath, _viewModel);
+        }
+
+        private void Notify(String message)
+        {
+            if (String.IsNullOrEmpty(message))
+            {
+                return;
+            }
+            var current = NotificationZone.Text;
+            NotificationZone.Clear();
+            NotificationZone.AppendText(message + Environment.NewLine);
+            NotificationZone.AppendText(current);
         }
     }
 }
