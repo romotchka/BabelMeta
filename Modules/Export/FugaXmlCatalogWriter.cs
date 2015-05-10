@@ -167,7 +167,18 @@ namespace MetadataConverter.Modules.Export
                 asset.contributors = new List<contributor>(); // These represent work-related contributors like typically Composer, Arranger, etc.
                 foreach (KeyValuePair<Int32, Role> workContributor in childWork.Contributors)
                 {
-                    Artist artist = CatalogContext.Instance.Artists.FirstOrDefault(a => a.Id == workContributor.Key);
+                    Artist artist;
+                    if (artistsBuffer.Exists(a => a.Id == workContributor.Key))
+                    {
+                        // Present in buffer
+                        artist = artistsBuffer.FirstOrDefault(a => a.Id == workContributor.Key);
+                    }
+                    else
+                    {
+                        // Find then add to buffer
+                        artist = CatalogContext.Instance.Artists.FirstOrDefault(a => a.Id == workContributor.Key);
+                        artistsBuffer.Add(artist);
+                    }
                     Role role = CatalogContext.Instance.Roles.FirstOrDefault(r => r.Name.CompareTo(workContributor.Value.Name) == 0);
                     contributorRole cRole = (_roleConverter.ContainsKey(role.Reference)) ? _roleConverter[role.Reference] : contributorRole.ContributingArtist;
 
