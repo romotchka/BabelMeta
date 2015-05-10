@@ -107,7 +107,7 @@ namespace MetadataConverter.Modules.Control
                 return false;
             }
 
-            // Works -> Artists
+            // Work -> Artist
             if  (
                     CatalogContext.Instance.Works.Exists(w => 
                         w.Contributors.Keys.ToList().Exists(c => 
@@ -121,7 +121,7 @@ namespace MetadataConverter.Modules.Control
                 return false;
             }
 
-            // Works -> Role
+            // Work -> Role
             if (
                     CatalogContext.Instance.Works.Exists(w =>
                         w.Contributors.Values.ToList().Exists(r =>
@@ -135,8 +135,17 @@ namespace MetadataConverter.Modules.Control
                 return false;
             }
 
-            // Works -> Works
-            // TODO
+            // Work -> Work
+            if (
+                    CatalogContext.Instance.Works.Where(w => w.Parent > 0).ToList().Exists(w =>
+                        !CatalogContext.Instance.Works.Exists(e =>
+                            e.Id == w.Parent
+                        )
+                    )
+                )
+            {
+                return false;
+            }
 
             // Isrc -> Work
             if (
@@ -208,6 +217,12 @@ namespace MetadataConverter.Modules.Control
                         )
                     )
                 )
+            {
+                return false;
+            }
+
+            // Default lang
+            if (CatalogContext.Instance.DefaultLang == null)
             {
                 return false;
             }

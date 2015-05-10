@@ -186,6 +186,15 @@ namespace MetadataConverter
                 return;
             }
             ReturnCodes r = FugaXmlCatalogWriter.Instance.Generate(fbd.SelectedPath, _viewModel);
+
+            if (r == ReturnCodes.Ok)
+            {
+                Notify("Catalog export completed.");
+            }
+            else
+            {
+                Notify("An error occurred during export.");
+            }
         }
 
         /// <summary>

@@ -82,6 +82,16 @@ namespace MetadataConverter.Model
             }
         }
 
+        public Lang DefaultLang
+        {
+            get
+            {
+                return (Langs.Exists(l => l.IsDefault))
+                    ? Langs.FirstOrDefault(l => l.IsDefault)
+                    : null;
+            }
+        }
+
         internal List<Lang> Langs;
 
         internal List<Role> Roles;

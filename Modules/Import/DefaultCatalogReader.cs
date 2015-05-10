@@ -533,6 +533,19 @@ namespace MetadataConverter.Modules.Import
                     if (keys.Contains(_worksheetColumns["role"]["role_name"]))
                     {
                         role.Name = cells.FirstOrDefault(c => c.Key == _worksheetColumns["role"]["role_name"]).Value.InnerText.Trim();
+
+                        // Attempt to retrieve a qualified name (standardized)
+                        switch (role.Name.ToLower())
+                        {
+                            case "arranger": role.Reference = Role.QualifiedName.Arranger; break;
+                            case "composer": role.Reference = Role.QualifiedName.Composer; break;
+                            case "conductor": role.Reference = Role.QualifiedName.Conductor; break;
+                            case "engineer": role.Reference = Role.QualifiedName.Engineer; break;
+                            case "ensemble": role.Reference = Role.QualifiedName.Ensemble; break;
+                            case "performer": role.Reference = Role.QualifiedName.Performer; break;
+                            // TODO
+                            default: role.Reference = Role.QualifiedName.ContributingArtist; break;
+                        }
                     }
 
                     if (!String.IsNullOrEmpty(role.Name))
