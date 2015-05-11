@@ -26,13 +26,18 @@ namespace MetadataConverter.Model
         public Dictionary<Lang, String> Title { get; set; }
 
         /// <summary>
+        /// The field name is singular because it represents the same entry in different languages available
+        /// </summary>
+        public Dictionary<Lang, String> MovementTitle { get; set; }
+
+        /// <summary>
         /// Work Contributor is e.g. the Composer or Arranger
         /// </summary>
         public Dictionary<Int32, Role> Contributors { get; set; }
 
         public String ClassicalCatalog { get; set; }
 
-        public Key? Key { get; set; }
+        public Key? Tonality { get; set; }
 
         public Int16? Year { get; set; }
     }

@@ -246,9 +246,11 @@ namespace MetadataConverter.Modules.Import
             {
                 return false;
             }
+            if (!ExistsCellValueInRow("movement_number", map, "work")) return false;
             foreach (Lang lang in CatalogContext.Instance.Langs)
             {
                 if (!ExistsCellValueInRow("title_" + lang.ShortName, map, "work")) return false;
+                if (!ExistsCellValueInRow("movement_title_" + lang.ShortName, map, "work")) return false;
             }
             _works = WorksheetActiveRows("work");
 
@@ -724,7 +726,7 @@ namespace MetadataConverter.Modules.Import
                         String shortKey = cells.FirstOrDefault(c => c.Key == _worksheetColumns["work"]["key"]).Value.InnerText.Trim();
                         if (_shortenedKeys.ContainsKey(shortKey))
                         {
-                            work.Key = _shortenedKeys[shortKey];
+                            work.Tonality = _shortenedKeys[shortKey];
                         }
                     }
 
@@ -769,6 +771,12 @@ namespace MetadataConverter.Modules.Import
                         i++;
                     }
 
+                    if (keys.Contains(_worksheetColumns["work"]["movement_number"]))
+                    {
+                        work.MovementNumber = Convert.ToInt16(cells.FirstOrDefault(c => c.Key == _worksheetColumns["work"]["movement_number"]).Value.InnerText.Trim());
+                        if (work.MovementNumber != null && work.MovementNumber <= 0) { work.MovementNumber = null; }
+                    }
+
                     work.Title = new Dictionary<Lang, String>();
                     // Object may have several lang-dependent field sets
                     foreach (Lang lang in CatalogContext.Instance.Langs)
@@ -782,6 +790,22 @@ namespace MetadataConverter.Modules.Import
                         if (!String.IsNullOrEmpty(title))
                         {
                             work.Title[lang] = title;
+                        }
+                    }
+
+                    work.MovementTitle = new Dictionary<Lang, String>();
+                    // Object may have several lang-dependent field sets
+                    foreach (Lang lang in CatalogContext.Instance.Langs)
+                    {
+                        String movementTitle = String.Empty;
+                        if (keys.Contains(_worksheetColumns["work"]["movement_title_" + lang.ShortName]))
+                        {
+                            movementTitle = cells.FirstOrDefault(c => c.Key == _worksheetColumns["work"]["movement_title_" + lang.ShortName]).Value.InnerText.Trim();
+                        }
+
+                        if (!String.IsNullOrEmpty(movementTitle))
+                        {
+                            work.MovementTitle[lang] = movementTitle;
                         }
                     }
 
