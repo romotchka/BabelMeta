@@ -4,7 +4,7 @@
  * romain.carbou@solstice-music.com
  */
 
-namespace MetadataConverter.Model
+namespace BabelMeta.Model
 {
     public enum Key
     {

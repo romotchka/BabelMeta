@@ -11,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MetadataConverter
+namespace BabelMeta
 {
     public class MainFormViewModel : INotifyPropertyChanged
     {

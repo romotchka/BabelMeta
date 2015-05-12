@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MetadataConverter.Model
+namespace BabelMeta.Model
 {
     public class Tag
     {

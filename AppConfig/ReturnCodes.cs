@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MetadataConverter.AppConfig
+namespace BabelMeta.AppConfig
 {
     public enum ReturnCodes
     {

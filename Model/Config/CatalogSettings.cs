@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MetadataConverter.Model.Config
+namespace BabelMeta.Model.Config
 {
     /// <summary>
     /// Default values

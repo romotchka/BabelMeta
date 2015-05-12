@@ -4,14 +4,14 @@
  * romain.carbou@solstice-music.com
  */
 
-using MetadataConverter.Model.Config;
+using BabelMeta.Model.Config;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MetadataConverter.Model
+namespace BabelMeta.Model
 {
     /// <summary>
     /// Singleton object representing the whole catalog in interchange format between Input/Output

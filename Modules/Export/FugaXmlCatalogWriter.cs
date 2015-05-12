@@ -4,10 +4,10 @@
  * romain.carbou@solstice-music.com
  */
 
-using MetadataConverter.Helpers;
-using MetadataConverter.Model;
-using MetadataConverter.Modules.Export.FugaXml;
-using MetadataConverter.AppConfig;
+using BabelMeta.Helpers;
+using BabelMeta.Model;
+using BabelMeta.Modules.Export.FugaXml;
+using BabelMeta.AppConfig;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,7 +16,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace MetadataConverter.Modules.Export
+namespace BabelMeta.Modules.Export
 {
     public class FugaXmlCatalogWriter : ICatalogWriter
     {

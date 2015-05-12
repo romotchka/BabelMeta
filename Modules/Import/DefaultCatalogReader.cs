@@ -4,8 +4,8 @@
  * romain.carbou@solstice-music.com
  */
 
-using MetadataConverter.Model;
-using MetadataConverter.AppConfig;
+using BabelMeta.Model;
+using BabelMeta.AppConfig;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,9 +14,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
-using MetadataConverter.Model.Config;
+using BabelMeta.Model.Config;
 
-namespace MetadataConverter.Modules.Import
+namespace BabelMeta.Modules.Import
 {
     /// <summary>
     /// This default Input format consists in a Excel 2003 XML export of worksheets:

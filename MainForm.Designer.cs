@@ -4,7 +4,7 @@
  * romain.carbou@solstice-music.com
  */
 
-namespace MetadataConverter
+namespace BabelMeta
 {
     partial class MainForm
     {

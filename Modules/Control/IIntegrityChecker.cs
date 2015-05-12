@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MetadataConverter.Modules.Control
+namespace BabelMeta.Modules.Control
 {
     public interface IIntegrityChecker
     {

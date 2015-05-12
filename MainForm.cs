@@ -4,11 +4,11 @@
  * romain.carbou@solstice-music.com
  */
 
-using MetadataConverter.Model;
-using MetadataConverter.Modules.Control;
-using MetadataConverter.Modules.Export;
-using MetadataConverter.Modules.Import;
-using MetadataConverter.AppConfig;
+using BabelMeta.Model;
+using BabelMeta.Modules.Control;
+using BabelMeta.Modules.Export;
+using BabelMeta.Modules.Import;
+using BabelMeta.AppConfig;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -20,7 +20,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace MetadataConverter
+namespace BabelMeta
 {
     public partial class MainForm : Form
     {

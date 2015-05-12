@@ -4,14 +4,14 @@
  * romain.carbou@solstice-music.com
  */
 
-using MetadataConverter.Model;
+using BabelMeta.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MetadataConverter.Modules.Control
+namespace BabelMeta.Modules.Control
 {
     public class ModelIntgrityChecker : IIntegrityChecker
     {

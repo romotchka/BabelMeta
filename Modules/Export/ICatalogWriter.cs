@@ -4,7 +4,7 @@
  * romain.carbou@solstice-music.com
  */
 
-using MetadataConverter.AppConfig;
+using BabelMeta.AppConfig;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,7 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MetadataConverter.Modules.Export
+namespace BabelMeta.Modules.Export
 {
     public interface ICatalogWriter
     {
