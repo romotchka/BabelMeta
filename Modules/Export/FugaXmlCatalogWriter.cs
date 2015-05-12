@@ -150,10 +150,15 @@ namespace BabelMeta.Modules.Export
             // TODO i.album.alternate_genreSpecified
             // TODO i.album.alternate_subgenre
             // TODO i.album.attachments
-            // TODO MANDATORY i.album.c_line_text
-            // TODO MANDATORY i.album.c_line_year
-            // TODO MANDATORY i.album.catalog_number
+
+            i.album.c_line_text = (!String.IsNullOrEmpty(album.CName)) ? album.CName : CatalogContext.Instance.Settings.COwnerDefault;
+
+            i.album.c_line_year = album.CYear.ToString();
+
+            i.album.catalog_number = album.CatalogReference;
+
             // TODO MANDATORY i.album.catalog_tier
+
             // TODO MANDATORY i.album.catalog_tierSpecified
             // TODO MANDATORY i.album.consumer_release_date
             // TODO MANDATORY i.album.cover_art
@@ -181,8 +186,10 @@ namespace BabelMeta.Modules.Export
             // TODO MANDATORY i.album.name
             // TODO i.album.original_release_date
             // TODO i.album.original_release_dateSpecified
-            // TODO MANDATORY i.album.p_line_text
-            // TODO MANDATORY i.album.p_line_year
+
+            i.album.p_line_text = (!String.IsNullOrEmpty(album.PName)) ? album.PName : CatalogContext.Instance.Settings.POwnerDefault;
+
+            i.album.p_line_year = album.PYear.ToString();
 
             i.album.parental_advisory = parental_advisory.@false; // TODO add setting
 

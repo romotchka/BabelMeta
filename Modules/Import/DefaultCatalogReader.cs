@@ -294,6 +294,7 @@ namespace BabelMeta.Modules.Import
             if (!ExistsCellValueInRow("recording_location", map, "isrc")) return false;
             if (!ExistsCellValueInRow("recording_year", map, "isrc")) return false;
             if (!ExistsCellValueInRow("available_separately", map, "isrc")) return false;
+            if (!ExistsCellValueInRow("catalog_tier", map, "isrc")) return false;
             _isrcs = WorksheetActiveRows("isrc");
 
             map = CellMapByRow(_worksheets["album"].ChildNodes.Cast<XmlNode>().FirstOrDefault(n => n.Name.CompareTo(OfficeXml.WorksheetRow) == 0));
@@ -304,6 +305,7 @@ namespace BabelMeta.Modules.Import
             if (!ExistsCellValueInRow("c_year", map, "album")) return false;
             if (!ExistsCellValueInRow("p_name", map, "album")) return false;
             if (!ExistsCellValueInRow("p_year", map, "album")) return false;
+            if (!ExistsCellValueInRow("catalog_tier", map, "album")) return false;
             if (!ExistsCellValueInRow("consumer_release_date", map, "album")) return false;
             if (!ExistsCellValueInRow("label", map, "album")) return false;
             if (!ExistsCellValueInRow("reference", map, "album")) return false;
@@ -1113,6 +1115,22 @@ namespace BabelMeta.Modules.Import
                         isrc.AvailableSeparately = CatalogContext.Instance.Settings.AvailableSeparatelyDefault;
                     }
 
+                    // Catalog tier default is album-wise catalog tier, done at a later stage, after Album parsing
+                    if (keys.Contains(_worksheetColumns["isrc"]["catalog_tier"]))
+                    {
+                        String tier = cells.FirstOrDefault(c => c.Key == _worksheetColumns["isrc"]["catalog_tier"]).Value.InnerText.ToLower().Trim();
+                        if (!String.IsNullOrEmpty(tier))
+                        {
+                            switch (tier)
+                            {
+                                case "back": isrc.Tier = CatalogTier.Back; break;
+                                case "budget": isrc.Tier = CatalogTier.Budget; break;
+                                case "front": isrc.Tier = CatalogTier.Front; break;
+                                case "mid": isrc.Tier = CatalogTier.Mid; break;
+                                case "premium": isrc.Tier = CatalogTier.Premium; break;
+                            }
+                        }
+                    }
 
                     // If at least isrc has one contributor, record entry
                     if (isrc.Contributors.Count > 0)
@@ -1199,6 +1217,40 @@ namespace BabelMeta.Modules.Import
                     if (album.PYear < 1900 || album.PYear > 2100)
                     {
                         album.PYear = null;
+                    }
+
+                    if (keys.Contains(_worksheetColumns["album"]["catalog_tier"]))
+                    {
+                        String tier = cells.FirstOrDefault(c => c.Key == _worksheetColumns["album"]["catalog_tier"]).Value.InnerText.ToLower().Trim();
+                        if (!String.IsNullOrEmpty(tier))
+                        {
+                            switch (tier)
+                            {
+                                case "back": album.Tier = CatalogTier.Back; break;
+                                case "budget": album.Tier = CatalogTier.Budget; break;
+                                case "front": album.Tier = CatalogTier.Front; break;
+                                case "mid": album.Tier = CatalogTier.Mid; break;
+                                case "premium": album.Tier = CatalogTier.Premium; break;
+                                default: album.Tier = CatalogContext.Instance.Settings.CatalogTierDefault; break;
+                            }
+                        }
+                        else
+                        {
+                            album.Tier = CatalogContext.Instance.Settings.CatalogTierDefault;
+                        }
+                    }
+                    else
+                    {
+                        album.Tier = CatalogContext.Instance.Settings.CatalogTierDefault;
+                    }
+
+                    if (keys.Contains(_worksheetColumns["album"]["consumer_release_date"]))
+                    {
+                        String dateString = cells.FirstOrDefault(c => c.Key == _worksheetColumns["album"]["consumer_release_date"]).Value.InnerText.Trim();
+                    }
+                    else
+                    {
+                        // TODO add auto date
                     }
 
                     if (keys.Contains(_worksheetColumns["album"]["label"]))
@@ -1453,9 +1505,47 @@ namespace BabelMeta.Modules.Import
                     // Now select the most frequent primary performer
                     int max = artistFrequencies.Values.ToList().Max();
                     album.PrimaryArtistId = artistFrequencies.Keys.ToList().FirstOrDefault(e => artistFrequencies[e] == max);
+                }
 
-                    // Total discs
-                    album.TotalDiscs = album.Assets.Keys.ToList().Max();
+                // Total discs
+                album.TotalDiscs = album.Assets.Keys.ToList().Max();
+
+                // C & P Copyrights
+                if (String.IsNullOrEmpty(album.CName))
+                {
+                    album.CName = album.PName;
+                }
+                if (String.IsNullOrEmpty(album.PName))
+                {
+                    album.PName = album.CName;
+                }
+                if (album.CYear == null)
+                {
+                    album.CYear = album.PYear;
+                }
+                if (album.PYear == null)
+                {
+                    album.PYear = album.CYear;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Complete such fields as Catalog Tier (default value), after albums parsing
+        /// </summary>
+        private void FinalizeIsrcs()
+        {
+            if (CatalogContext.Instance.Isrcs == null || CatalogContext.Instance.Albums == null)
+            {
+                return;
+            }
+
+            // This update may raise undesired affectations if the isrc is present in more than one album (compilations, etc.) 
+            foreach (Isrc isrc in CatalogContext.Instance.Isrcs)
+            {
+                if (isrc.Tier == null)
+                {
+                    isrc.Tier = (CatalogContext.Instance.Albums.FirstOrDefault(a => a.Assets.Values.ToList().Exists(v => v.Values.ToList().Contains(isrc.Id)))).Tier;                
                 }
             }
         }

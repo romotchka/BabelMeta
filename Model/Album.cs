@@ -4,6 +4,7 @@
  * romain.carbou@solstice-music.com
  */
 
+using BabelMeta.Model.Config;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,8 @@ namespace BabelMeta.Model
         public String PName { get; set; }
 
         public Int16? PYear { get; set; }
+
+        public CatalogTier Tier { get; set; }
 
         public DateTime ConsumerReleaseDate { get; set; }
 

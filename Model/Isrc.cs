@@ -4,6 +4,7 @@
  * romain.carbou@solstice-music.com
  */
 
+using BabelMeta.Model.Config;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,5 +38,6 @@ namespace BabelMeta.Model
 
         public bool AvailableSeparately { get; set; }
 
+        public CatalogTier Tier { get; set; }
     }
 }
