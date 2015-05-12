@@ -1417,8 +1417,8 @@ namespace BabelMeta.Modules.Import
 
             foreach (Album album in CatalogContext.Instance.Albums)
             {
-                // Primary Artist field
-                Dictionary<Int32, int> frequencies = new Dictionary<Int32, int>(); // Keys are primary artists, Values are occurrences in tracks
+                // Primary Artist field automatic computation
+                Dictionary<Int32, int> artistFrequencies = new Dictionary<Int32, int>(); // Keys are primary artists, Values are occurrences in tracks
                 if (album.PrimaryArtistId == null)
                 {
                     foreach (KeyValuePair<Int16, Dictionary<Int16, String>> volume in album.Assets)
@@ -1426,20 +1426,24 @@ namespace BabelMeta.Modules.Import
                         foreach (KeyValuePair<Int16, String> track in volume.Value)
                         {
                             Isrc isrc = CatalogContext.Instance.Isrcs.FirstOrDefault(e => e.Id.CompareTo(track.Value) == 0);
+                            if (isrc == null || String.IsNullOrEmpty(isrc.Id))
+                            {
+                                continue;
+                            }
                             foreach (KeyValuePair<Int32, Dictionary<Role, Quality>> contributor in isrc.Contributors)
                             {
-                                Int32 artistId = contributor.Key;
                                 foreach (KeyValuePair<Role, Quality> roleQuality in contributor.Value)
                                 {
-                                    if (roleQuality.Key.Reference == Role.QualifiedName.Performer && roleQuality.Value.Name.CompareTo("Primary") == 0)
+                                    if (roleQuality.Key.Reference == Role.QualifiedName.Performer && roleQuality.Value.Name.ToLower().CompareTo("primary") == 0)
                                     {
                                         // Found a Primary Performer occurrence!
-                                        if (frequencies.ContainsKey(artistId)) {
-                                            frequencies[artistId]++;
+                                        if (artistFrequencies.ContainsKey(contributor.Key))
+                                        {
+                                            artistFrequencies[contributor.Key]++;
                                         }
                                         else
                                         {
-                                            frequencies[artistId] = 1;
+                                            artistFrequencies[contributor.Key] = 1;
                                         }
                                     }
                                 }
@@ -1447,8 +1451,8 @@ namespace BabelMeta.Modules.Import
                         }
                     }
                     // Now select the most frequent primary performer
-                    int max = frequencies.Values.ToList().Max();
-                    album.PrimaryArtistId = frequencies.Keys.ToList().FirstOrDefault(e => frequencies[e] == max);
+                    int max = artistFrequencies.Values.ToList().Max();
+                    album.PrimaryArtistId = artistFrequencies.Keys.ToList().FirstOrDefault(e => artistFrequencies[e] == max);
 
                     // Total discs
                     album.TotalDiscs = album.Assets.Keys.ToList().Max();

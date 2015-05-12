@@ -186,7 +186,7 @@ namespace BabelMeta.Modules.Export
 
             i.album.parental_advisory = parental_advisory.@false; // TODO add setting
 
-            i.album.parental_advisorySpecified = false;
+            i.album.parental_advisorySpecified = true;
 
             // TODO i.album.pricing_intervals
             // TODO i.album.pricings
@@ -194,11 +194,15 @@ namespace BabelMeta.Modules.Export
             if (album.PrimaryArtistId > 0)
             {
                 Artist primaryArtist = CatalogContext.Instance.Artists.FirstOrDefault(e => e.Id == (Int32)album.PrimaryArtistId);
-                i.album.primary_artist = new primary_artist
+                if (primaryArtist.LastName.ContainsKey(CatalogContext.Instance.DefaultLang))
                 {
-                    name = (primaryArtist.FirstName + " " + primaryArtist.LastName).Trim(),
-                };
+                    i.album.primary_artist = new primary_artist
+                    {
+                        name = (primaryArtist.FirstName[CatalogContext.Instance.DefaultLang] + " " + primaryArtist.LastName[CatalogContext.Instance.DefaultLang]).Trim(),
+                    };
+                }
             }
+
             // TODO i.album.recording_location
             // TODO i.album.recording_year
             // TODO MANDATORY i.album.redeliveries
@@ -208,7 +212,7 @@ namespace BabelMeta.Modules.Export
             // TODO MANDATORY i.album.supplier
             // TODO MANDATORY i.album.territories
 
-            i.album.total_discs = album.TotalDiscs.ToString() ;
+            i.album.total_discs = album.TotalDiscs.ToString();
             
             i.album.upc_code = album.Ean.ToString();
 
@@ -238,13 +242,13 @@ namespace BabelMeta.Modules.Export
                     return;
                 }
                 // The asset's work is either standalone or a child work.
-                Work childWork = CatalogContext.Instance.Works.FirstOrDefault(e => e.Id == isrc.Work);
-                if (childWork == null)
+                Work currentWork = CatalogContext.Instance.Works.FirstOrDefault(e => e.Id == isrc.Work);
+                if (currentWork == null)
                 {
                     return;
                 }
-                Work parentWork = (childWork.Parent > 0)
-                    ? CatalogContext.Instance.Works.FirstOrDefault(w => w.Id == childWork.Parent)
+                Work parentWork = (currentWork.Parent > 0)
+                    ? CatalogContext.Instance.Works.FirstOrDefault(w => w.Id == currentWork.Parent)
                     : null;
 
                 ingestionAlbumTracksClassical_track asset = new ingestionAlbumTracksClassical_track();
@@ -264,10 +268,10 @@ namespace BabelMeta.Modules.Export
                 // TODO MANDATORY asset.catalog_tier 
                 // TODO MANDATORY asset.catalog_tierSpecified
 
-                asset.classical_catalog = (parentWork == null) ? childWork.ClassicalCatalog : parentWork.ClassicalCatalog;
+                asset.classical_catalog = (parentWork == null) ? currentWork.ClassicalCatalog : parentWork.ClassicalCatalog;
 
                 asset.contributors = new List<contributor>(); // These represent work-related contributors like typically Composer, Arranger, etc.
-                foreach (KeyValuePair<Int32, Role> workContributor in childWork.Contributors)
+                foreach (KeyValuePair<Int32, Role> workContributor in currentWork.Contributors)
                 {
                     Artist artist;
                     if (artistsBuffer.Exists(a => a.Id == workContributor.Key))
@@ -298,7 +302,7 @@ namespace BabelMeta.Modules.Export
                 // TODO asset.country_of_recording
 
                 if  (
-                        childWork.Title.ContainsKey(CatalogContext.Instance.DefaultLang)
+                        currentWork.Title.ContainsKey(CatalogContext.Instance.DefaultLang)
                         &&  (
                                 parentWork == null
                                 || parentWork.Title.ContainsKey(CatalogContext.Instance.DefaultLang)
@@ -306,8 +310,8 @@ namespace BabelMeta.Modules.Export
                     )
                 {
                     asset.display_title = (parentWork == null)
-                        ? childWork.Title[CatalogContext.Instance.DefaultLang]
-                        : parentWork.Title[CatalogContext.Instance.DefaultLang] + Syntax.HierarchicalSeparator(CatalogContext.Instance.DefaultLang) + childWork.Title[CatalogContext.Instance.DefaultLang];
+                        ? currentWork.Title[CatalogContext.Instance.DefaultLang]
+                        : parentWork.Title[CatalogContext.Instance.DefaultLang] + Syntax.HierarchicalSeparator(CatalogContext.Instance.DefaultLang) + currentWork.Title[CatalogContext.Instance.DefaultLang];
                 }
 
                 // TODO asset.extra1
@@ -325,12 +329,12 @@ namespace BabelMeta.Modules.Export
 
                 asset.isrc_code = isrcId;
 
-                asset.keySpecified = (parentWork == null && childWork.Tonality != null) || (parentWork != null && parentWork.Tonality != null);
+                asset.keySpecified = (parentWork == null && currentWork.Tonality != null) || (parentWork != null && parentWork.Tonality != null);
 
                 if (asset.keySpecified)
                 {
                     asset.key = (parentWork == null)
-                        ? _keyConverter[(Key)(childWork.Tonality)]
+                        ? _keyConverter[(Key)(currentWork.Tonality)]
                         : _keyConverter[(Key)(parentWork.Tonality)];
                 }
 
@@ -343,16 +347,16 @@ namespace BabelMeta.Modules.Export
 
                 if  (
                         parentWork != null 
-                        && childWork.MovementTitle.ContainsKey(CatalogContext.Instance.DefaultLang)
-                        && !String.IsNullOrEmpty(childWork.MovementTitle[CatalogContext.Instance.DefaultLang])
+                        && currentWork.MovementTitle.ContainsKey(CatalogContext.Instance.DefaultLang)
+                        && !String.IsNullOrEmpty(currentWork.MovementTitle[CatalogContext.Instance.DefaultLang])
                     )
                 {
-                    asset.movement = childWork.MovementTitle[CatalogContext.Instance.DefaultLang];
+                    asset.movement = currentWork.MovementTitle[CatalogContext.Instance.DefaultLang];
                 }
 
-                if (parentWork != null && childWork.MovementNumber > 0)
+                if (parentWork != null && currentWork.MovementNumber > 0)
                 {
-                    asset.movement_number = childWork.MovementNumber.ToString();
+                    asset.movement_number = currentWork.MovementNumber.ToString();
                 }
 
                 asset.on_disc = volumeIndex.ToString();
@@ -373,8 +377,10 @@ namespace BabelMeta.Modules.Export
                     e.Id == (isrc.Contributors.Keys.ToArray())[0]);
                 if (primaryArtist.LastName.ContainsKey(CatalogContext.Instance.DefaultLang))
                 {
-                    asset.primary_artist = new primary_artist();
-                    asset.primary_artist.name = (primaryArtist.FirstName[CatalogContext.Instance.DefaultLang] + " " + primaryArtist.LastName[CatalogContext.Instance.DefaultLang]).Trim();
+                    asset.primary_artist = new primary_artist()
+                    {
+                        name = (primaryArtist.FirstName[CatalogContext.Instance.DefaultLang] + " " + primaryArtist.LastName[CatalogContext.Instance.DefaultLang]).Trim(),
+                    };
                 }
 
                 // TODO asset.publishers
