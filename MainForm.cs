@@ -8,7 +8,7 @@ using MetadataConverter.Model;
 using MetadataConverter.Modules.Control;
 using MetadataConverter.Modules.Export;
 using MetadataConverter.Modules.Import;
-using MetadataConverter.Settings;
+using MetadataConverter.AppConfig;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

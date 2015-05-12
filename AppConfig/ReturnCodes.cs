@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MetadataConverter.Settings
+namespace MetadataConverter.AppConfig
 {
     public enum ReturnCodes
     {

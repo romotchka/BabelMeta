@@ -4,7 +4,7 @@
  * romain.carbou@solstice-music.com
  */
 
-using MetadataConverter.Settings;
+using MetadataConverter.AppConfig;
 using System;
 using System.Collections.Generic;
 using System.IO;

@@ -5,7 +5,7 @@
  */
 
 using MetadataConverter.Model;
-using MetadataConverter.Settings;
+using MetadataConverter.AppConfig;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using MetadataConverter.Model.Config;
 
 namespace MetadataConverter.Modules.Import
 {
@@ -73,6 +74,7 @@ namespace MetadataConverter.Modules.Import
         /// </summary>
         private Dictionary<String, Dictionary<String, Int32>> _worksheetColumns;
 
+        private List<XmlNode> _settings;
         private List<XmlNode> _langs;
         private List<XmlNode> _tags;
         private List<XmlNode> _roles;
@@ -155,6 +157,9 @@ namespace MetadataConverter.Modules.Import
             ParseAlbums();
             ParseAssets();
 
+            // Finalization
+            FinalizeAlbums();
+
             CatalogContext.Instance.Initialized = true;
             _mainFormViewModel.InputProgressBarValue = _mainFormViewModel.InputProgressBarMax;
             return ReturnCodes.Ok;
@@ -168,6 +173,8 @@ namespace MetadataConverter.Modules.Import
             }
 
             // Check worksheets
+            if (!ExistsWorksheet("SETTINGS")) return false;
+
             if (!ExistsWorksheet("lang")) return false;
             if (!ExistsWorksheet("tag")) return false;
             if (!ExistsWorksheet("role")) return false;
@@ -184,6 +191,14 @@ namespace MetadataConverter.Modules.Import
 
             // Strict order so as to enable referential integrity check
 
+            map = CellMapByRow(_worksheets["SETTINGS"].ChildNodes.Cast<XmlNode>().FirstOrDefault(n => n.Name.CompareTo(OfficeXml.WorksheetRow) == 0));
+            if (!ExistsCellValueInRow("parameter", map, "SETTINGS")) return false;
+            if (!ExistsCellValueInRow("value", map, "SETTINGS")) return false;
+            _settings = WorksheetActiveRows("SETTINGS");
+
+            // Langs is the next worksheet to be parsed first because some worksheet columns are lang-dependent
+            ParseSettings();
+
             map = CellMapByRow(_worksheets["lang"].ChildNodes.Cast<XmlNode>().FirstOrDefault(n => n.Name.CompareTo(OfficeXml.WorksheetRow) == 0));
             if (!ExistsCellValueInRow("local_db", map, "lang")) return false;
             if (!ExistsCellValueInRow("partner_db", map, "lang")) return false;
@@ -192,7 +207,7 @@ namespace MetadataConverter.Modules.Import
             if (!ExistsCellValueInRow("default", map, "lang")) return false;
             _langs = WorksheetActiveRows("lang");
 
-            // Langs is the worksheet to be parsed first because some worksheet columns are lang-dependent
+            // Langs is the next worksheet to be parsed first because some worksheet columns are lang-dependent
             ParseLangs();
 
             map = CellMapByRow(_worksheets["tag"].ChildNodes.Cast<XmlNode>().FirstOrDefault(n => n.Name.CompareTo(OfficeXml.WorksheetRow) == 0));
@@ -272,12 +287,24 @@ namespace MetadataConverter.Modules.Import
             {
                 return false;
             }
+            if (!ExistsCellValueInRow("c_name", map, "isrc")) return false;
+            if (!ExistsCellValueInRow("c_year", map, "isrc")) return false;
+            if (!ExistsCellValueInRow("p_name", map, "isrc")) return false;
+            if (!ExistsCellValueInRow("p_year", map, "isrc")) return false;
+            if (!ExistsCellValueInRow("recording_location", map, "isrc")) return false;
+            if (!ExistsCellValueInRow("recording_year", map, "isrc")) return false;
+            if (!ExistsCellValueInRow("available_separately", map, "isrc")) return false;
             _isrcs = WorksheetActiveRows("isrc");
 
             map = CellMapByRow(_worksheets["album"].ChildNodes.Cast<XmlNode>().FirstOrDefault(n => n.Name.CompareTo(OfficeXml.WorksheetRow) == 0));
             if (!ExistsCellValueInRow("local_db", map, "album")) return false;
             if (!ExistsCellValueInRow("partner_db", map, "album")) return false;
             if (!ExistsCellValueInRow("album_id", map, "album")) return false;
+            if (!ExistsCellValueInRow("c_name", map, "album")) return false;
+            if (!ExistsCellValueInRow("c_year", map, "album")) return false;
+            if (!ExistsCellValueInRow("p_name", map, "album")) return false;
+            if (!ExistsCellValueInRow("p_year", map, "album")) return false;
+            if (!ExistsCellValueInRow("consumer_release_date", map, "album")) return false;
             if (!ExistsCellValueInRow("label", map, "album")) return false;
             if (!ExistsCellValueInRow("reference", map, "album")) return false;
             if (!ExistsCellValueInRow("ean", map, "album")) return false;
@@ -287,6 +314,10 @@ namespace MetadataConverter.Modules.Import
             {
                 if (!ExistsCellValueInRow("title_" + lang.ShortName, map, "album")) return false;
             }
+            if (!ExistsCellValueInRow("primary_artist", map, "album")) return false;
+            if (!ExistsCellValueInRow("recording_location", map, "album")) return false;
+            if (!ExistsCellValueInRow("recording_year", map, "album")) return false;
+            if (!ExistsCellValueInRow("redeliver", map, "album")) return false;
             _albums = WorksheetActiveRows("album");
 
             map = CellMapByRow(_worksheets["asset"].ChildNodes.Cast<XmlNode>().FirstOrDefault(n => n.Name.CompareTo(OfficeXml.WorksheetRow) == 0));
@@ -354,17 +385,24 @@ namespace MetadataConverter.Modules.Import
             foreach (XmlNode row in rows)
             {
                 Dictionary<Int32, XmlNode> map = CellMapByRow(row);
-                // Filtering active rows only
-                bool local = map.ContainsKey(_worksheetColumns[worksheetName]["local_db"]) && map[_worksheetColumns[worksheetName]["local_db"]].InnerText.CompareTo("active") == 0;
-                bool partner = map.ContainsKey(_worksheetColumns[worksheetName]["partner_db"]) && map[_worksheetColumns[worksheetName]["partner_db"]].InnerText.CompareTo("active") == 0;
-                if (
-                        (localActive && partnerActive && local && partner)
-                        || (localActive && !partnerActive && local)
-                        || (!localActive && partnerActive && partner)
-                        || (!localActive && !partnerActive && (local || partner))
-                    )
+                // Filtering active rows only (except for SETTINGS)
+                if (worksheetName.CompareTo("SETTINGS") == 0)
                 {
                     filteredRows.Add(row);
+                }
+                else
+                {
+                    bool local = map.ContainsKey(_worksheetColumns[worksheetName]["local_db"]) && map[_worksheetColumns[worksheetName]["local_db"]].InnerText.CompareTo("active") == 0;
+                    bool partner = map.ContainsKey(_worksheetColumns[worksheetName]["partner_db"]) && map[_worksheetColumns[worksheetName]["partner_db"]].InnerText.CompareTo("active") == 0;
+                    if (
+                            (localActive && partnerActive && local && partner)
+                            || (localActive && !partnerActive && local)
+                            || (!localActive && partnerActive && partner)
+                            || (!localActive && !partnerActive && (local || partner))
+                        )
+                    {
+                        filteredRows.Add(row);
+                    }
                 }
             }
             return filteredRows;
@@ -440,6 +478,88 @@ namespace MetadataConverter.Modules.Import
             }
 
             return exists;
+        }
+
+        private void ParseSettings()
+        {
+            if (_settings == null)
+            {
+                return;
+            }
+            foreach (XmlNode row in _settings)
+            {
+                Dictionary<Int32, XmlNode> cells = CellMapByRow(row);
+                if (cells != null && cells.Count > 0)
+                {
+                    String parameter = String.Empty;
+                    String value = String.Empty;
+                    List<Int32> keys = cells.Keys.ToList();
+
+                    if (keys.Contains(_worksheetColumns["SETTINGS"]["parameter"]))
+                    {
+                        parameter = cells.FirstOrDefault(c => c.Key == _worksheetColumns["SETTINGS"]["parameter"]).Value.InnerText.Trim();
+                    }
+
+                    if (keys.Contains(_worksheetColumns["SETTINGS"]["value"]))
+                    {
+                        value = cells.FirstOrDefault(c => c.Key == _worksheetColumns["SETTINGS"]["value"]).Value.InnerText.Trim();
+                    }
+
+                    if (!String.IsNullOrEmpty(parameter))
+                    {
+                        if (CatalogContext.Instance.Settings == null)
+                        {
+                            CatalogContext.Instance.Settings = new CatalogSettings();
+                        }
+                        CatalogSettings settings = CatalogContext.Instance.Settings;
+
+                        switch (parameter)
+                        {
+                            case "SUPPLIER": settings.SupplierDefault = value; break;
+                            case "LABEL_NAME": settings.LabelDefault = value; break;
+                            case "ALBUM_COPYRIGHT_C_OWNER": settings.COwnerDefault = (String.IsNullOrEmpty(value)) ? settings.LabelDefault : value; break;
+                            case "ALBUM_COPYRIGHT_P_OWNER": settings.POwnerDefault = (String.IsNullOrEmpty(value)) ? settings.LabelDefault : value; break;
+                            case "ALBUM_CATALOG_TIER": 
+                                if (!String.IsNullOrEmpty(value))
+                                {
+                                    switch (value.ToLower())
+                                    {
+                                        case "back": settings.CatalogTierDefault = CatalogTier.Back; break;
+                                        case "budget": settings.CatalogTierDefault = CatalogTier.Budget; break;
+                                        case "front": settings.CatalogTierDefault = CatalogTier.Front; break;
+                                        case "mid": settings.CatalogTierDefault = CatalogTier.Mid; break;
+                                        case "premium": settings.CatalogTierDefault = CatalogTier.Premium ; break;
+                                    }
+                                }
+                                else
+                                {
+                                    settings.CatalogTierDefault = CatalogTier.Front;
+                                }
+                                break;
+                            case "ALBUM_MAIN_GENRE": settings.MainGenreDefault = value; break;
+                            case "ALBUM_FORMAT":
+                                if (!String.IsNullOrEmpty(value))
+                                {
+                                    switch (value.ToLower())
+                                    {
+                                        case "album": settings.FormatDefault = ProductFormat.Album; break;
+                                        case "boxset": settings.FormatDefault = ProductFormat.BoxSet; break;
+                                        case "ep": settings.FormatDefault = ProductFormat.EP; break;
+                                        case "single": settings.FormatDefault = ProductFormat.Single; break;
+                                    }
+                                }
+                                else
+                                {
+                                    settings.FormatDefault = ProductFormat.Album;
+                                }
+                                break;
+                            case "ASSET_AVAILABLE_SEPARATELY": settings.AvailableSeparatelyDefault = (String.IsNullOrEmpty(value) || value.Trim().ToLower().CompareTo("no") != 0); break;
+                        }
+                    }
+
+                }
+            }
+
         }
 
         /// <summary>
@@ -922,6 +1042,78 @@ namespace MetadataConverter.Modules.Import
                         i++;
                     }
 
+                    if (keys.Contains(_worksheetColumns["isrc"]["c_name"]))
+                    {
+                        isrc.CName = cells.FirstOrDefault(c => c.Key == _worksheetColumns["isrc"]["c_name"]).Value.InnerText.Trim();
+                        if (String.IsNullOrEmpty(isrc.CName))
+                        {
+                            isrc.CName = CatalogContext.Instance.Settings.LabelDefault;
+                        }
+                    }
+                    else
+                    {
+                        isrc.CName = CatalogContext.Instance.Settings.LabelDefault;
+                    }
+
+                    if (keys.Contains(_worksheetColumns["isrc"]["c_year"]))
+                    {
+                        isrc.CYear = Convert.ToInt16(cells.FirstOrDefault(c => c.Key == _worksheetColumns["isrc"]["c_year"]).Value.InnerText.Trim());
+                    }
+                    if (isrc.CYear < 1900 || isrc.CYear > 2100)
+                    {
+                        isrc.CYear = null;
+                    }
+
+                    if (keys.Contains(_worksheetColumns["isrc"]["p_name"]))
+                    {
+                        isrc.PName = cells.FirstOrDefault(c => c.Key == _worksheetColumns["isrc"]["p_name"]).Value.InnerText.Trim();
+                        if (String.IsNullOrEmpty(isrc.PName))
+                        {
+                            isrc.PName = CatalogContext.Instance.Settings.LabelDefault;
+                        }
+                    }
+                    else
+                    {
+                        isrc.PName = CatalogContext.Instance.Settings.LabelDefault;
+                    }
+
+                    if (keys.Contains(_worksheetColumns["isrc"]["p_year"]))
+                    {
+                        isrc.PYear = Convert.ToInt16(cells.FirstOrDefault(c => c.Key == _worksheetColumns["isrc"]["p_year"]).Value.InnerText.Trim());
+                    }
+                    if (isrc.PYear < 1900 || isrc.PYear > 2100)
+                    {
+                        isrc.PYear = null;
+                    }
+
+
+                    if (keys.Contains(_worksheetColumns["isrc"]["recording_location"]))
+                    {
+                        isrc.RecordingLocation = cells.FirstOrDefault(c => c.Key == _worksheetColumns["isrc"]["recording_location"]).Value.InnerText.Trim();
+                    }
+
+                    if (keys.Contains(_worksheetColumns["isrc"]["recording_year"]))
+                    {
+                        isrc.RecordingYear = Convert.ToInt16(cells.FirstOrDefault(c => c.Key == _worksheetColumns["isrc"]["recording_year"]).Value.InnerText.Trim());
+                    }
+                    if (isrc.RecordingYear < 1900 || isrc.RecordingYear > 2100)
+                    {
+                        isrc.RecordingYear = null;
+                    }
+
+                    if (keys.Contains(_worksheetColumns["isrc"]["available_separately"]))
+                    {
+                        String value = cells.FirstOrDefault(c => c.Key == _worksheetColumns["isrc"]["available_separately"]).Value.InnerText.Trim();
+                        isrc.AvailableSeparately = (!String.IsNullOrEmpty(value) && value.Trim().ToLower().CompareTo("no") == 0)
+                            ? false
+                            : CatalogContext.Instance.Settings.AvailableSeparatelyDefault;
+                    }
+                    else
+                    {
+                        isrc.AvailableSeparately = CatalogContext.Instance.Settings.AvailableSeparatelyDefault;
+                    }
+
+
                     // If at least isrc has one contributor, record entry
                     if (isrc.Contributors.Count > 0)
                     {
@@ -965,15 +1157,65 @@ namespace MetadataConverter.Modules.Import
                         continue;
                     }
 
+                    if (keys.Contains(_worksheetColumns["album"]["c_name"]))
+                    {
+                        album.CName = cells.FirstOrDefault(c => c.Key == _worksheetColumns["album"]["c_name"]).Value.InnerText.Trim();
+                        if (String.IsNullOrEmpty(album.CName))
+                        {
+                            album.CName = CatalogContext.Instance.Settings.LabelDefault;
+                        }
+                    }
+                    else
+                    {
+                        album.CName = CatalogContext.Instance.Settings.LabelDefault;
+                    }
+
+                    if (keys.Contains(_worksheetColumns["album"]["c_year"]))
+                    {
+                        album.CYear = Convert.ToInt16(cells.FirstOrDefault(c => c.Key == _worksheetColumns["album"]["c_year"]).Value.InnerText.Trim());
+                    }
+                    if (album.CYear < 1900 || album.CYear > 2100)
+                    {
+                        album.CYear = null;
+                    }
+
+                    if (keys.Contains(_worksheetColumns["album"]["p_name"]))
+                    {
+                        album.PName = cells.FirstOrDefault(c => c.Key == _worksheetColumns["album"]["p_name"]).Value.InnerText.Trim();
+                        if (String.IsNullOrEmpty(album.PName))
+                        {
+                            album.PName = CatalogContext.Instance.Settings.LabelDefault;
+                        }
+                    }
+                    else
+                    {
+                        album.PName = CatalogContext.Instance.Settings.LabelDefault;
+                    }
+
+                    if (keys.Contains(_worksheetColumns["album"]["p_year"]))
+                    {
+                        album.PYear = Convert.ToInt16(cells.FirstOrDefault(c => c.Key == _worksheetColumns["album"]["p_year"]).Value.InnerText.Trim());
+                    }
+                    if (album.PYear < 1900 || album.PYear > 2100)
+                    {
+                        album.PYear = null;
+                    }
+
                     if (keys.Contains(_worksheetColumns["album"]["label"]))
                     {
                         String label = cells.FirstOrDefault(c => c.Key == _worksheetColumns["album"]["label"]).Value.InnerText.Trim();
                         if (!String.IsNullOrEmpty(label))
                         {
                             album.Owner = label;
-                            album.CopyrightCLabel = label;
-                            album.CopyrightPLabel = label;
                         }
+                        else
+                        {
+                            album.Owner = CatalogContext.Instance.Settings.LabelDefault;
+                        }
+                    }
+                    else
+                    {
+                        album.Owner = CatalogContext.Instance.Settings.LabelDefault;
                     }
 
                     if (keys.Contains(_worksheetColumns["album"]["reference"]))
@@ -997,6 +1239,10 @@ namespace MetadataConverter.Modules.Import
                         if (!String.IsNullOrEmpty(tagName) && CatalogContext.Instance.Tags.Exists(t => t.Name.CompareTo(tagName) == 0))
                         {
                             album.Genre = CatalogContext.Instance.Tags.FirstOrDefault(t => t.Name.CompareTo(tagName) == 0);
+                        }
+                        else
+                        {
+                            // TODO (add dictionary etc.)
                         }
                     }
 
@@ -1026,6 +1272,34 @@ namespace MetadataConverter.Modules.Import
                             album.Title[lang] = title;
                         }
                     }
+
+                    // Primary artist, if empty, will be updated once ParseIsrc is completed
+                    if (keys.Contains(_worksheetColumns["album"]["primary_artist"]))
+                    {
+                        album.PrimaryArtistId = Convert.ToInt32(cells.FirstOrDefault(c => c.Key == _worksheetColumns["album"]["primary_artist"]).Value.InnerText.Trim());
+                        if (album == null || album.Id <= 0)
+                        {
+                            album.PrimaryArtistId = null;
+                        }
+                    }
+
+                    if (keys.Contains(_worksheetColumns["album"]["recording_location"]))
+                    {
+                        album.RecordingLocation = cells.FirstOrDefault(c => c.Key == _worksheetColumns["album"]["recording_location"]).Value.InnerText.Trim();
+                    }
+
+                    if (keys.Contains(_worksheetColumns["album"]["recording_year"]))
+                    {
+                        album.RecordingYear = Convert.ToInt16(cells.FirstOrDefault(c => c.Key == _worksheetColumns["album"]["recording_year"]).Value.InnerText.Trim());
+                    }
+                    if (album.RecordingYear < 1900 || album.RecordingYear > 2100)
+                    {
+                        album.RecordingYear = null;
+                    }
+
+                    // Hard-coded value
+                    album.Redeliver = false;
+
 
                     // If, at least, one language set is available (default or not), save the entry 
                     if (album.Title.Count > 0)
@@ -1133,5 +1407,53 @@ namespace MetadataConverter.Modules.Import
             }
         }
 
+        // Complete fields that rely on posterior data, e.g. on Assets
+        private void FinalizeAlbums()
+        {
+            if (CatalogContext.Instance.Albums == null)
+            {
+                return;
+            }
+
+            foreach (Album album in CatalogContext.Instance.Albums)
+            {
+                // Primary Artist field
+                Dictionary<Int32, int> frequencies = new Dictionary<Int32, int>(); // Keys are primary artists, Values are occurrences in tracks
+                if (album.PrimaryArtistId == null)
+                {
+                    foreach (KeyValuePair<Int16, Dictionary<Int16, String>> volume in album.Assets)
+                    {
+                        foreach (KeyValuePair<Int16, String> track in volume.Value)
+                        {
+                            Isrc isrc = CatalogContext.Instance.Isrcs.FirstOrDefault(e => e.Id.CompareTo(track.Value) == 0);
+                            foreach (KeyValuePair<Int32, Dictionary<Role, Quality>> contributor in isrc.Contributors)
+                            {
+                                Int32 artistId = contributor.Key;
+                                foreach (KeyValuePair<Role, Quality> roleQuality in contributor.Value)
+                                {
+                                    if (roleQuality.Key.Reference == Role.QualifiedName.Performer && roleQuality.Value.Name.CompareTo("Primary") == 0)
+                                    {
+                                        // Found a Primary Performer occurrence!
+                                        if (frequencies.ContainsKey(artistId)) {
+                                            frequencies[artistId]++;
+                                        }
+                                        else
+                                        {
+                                            frequencies[artistId] = 1;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    // Now select the most frequent primary performer
+                    int max = frequencies.Values.ToList().Max();
+                    album.PrimaryArtistId = frequencies.Keys.ToList().FirstOrDefault(e => frequencies[e] == max);
+
+                    // Total discs
+                    album.TotalDiscs = album.Assets.Keys.ToList().Max();
+                }
+            }
+        }
     }
 }

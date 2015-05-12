@@ -16,6 +16,16 @@ namespace MetadataConverter.Model
     {
         public Int32 Id { get; set; }
 
+        public String CName { get; set; }
+
+        public Int16? CYear { get; set; }
+
+        public String PName { get; set; }
+
+        public Int16? PYear { get; set; }
+
+        public DateTime ConsumerReleaseDate { get; set; }
+
         public Int64? Ean { get; set; }
 
         /// <summary>
@@ -31,18 +41,22 @@ namespace MetadataConverter.Model
 
         public String CatalogReference { get; set; }
 
-        public Int16 CopyrightPYear { get; set; }
+        public String RecordingLocation { get; set; }
 
-        public String CopyrightPLabel { get; set; }
+        public Int16? RecordingYear { get; set; }
 
-        public Int16 CopyrightCYear { get; set; }
-        
-        public String CopyrightCLabel { get; set; }
+        public bool Redeliver { get; set; }
 
         /// <summary>
         /// Nested Dictionaries correspond to Volume index & Track index.
         /// The String value is an Isrc id.
         /// </summary>
         public Dictionary<Int16, Dictionary<Int16, String>> Assets { get; set; }
+
+        // Deduced field
+        public Int32? PrimaryArtistId { get; set; }
+
+        // Deduced field
+        public Int16? TotalDiscs { get; set; }
     }
 }

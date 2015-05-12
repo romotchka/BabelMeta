@@ -7,7 +7,7 @@
 using MetadataConverter.Helpers;
 using MetadataConverter.Model;
 using MetadataConverter.Modules.Export.FugaXml;
-using MetadataConverter.Settings;
+using MetadataConverter.AppConfig;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -150,13 +150,13 @@ namespace MetadataConverter.Modules.Export
             // TODO i.album.alternate_genreSpecified
             // TODO i.album.alternate_subgenre
             // TODO i.album.attachments
-            // TODO i.album.c_line_text
-            // TODO i.album.c_line_year
-            // TODO i.album.catalog_number
-            // TODO i.album.catalog_tier
-            // TODO i.album.catalog_tierSpecified
-            // TODO i.album.consumer_release_date
-            // TODO i.album.cover_art
+            // TODO MANDATORY i.album.c_line_text
+            // TODO MANDATORY i.album.c_line_year
+            // TODO MANDATORY i.album.catalog_number
+            // TODO MANDATORY i.album.catalog_tier
+            // TODO MANDATORY i.album.catalog_tierSpecified
+            // TODO MANDATORY i.album.consumer_release_date
+            // TODO MANDATORY i.album.cover_art
             // TODO i.album.display_artist
             // TODO i.album.extra1
             // TODO i.album.extra2
@@ -171,35 +171,45 @@ namespace MetadataConverter.Modules.Export
             // TODO i.album.extra10
             // TODO i.album.extra10Specified
             // TODO i.album.fuga_id
-            // TODO i.album.label
+            // TODO MANDATORY i.album.label
 
             i.album.language = ingestionAlbumLanguage.EN; // TODO
 
             // TODO i.album.languageSpecified
-            // TODO i.album.main_genre
-            // TODO i.album.main_subgenre
-            // TODO i.album.name
+            // TODO MANDATORY i.album.main_genre
+            // TODO MANDATORY i.album.main_subgenre
+            // TODO MANDATORY i.album.name
             // TODO i.album.original_release_date
             // TODO i.album.original_release_dateSpecified
-            // TODO i.album.p_line_text
-            // TODO i.album.p_line_year
+            // TODO MANDATORY i.album.p_line_text
+            // TODO MANDATORY i.album.p_line_year
 
             i.album.parental_advisory = parental_advisory.@false; // TODO add setting
 
-            // TODO i.album.parental_advisorySpecified
+            i.album.parental_advisorySpecified = false;
+
             // TODO i.album.pricing_intervals
             // TODO i.album.pricings
-            // TODO i.album.primary_artist
+
+            if (album.PrimaryArtistId > 0)
+            {
+                Artist primaryArtist = CatalogContext.Instance.Artists.FirstOrDefault(e => e.Id == (Int32)album.PrimaryArtistId);
+                i.album.primary_artist = new primary_artist
+                {
+                    name = (primaryArtist.FirstName + " " + primaryArtist.LastName).Trim(),
+                };
+            }
             // TODO i.album.recording_location
             // TODO i.album.recording_year
-            // TODO i.album.redeliveries
-            // TODO i.album.release_format_type
+            // TODO MANDATORY i.album.redeliveries
+            // TODO MANDATORY i.album.release_format_type
             // TODO i.album.release_version
             // TODO i.album.schedule
-            // TODO i.album.supplier
-            // TODO i.album.territories
-            // TODO i.album.total_discs
+            // TODO MANDATORY i.album.supplier
+            // TODO MANDATORY i.album.territories
 
+            i.album.total_discs = album.TotalDiscs.ToString() ;
+            
             i.album.upc_code = album.Ean.ToString();
 
             // TODO i.album.usage_rights
@@ -250,9 +260,9 @@ namespace MetadataConverter.Modules.Export
 
                 asset.always_send_display_titleSpecified = true;
 
-                // TODO asset.available_separately
-                // TODO asset.catalog_tier 
-                // TODO asset.catalog_tierSpecified
+                // TODO MANDATORY asset.available_separately
+                // TODO MANDATORY asset.catalog_tier 
+                // TODO MANDATORY asset.catalog_tierSpecified
 
                 asset.classical_catalog = (parentWork == null) ? childWork.ClassicalCatalog : parentWork.ClassicalCatalog;
 

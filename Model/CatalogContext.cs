@@ -4,6 +4,7 @@
  * romain.carbou@solstice-music.com
  */
 
+using MetadataConverter.Model.Config;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +32,7 @@ namespace MetadataConverter.Model
                 {
                     _instance = new CatalogContext();
 
+                    _instance.Settings = new CatalogSettings();
                     _instance.Langs = new List<Lang>();
                     _instance.Roles = new List<Role>();
                     _instance.Qualities = new List<Quality>();
@@ -92,6 +94,8 @@ namespace MetadataConverter.Model
             }
         }
 
+        internal CatalogSettings Settings;
+
         internal List<Lang> Langs;
 
         internal List<Role> Roles;
@@ -110,6 +114,7 @@ namespace MetadataConverter.Model
 
         public void Init()
         {
+            _instance.Settings = null;
             _instance.Langs.Clear();
             _instance.Roles.Clear();
             _instance.Qualities.Clear();

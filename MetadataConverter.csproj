@@ -55,6 +55,9 @@
     <Compile Include="Model\Album.cs" />
     <Compile Include="Model\Artist.cs" />
     <Compile Include="Model\CatalogContext.cs" />
+    <Compile Include="Model\Config\CatalogTier.cs" />
+    <Compile Include="Model\Config\ProductFormat.cs" />
+    <Compile Include="Model\Config\CatalogSettings.cs" />
     <Compile Include="Model\Isrc.cs" />
     <Compile Include="Model\Quality.cs" />
     <Compile Include="Model\Role.cs" />
@@ -72,7 +75,7 @@
     <Compile Include="Modules\OfficeXml.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Settings\ReturnCodes.cs" />
+    <Compile Include="AppConfig\ReturnCodes.cs" />
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
       <SubType>Designer</SubType>
