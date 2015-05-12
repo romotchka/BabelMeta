@@ -1,5 +1,5 @@
 ﻿/*
- * Metadata Converter
+ * Babel Meta
  * Copyright 2015 - Romain Carbou
  * romain.carbou@solstice-music.com
  */

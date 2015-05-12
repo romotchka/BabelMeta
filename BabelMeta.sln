@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetadataConverter", "MetadataConverter.csproj", "{A1CE9FF4-CE1F-4539-A04A-C46F97F5A903}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BabelMeta", "BabelMeta.csproj", "{A1CE9FF4-CE1F-4539-A04A-C46F97F5A903}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
