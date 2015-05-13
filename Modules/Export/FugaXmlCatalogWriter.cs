@@ -15,6 +15,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using BabelMeta.Model.Config;
 
 namespace BabelMeta.Modules.Export
 {
@@ -64,6 +65,30 @@ namespace BabelMeta.Modules.Export
                 {Key.GMajor,ingestionAlbumTracksClassical_trackKey.G_MAJOR},
                 {Key.GMinor,ingestionAlbumTracksClassical_trackKey.G_MINOR},
                 {Key.GSharpMinor,ingestionAlbumTracksClassical_trackKey.G_SHARP_MINOR},
+            };
+
+        private readonly Dictionary<CatalogTier, ingestionAlbumCatalog_tier> _albumTierConverter =
+            new Dictionary<CatalogTier, ingestionAlbumCatalog_tier>
+            {
+                {CatalogTier.Back, ingestionAlbumCatalog_tier.BACK},
+                {CatalogTier.Budget, ingestionAlbumCatalog_tier.BUDGET},
+                {CatalogTier.Front, ingestionAlbumCatalog_tier.FRONT},
+                {CatalogTier.Mid, ingestionAlbumCatalog_tier.MID},
+                {CatalogTier.Premium, ingestionAlbumCatalog_tier.PREMIUM},
+            };
+
+        /// <summary>
+        /// Not a one-to-one Dictionary. Check business rules.
+        /// </summary>
+        private readonly Dictionary<CatalogTier, ingestionAlbumTracksClassical_trackCatalog_tier> _isrcTierConverter =
+            new Dictionary<CatalogTier, ingestionAlbumTracksClassical_trackCatalog_tier>
+            {
+                {CatalogTier.Back, ingestionAlbumTracksClassical_trackCatalog_tier.BACK},
+                {CatalogTier.Budget, ingestionAlbumTracksClassical_trackCatalog_tier.BACK},
+                {CatalogTier.Free, ingestionAlbumTracksClassical_trackCatalog_tier.FREE},
+                {CatalogTier.Front, ingestionAlbumTracksClassical_trackCatalog_tier.FRONT},
+                {CatalogTier.Mid, ingestionAlbumTracksClassical_trackCatalog_tier.MID},
+                {CatalogTier.Premium, ingestionAlbumTracksClassical_trackCatalog_tier.FRONT},
             };
 
         MainFormViewModel _viewModel = null;
@@ -157,9 +182,10 @@ namespace BabelMeta.Modules.Export
 
             i.album.catalog_number = album.CatalogReference;
 
-            // TODO MANDATORY i.album.catalog_tier
+            i.album.catalog_tier = _albumTierConverter[album.Tier];
 
-            // TODO MANDATORY i.album.catalog_tierSpecified
+            i.album.catalog_tierSpecified = true;
+
             // TODO MANDATORY i.album.consumer_release_date
             // TODO MANDATORY i.album.cover_art
             // TODO i.album.display_artist
@@ -271,9 +297,11 @@ namespace BabelMeta.Modules.Export
 
                 asset.always_send_display_titleSpecified = true;
 
-                // TODO MANDATORY asset.available_separately
-                // TODO MANDATORY asset.catalog_tier 
-                // TODO MANDATORY asset.catalog_tierSpecified
+                asset.available_separately = isrc.AvailableSeparately;
+
+                asset.catalog_tier = _isrcTierConverter[isrc.Tier];
+
+                asset.catalog_tierSpecified = true;
 
                 asset.classical_catalog = (parentWork == null) ? currentWork.ClassicalCatalog : parentWork.ClassicalCatalog;
 

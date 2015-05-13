@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Excel = Microsoft.Office.Interop.Excel;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
@@ -305,6 +306,8 @@ namespace BabelMeta.Modules.Import
             if (!ExistsCellValueInRow("c_year", map, "album")) return false;
             if (!ExistsCellValueInRow("p_name", map, "album")) return false;
             if (!ExistsCellValueInRow("p_year", map, "album")) return false;
+            if (!ExistsCellValueInRow("recording_location", map, "album")) return false;
+            if (!ExistsCellValueInRow("recording_year", map, "album")) return false;
             if (!ExistsCellValueInRow("catalog_tier", map, "album")) return false;
             if (!ExistsCellValueInRow("consumer_release_date", map, "album")) return false;
             if (!ExistsCellValueInRow("label", map, "album")) return false;
@@ -369,6 +372,8 @@ namespace BabelMeta.Modules.Import
         /// <returns></returns>
         private List<XmlNode> WorksheetActiveRows(String worksheetName, bool localActive = false, bool partnerActive = false)
         {
+
+
             if (String.IsNullOrEmpty(worksheetName))
             {
                 return null;
@@ -761,8 +766,35 @@ namespace BabelMeta.Modules.Import
 
                     artist.LastName = new Dictionary<Lang, String>();
                     artist.FirstName = new Dictionary<Lang, String>();
+
+                    // Default lang
+                    String defaultLast = String.Empty;
+                    String defaultFirst = String.Empty;
+
+                    if (keys.Contains(_worksheetColumns["artist"]["lastname_" + CatalogContext.Instance.DefaultLang.ShortName]))
+                    {
+                        defaultLast = cells.FirstOrDefault(c => c.Key == _worksheetColumns["artist"]["lastname_" + CatalogContext.Instance.DefaultLang.ShortName]).Value.InnerText.Trim();
+                    }
+                    else
+                    {
+                        continue; // Last name default is mandatory
+                    }
+
+                    if (keys.Contains(_worksheetColumns["artist"]["firstname_" + CatalogContext.Instance.DefaultLang.ShortName]))
+                    {
+                        defaultFirst = cells.FirstOrDefault(c => c.Key == _worksheetColumns["artist"]["firstname_" + CatalogContext.Instance.DefaultLang.ShortName]).Value.InnerText.Trim();
+                    }
+                    else
+                    {
+                        defaultFirst = String.Empty;
+                    }
+
+                    artist.LastName[CatalogContext.Instance.DefaultLang] = defaultLast;
+                    artist.FirstName[CatalogContext.Instance.DefaultLang] = defaultFirst;
+
                     // Object may have several lang-dependent field sets
-                    foreach (Lang lang in CatalogContext.Instance.Langs)
+                    List<Lang> otherLangs = CatalogContext.Instance.Langs.Where(l => l != CatalogContext.Instance.DefaultLang).ToList();
+                    foreach (Lang lang in otherLangs)
                     {
                         String last = String.Empty;
                         String first = String.Empty;
@@ -771,25 +803,25 @@ namespace BabelMeta.Modules.Import
                         {
                             last = cells.FirstOrDefault(c => c.Key == _worksheetColumns["artist"]["lastname_" + lang.ShortName]).Value.InnerText.Trim();
                         }
+                        if (String.IsNullOrEmpty(last))
+                        {
+                            last = defaultLast;
+                        }
 
                         if (keys.Contains(_worksheetColumns["artist"]["firstname_" + lang.ShortName]))
                         {
                             first = cells.FirstOrDefault(c => c.Key == _worksheetColumns["artist"]["firstname_" + lang.ShortName]).Value.InnerText.Trim();
                         }
-
-                        // If, at least, last name is not empty, record both fields
-                        if (!String.IsNullOrEmpty(last))
+                        if (String.IsNullOrEmpty(first))
                         {
-                            artist.LastName[lang] = last;
-                            artist.FirstName[lang] = first;
+                            first = defaultFirst;
                         }
+
+                        artist.LastName[lang] = last;
+                        artist.FirstName[lang] = first;
                     }
 
-                    // If, at least, one language set is available (default or not), save the entry 
-                    if (artist.LastName.Count > 0)
-                    {
-                        CatalogContext.Instance.Artists.Add(artist);
-                    }
+                    CatalogContext.Instance.Artists.Add(artist);
                 }
 
                 if (_mainFormViewModel != null)
@@ -1125,6 +1157,7 @@ namespace BabelMeta.Modules.Import
                             {
                                 case "back": isrc.Tier = CatalogTier.Back; break;
                                 case "budget": isrc.Tier = CatalogTier.Budget; break;
+                                case "free": isrc.Tier = CatalogTier.Free; break;
                                 case "front": isrc.Tier = CatalogTier.Front; break;
                                 case "mid": isrc.Tier = CatalogTier.Mid; break;
                                 case "premium": isrc.Tier = CatalogTier.Premium; break;

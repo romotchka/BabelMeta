@@ -17,6 +17,7 @@ namespace BabelMeta.Model.Config
         Budget,
         Back,
         Mid,
+        Free,
         Front,
         Premium,
     }
