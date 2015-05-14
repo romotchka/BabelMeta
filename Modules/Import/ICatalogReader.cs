@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace BabelMeta.Modules.Import
 {
@@ -19,6 +20,6 @@ namespace BabelMeta.Modules.Import
         /// <summary>
         /// The Parse method refreshes the CatalogContext according to the Input data
         /// </summary>
-        ReturnCodes Parse(Stream s, MainFormViewModel viewModel = null);
+        ReturnCodes Parse(OpenFileDialog ofd, String formatType, MainFormViewModel viewModel = null);
     }
 }

@@ -16,7 +16,7 @@ namespace BabelMeta.Model
     {
         public String Name { get; set; }
 
-        public QualifiedName Reference { get; set; }
+        public QualifiedName? Reference { get; set; }
 
         public enum QualifiedName
         {

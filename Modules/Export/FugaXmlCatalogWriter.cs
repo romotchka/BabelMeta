@@ -299,7 +299,7 @@ namespace BabelMeta.Modules.Export
 
                 asset.available_separately = isrc.AvailableSeparately;
 
-                asset.catalog_tier = _isrcTierConverter[isrc.Tier];
+                asset.catalog_tier = _isrcTierConverter[(CatalogTier)isrc.Tier];
 
                 asset.catalog_tierSpecified = true;
 
@@ -321,7 +321,9 @@ namespace BabelMeta.Modules.Export
                         artistsBuffer.Add(artist);
                     }
                     Role role = CatalogContext.Instance.Roles.FirstOrDefault(r => r.Name.CompareTo(workContributor.Value.Name) == 0);
-                    contributorRole cRole = (_roleConverter.ContainsKey(role.Reference)) ? _roleConverter[role.Reference] : contributorRole.ContributingArtist;
+                    contributorRole cRole = (_roleConverter.ContainsKey((BabelMeta.Model.Role.QualifiedName)role.Reference))
+                        ? _roleConverter[(BabelMeta.Model.Role.QualifiedName)role.Reference] 
+                        : contributorRole.ContributingArtist;
 
                     if (artist.LastName.ContainsKey(CatalogContext.Instance.DefaultLang))
                     {
