@@ -26,10 +26,18 @@ namespace BabelMeta.Modules.Import
     /// </summary>
     public class DefaultCatalogReader : ICatalogReader
     {
-        private XmlDocument _xmlDocument;
-
+        /// <summary>
+        /// Excel format main object
+        /// </summary>
         private Excel.Application _excelApplication;
         private Workbook _excelDocument;
+        private Dictionary<String, Int32> _excelLastRow; // Worksheet-wise
+        private Dictionary<String, Int32> _excelLastColumn; // Worksheet-wise
+
+        /// <summary>
+        /// Xml format main object
+        /// </summary>
+        private XmlDocument _xmlDocument;
 
         /// <summary>
         /// 0: Excel XML 2003
@@ -143,6 +151,8 @@ namespace BabelMeta.Modules.Import
             switch (_formatType)
             {
                 case "excel":
+                    _excelLastRow = new Dictionary<String, Int32>();
+                    _excelLastColumn = new Dictionary<String, Int32>();
                     if (String.IsNullOrEmpty(ofd.FileName))
                     {
                         return ReturnCodes.ModulesImportDefaultParseEmptyStream;
@@ -215,6 +225,29 @@ namespace BabelMeta.Modules.Import
             return ReturnCodes.Ok;
         }
 
+        private Dictionary<Int32,object> GetHeader(String worksheetName)
+        {
+            if (String.IsNullOrEmpty(worksheetName))
+            {
+                return null;
+            }
+            Dictionary<Int32, object> map = null;
+            switch (_formatType)
+            {
+                case "excel":
+                    map = CellMapByRow(1, worksheetName);
+                    break;
+                case "xml":
+                    if ((XmlNode)(_worksheets[worksheetName]) == null)
+                    { 
+                        return null; 
+                    }
+                    map = CellMapByRow(((XmlNode)(_worksheets[worksheetName])).ChildNodes.Cast<XmlNode>().FirstOrDefault(n => n.Name.CompareTo(OfficeXml.WorksheetRow) == 0));
+                    break;
+            }
+            return map;
+        }
+
         /// <summary>
         /// Checks that Workbook embarks expected Worksheets
         /// </summary>
@@ -247,36 +280,21 @@ namespace BabelMeta.Modules.Import
             if (!ExistsWorksheet("asset")) return false;
 
             // Check columns and identify their indexes
-            Dictionary<Int32, object> map = new Dictionary<int,object>(); // TODO remove call to constructor, map is a pointer
+            Dictionary<Int32, object> map = new Dictionary<Int32,object>(); // TODO remove call to constructor, map is a pointer
             int i;
 
 
             // Strict order so as to enable referential integrity check
 
-
             // SETTINGS
-            switch (_formatType)
-            {
-                case "excel":
-                    break;
-                case "xml":
-                    map = CellMapByRow(((XmlNode)(_worksheets["SETTINGS"])).ChildNodes.Cast<XmlNode>().FirstOrDefault(n => n.Name.CompareTo(OfficeXml.WorksheetRow) == 0));
-                    break;
-            }
+            map = GetHeader("SETTINGS");
             if (!ExistsCellValueInRow("parameter", map, "SETTINGS")) return false;
             if (!ExistsCellValueInRow("value", map, "SETTINGS")) return false;
             _settings = WorksheetActiveRows("SETTINGS");
             ParseSettings(); // must be parsed first
 
             // lang
-            switch (_formatType)
-            {
-                case "excel":
-                    break;
-                case "xml":
-                    map = CellMapByRow(((XmlNode)_worksheets["lang"]).ChildNodes.Cast<XmlNode>().FirstOrDefault(n => n.Name.CompareTo(OfficeXml.WorksheetRow) == 0));
-                    break;
-            }
+            map = GetHeader("lang");
             if (!ExistsCellValueInRow("local_db", map, "lang")) return false;
             if (!ExistsCellValueInRow("partner_db", map, "lang")) return false;
             if (!ExistsCellValueInRow("long_name", map, "lang")) return false;
@@ -286,56 +304,28 @@ namespace BabelMeta.Modules.Import
             ParseLangs(); // must be parsed second, because columns lang-dependent
 
             // tag
-            switch (_formatType)
-            {
-                case "excel":
-                    break;
-                case "xml":
-                    map = CellMapByRow(((XmlNode)_worksheets["tag"]).ChildNodes.Cast<XmlNode>().FirstOrDefault(n => n.Name.CompareTo(OfficeXml.WorksheetRow) == 0));
-                    break;
-            }
+            map = GetHeader("tag");
             if (!ExistsCellValueInRow("local_db", map, "tag")) return false;
             if (!ExistsCellValueInRow("partner_db", map, "tag")) return false;
             if (!ExistsCellValueInRow("tag_name", map, "tag")) return false;
             _tags = WorksheetActiveRows("tag");
 
             // role
-            switch (_formatType)
-            {
-                case "excel":
-                    break;
-                case "xml":
-                    map = CellMapByRow(((XmlNode)_worksheets["role"]).ChildNodes.Cast<XmlNode>().FirstOrDefault(n => n.Name.CompareTo(OfficeXml.WorksheetRow) == 0));
-                    break;
-            }
+            map = GetHeader("role");
             if (!ExistsCellValueInRow("local_db", map, "role")) return false;
             if (!ExistsCellValueInRow("partner_db", map, "role")) return false;
             if (!ExistsCellValueInRow("role_name", map, "role")) return false;
             _roles = WorksheetActiveRows("role");
 
             // quality
-            switch (_formatType)
-            {
-                case "excel":
-                    break;
-                case "xml":
-                    map = CellMapByRow(((XmlNode)_worksheets["quality"]).ChildNodes.Cast<XmlNode>().FirstOrDefault(n => n.Name.CompareTo(OfficeXml.WorksheetRow) == 0));
-                    break;
-            }
+            map = GetHeader("quality");
             if (!ExistsCellValueInRow("local_db", map, "quality")) return false;
             if (!ExistsCellValueInRow("partner_db", map, "quality")) return false;
             if (!ExistsCellValueInRow("quality_name", map, "quality")) return false;
             _qualities = WorksheetActiveRows("quality");
 
             // artist
-            switch (_formatType)
-            {
-                case "excel":
-                    break;
-                case "xml":
-                    map = CellMapByRow(((XmlNode)_worksheets["artist"]).ChildNodes.Cast<XmlNode>().FirstOrDefault(n => n.Name.CompareTo(OfficeXml.WorksheetRow) == 0));
-                    break;
-            }
+            map = GetHeader("artist");
             if (!ExistsCellValueInRow("local_db", map, "artist")) return false;
             if (!ExistsCellValueInRow("partner_db", map, "artist")) return false;
             if (!ExistsCellValueInRow("id", map, "artist")) return false;
@@ -349,14 +339,7 @@ namespace BabelMeta.Modules.Import
             _artists = WorksheetActiveRows("artist");
 
             // work
-            switch (_formatType)
-            {
-                case "excel":
-                    break;
-                case "xml":
-                    map = CellMapByRow(((XmlNode)_worksheets["work"]).ChildNodes.Cast<XmlNode>().FirstOrDefault(n => n.Name.CompareTo(OfficeXml.WorksheetRow) == 0));
-                    break;
-            }
+            map = GetHeader("work");
             if (!ExistsCellValueInRow("local_db", map, "work")) return false;
             if (!ExistsCellValueInRow("partner_db", map, "work")) return false;
             if (!ExistsCellValueInRow("id", map, "work")) return false;
@@ -385,14 +368,7 @@ namespace BabelMeta.Modules.Import
             _works = WorksheetActiveRows("work");
 
             // isrc
-            switch (_formatType)
-            {
-                case "excel":
-                    break;
-                case "xml":
-                    map = CellMapByRow(((XmlNode)_worksheets["isrc"]).ChildNodes.Cast<XmlNode>().FirstOrDefault(n => n.Name.CompareTo(OfficeXml.WorksheetRow) == 0));
-                    break;
-            }
+            map = GetHeader("isrc");
             if (!ExistsCellValueInRow("local_db", map, "isrc")) return false;
             if (!ExistsCellValueInRow("partner_db", map, "isrc")) return false;
             if (!ExistsCellValueInRow("isrc_id", map, "isrc")) return false;
@@ -421,14 +397,7 @@ namespace BabelMeta.Modules.Import
             _isrcs = WorksheetActiveRows("isrc");
 
             // album
-            switch (_formatType)
-            {
-                case "excel":
-                    break;
-                case "xml":
-                    map = CellMapByRow(((XmlNode)_worksheets["album"]).ChildNodes.Cast<XmlNode>().FirstOrDefault(n => n.Name.CompareTo(OfficeXml.WorksheetRow) == 0));
-                    break;
-            }
+            map = GetHeader("album");
             if (!ExistsCellValueInRow("local_db", map, "album")) return false;
             if (!ExistsCellValueInRow("partner_db", map, "album")) return false;
             if (!ExistsCellValueInRow("album_id", map, "album")) return false;
@@ -456,14 +425,7 @@ namespace BabelMeta.Modules.Import
             _albums = WorksheetActiveRows("album");
 
             // asset
-            switch (_formatType)
-            {
-                case "excel":
-                    break;
-                case "xml":
-                    map = CellMapByRow(((XmlNode)_worksheets["asset"]).ChildNodes.Cast<XmlNode>().FirstOrDefault(n => n.Name.CompareTo(OfficeXml.WorksheetRow) == 0));
-                    break;
-            }
+            map = GetHeader("asset");
             if (!ExistsCellValueInRow("local_db", map, "asset")) return false;
             if (!ExistsCellValueInRow("partner_db", map, "asset")) return false;
             if (!ExistsCellValueInRow("album_id", map, "asset")) return false;
@@ -478,9 +440,15 @@ namespace BabelMeta.Modules.Import
         /// <summary>
         /// Returns a dictionary of cell objects (Key = column)
         /// </summary>
-        /// <param name="row"></param>
+        /// <param name="row">
+        ///     For Excel, represents the row number
+        ///     For XML, represents the XmlNode row object
+        /// </param>
+        /// <param name="worksheetName">
+        ///     Used only in Excel format.
+        /// </param>
         /// <returns></returns>
-        private Dictionary<Int32, object> CellMapByRow(object row)
+        private Dictionary<Int32, object> CellMapByRow(object row, String worksheetName = "")
         {
             if (String.IsNullOrEmpty(_formatType))
             {
@@ -498,6 +466,31 @@ namespace BabelMeta.Modules.Import
             switch (_formatType)
             {
                 case "excel":
+                    if (String.IsNullOrEmpty(worksheetName) || !_worksheets.ContainsKey(worksheetName))
+                    {
+                        return null;
+                    }
+                    Int32 rowIndex = (Int32)row;
+                    if (rowIndex < 1)
+                    {
+                        return null;
+                    }
+                    try
+                    {
+                        for (; index <= _excelLastColumn[worksheetName]; index++)
+                        {
+                            Range cell = ((_Worksheet)_worksheets[worksheetName]).Cells[rowIndex, index];
+                            if (cell != null && cell.Value != null && !String.IsNullOrEmpty(cell.Value.ToString()))
+                            {
+                                map[index] = cell;
+                            }
+                        }
+
+                    }
+                    catch (Exception)
+                    {
+
+                    }
                     break;
 
                 case "xml":
@@ -535,19 +528,24 @@ namespace BabelMeta.Modules.Import
                 return null;
             }
 
-            if (_worksheets[worksheetName] == null)
+            if (!(_worksheets.ContainsKey(worksheetName)) ||  _worksheets[worksheetName] == null)
             {
                 return null;
             }
 
-            List<object> rows = new List<object>(); // TODO remove call to constructor
+            if (_excelLastRow == null || !(_excelLastRow.ContainsKey(worksheetName)) || _excelLastColumn == null || !(_excelLastColumn.ContainsKey(worksheetName)))
+            {
+                return null;
+            }
+
+            List<object> rows = null; 
             List<object> filteredRows = new List<object>();
 
             switch (_formatType)
             {
                 case "excel":
+                    rows = Enumerable.Range(1, _excelLastRow[worksheetName]).Cast<object>().ToList();
                     break;
-
                 case "xml":
                     rows = ((XmlNode)_worksheets[worksheetName]).ChildNodes.Cast<object>()
                     .Where(r => ((XmlNode)r).Name.CompareTo(OfficeXml.WorksheetRow) == 0)
@@ -557,7 +555,18 @@ namespace BabelMeta.Modules.Import
 
             foreach (object row in rows)
             {
-                Dictionary<Int32, object> map = CellMapByRow(row);
+                Dictionary<Int32, object> map = null;
+                switch (_formatType)
+                {
+                    case "excel":
+                        map = CellMapByRow(row, worksheetName);
+                        break;
+
+                    case "xml":
+                        map = CellMapByRow(row);
+                        break;
+                }
+
                 // Filtering active rows only (except for SETTINGS)
                 if (worksheetName.CompareTo("SETTINGS") == 0)
                 {
@@ -565,18 +574,26 @@ namespace BabelMeta.Modules.Import
                 }
                 else
                 {
-                    // Any other worksheet than SETTINGS...
+                    // Any worksheet other than SETTINGS...
                     bool local = false;
                     bool partner = false;
 
                     switch (_formatType)
                     {
                         case "excel":
+                            try
+                            {
+                                local = map.ContainsKey(_worksheetColumns[worksheetName]["local_db"]) && ((Range)map[_worksheetColumns[worksheetName]["local_db"]]).Value.ToString().ToLower().CompareTo("active") == 0;
+                                partner = map.ContainsKey(_worksheetColumns[worksheetName]["partner_db"]) && ((Range)map[_worksheetColumns[worksheetName]["partner_db"]]).Value.ToString().ToLower().CompareTo("active") == 0;
+                            }
+                            catch (Exception)
+                            {
+                            }
                             break;
 
                         case "xml":
-                            local = map.ContainsKey(_worksheetColumns[worksheetName]["local_db"]) && ((XmlNode)map[_worksheetColumns[worksheetName]["local_db"]]).InnerText.CompareTo("active") == 0;
-                            partner = map.ContainsKey(_worksheetColumns[worksheetName]["partner_db"]) && ((XmlNode)map[_worksheetColumns[worksheetName]["partner_db"]]).InnerText.CompareTo("active") == 0;
+                            local = map.ContainsKey(_worksheetColumns[worksheetName]["local_db"]) && ((XmlNode)map[_worksheetColumns[worksheetName]["local_db"]]).InnerText.ToLower().CompareTo("active") == 0;
+                            partner = map.ContainsKey(_worksheetColumns[worksheetName]["partner_db"]) && ((XmlNode)map[_worksheetColumns[worksheetName]["partner_db"]]).InnerText.ToLower().CompareTo("active") == 0;
                             break;
                     }
 
@@ -599,7 +616,7 @@ namespace BabelMeta.Modules.Import
         /// </summary>
         /// <param name="cellValue"></param>
         /// <param name="map"></param>
-        /// <param name="worksheetName">If provided, the value is considered a header name and is recorded along with column index</param>
+        /// <param name="worksheetName">If provided, the value sarched is considered a header name and is recorded along with column index</param>
         /// <returns></returns>
         private bool ExistsCellValueInRow(String cellValue, Dictionary<Int32, object> map, String worksheetName = "")
         {
@@ -614,6 +631,13 @@ namespace BabelMeta.Modules.Import
             switch (_formatType)
             {
                 case "excel":
+                    try
+                    {
+                        element = map.FirstOrDefault(e => ((Range)e.Value).Value.ToString().Trim().CompareTo(cellValue) == 0);
+                    }
+                    catch (Exception)
+                    {
+                    }
                     break;
 
                 case "xml":
@@ -648,16 +672,16 @@ namespace BabelMeta.Modules.Import
                 return true;
             }
 
-            object table = new object();
+            object table = null;
 
             switch (_formatType)
             {
                 case "excel":
                     Sheets sheets = _excelDocument.Worksheets;
                     int sheetsCount = sheets.Count;
-                    int index = 0;
+                    int index = 1;
                     int maxSheets = 64; // Security
-                    while (index < sheetsCount && index < maxSheets)
+                    while (index <= sheetsCount && index <= maxSheets)
                     {
                         try
                         {
@@ -666,18 +690,20 @@ namespace BabelMeta.Modules.Import
                             {
                                 if (!String.IsNullOrEmpty(excelWorksheet.Name) && excelWorksheet.Name.CompareTo(worksheetName) == 0)
                                 {
-                                    // TODO
-                                    return true;
+                                    table = excelWorksheet;
+                                    var rngLast = excelWorksheet.get_Range("A1").SpecialCells(XlCellType.xlCellTypeLastCell);
+                                    _excelLastRow[worksheetName] = rngLast.Row;
+                                    _excelLastColumn[worksheetName] = rngLast.Column;
+                                    break;
                                 }
                             }
                         }
-
                         catch (Exception)
                         {
                         }
                         index++;
                     }
-                    return false;
+                    break;
 
                 case "xml":
                     XmlNode xmlWorksheet = _xmlDocument.DocumentElement.ChildNodes.Cast<XmlNode>()
@@ -692,11 +718,9 @@ namespace BabelMeta.Modules.Import
                     {
                         return false;
                     }
-
-                    table = (XmlNode)(xmlWorksheet.ChildNodes.Cast<XmlNode>().FirstOrDefault(n => n.Name == OfficeXml.WorksheetTable));
+                    table = xmlWorksheet.ChildNodes.Cast<XmlNode>().FirstOrDefault(n => n.Name == OfficeXml.WorksheetTable);
                     break;
             }
-
 
             bool exists = table != null;
 
@@ -732,7 +756,14 @@ namespace BabelMeta.Modules.Import
             switch (_formatType)
             {
                 case "excel":
-                    return String.Empty;
+                    try
+                    {
+                        return (trim) ? ((Range)o).Value.ToString().Trim() : ((Range)o).Value.ToString();
+                    }
+                    catch (Exception)
+                    {
+                        return String.Empty;
+                    }
 
                 case "xml":
                     return (trim) ? ((XmlNode)(o)).InnerText.Trim() : ((XmlNode)(o)).InnerText;
@@ -756,7 +787,7 @@ namespace BabelMeta.Modules.Import
             {
                 try
                 {
-                    Dictionary<Int32, object> cells = CellMapByRow(row);
+                    Dictionary<Int32, object> cells = CellMapByRow(row, "SETTINGS");
                     if (cells != null && cells.Count > 0)
                     {
                         String parameter = CellContentWizard(cells, _worksheetColumns["SETTINGS"]["parameter"]);
@@ -815,7 +846,6 @@ namespace BabelMeta.Modules.Import
                         }
                     }
                 }
-
                 catch (Exception)
                 {
                 }
@@ -837,7 +867,7 @@ namespace BabelMeta.Modules.Import
             {
                 try
                 {
-                    Dictionary<Int32, object> cells = CellMapByRow(row);
+                    Dictionary<Int32, object> cells = CellMapByRow(row, "lang");
                     if (cells != null && cells.Count > 0)
                     {
                         Lang lang = new Lang
@@ -854,7 +884,6 @@ namespace BabelMeta.Modules.Import
                         }
                     }
                 }
-
                 catch
                 {
                 }
@@ -875,7 +904,7 @@ namespace BabelMeta.Modules.Import
             {
                 try
                 {
-                    Dictionary<Int32, object> cells = CellMapByRow(row);
+                    Dictionary<Int32, object> cells = CellMapByRow(row, "tag");
                     if (cells != null && cells.Count > 0)
                     {
                         Tag tag = new Tag
@@ -889,7 +918,6 @@ namespace BabelMeta.Modules.Import
                         }
                     }
                 }
-
                 catch (Exception)
                 {
                 }
@@ -915,7 +943,7 @@ namespace BabelMeta.Modules.Import
             {
                 try
                 {
-                    Dictionary<Int32, object> cells = CellMapByRow(row);
+                    Dictionary<Int32, object> cells = CellMapByRow(row, "role");
                     if (cells != null && cells.Count > 0)
                     {
                         Role role = new Role
@@ -940,7 +968,6 @@ namespace BabelMeta.Modules.Import
                         }
                     }
                 }
-
                 catch (Exception)
                 {
                 }
@@ -963,7 +990,7 @@ namespace BabelMeta.Modules.Import
             {
                 try
                 {
-                    Dictionary<Int32, object> cells = CellMapByRow(row);
+                    Dictionary<Int32, object> cells = CellMapByRow(row, "quality");
                     if (cells != null && cells.Count > 0)
                     {
                         Quality quality = new Quality
@@ -977,7 +1004,6 @@ namespace BabelMeta.Modules.Import
                         }
                     }
                 }
-
                 catch (Exception)
                 {
                 }
@@ -1000,7 +1026,7 @@ namespace BabelMeta.Modules.Import
             {
                 try
                 {
-                    Dictionary<Int32, object> cells = CellMapByRow(row);
+                    Dictionary<Int32, object> cells = CellMapByRow(row, "artist");
                     if (cells != null && cells.Count > 0)
                     {
                         Artist artist = new Artist
@@ -1053,7 +1079,6 @@ namespace BabelMeta.Modules.Import
                         CatalogContext.Instance.Artists.Add(artist);
                     }
                 }
-
                 catch (Exception)
                 {
                 }
@@ -1079,7 +1104,7 @@ namespace BabelMeta.Modules.Import
             {
                 try
                 {
-                    Dictionary<Int32, object> cells = CellMapByRow(row);
+                    Dictionary<Int32, object> cells = CellMapByRow(row, "work");
                     if (cells != null && cells.Count > 0)
                     {
 
@@ -1150,7 +1175,6 @@ namespace BabelMeta.Modules.Import
                         }
                     }
                 }
-
                 catch (Exception)
                 {
                 }
@@ -1176,7 +1200,7 @@ namespace BabelMeta.Modules.Import
             {
                 try
                 {
-                    Dictionary<Int32, object> cells = CellMapByRow(row);
+                    Dictionary<Int32, object> cells = CellMapByRow(row, "isrc");
                     if (cells != null && cells.Count > 0)
                     {
                         Isrc isrc = new Isrc
@@ -1271,7 +1295,6 @@ namespace BabelMeta.Modules.Import
                         }
                     }
                 }
-
                 catch (Exception)
                 {
                 }
@@ -1297,7 +1320,7 @@ namespace BabelMeta.Modules.Import
             {
                 try
                 {
-                    Dictionary<Int32, object> cells = CellMapByRow(row);
+                    Dictionary<Int32, object> cells = CellMapByRow(row, "album");
                     if (cells != null && cells.Count > 0)
                     {
                         {
@@ -1396,7 +1419,6 @@ namespace BabelMeta.Modules.Import
                         }
                     }
                 }
-
                 catch (Exception)
                 {
                 }
@@ -1422,7 +1444,7 @@ namespace BabelMeta.Modules.Import
             {
                 try
                 {
-                    Dictionary<Int32, object> cells = CellMapByRow(row);
+                    Dictionary<Int32, object> cells = CellMapByRow(row, "asset");
                     if (cells != null && cells.Count > 0)
                     {
                         Int32 albumId = Convert.ToInt32(CellContentWizard(cells, _worksheetColumns["asset"]["album_id"]));
@@ -1488,7 +1510,6 @@ namespace BabelMeta.Modules.Import
                         album.Assets[volumeIndex][trackIndex] = isrcId;
                     }
                 }
-
                 catch (Exception)
                 {
                 }
@@ -1571,7 +1592,6 @@ namespace BabelMeta.Modules.Import
                         album.PYear = album.CYear;
                     }
                 }
-
                 catch (Exception)
                 {
                 }
@@ -1599,7 +1619,6 @@ namespace BabelMeta.Modules.Import
                         isrc.Tier = (CatalogContext.Instance.Albums.FirstOrDefault(a => a.Assets.Values.ToList().Exists(v => v.Values.ToList().Contains(isrc.Id)))).Tier;
                     }
                 }
-
                 catch (Exception)
                 {
                 }
