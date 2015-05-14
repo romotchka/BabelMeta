@@ -653,10 +653,34 @@ namespace BabelMeta.Modules.Import
             switch (_formatType)
             {
                 case "excel":
-                    break;
+                    Sheets sheets = _excelDocument.Worksheets;
+                    int sheetsCount = sheets.Count;
+                    int index = 0;
+                    int maxSheets = 64; // Security
+                    while (index < sheetsCount && index < maxSheets)
+                    {
+                        try
+                        {
+                            _Worksheet excelWorksheet = (_Worksheet)sheets.get_Item(index);
+                            if (excelWorksheet != null)
+                            {
+                                if (!String.IsNullOrEmpty(excelWorksheet.Name) && excelWorksheet.Name.CompareTo(worksheetName) == 0)
+                                {
+                                    // TODO
+                                    return true;
+                                }
+                            }
+                        }
+
+                        catch (Exception)
+                        {
+                        }
+                        index++;
+                    }
+                    return false;
 
                 case "xml":
-                    XmlNode worksheet = _xmlDocument.DocumentElement.ChildNodes.Cast<XmlNode>()
+                    XmlNode xmlWorksheet = _xmlDocument.DocumentElement.ChildNodes.Cast<XmlNode>()
                         .FirstOrDefault(
                             n =>
                             n.Name == OfficeXml.Worksheet
@@ -664,12 +688,12 @@ namespace BabelMeta.Modules.Import
                             && n.Attributes[OfficeXml.WorksheetName].InnerText.CompareTo(worksheetName) == 0
                         );
 
-                    if (worksheet == null)
+                    if (xmlWorksheet == null)
                     {
                         return false;
                     }
 
-                    table = (XmlNode)(worksheet.ChildNodes.Cast<XmlNode>().FirstOrDefault(n => n.Name == OfficeXml.WorksheetTable));
+                    table = (XmlNode)(xmlWorksheet.ChildNodes.Cast<XmlNode>().FirstOrDefault(n => n.Name == OfficeXml.WorksheetTable));
                     break;
             }
 
