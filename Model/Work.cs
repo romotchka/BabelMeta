@@ -16,7 +16,7 @@ namespace BabelMeta.Model
     {
         public Int32 Id { get; set; }
 
-        public Int32 Parent { get; set; }
+        public Int32? Parent { get; set; }
 
         public Int16? MovementNumber { get; set; }
 
