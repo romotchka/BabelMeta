@@ -24,5 +24,38 @@ namespace BabelMeta.Helpers
                 default: return ": ";
             }
         }
+
+        /// <summary>
+        /// Expected format is yyyy-mm-dd[...]
+        /// Returns DateTime extracted, or Now if an error occurs
+        /// </summary>
+        /// <param name="dateString"></param>
+        /// <returns></returns>
+        public static DateTime ToDateTime(this String dateString)
+        {
+            string[] words = dateString.Split(new char[] { '-' });
+
+            if (words != null && words.ToList().Count >= 3)
+            {
+                var year = Convert.ToInt32(words[0]);
+                var month = Convert.ToInt32(words[1]);
+                var day = Convert.ToInt32(words[2]);
+
+                if (year > 0 && month > 0 && month <= 12 && day > 0 && day <= 31)
+                {
+                    try
+                    {
+                        DateTime dateTime = new DateTime(year, month, day);
+                        return dateTime;
+                    }
+                    catch (Exception)
+                    {
+                        return DateTime.Now;
+                    }
+                }
+            }
+            return DateTime.Now;
+        }
+
     }
 }

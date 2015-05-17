@@ -134,24 +134,26 @@ namespace BabelMeta.Modules.Export
                 i.album = new ingestionAlbum();
                 i.album.tracks = new ingestionAlbumTracks();
 
-                GenerateAlbumWiseData(album,i);
-
-                foreach (KeyValuePair<Int16, Dictionary<Int16, String>> volume in album.Assets)
-                {
-                    GenerateTrackWiseData(album, volume, i);
-                }
-
                 // There MUST be a subfolder for each album
-                if (String.IsNullOrEmpty(i.album.upc_code))
+                if (String.IsNullOrEmpty(album.Ean.ToString()))
                 {
                     continue;
                 }
-                String subfolder = rootFolder + i.album.upc_code;
+                String subfolder = rootFolder + album.Ean;
                 if (!Directory.Exists(subfolder))
                 {
                     Directory.CreateDirectory(subfolder);
                 }
                 subfolder += "\\";
+
+                string[] files = Directory.GetFiles(subfolder, "*.*");
+
+                GenerateAlbumWiseData(album, i, files);
+
+                foreach (KeyValuePair<Int16, Dictionary<Int16, String>> volume in album.Assets)
+                {
+                    GenerateTrackWiseData(album, volume, i, files);
+                }
 
                 TextWriter tw = new StreamWriter(subfolder + i.album.upc_code + ".xml", false, Encoding.UTF8);
                 tw.Write(i.Serialize());
@@ -162,7 +164,91 @@ namespace BabelMeta.Modules.Export
             return ReturnCodes.Ok;
         }
 
-        private void GenerateAlbumWiseData(Album album, ingestion i)
+        /// <summary>
+        /// Returns the file name, if found, of the file corresponding to criteria
+        /// </summary>
+        /// <param name="fileType"></param>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        private String GetFilename(string[] files, FugaIngestionFileType fileType, object parameter = null)
+        {
+            if (files == null || files.Length == 0)
+            {
+                return String.Empty;
+            }
+            var filesList = files.ToList();
+
+            switch (fileType)
+            {
+                case FugaIngestionFileType.Attachment:
+                    foreach (string file in filesList)
+                    {
+                        var nameExtension = file.Split('.').Last().ToLower();
+                        if (!String.IsNullOrEmpty(nameExtension) && nameExtension.CompareTo("pdf") == 0)
+                        {
+                            return file;
+                        }
+                    }
+                    break;
+
+                case FugaIngestionFileType.AudioTrack:
+                    if (parameter != null)
+                    {
+                        var volumeIndex = ((KeyValuePair<int, int>)parameter).Key;
+                        var trackIndex = ((KeyValuePair<int, int>)parameter).Value;
+                        foreach (string file in filesList)
+                        {
+                            var nameExtension = file.Split('.').Last().ToLower();
+                            if (
+                                    !String.IsNullOrEmpty(nameExtension) &&
+                                    (nameExtension.CompareTo("wav") == 0 || nameExtension.CompareTo("aiff") == 0)
+                                )
+                            {
+                                var nameLeft = file.Substring(0, file.Length - 2 - nameExtension.Length);
+                                var nameElements = nameLeft.Split('-');
+                                var nameElementsCount = nameElements.ToList().Count();
+                                if (nameElementsCount < 3)
+                                {
+                                    continue;
+                                }
+                                int tryVolumeIndex = 0;
+                                int tryTrackIndex = 0;
+                                var convertVolume = int.TryParse(nameElements[nameElementsCount - 2], out tryVolumeIndex);
+                                var convertTrack = int.TryParse(nameElements[nameElementsCount - 1], out tryTrackIndex);
+                                if (
+                                        convertVolume 
+                                        && convertTrack
+                                        && tryVolumeIndex == volumeIndex
+                                        && tryTrackIndex == trackIndex
+                                    )
+                                {
+                                    // Found !
+                                    return file;
+                                }
+                            }                            
+                        }
+                    }
+                    break;
+
+                case FugaIngestionFileType.Cover:
+                    foreach (string file in filesList)
+                    {
+                        var nameExtension = file.Split('.').Last().ToLower();
+                        if (
+                                !String.IsNullOrEmpty(nameExtension) &&
+                                (nameExtension.CompareTo("jpg") == 0 || nameExtension.CompareTo("png") == 0)
+                            )
+                        {
+                            return file;
+                        }
+                    }
+                    break;
+            }
+
+            return String.Empty;
+        }
+
+        private void GenerateAlbumWiseData(Album album, ingestion i, string[] files)
         {
             if (album == null || i == null)
             {
@@ -172,9 +258,22 @@ namespace BabelMeta.Modules.Export
             // TODO i.album.additional_artists
             // TODO i.album.album_notes
             // TODO i.album.alternate_genre
-            // TODO i.album.alternate_genreSpecified
+
+            i.album.alternate_genreSpecified = false;
+
             // TODO i.album.alternate_subgenre
-            // TODO i.album.attachments
+
+            string attachmentFile = GetFilename(files, FugaIngestionFileType.Attachment);
+            if (!String.IsNullOrEmpty(attachmentFile))
+            {
+                i.album.attachments = new List<attachment_type>();
+                i.album.attachments.Add(new attachment_type
+                    {
+                        name = "Booklet",
+                        description = "Booklet",
+                        file = new file_type { name = attachmentFile },
+                    });
+            }
 
             i.album.c_line_text = (!String.IsNullOrEmpty(album.CName)) ? album.CName : CatalogContext.Instance.Settings.COwnerDefault;
 
@@ -186,8 +285,22 @@ namespace BabelMeta.Modules.Export
 
             i.album.catalog_tierSpecified = true;
 
-            // TODO MANDATORY i.album.consumer_release_date
-            // TODO MANDATORY i.album.cover_art
+            i.album.consumer_release_date = album.ConsumerReleaseDate;
+
+            var coverFile = GetFilename(files, FugaIngestionFileType.Cover);
+            if (!String.IsNullOrEmpty(coverFile))
+            {
+                i.album.cover_art = new ingestionAlbumCover_art();
+                i.album.cover_art.image = new ingestionAlbumCover_artImage
+                {
+                    file = new file_type
+                    {
+                        name = coverFile,
+                    },
+                };
+
+            }
+
             // TODO i.album.display_artist
             // TODO i.album.extra1
             // TODO i.album.extra2
@@ -202,14 +315,19 @@ namespace BabelMeta.Modules.Export
             // TODO i.album.extra10
             // TODO i.album.extra10Specified
             // TODO i.album.fuga_id
-            // TODO MANDATORY i.album.label
+
+            i.album.label = album.Owner;
 
             i.album.language = ingestionAlbumLanguage.EN; // TODO
 
-            // TODO i.album.languageSpecified
-            // TODO MANDATORY i.album.main_genre
-            // TODO MANDATORY i.album.main_subgenre
-            // TODO MANDATORY i.album.name
+            i.album.languageSpecified = true;
+
+            i.album.main_genre = genre_type.Classical; // TODO add a converter
+
+            i.album.main_subgenre = album.Subgenre.Name;
+
+            i.album.name = album.Title[CatalogContext.Instance.DefaultLang];
+
             // TODO i.album.original_release_date
             // TODO i.album.original_release_dateSpecified
 
@@ -236,14 +354,25 @@ namespace BabelMeta.Modules.Export
                 }
             }
 
-            // TODO i.album.recording_location
-            // TODO i.album.recording_year
-            // TODO MANDATORY i.album.redeliveries
-            // TODO MANDATORY i.album.release_format_type
+            i.album.recording_location = album.RecordingLocation;
+
+            i.album.recording_year = album.RecordingYear.ToString();
+
+            i.album.redeliveries = new redeliveries_type
+            {
+                redeliver = false,
+            };
+
+
+            i.album.release_format_type = ingestionAlbumRelease_format_type.ALBUM; // TODO translater
+
             // TODO i.album.release_version
             // TODO i.album.schedule
-            // TODO MANDATORY i.album.supplier
-            // TODO MANDATORY i.album.territories
+
+            i.album.supplier = CatalogContext.Instance.Settings.SupplierDefault;
+
+            i.album.territories = new List<territory_code>();
+            i.album.territories.Add(territory_code.WORLD);
 
             i.album.total_discs = album.TotalDiscs.ToString();
             
@@ -253,7 +382,7 @@ namespace BabelMeta.Modules.Export
 
         }
 
-        private void GenerateTrackWiseData(Album album, KeyValuePair<Int16, Dictionary<Int16, String>> volume, ingestion i)
+        private void GenerateTrackWiseData(Album album, KeyValuePair<Int16, Dictionary<Int16, String>> volume, ingestion i, string[] files)
         {
             if (album == null || i == null)
             {
@@ -272,25 +401,52 @@ namespace BabelMeta.Modules.Export
                 Isrc isrc = CatalogContext.Instance.Isrcs.FirstOrDefault(e => e.Id.CompareTo(isrcId) == 0);
                 if (isrc == null)
                 {
-                    return;
+                    continue;
                 }
                 // The asset's work is either standalone or a child work.
                 Work currentWork = CatalogContext.Instance.Works.FirstOrDefault(e => e.Id == isrc.Work);
                 if (currentWork == null)
                 {
-                    return;
+                    continue;
                 }
                 Work parentWork = (currentWork.Parent > 0)
                     ? CatalogContext.Instance.Works.FirstOrDefault(w => w.Id == currentWork.Parent)
                     : null;
+                var isrcPerformersKeys = isrc.Contributors.Keys.ToArray();
+                if (isrcPerformersKeys == null || !(isrcPerformersKeys.Length > 0))
+                {
+                    continue;
+                }
 
                 ingestionAlbumTracksClassical_track asset = new ingestionAlbumTracksClassical_track();
 
-                // TODO asset.additional_artists
-                // TODO asset.allow_preorder_preview
-                // TODO asset.allow_preorder_previewSpecified
+                // Additional artists, if any, are from the second performer.
+                if (isrcPerformersKeys.Length > 1)
+                {
+                    asset.additional_artists = new List<artist>();
+                }
+                for (var j = 1; j < isrcPerformersKeys.Length; j++)
+                {
+                    Artist additionalArtist = CatalogContext.Instance.Artists.FirstOrDefault(e =>
+                        e.Id == isrcPerformersKeys[j]);
+                    if (additionalArtist.LastName.ContainsKey(CatalogContext.Instance.DefaultLang))
+                    {
+                        asset.additional_artists.Add(new artist
+                        {
+                            name = (additionalArtist.FirstName[CatalogContext.Instance.DefaultLang] + " " + additionalArtist.LastName[CatalogContext.Instance.DefaultLang]).Trim(),
+                            primary_artist = true, // TODO manage primary character for additional artists
+                        });
+                    }
+                }
+
+                asset.allow_preorder_preview = false;
+
+                asset.allow_preorder_previewSpecified = true;
+
                 // TODO asset.alternate_genre
-                // TODO asset.alternate_genreSpecified
+
+                asset.alternate_genreSpecified = false;
+
                 // TODO asset.alternate_subgenre
 
                 asset.always_send_display_title = true;
@@ -398,20 +554,23 @@ namespace BabelMeta.Modules.Export
 
                 asset.on_disc = volumeIndex.ToString();
 
-                // TODO asset.p_line_text
-                // TODO asset.p_line_year
+                asset.p_line_text = isrc.PName;
+
+                asset.p_line_year = isrc.PYear.ToString();
 
                 asset.parental_advisory = parental_advisory.@false; // TODO add seting
 
                 // TODO asset.preorder_type
-                // TODO asset.preorder_typeSpecified
+
+                asset.preorder_typeSpecified = false;
 
                 asset.preview_length = "30"; // TODO add setting
                 
                 asset.preview_start = "0";
 
+                // Primary artists is performer 1 (isrc contributor 1)
                 Artist primaryArtist = CatalogContext.Instance.Artists.FirstOrDefault(e =>
-                    e.Id == (isrc.Contributors.Keys.ToArray())[0]);
+                    e.Id == isrcPerformersKeys[0]);
                 if (primaryArtist.LastName.ContainsKey(CatalogContext.Instance.DefaultLang))
                 {
                     asset.primary_artist = new primary_artist()
@@ -421,10 +580,25 @@ namespace BabelMeta.Modules.Export
                 }
 
                 // TODO asset.publishers
-                // TODO asset.recording_location
-                // TODO asset.recording_year
+
+                asset.recording_location = isrc.RecordingLocation;
+
+                asset.recording_year = isrc.RecordingYear.ToString();
+
                 // TODO asset.redeliveries_of_associated
-                // TODO asset.resources
+                var audioFilename = GetFilename(files, FugaIngestionFileType.AudioTrack, new KeyValuePair<int, int>(volumeIndex, trackIndex));
+                if (!String.IsNullOrEmpty(audioFilename))
+                {
+                    asset.resources = new List<resourcesAudio>();
+                    asset.resources.Add(new resourcesAudio 
+                    {
+                        file = new file_type
+                        {
+                            name = audioFilename,
+                        }
+                    });
+                }
+
                 // TODO asset.rights_contract_begin_date
                 // TODO asset.rights_contract_begin_dateSpecified
                 // TODO asset.rights_holder_name

@@ -5,6 +5,7 @@
  */
 
 using BabelMeta.AppConfig;
+using BabelMeta.Helpers;
 using BabelMeta.Model;
 using BabelMeta.Model.Config;
 using Microsoft.Office.Interop.Excel;
@@ -492,7 +493,11 @@ namespace BabelMeta.Modules.Import
                         // Cell index has priority over deduced index
                         if (cell.Attributes[OfficeXml.CellIndex] != null)
                         {
-                            index = Convert.ToInt32(cell.Attributes[OfficeXml.CellIndex].InnerText);
+                            Int32 tryIndex;
+                            if (int.TryParse(cell.Attributes[OfficeXml.CellIndex].InnerText, out tryIndex))
+                            {
+                                index = tryIndex;
+                            }
                         }
                         map[index] = cell;
                         index++;
@@ -962,6 +967,7 @@ namespace BabelMeta.Modules.Import
                 return;
             }
 
+            // TODO replace Convert.ToInt by int.TryParse...
             foreach (object row in _artists)
             {
                 Dictionary<Int32, object> cells = CellMapByRow(row, "artist");
@@ -1034,6 +1040,7 @@ namespace BabelMeta.Modules.Import
                 return;
             }
 
+            // TODO replace Convert.ToInt by int.TryParse...
             foreach (object row in _works)
             {
                 Dictionary<Int32, object> cells = CellMapByRow(row, "work");
@@ -1085,7 +1092,8 @@ namespace BabelMeta.Modules.Import
                     }
 
                     int i = 1;
-                    while   (
+                    // TODO replace Convert.ToInt by int.TryParse...
+                    while (
                                 (_worksheetColumns["work"].ContainsKey("id_contributor" + i))
                                 && (_worksheetColumns["work"].ContainsKey("role_contributor" + i))
                             )
@@ -1125,6 +1133,7 @@ namespace BabelMeta.Modules.Import
                 return;
             }
 
+            // TODO replace Convert.ToInt by int.TryParse...
             foreach (object row in _isrcs)
             {
                 Dictionary<Int32, object> cells = CellMapByRow(row, "isrc");
@@ -1177,6 +1186,7 @@ namespace BabelMeta.Modules.Import
                     }
 
                     int i = 1;
+                    // TODO replace Convert.ToInt by int.TryParse...
                     while (
                                 (_worksheetColumns["isrc"].ContainsKey("id_contributor" + i))
                                 && (_worksheetColumns["isrc"].ContainsKey("role_contributor" + i))
@@ -1239,6 +1249,7 @@ namespace BabelMeta.Modules.Import
                 return;
             }
 
+            // TODO replace Convert.ToInt by int.TryParse...
             foreach (object row in _albums)
             {
                 Dictionary<Int32, object> cells = CellMapByRow(row, "album");
@@ -1260,6 +1271,7 @@ namespace BabelMeta.Modules.Import
                             Owner = CellContentWizard(cells, _worksheetColumns["album"]["label"]),
                             CatalogReference = CellContentWizard(cells, _worksheetColumns["album"]["reference"]),
                             Ean = Convert.ToInt64(CellContentWizard(cells, _worksheetColumns["album"]["ean"], "0")),
+                            ConsumerReleaseDate = CellContentWizard(cells, _worksheetColumns["album"]["consumer_release_date"]).ToDateTime(),
                             Title = new Dictionary<Lang, String>
                         {
                             {CatalogContext.Instance.DefaultLang, CellContentWizard(cells, _worksheetColumns["album"]["title_" + CatalogContext.Instance.DefaultLang.ShortName])},
@@ -1328,6 +1340,7 @@ namespace BabelMeta.Modules.Import
 
                         if (album.Ean != null && album.Ean < 0) { album.Ean = null; }
 
+
                         // Object may have several lang-dependent field sets
                         List<Lang> otherLangs = CatalogContext.Instance.Langs.Where(l => l != CatalogContext.Instance.DefaultLang).ToList();
                         foreach (Lang lang in otherLangs)
@@ -1357,6 +1370,7 @@ namespace BabelMeta.Modules.Import
                 return;
             }
 
+            // TODO replace Convert.ToInt by int.TryParse...
             foreach (object row in _assets)
             {
                 Dictionary<Int32, object> cells = CellMapByRow(row, "asset");

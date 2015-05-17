@@ -29,6 +29,8 @@ namespace BabelMeta.Model
 
         public DateTime ConsumerReleaseDate { get; set; }
 
+        public DateTime OriginalReleaseDate { get; set; }
+
         public Int64? Ean { get; set; }
 
         /// <summary>
