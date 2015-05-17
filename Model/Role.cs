@@ -7,13 +7,33 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace BabelMeta.Model
 {
-    public class Role
+    [Serializable()]
+    public class Role : ISerializable
     {
+        public Role()
+        {
+            Name = String.Empty;
+            Reference = null;
+        }
+
+        public Role(SerializationInfo info, StreamingContext ctxt)
+        {
+            Name = (String)info.GetValue("BabelMeta.Model.Role.Name", typeof(String));
+            Reference = (QualifiedName?)info.GetValue("BabelMeta.Model.Role.Reference", typeof(QualifiedName?));
+        }
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("BabelMeta.Model.Role.Name", Name);
+            info.AddValue("BabelMeta.Model.Role.Reference", Reference);
+        }
+
         public String Name { get; set; }
 
         public QualifiedName? Reference { get; set; }

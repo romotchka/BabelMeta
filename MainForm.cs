@@ -19,6 +19,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace BabelMeta
 {
@@ -105,6 +106,99 @@ namespace BabelMeta
                 {
                     Notify("Error: Could not read file from disk. Original error: " + ex.Message);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Deserializes a CatalogContext from file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void loadSessionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        /// <summary>
+        /// Serializes a CatalogContext from file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void saveSessionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog fbd = new FolderBrowserDialog();
+
+            fbd.Description = "Select a root folder to save session files.";
+            fbd.ShowDialog();
+
+            if (String.IsNullOrEmpty(fbd.SelectedPath))
+            {
+                return;
+            }
+            if ((fbd.SelectedPath.ToCharArray())[fbd.SelectedPath.Length - 1] != '\\')
+            {
+                fbd.SelectedPath += "\\";
+            }
+
+            Stream stream;
+            BinaryFormatter binaryFormatter = new BinaryFormatter();
+
+            try
+            {
+                // Langs
+                stream = File.Open(fbd.SelectedPath + "Langs.bmd", FileMode.Create);
+
+                binaryFormatter.Serialize(stream, CatalogContext.Instance.Langs);
+                stream.Close();
+
+                // Tags
+                stream = File.Open(fbd.SelectedPath + "Tags.bmd", FileMode.Create);
+
+                binaryFormatter.Serialize(stream, CatalogContext.Instance.Tags);
+                stream.Close();
+
+                // Roles
+                stream = File.Open(fbd.SelectedPath + "Roles.bmd", FileMode.Create);
+
+                binaryFormatter.Serialize(stream, CatalogContext.Instance.Roles);
+                stream.Close();
+
+                // Qualities
+                stream = File.Open(fbd.SelectedPath + "Qualities.bmd", FileMode.Create);
+
+                binaryFormatter.Serialize(stream, CatalogContext.Instance.Qualities);
+                stream.Close();
+
+                // Artists
+                stream = File.Open(fbd.SelectedPath + "Artists.bmd", FileMode.Create);
+
+                binaryFormatter.Serialize(stream, CatalogContext.Instance.Artists);
+                stream.Close();
+
+                // Works
+                stream = File.Open(fbd.SelectedPath + "Works.bmd", FileMode.Create);
+
+                binaryFormatter.Serialize(stream, CatalogContext.Instance.Works);
+                stream.Close();
+
+                // Isrcs
+                stream = File.Open(fbd.SelectedPath + "Isrcs.bmd", FileMode.Create);
+
+                binaryFormatter.Serialize(stream, CatalogContext.Instance.Isrcs);
+                stream.Close();
+
+                // Albums
+                stream = File.Open(fbd.SelectedPath + "Albums.bmd", FileMode.Create);
+
+                binaryFormatter.Serialize(stream, CatalogContext.Instance.Albums);
+                stream.Close();
+
+                Notify("Session saved.");
+            }
+
+            catch
+            {
+                Notify("Session not saved: I/O error on disk.");
             }
         }
 
@@ -220,7 +314,6 @@ namespace BabelMeta
             NotificationZone.AppendText(message + Environment.NewLine);
             NotificationZone.AppendText(current);
         }
-
-        
+       
     }
 }

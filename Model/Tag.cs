@@ -7,13 +7,30 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace BabelMeta.Model
 {
-    public class Tag
+    [Serializable()]
+    public class Tag : ISerializable
     {
+        public Tag()
+        {
+            Name = String.Empty;
+        }
+
+        public Tag(SerializationInfo info, StreamingContext ctxt)
+        {
+            Name = (String)info.GetValue("BabelMeta.Model.Tag.Name", typeof(String));
+        }
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("BabelMeta.Model.Tag.Name", Name);
+        }
+
         public String Name { get; set; }
     }
 }
