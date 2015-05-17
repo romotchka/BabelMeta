@@ -57,5 +57,14 @@ namespace BabelMeta.Helpers
             return DateTime.Now;
         }
 
+        public static String GetFileNameFromFullPath(this String path)
+        {
+            if (String.IsNullOrEmpty(path))
+            {
+                return String.Empty;
+            }
+            var pathElements = path.Split('\\');
+            return pathElements[pathElements.Length - 1];
+        }
     }
 }

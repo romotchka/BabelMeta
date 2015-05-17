@@ -113,6 +113,12 @@ namespace BabelMeta.Modules.Export
             }
         }
 
+        /// <summary>
+        /// Main generation method.
+        /// </summary>
+        /// <param name="rootFolder"></param>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
         public ReturnCodes Generate(String rootFolder, MainFormViewModel viewModel = null)
         {
             if (String.IsNullOrEmpty(rootFolder))
@@ -170,7 +176,7 @@ namespace BabelMeta.Modules.Export
         /// <param name="fileType"></param>
         /// <param name="parameter"></param>
         /// <returns></returns>
-        private String GetFilename(string[] files, FugaIngestionFileType fileType, object parameter = null)
+        private String SearchFilename(string[] files, FugaIngestionFileType fileType, object parameter = null)
         {
             if (files == null || files.Length == 0)
             {
@@ -186,7 +192,7 @@ namespace BabelMeta.Modules.Export
                         var nameExtension = file.Split('.').Last().ToLower();
                         if (!String.IsNullOrEmpty(nameExtension) && nameExtension.CompareTo("pdf") == 0)
                         {
-                            return file;
+                            return file.GetFileNameFromFullPath();
                         }
                     }
                     break;
@@ -201,10 +207,10 @@ namespace BabelMeta.Modules.Export
                             var nameExtension = file.Split('.').Last().ToLower();
                             if (
                                     !String.IsNullOrEmpty(nameExtension) &&
-                                    (nameExtension.CompareTo("wav") == 0 || nameExtension.CompareTo("aiff") == 0)
+                                    (nameExtension.CompareTo("wav") == 0 || nameExtension.CompareTo("aif") == 0 || nameExtension.CompareTo("aiff") == 0)
                                 )
                             {
-                                var nameLeft = file.Substring(0, file.Length - 2 - nameExtension.Length);
+                                var nameLeft = file.Substring(0, file.Length - nameExtension.Length);
                                 var nameElements = nameLeft.Split('-');
                                 var nameElementsCount = nameElements.ToList().Count();
                                 if (nameElementsCount < 3)
@@ -223,7 +229,7 @@ namespace BabelMeta.Modules.Export
                                     )
                                 {
                                     // Found !
-                                    return file;
+                                    return file.GetFileNameFromFullPath();
                                 }
                             }                            
                         }
@@ -236,10 +242,10 @@ namespace BabelMeta.Modules.Export
                         var nameExtension = file.Split('.').Last().ToLower();
                         if (
                                 !String.IsNullOrEmpty(nameExtension) &&
-                                (nameExtension.CompareTo("jpg") == 0 || nameExtension.CompareTo("png") == 0)
+                                (nameExtension.CompareTo("jpg") == 0 || nameExtension.CompareTo("jpeg") == 0 || nameExtension.CompareTo("png") == 0)
                             )
                         {
-                            return file;
+                            return file.GetFileNameFromFullPath();
                         }
                     }
                     break;
@@ -263,7 +269,7 @@ namespace BabelMeta.Modules.Export
 
             // TODO i.album.alternate_subgenre
 
-            string attachmentFile = GetFilename(files, FugaIngestionFileType.Attachment);
+            string attachmentFile = SearchFilename(files, FugaIngestionFileType.Attachment);
             if (!String.IsNullOrEmpty(attachmentFile))
             {
                 i.album.attachments = new List<attachment_type>();
@@ -287,7 +293,7 @@ namespace BabelMeta.Modules.Export
 
             i.album.consumer_release_date = album.ConsumerReleaseDate;
 
-            var coverFile = GetFilename(files, FugaIngestionFileType.Cover);
+            var coverFile = SearchFilename(files, FugaIngestionFileType.Cover);
             if (!String.IsNullOrEmpty(coverFile))
             {
                 i.album.cover_art = new ingestionAlbumCover_art();
@@ -586,7 +592,7 @@ namespace BabelMeta.Modules.Export
                 asset.recording_year = isrc.RecordingYear.ToString();
 
                 // TODO asset.redeliveries_of_associated
-                var audioFilename = GetFilename(files, FugaIngestionFileType.AudioTrack, new KeyValuePair<int, int>(volumeIndex, trackIndex));
+                var audioFilename = SearchFilename(files, FugaIngestionFileType.AudioTrack, new KeyValuePair<int, int>(volumeIndex, trackIndex));
                 if (!String.IsNullOrEmpty(audioFilename))
                 {
                     asset.resources = new List<resourcesAudio>();
