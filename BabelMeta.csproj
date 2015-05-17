@@ -70,6 +70,7 @@
     <Compile Include="Model\Work.cs" />
     <Compile Include="Modules\Control\IIntegrityChecker.cs" />
     <Compile Include="Modules\Control\ModelIntegrityChecker.cs" />
+    <Compile Include="Modules\Export\FugaIngestionFileType.cs" />
     <Compile Include="Modules\Export\FugaXmlCatalogWriter.cs" />
     <Compile Include="Modules\Export\FugaXml\ingestion.designer.cs" />
     <Compile Include="Modules\Export\ICatalogWriter.cs" />

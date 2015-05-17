@@ -35,6 +35,8 @@ namespace BabelMeta
 
             CheckedPicto.DataBindings.Add(new Binding("Visible", _viewModel, "CheckedPictoVisibility"));
             WarningPicto.DataBindings.Add(new Binding("Visible", _viewModel, "WarningPictoVisibility"));
+
+            InputFormat.SelectedIndex = 0;
     
         }
 
@@ -54,12 +56,22 @@ namespace BabelMeta
             OpenFileDialog openFileDialog = new OpenFileDialog();
 
             openFileDialog.InitialDirectory = "c:\\";
-            openFileDialog.Title = "Open a default XML file";
+            openFileDialog.Title = "Open a default file";
             openFileDialog.RestoreDirectory = true;
-            switch (InputFormat.TabIndex)
+
+            if (InputFormat.SelectedItem == null)
             {
-                case 0:
+                Notify("No format selected.");
+                return;
+            }
+
+            switch (InputFormat.SelectedItem.ToString().ToLower())
+            {
+                case "xml":
                     openFileDialog.Filter = "XML files (*.xml)|*.xml";
+                    break;
+                case "excel":
+                    openFileDialog.Filter = "Excel files (*.xls, *.xlsx)|*.xls*";
                     break;
 
                 default:
@@ -82,16 +94,12 @@ namespace BabelMeta
                     CatalogContext.Instance.Init();
                     CatalogContext.Instance.Initialized = false;
 
+                    InputProgressBar.Value = 0;
+                    InputProgressBar.Visible = true;
+                    OutputProgressBar.Visible = false;
+
                     // Call appropriate parser, depending on input format
-                    switch (InputFormat.TabIndex)
-                    {
-                        case 0:
-                            InputProgressBar.Value = 0;
-                            InputProgressBar.Visible = true;
-                            OutputProgressBar.Visible = false;
-                            ReturnCodes r =  DefaultCatalogReader.Instance.Parse(stream, _viewModel);
-                            break;
-                    }
+                    ReturnCodes r = DefaultCatalogReader.Instance.Parse(openFileDialog, InputFormat.SelectedItem.ToString(), _viewModel);
                 }
                 catch (Exception ex)
                 {
@@ -212,5 +220,7 @@ namespace BabelMeta
             NotificationZone.AppendText(message + Environment.NewLine);
             NotificationZone.AppendText(current);
         }
+
+        
     }
 }

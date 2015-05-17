@@ -35,355 +35,356 @@ namespace BabelMeta
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            menuStrip1 = new System.Windows.Forms.MenuStrip();
-            toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            actionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            checkIntegrityToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            convertToSQLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            solsticeLegacyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            solsticeIgniterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            convertToXMLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            fugaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            InputGroupBox = new System.Windows.Forms.GroupBox();
-            CheckedPicto = new System.Windows.Forms.PictureBox();
-            WarningPicto = new System.Windows.Forms.PictureBox();
-            InputProgressBar = new System.Windows.Forms.ProgressBar();
-            FilterArtistCheckBox = new System.Windows.Forms.CheckBox();
-            FilterWorkCheckBox = new System.Windows.Forms.CheckBox();
-            DuplicatesCheckBox = new System.Windows.Forms.CheckBox();
-            ReferentialIntegrityCheckBox = new System.Windows.Forms.CheckBox();
-            InputFormat = new System.Windows.Forms.ListBox();
-            OutputGroupBox = new System.Windows.Forms.GroupBox();
-            OutputProgressBar = new System.Windows.Forms.ProgressBar();
-            InsertFormat = new System.Windows.Forms.ListBox();
-            CurlyDoubleQuoteCheckBox = new System.Windows.Forms.CheckBox();
-            CurlySimpleQuoteCheckBox = new System.Windows.Forms.CheckBox();
-            NotificationZone = new System.Windows.Forms.TextBox();
-            CompanyLogo = new System.Windows.Forms.PictureBox();
-            menuStrip1.SuspendLayout();
-            InputGroupBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(CheckedPicto)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(WarningPicto)).BeginInit();
-            OutputGroupBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(CompanyLogo)).BeginInit();
-            SuspendLayout();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.actionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.checkIntegrityToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.convertToSQLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.solsticeLegacyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.solsticeIgniterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.convertToXMLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fugaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.InputGroupBox = new System.Windows.Forms.GroupBox();
+            this.CheckedPicto = new System.Windows.Forms.PictureBox();
+            this.WarningPicto = new System.Windows.Forms.PictureBox();
+            this.InputProgressBar = new System.Windows.Forms.ProgressBar();
+            this.FilterArtistCheckBox = new System.Windows.Forms.CheckBox();
+            this.FilterWorkCheckBox = new System.Windows.Forms.CheckBox();
+            this.DuplicatesCheckBox = new System.Windows.Forms.CheckBox();
+            this.ReferentialIntegrityCheckBox = new System.Windows.Forms.CheckBox();
+            this.InputFormat = new System.Windows.Forms.ListBox();
+            this.OutputGroupBox = new System.Windows.Forms.GroupBox();
+            this.OutputProgressBar = new System.Windows.Forms.ProgressBar();
+            this.InsertFormat = new System.Windows.Forms.ListBox();
+            this.CurlyDoubleQuoteCheckBox = new System.Windows.Forms.CheckBox();
+            this.CurlySimpleQuoteCheckBox = new System.Windows.Forms.CheckBox();
+            this.NotificationZone = new System.Windows.Forms.TextBox();
+            this.CompanyLogo = new System.Windows.Forms.PictureBox();
+            this.menuStrip1.SuspendLayout();
+            this.InputGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.CheckedPicto)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.WarningPicto)).BeginInit();
+            this.OutputGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.CompanyLogo)).BeginInit();
+            this.SuspendLayout();
             // 
             // menuStrip1
             // 
-            menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            toolStripMenuItem1,
-            actionToolStripMenuItem,
-            toolStripMenuItem2});
-            menuStrip1.Location = new System.Drawing.Point(0, 0);
-            menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new System.Drawing.Size(479, 24);
-            menuStrip1.TabIndex = 0;
-            menuStrip1.Text = "menuStrip1";
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem1,
+            this.actionToolStripMenuItem,
+            this.toolStripMenuItem2});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(479, 24);
+            this.menuStrip1.TabIndex = 0;
+            this.menuStrip1.Text = "menuStrip1";
             // 
             // toolStripMenuItem1
             // 
-            toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            openToolStripMenuItem,
-            quitToolStripMenuItem});
-            toolStripMenuItem1.Name = "toolStripMenuItem1";
-            toolStripMenuItem1.Size = new System.Drawing.Size(37, 20);
-            toolStripMenuItem1.Text = "File";
+            this.toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openToolStripMenuItem,
+            this.quitToolStripMenuItem});
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(37, 20);
+            this.toolStripMenuItem1.Text = "File";
             // 
             // openToolStripMenuItem
             // 
-            openToolStripMenuItem.Name = "openToolStripMenuItem";
-            openToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
-            openToolStripMenuItem.Text = "Open";
-            openToolStripMenuItem.Click += new System.EventHandler(openToolStripMenuItem_Click);
+            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.openToolStripMenuItem.Text = "Open";
+            this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // quitToolStripMenuItem
             // 
-            quitToolStripMenuItem.Name = "quitToolStripMenuItem";
-            quitToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
-            quitToolStripMenuItem.Text = "Quit";
-            quitToolStripMenuItem.Click += new System.EventHandler(quitToolStripMenuItem_Click);
+            this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
+            this.quitToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.quitToolStripMenuItem.Text = "Quit";
+            this.quitToolStripMenuItem.Click += new System.EventHandler(this.quitToolStripMenuItem_Click);
             // 
             // actionToolStripMenuItem
             // 
-            actionToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            checkIntegrityToolStripMenuItem,
-            convertToSQLToolStripMenuItem,
-            convertToXMLToolStripMenuItem});
-            actionToolStripMenuItem.Name = "actionToolStripMenuItem";
-            actionToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
-            actionToolStripMenuItem.Text = "Action";
+            this.actionToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.checkIntegrityToolStripMenuItem,
+            this.convertToSQLToolStripMenuItem,
+            this.convertToXMLToolStripMenuItem});
+            this.actionToolStripMenuItem.Name = "actionToolStripMenuItem";
+            this.actionToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
+            this.actionToolStripMenuItem.Text = "Action";
             // 
             // checkIntegrityToolStripMenuItem
             // 
-            checkIntegrityToolStripMenuItem.Name = "checkIntegrityToolStripMenuItem";
-            checkIntegrityToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
-            checkIntegrityToolStripMenuItem.Text = "Check integrity";
-            checkIntegrityToolStripMenuItem.Click += new System.EventHandler(checkIntegrityToolStripMenuItem_Click);
+            this.checkIntegrityToolStripMenuItem.Name = "checkIntegrityToolStripMenuItem";
+            this.checkIntegrityToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.checkIntegrityToolStripMenuItem.Text = "Check integrity";
+            this.checkIntegrityToolStripMenuItem.Click += new System.EventHandler(this.checkIntegrityToolStripMenuItem_Click);
             // 
             // convertToSQLToolStripMenuItem
             // 
-            convertToSQLToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            solsticeLegacyToolStripMenuItem,
-            solsticeIgniterToolStripMenuItem});
-            convertToSQLToolStripMenuItem.Name = "convertToSQLToolStripMenuItem";
-            convertToSQLToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
-            convertToSQLToolStripMenuItem.Text = "Convert to SQL";
+            this.convertToSQLToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.solsticeLegacyToolStripMenuItem,
+            this.solsticeIgniterToolStripMenuItem});
+            this.convertToSQLToolStripMenuItem.Name = "convertToSQLToolStripMenuItem";
+            this.convertToSQLToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.convertToSQLToolStripMenuItem.Text = "Convert to SQL";
             // 
             // solsticeLegacyToolStripMenuItem
             // 
-            solsticeLegacyToolStripMenuItem.Name = "solsticeLegacyToolStripMenuItem";
-            solsticeLegacyToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
-            solsticeLegacyToolStripMenuItem.Text = "Solstice Legacy";
-            solsticeLegacyToolStripMenuItem.Click += new System.EventHandler(solsticeLegacyToolStripMenuItem_Click);
+            this.solsticeLegacyToolStripMenuItem.Name = "solsticeLegacyToolStripMenuItem";
+            this.solsticeLegacyToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.solsticeLegacyToolStripMenuItem.Text = "Solstice Legacy";
+            this.solsticeLegacyToolStripMenuItem.Click += new System.EventHandler(this.solsticeLegacyToolStripMenuItem_Click);
             // 
             // solsticeIgniterToolStripMenuItem
             // 
-            solsticeIgniterToolStripMenuItem.Name = "solsticeIgniterToolStripMenuItem";
-            solsticeIgniterToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
-            solsticeIgniterToolStripMenuItem.Text = "Solstice Igniter";
-            solsticeIgniterToolStripMenuItem.Click += new System.EventHandler(solsticeIgniterToolStripMenuItem_Click);
+            this.solsticeIgniterToolStripMenuItem.Name = "solsticeIgniterToolStripMenuItem";
+            this.solsticeIgniterToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.solsticeIgniterToolStripMenuItem.Text = "Solstice Igniter";
+            this.solsticeIgniterToolStripMenuItem.Click += new System.EventHandler(this.solsticeIgniterToolStripMenuItem_Click);
             // 
             // convertToXMLToolStripMenuItem
             // 
-            convertToXMLToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            fugaToolStripMenuItem});
-            convertToXMLToolStripMenuItem.Name = "convertToXMLToolStripMenuItem";
-            convertToXMLToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
-            convertToXMLToolStripMenuItem.Text = "Convert to XML";
+            this.convertToXMLToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fugaToolStripMenuItem});
+            this.convertToXMLToolStripMenuItem.Name = "convertToXMLToolStripMenuItem";
+            this.convertToXMLToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.convertToXMLToolStripMenuItem.Text = "Convert to XML";
             // 
             // fugaToolStripMenuItem
             // 
-            fugaToolStripMenuItem.Name = "fugaToolStripMenuItem";
-            fugaToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
-            fugaToolStripMenuItem.Text = "Fuga";
-            fugaToolStripMenuItem.Click += new System.EventHandler(fugaToolStripMenuItem_Click);
+            this.fugaToolStripMenuItem.Name = "fugaToolStripMenuItem";
+            this.fugaToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+            this.fugaToolStripMenuItem.Text = "Fuga";
+            this.fugaToolStripMenuItem.Click += new System.EventHandler(this.fugaToolStripMenuItem_Click);
             // 
             // toolStripMenuItem2
             // 
-            toolStripMenuItem2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            helpToolStripMenuItem,
-            aboutToolStripMenuItem});
-            toolStripMenuItem2.Name = "toolStripMenuItem2";
-            toolStripMenuItem2.Size = new System.Drawing.Size(24, 20);
-            toolStripMenuItem2.Text = "?";
+            this.toolStripMenuItem2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.helpToolStripMenuItem,
+            this.aboutToolStripMenuItem});
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(24, 20);
+            this.toolStripMenuItem2.Text = "?";
             // 
             // helpToolStripMenuItem
             // 
-            helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            helpToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
-            helpToolStripMenuItem.Text = "Help";
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.helpToolStripMenuItem.Text = "Help";
             // 
             // aboutToolStripMenuItem
             // 
-            aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
-            aboutToolStripMenuItem.Text = "About";
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.aboutToolStripMenuItem.Text = "About";
             // 
             // InputGroupBox
             // 
-            InputGroupBox.AutoSize = true;
-            InputGroupBox.Controls.Add(CheckedPicto);
-            InputGroupBox.Controls.Add(WarningPicto);
-            InputGroupBox.Controls.Add(InputProgressBar);
-            InputGroupBox.Controls.Add(FilterArtistCheckBox);
-            InputGroupBox.Controls.Add(FilterWorkCheckBox);
-            InputGroupBox.Controls.Add(DuplicatesCheckBox);
-            InputGroupBox.Controls.Add(ReferentialIntegrityCheckBox);
-            InputGroupBox.Controls.Add(InputFormat);
-            InputGroupBox.Location = new System.Drawing.Point(12, 42);
-            InputGroupBox.Name = "InputGroupBox";
-            InputGroupBox.Size = new System.Drawing.Size(430, 126);
-            InputGroupBox.TabIndex = 1;
-            InputGroupBox.TabStop = false;
-            InputGroupBox.Text = "Input Options";
+            this.InputGroupBox.AutoSize = true;
+            this.InputGroupBox.Controls.Add(this.CheckedPicto);
+            this.InputGroupBox.Controls.Add(this.WarningPicto);
+            this.InputGroupBox.Controls.Add(this.InputProgressBar);
+            this.InputGroupBox.Controls.Add(this.FilterArtistCheckBox);
+            this.InputGroupBox.Controls.Add(this.FilterWorkCheckBox);
+            this.InputGroupBox.Controls.Add(this.DuplicatesCheckBox);
+            this.InputGroupBox.Controls.Add(this.ReferentialIntegrityCheckBox);
+            this.InputGroupBox.Controls.Add(this.InputFormat);
+            this.InputGroupBox.Location = new System.Drawing.Point(12, 42);
+            this.InputGroupBox.Name = "InputGroupBox";
+            this.InputGroupBox.Size = new System.Drawing.Size(430, 126);
+            this.InputGroupBox.TabIndex = 1;
+            this.InputGroupBox.TabStop = false;
+            this.InputGroupBox.Text = "Input Options";
             // 
             // CheckedPicto
             // 
-            CheckedPicto.Image = ((System.Drawing.Image)(resources.GetObject("CheckedPicto.Image")));
-            CheckedPicto.Location = new System.Drawing.Point(372, 75);
-            CheckedPicto.Name = "CheckedPicto";
-            CheckedPicto.Size = new System.Drawing.Size(32, 32);
-            CheckedPicto.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            CheckedPicto.TabIndex = 4;
-            CheckedPicto.TabStop = false;
-            CheckedPicto.Visible = false;
+            this.CheckedPicto.Image = ((System.Drawing.Image)(resources.GetObject("CheckedPicto.Image")));
+            this.CheckedPicto.Location = new System.Drawing.Point(372, 75);
+            this.CheckedPicto.Name = "CheckedPicto";
+            this.CheckedPicto.Size = new System.Drawing.Size(32, 32);
+            this.CheckedPicto.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.CheckedPicto.TabIndex = 4;
+            this.CheckedPicto.TabStop = false;
+            this.CheckedPicto.Visible = false;
             // 
             // WarningPicto
             // 
-            WarningPicto.Image = ((System.Drawing.Image)(resources.GetObject("WarningPicto.Image")));
-            WarningPicto.Location = new System.Drawing.Point(372, 75);
-            WarningPicto.Name = "WarningPicto";
-            WarningPicto.Size = new System.Drawing.Size(32, 32);
-            WarningPicto.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            WarningPicto.TabIndex = 4;
-            WarningPicto.TabStop = false;
-            WarningPicto.Visible = false;
+            this.WarningPicto.Image = ((System.Drawing.Image)(resources.GetObject("WarningPicto.Image")));
+            this.WarningPicto.Location = new System.Drawing.Point(372, 75);
+            this.WarningPicto.Name = "WarningPicto";
+            this.WarningPicto.Size = new System.Drawing.Size(32, 32);
+            this.WarningPicto.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.WarningPicto.TabIndex = 4;
+            this.WarningPicto.TabStop = false;
+            this.WarningPicto.Visible = false;
             // 
             // InputProgressBar
             // 
-            InputProgressBar.Location = new System.Drawing.Point(6, 88);
-            InputProgressBar.Name = "InputProgressBar";
-            InputProgressBar.Size = new System.Drawing.Size(360, 10);
-            InputProgressBar.Step = 1;
-            InputProgressBar.TabIndex = 5;
-            InputProgressBar.Visible = false;
+            this.InputProgressBar.Location = new System.Drawing.Point(6, 88);
+            this.InputProgressBar.Name = "InputProgressBar";
+            this.InputProgressBar.Size = new System.Drawing.Size(360, 10);
+            this.InputProgressBar.Step = 1;
+            this.InputProgressBar.TabIndex = 5;
+            this.InputProgressBar.Visible = false;
             // 
             // FilterArtistCheckBox
             // 
-            FilterArtistCheckBox.AutoSize = true;
-            FilterArtistCheckBox.Location = new System.Drawing.Point(248, 42);
-            FilterArtistCheckBox.Name = "FilterArtistCheckBox";
-            FilterArtistCheckBox.Size = new System.Drawing.Size(127, 17);
-            FilterArtistCheckBox.TabIndex = 4;
-            FilterArtistCheckBox.Text = "Filter artists not in use";
-            FilterArtistCheckBox.UseVisualStyleBackColor = true;
+            this.FilterArtistCheckBox.AutoSize = true;
+            this.FilterArtistCheckBox.Location = new System.Drawing.Point(248, 42);
+            this.FilterArtistCheckBox.Name = "FilterArtistCheckBox";
+            this.FilterArtistCheckBox.Size = new System.Drawing.Size(127, 17);
+            this.FilterArtistCheckBox.TabIndex = 4;
+            this.FilterArtistCheckBox.Text = "Filter artists not in use";
+            this.FilterArtistCheckBox.UseVisualStyleBackColor = true;
             // 
             // FilterWorkCheckBox
             // 
-            FilterWorkCheckBox.AutoSize = true;
-            FilterWorkCheckBox.Location = new System.Drawing.Point(248, 19);
-            FilterWorkCheckBox.Name = "FilterWorkCheckBox";
-            FilterWorkCheckBox.Size = new System.Drawing.Size(128, 17);
-            FilterWorkCheckBox.TabIndex = 3;
-            FilterWorkCheckBox.Text = "Filter works not in use";
-            FilterWorkCheckBox.UseVisualStyleBackColor = true;
+            this.FilterWorkCheckBox.AutoSize = true;
+            this.FilterWorkCheckBox.Location = new System.Drawing.Point(248, 19);
+            this.FilterWorkCheckBox.Name = "FilterWorkCheckBox";
+            this.FilterWorkCheckBox.Size = new System.Drawing.Size(128, 17);
+            this.FilterWorkCheckBox.TabIndex = 3;
+            this.FilterWorkCheckBox.Text = "Filter works not in use";
+            this.FilterWorkCheckBox.UseVisualStyleBackColor = true;
             // 
             // DuplicatesCheckBox
             // 
-            DuplicatesCheckBox.AutoSize = true;
-            DuplicatesCheckBox.Checked = true;
-            DuplicatesCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            DuplicatesCheckBox.Location = new System.Drawing.Point(6, 65);
-            DuplicatesCheckBox.Name = "DuplicatesCheckBox";
-            DuplicatesCheckBox.Size = new System.Drawing.Size(108, 17);
-            DuplicatesCheckBox.TabIndex = 2;
-            DuplicatesCheckBox.Text = "Check duplicates";
-            DuplicatesCheckBox.UseVisualStyleBackColor = true;
+            this.DuplicatesCheckBox.AutoSize = true;
+            this.DuplicatesCheckBox.Checked = true;
+            this.DuplicatesCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.DuplicatesCheckBox.Location = new System.Drawing.Point(6, 65);
+            this.DuplicatesCheckBox.Name = "DuplicatesCheckBox";
+            this.DuplicatesCheckBox.Size = new System.Drawing.Size(108, 17);
+            this.DuplicatesCheckBox.TabIndex = 2;
+            this.DuplicatesCheckBox.Text = "Check duplicates";
+            this.DuplicatesCheckBox.UseVisualStyleBackColor = true;
             // 
             // ReferentialIntegrityCheckBox
             // 
-            ReferentialIntegrityCheckBox.AutoSize = true;
-            ReferentialIntegrityCheckBox.Checked = true;
-            ReferentialIntegrityCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            ReferentialIntegrityCheckBox.Location = new System.Drawing.Point(6, 42);
-            ReferentialIntegrityCheckBox.Name = "ReferentialIntegrityCheckBox";
-            ReferentialIntegrityCheckBox.Size = new System.Drawing.Size(145, 17);
-            ReferentialIntegrityCheckBox.TabIndex = 1;
-            ReferentialIntegrityCheckBox.Text = "Check referential integrity";
-            ReferentialIntegrityCheckBox.UseVisualStyleBackColor = true;
+            this.ReferentialIntegrityCheckBox.AutoSize = true;
+            this.ReferentialIntegrityCheckBox.Checked = true;
+            this.ReferentialIntegrityCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ReferentialIntegrityCheckBox.Location = new System.Drawing.Point(6, 42);
+            this.ReferentialIntegrityCheckBox.Name = "ReferentialIntegrityCheckBox";
+            this.ReferentialIntegrityCheckBox.Size = new System.Drawing.Size(145, 17);
+            this.ReferentialIntegrityCheckBox.TabIndex = 1;
+            this.ReferentialIntegrityCheckBox.Text = "Check referential integrity";
+            this.ReferentialIntegrityCheckBox.UseVisualStyleBackColor = true;
             // 
             // InputFormat
             // 
-            InputFormat.FormattingEnabled = true;
-            InputFormat.Items.AddRange(new object[] {
-            "Default XML"});
-            InputFormat.Location = new System.Drawing.Point(6, 19);
-            InputFormat.Name = "InputFormat";
-            InputFormat.Size = new System.Drawing.Size(209, 17);
-            InputFormat.TabIndex = 0;
+            this.InputFormat.FormattingEnabled = true;
+            this.InputFormat.Items.AddRange(new object[] {
+            "Excel",
+            "XML"});
+            this.InputFormat.Location = new System.Drawing.Point(6, 19);
+            this.InputFormat.Name = "InputFormat";
+            this.InputFormat.Size = new System.Drawing.Size(209, 17);
+            this.InputFormat.TabIndex = 0;
             // 
             // OutputGroupBox
             // 
-            OutputGroupBox.AutoSize = true;
-            OutputGroupBox.Controls.Add(OutputProgressBar);
-            OutputGroupBox.Controls.Add(InsertFormat);
-            OutputGroupBox.Controls.Add(CurlyDoubleQuoteCheckBox);
-            OutputGroupBox.Controls.Add(CurlySimpleQuoteCheckBox);
-            OutputGroupBox.Location = new System.Drawing.Point(12, 174);
-            OutputGroupBox.Name = "OutputGroupBox";
-            OutputGroupBox.Size = new System.Drawing.Size(430, 95);
-            OutputGroupBox.TabIndex = 2;
-            OutputGroupBox.TabStop = false;
-            OutputGroupBox.Text = "Output Options";
+            this.OutputGroupBox.AutoSize = true;
+            this.OutputGroupBox.Controls.Add(this.OutputProgressBar);
+            this.OutputGroupBox.Controls.Add(this.InsertFormat);
+            this.OutputGroupBox.Controls.Add(this.CurlyDoubleQuoteCheckBox);
+            this.OutputGroupBox.Controls.Add(this.CurlySimpleQuoteCheckBox);
+            this.OutputGroupBox.Location = new System.Drawing.Point(12, 174);
+            this.OutputGroupBox.Name = "OutputGroupBox";
+            this.OutputGroupBox.Size = new System.Drawing.Size(430, 95);
+            this.OutputGroupBox.TabIndex = 2;
+            this.OutputGroupBox.TabStop = false;
+            this.OutputGroupBox.Text = "Output Options";
             // 
             // OutputProgressBar
             // 
-            OutputProgressBar.Location = new System.Drawing.Point(6, 66);
-            OutputProgressBar.Name = "OutputProgressBar";
-            OutputProgressBar.Size = new System.Drawing.Size(360, 10);
-            OutputProgressBar.Step = 1;
-            OutputProgressBar.TabIndex = 3;
-            OutputProgressBar.Visible = false;
+            this.OutputProgressBar.Location = new System.Drawing.Point(6, 66);
+            this.OutputProgressBar.Name = "OutputProgressBar";
+            this.OutputProgressBar.Size = new System.Drawing.Size(360, 10);
+            this.OutputProgressBar.Step = 1;
+            this.OutputProgressBar.TabIndex = 3;
+            this.OutputProgressBar.Visible = false;
             // 
             // InsertFormat
             // 
-            InsertFormat.FormattingEnabled = true;
-            InsertFormat.Items.AddRange(new object[] {
+            this.InsertFormat.FormattingEnabled = true;
+            this.InsertFormat.Items.AddRange(new object[] {
             "Use INSERT in SQL",
             "Use INSERT/REPLACE in SQL"});
-            InsertFormat.Location = new System.Drawing.Point(6, 20);
-            InsertFormat.Name = "InsertFormat";
-            InsertFormat.Size = new System.Drawing.Size(209, 17);
-            InsertFormat.TabIndex = 2;
+            this.InsertFormat.Location = new System.Drawing.Point(6, 20);
+            this.InsertFormat.Name = "InsertFormat";
+            this.InsertFormat.Size = new System.Drawing.Size(209, 17);
+            this.InsertFormat.TabIndex = 2;
             // 
             // CurlyDoubleQuoteCheckBox
             // 
-            CurlyDoubleQuoteCheckBox.AutoSize = true;
-            CurlyDoubleQuoteCheckBox.Location = new System.Drawing.Point(248, 43);
-            CurlyDoubleQuoteCheckBox.Name = "CurlyDoubleQuoteCheckBox";
-            CurlyDoubleQuoteCheckBox.Size = new System.Drawing.Size(158, 17);
-            CurlyDoubleQuoteCheckBox.TabIndex = 1;
-            CurlyDoubleQuoteCheckBox.Text = "Enforce curly double quotes";
-            CurlyDoubleQuoteCheckBox.UseVisualStyleBackColor = true;
+            this.CurlyDoubleQuoteCheckBox.AutoSize = true;
+            this.CurlyDoubleQuoteCheckBox.Location = new System.Drawing.Point(248, 43);
+            this.CurlyDoubleQuoteCheckBox.Name = "CurlyDoubleQuoteCheckBox";
+            this.CurlyDoubleQuoteCheckBox.Size = new System.Drawing.Size(158, 17);
+            this.CurlyDoubleQuoteCheckBox.TabIndex = 1;
+            this.CurlyDoubleQuoteCheckBox.Text = "Enforce curly double quotes";
+            this.CurlyDoubleQuoteCheckBox.UseVisualStyleBackColor = true;
             // 
             // CurlySimpleQuoteCheckBox
             // 
-            CurlySimpleQuoteCheckBox.AutoSize = true;
-            CurlySimpleQuoteCheckBox.Location = new System.Drawing.Point(248, 20);
-            CurlySimpleQuoteCheckBox.Name = "CurlySimpleQuoteCheckBox";
-            CurlySimpleQuoteCheckBox.Size = new System.Drawing.Size(155, 17);
-            CurlySimpleQuoteCheckBox.TabIndex = 0;
-            CurlySimpleQuoteCheckBox.Text = "Enforce curly simple quotes";
-            CurlySimpleQuoteCheckBox.UseVisualStyleBackColor = true;
+            this.CurlySimpleQuoteCheckBox.AutoSize = true;
+            this.CurlySimpleQuoteCheckBox.Location = new System.Drawing.Point(248, 20);
+            this.CurlySimpleQuoteCheckBox.Name = "CurlySimpleQuoteCheckBox";
+            this.CurlySimpleQuoteCheckBox.Size = new System.Drawing.Size(155, 17);
+            this.CurlySimpleQuoteCheckBox.TabIndex = 0;
+            this.CurlySimpleQuoteCheckBox.Text = "Enforce curly simple quotes";
+            this.CurlySimpleQuoteCheckBox.UseVisualStyleBackColor = true;
             // 
             // NotificationZone
             // 
-            NotificationZone.Location = new System.Drawing.Point(12, 280);
-            NotificationZone.Multiline = true;
-            NotificationZone.Name = "NotificationZone";
-            NotificationZone.Size = new System.Drawing.Size(360, 64);
-            NotificationZone.TabIndex = 3;
+            this.NotificationZone.Location = new System.Drawing.Point(12, 280);
+            this.NotificationZone.Multiline = true;
+            this.NotificationZone.Name = "NotificationZone";
+            this.NotificationZone.Size = new System.Drawing.Size(360, 64);
+            this.NotificationZone.TabIndex = 3;
             // 
             // CompanyLogo
             // 
-            CompanyLogo.Image = ((System.Drawing.Image)(resources.GetObject("CompanyLogo.Image")));
-            CompanyLogo.Location = new System.Drawing.Point(378, 280);
-            CompanyLogo.Name = "CompanyLogo";
-            CompanyLogo.Size = new System.Drawing.Size(64, 64);
-            CompanyLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            CompanyLogo.TabIndex = 4;
-            CompanyLogo.TabStop = false;
+            this.CompanyLogo.Image = ((System.Drawing.Image)(resources.GetObject("CompanyLogo.Image")));
+            this.CompanyLogo.Location = new System.Drawing.Point(378, 280);
+            this.CompanyLogo.Name = "CompanyLogo";
+            this.CompanyLogo.Size = new System.Drawing.Size(64, 64);
+            this.CompanyLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.CompanyLogo.TabIndex = 4;
+            this.CompanyLogo.TabStop = false;
             // 
             // MainForm
             // 
-            AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            AutoSize = true;
-            ClientSize = new System.Drawing.Size(479, 369);
-            Controls.Add(CompanyLogo);
-            Controls.Add(NotificationZone);
-            Controls.Add(OutputGroupBox);
-            Controls.Add(InputGroupBox);
-            Controls.Add(menuStrip1);
-            MainMenuStrip = menuStrip1;
-            Name = "MainForm";
-            Text = "Metadata Converter";
-            menuStrip1.ResumeLayout(false);
-            menuStrip1.PerformLayout();
-            InputGroupBox.ResumeLayout(false);
-            InputGroupBox.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(CheckedPicto)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(WarningPicto)).EndInit();
-            OutputGroupBox.ResumeLayout(false);
-            OutputGroupBox.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(CompanyLogo)).EndInit();
-            ResumeLayout(false);
-            PerformLayout();
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSize = true;
+            this.ClientSize = new System.Drawing.Size(479, 369);
+            this.Controls.Add(this.CompanyLogo);
+            this.Controls.Add(this.NotificationZone);
+            this.Controls.Add(this.OutputGroupBox);
+            this.Controls.Add(this.InputGroupBox);
+            this.Controls.Add(this.menuStrip1);
+            this.MainMenuStrip = this.menuStrip1;
+            this.Name = "MainForm";
+            this.Text = "Metadata Converter";
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
+            this.InputGroupBox.ResumeLayout(false);
+            this.InputGroupBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.CheckedPicto)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.WarningPicto)).EndInit();
+            this.OutputGroupBox.ResumeLayout(false);
+            this.OutputGroupBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.CompanyLogo)).EndInit();
+            this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 

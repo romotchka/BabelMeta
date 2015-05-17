@@ -38,6 +38,6 @@ namespace BabelMeta.Model
 
         public bool AvailableSeparately { get; set; }
 
-        public CatalogTier Tier { get; set; }
+        public CatalogTier? Tier { get; set; }
     }
 }

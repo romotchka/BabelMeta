@@ -17,6 +17,7 @@ namespace BabelMeta.AppConfig
         Ok,
 
         ModulesImportDefaultParseEmptyStream,
+        ModulesImportDefaultParseUnknownFormat,
         ModulesImportDefaultParseInvalidWorkbook,
 
         ModulesExportFugaXmlGenerateNullFolderName,
