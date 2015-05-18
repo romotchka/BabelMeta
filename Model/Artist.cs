@@ -30,8 +30,8 @@ namespace BabelMeta.Model
             Id = (Int32)info.GetValue("BabelMeta.Model.Artist.Id", typeof(Int32));
             Birth = (Int16?)info.GetValue("BabelMeta.Model.Artist.Birth", typeof(Int16?));
             Death = (Int16?)info.GetValue("BabelMeta.Model.Artist.Death", typeof(Int16?));
-            FirstName = (Dictionary<Lang, String>)info.GetValue("BabelMeta.Model.Artist.FirstName", typeof(Dictionary<Lang, String>));
-            LastName = (Dictionary<Lang, String>)info.GetValue("BabelMeta.Model.Artist.LastName", typeof(Dictionary<Lang, String>));
+            FirstName = (Dictionary<string, string>)info.GetValue("BabelMeta.Model.Artist.FirstName", typeof(Dictionary<string, string>));
+            LastName = (Dictionary<string, string>)info.GetValue("BabelMeta.Model.Artist.LastName", typeof(Dictionary<string, string>));
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -52,11 +52,11 @@ namespace BabelMeta.Model
         /// <summary>
         /// The field name is singular because it represents the same entry in different languages available
         /// </summary>
-        public Dictionary<Lang, String> FirstName { get; set; }
+        public Dictionary<string, string> FirstName { get; set; }
 
         /// <summary>
         /// The field name is singular because it represents the same entry in different languages available
         /// </summary>
-        public Dictionary<Lang, String> LastName { get; set; }
+        public Dictionary<string, string> LastName { get; set; }
     }
 }

@@ -126,17 +126,17 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         public static ingestion Deserialize(string xml)
         {
-            System.IO.StringReader stringReader = null;
+            System.IO.StringReader StringReader = null;
             try
             {
-                stringReader = new System.IO.StringReader(xml);
-                return ((ingestion)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
+                StringReader = new System.IO.StringReader(xml);
+                return ((ingestion)(Serializer.Deserialize(System.Xml.XmlReader.Create(StringReader))));
             }
             finally
             {
-                if ((stringReader != null))
+                if ((StringReader != null))
                 {
-                    stringReader.Dispose();
+                    StringReader.Dispose();
                 }
             }
         }
@@ -177,9 +177,9 @@ namespace BabelMeta.Modules.Export.FugaXml
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlString = Serialize(encoding);
+                string xmlstring = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlString);
+                streamWriter.WriteLine(xmlstring);
                 streamWriter.Close();
             }
             finally
@@ -238,10 +238,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlString = sr.ReadToEnd();
+                string xmlstring = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlString);
+                return Deserialize(xmlstring);
             }
             finally
             {
@@ -663,17 +663,17 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         public static ingestionAlbum Deserialize(string xml)
         {
-            System.IO.StringReader stringReader = null;
+            System.IO.StringReader StringReader = null;
             try
             {
-                stringReader = new System.IO.StringReader(xml);
-                return ((ingestionAlbum)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
+                StringReader = new System.IO.StringReader(xml);
+                return ((ingestionAlbum)(Serializer.Deserialize(System.Xml.XmlReader.Create(StringReader))));
             }
             finally
             {
-                if ((stringReader != null))
+                if ((StringReader != null))
                 {
-                    stringReader.Dispose();
+                    StringReader.Dispose();
                 }
             }
         }
@@ -714,9 +714,9 @@ namespace BabelMeta.Modules.Export.FugaXml
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlString = Serialize(encoding);
+                string xmlstring = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlString);
+                streamWriter.WriteLine(xmlstring);
                 streamWriter.Close();
             }
             finally
@@ -775,10 +775,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlString = sr.ReadToEnd();
+                string xmlstring = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlString);
+                return Deserialize(xmlstring);
             }
             finally
             {
@@ -993,17 +993,17 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         public static attachment_type Deserialize(string xml)
         {
-            System.IO.StringReader stringReader = null;
+            System.IO.StringReader StringReader = null;
             try
             {
-                stringReader = new System.IO.StringReader(xml);
-                return ((attachment_type)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
+                StringReader = new System.IO.StringReader(xml);
+                return ((attachment_type)(Serializer.Deserialize(System.Xml.XmlReader.Create(StringReader))));
             }
             finally
             {
-                if ((stringReader != null))
+                if ((StringReader != null))
                 {
-                    stringReader.Dispose();
+                    StringReader.Dispose();
                 }
             }
         }
@@ -1044,9 +1044,9 @@ namespace BabelMeta.Modules.Export.FugaXml
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlString = Serialize(encoding);
+                string xmlstring = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlString);
+                streamWriter.WriteLine(xmlstring);
                 streamWriter.Close();
             }
             finally
@@ -1105,10 +1105,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlString = sr.ReadToEnd();
+                string xmlstring = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlString);
+                return Deserialize(xmlstring);
             }
             finally
             {
@@ -1244,17 +1244,17 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         public static file_type Deserialize(string xml)
         {
-            System.IO.StringReader stringReader = null;
+            System.IO.StringReader StringReader = null;
             try
             {
-                stringReader = new System.IO.StringReader(xml);
-                return ((file_type)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
+                StringReader = new System.IO.StringReader(xml);
+                return ((file_type)(Serializer.Deserialize(System.Xml.XmlReader.Create(StringReader))));
             }
             finally
             {
-                if ((stringReader != null))
+                if ((StringReader != null))
                 {
-                    stringReader.Dispose();
+                    StringReader.Dispose();
                 }
             }
         }
@@ -1295,9 +1295,9 @@ namespace BabelMeta.Modules.Export.FugaXml
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlString = Serialize(encoding);
+                string xmlstring = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlString);
+                streamWriter.WriteLine(xmlstring);
                 streamWriter.Close();
             }
             finally
@@ -1356,10 +1356,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlString = sr.ReadToEnd();
+                string xmlstring = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlString);
+                return Deserialize(xmlstring);
             }
             finally
             {
@@ -1486,17 +1486,17 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         public static territory_release_date_type Deserialize(string xml)
         {
-            System.IO.StringReader stringReader = null;
+            System.IO.StringReader StringReader = null;
             try
             {
-                stringReader = new System.IO.StringReader(xml);
-                return ((territory_release_date_type)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
+                StringReader = new System.IO.StringReader(xml);
+                return ((territory_release_date_type)(Serializer.Deserialize(System.Xml.XmlReader.Create(StringReader))));
             }
             finally
             {
-                if ((stringReader != null))
+                if ((StringReader != null))
                 {
-                    stringReader.Dispose();
+                    StringReader.Dispose();
                 }
             }
         }
@@ -1537,9 +1537,9 @@ namespace BabelMeta.Modules.Export.FugaXml
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlString = Serialize(encoding);
+                string xmlstring = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlString);
+                streamWriter.WriteLine(xmlstring);
                 streamWriter.Close();
             }
             finally
@@ -1598,10 +1598,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlString = sr.ReadToEnd();
+                string xmlstring = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlString);
+                return Deserialize(xmlstring);
             }
             finally
             {
@@ -1734,17 +1734,17 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         public static usage_right_type Deserialize(string xml)
         {
-            System.IO.StringReader stringReader = null;
+            System.IO.StringReader StringReader = null;
             try
             {
-                stringReader = new System.IO.StringReader(xml);
-                return ((usage_right_type)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
+                StringReader = new System.IO.StringReader(xml);
+                return ((usage_right_type)(Serializer.Deserialize(System.Xml.XmlReader.Create(StringReader))));
             }
             finally
             {
-                if ((stringReader != null))
+                if ((StringReader != null))
                 {
-                    stringReader.Dispose();
+                    StringReader.Dispose();
                 }
             }
         }
@@ -1785,9 +1785,9 @@ namespace BabelMeta.Modules.Export.FugaXml
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlString = Serialize(encoding);
+                string xmlstring = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlString);
+                streamWriter.WriteLine(xmlstring);
                 streamWriter.Close();
             }
             finally
@@ -1846,10 +1846,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlString = sr.ReadToEnd();
+                string xmlstring = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlString);
+                return Deserialize(xmlstring);
             }
             finally
             {
@@ -1968,17 +1968,17 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         public static organization_type Deserialize(string xml)
         {
-            System.IO.StringReader stringReader = null;
+            System.IO.StringReader StringReader = null;
             try
             {
-                stringReader = new System.IO.StringReader(xml);
-                return ((organization_type)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
+                StringReader = new System.IO.StringReader(xml);
+                return ((organization_type)(Serializer.Deserialize(System.Xml.XmlReader.Create(StringReader))));
             }
             finally
             {
-                if ((stringReader != null))
+                if ((StringReader != null))
                 {
-                    stringReader.Dispose();
+                    StringReader.Dispose();
                 }
             }
         }
@@ -2019,9 +2019,9 @@ namespace BabelMeta.Modules.Export.FugaXml
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlString = Serialize(encoding);
+                string xmlstring = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlString);
+                streamWriter.WriteLine(xmlstring);
                 streamWriter.Close();
             }
             finally
@@ -2080,10 +2080,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlString = sr.ReadToEnd();
+                string xmlstring = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlString);
+                return Deserialize(xmlstring);
             }
             finally
             {
@@ -2267,17 +2267,17 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         public static redeliveries_type Deserialize(string xml)
         {
-            System.IO.StringReader stringReader = null;
+            System.IO.StringReader StringReader = null;
             try
             {
-                stringReader = new System.IO.StringReader(xml);
-                return ((redeliveries_type)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
+                StringReader = new System.IO.StringReader(xml);
+                return ((redeliveries_type)(Serializer.Deserialize(System.Xml.XmlReader.Create(StringReader))));
             }
             finally
             {
-                if ((stringReader != null))
+                if ((StringReader != null))
                 {
-                    stringReader.Dispose();
+                    StringReader.Dispose();
                 }
             }
         }
@@ -2318,9 +2318,9 @@ namespace BabelMeta.Modules.Export.FugaXml
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlString = Serialize(encoding);
+                string xmlstring = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlString);
+                streamWriter.WriteLine(xmlstring);
                 streamWriter.Close();
             }
             finally
@@ -2379,10 +2379,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlString = sr.ReadToEnd();
+                string xmlstring = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlString);
+                return Deserialize(xmlstring);
             }
             finally
             {
@@ -2520,17 +2520,17 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         public static pricing_interval_type Deserialize(string xml)
         {
-            System.IO.StringReader stringReader = null;
+            System.IO.StringReader StringReader = null;
             try
             {
-                stringReader = new System.IO.StringReader(xml);
-                return ((pricing_interval_type)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
+                StringReader = new System.IO.StringReader(xml);
+                return ((pricing_interval_type)(Serializer.Deserialize(System.Xml.XmlReader.Create(StringReader))));
             }
             finally
             {
-                if ((stringReader != null))
+                if ((StringReader != null))
                 {
-                    stringReader.Dispose();
+                    StringReader.Dispose();
                 }
             }
         }
@@ -2571,9 +2571,9 @@ namespace BabelMeta.Modules.Export.FugaXml
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlString = Serialize(encoding);
+                string xmlstring = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlString);
+                streamWriter.WriteLine(xmlstring);
                 streamWriter.Close();
             }
             finally
@@ -2632,10 +2632,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlString = sr.ReadToEnd();
+                string xmlstring = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlString);
+                return Deserialize(xmlstring);
             }
             finally
             {
@@ -3527,17 +3527,17 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         public static pricing_type Deserialize(string xml)
         {
-            System.IO.StringReader stringReader = null;
+            System.IO.StringReader StringReader = null;
             try
             {
-                stringReader = new System.IO.StringReader(xml);
-                return ((pricing_type)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
+                StringReader = new System.IO.StringReader(xml);
+                return ((pricing_type)(Serializer.Deserialize(System.Xml.XmlReader.Create(StringReader))));
             }
             finally
             {
-                if ((stringReader != null))
+                if ((StringReader != null))
                 {
-                    stringReader.Dispose();
+                    StringReader.Dispose();
                 }
             }
         }
@@ -3578,9 +3578,9 @@ namespace BabelMeta.Modules.Export.FugaXml
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlString = Serialize(encoding);
+                string xmlstring = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlString);
+                streamWriter.WriteLine(xmlstring);
                 streamWriter.Close();
             }
             finally
@@ -3639,10 +3639,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlString = sr.ReadToEnd();
+                string xmlstring = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlString);
+                return Deserialize(xmlstring);
             }
             finally
             {
@@ -3767,17 +3767,17 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         public static artist Deserialize(string xml)
         {
-            System.IO.StringReader stringReader = null;
+            System.IO.StringReader StringReader = null;
             try
             {
-                stringReader = new System.IO.StringReader(xml);
-                return ((artist)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
+                StringReader = new System.IO.StringReader(xml);
+                return ((artist)(Serializer.Deserialize(System.Xml.XmlReader.Create(StringReader))));
             }
             finally
             {
-                if ((stringReader != null))
+                if ((StringReader != null))
                 {
-                    stringReader.Dispose();
+                    StringReader.Dispose();
                 }
             }
         }
@@ -3818,9 +3818,9 @@ namespace BabelMeta.Modules.Export.FugaXml
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlString = Serialize(encoding);
+                string xmlstring = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlString);
+                streamWriter.WriteLine(xmlstring);
                 streamWriter.Close();
             }
             finally
@@ -3879,10 +3879,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlString = sr.ReadToEnd();
+                string xmlstring = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlString);
+                return Deserialize(xmlstring);
             }
             finally
             {
@@ -3997,17 +3997,17 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         public static contributor Deserialize(string xml)
         {
-            System.IO.StringReader stringReader = null;
+            System.IO.StringReader StringReader = null;
             try
             {
-                stringReader = new System.IO.StringReader(xml);
-                return ((contributor)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
+                StringReader = new System.IO.StringReader(xml);
+                return ((contributor)(Serializer.Deserialize(System.Xml.XmlReader.Create(StringReader))));
             }
             finally
             {
-                if ((stringReader != null))
+                if ((StringReader != null))
                 {
-                    stringReader.Dispose();
+                    StringReader.Dispose();
                 }
             }
         }
@@ -4048,9 +4048,9 @@ namespace BabelMeta.Modules.Export.FugaXml
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlString = Serialize(encoding);
+                string xmlstring = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlString);
+                streamWriter.WriteLine(xmlstring);
                 streamWriter.Close();
             }
             finally
@@ -4109,10 +4109,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlString = sr.ReadToEnd();
+                string xmlstring = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlString);
+                return Deserialize(xmlstring);
             }
             finally
             {
@@ -4285,17 +4285,17 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         public static publisher Deserialize(string xml)
         {
-            System.IO.StringReader stringReader = null;
+            System.IO.StringReader StringReader = null;
             try
             {
-                stringReader = new System.IO.StringReader(xml);
-                return ((publisher)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
+                StringReader = new System.IO.StringReader(xml);
+                return ((publisher)(Serializer.Deserialize(System.Xml.XmlReader.Create(StringReader))));
             }
             finally
             {
-                if ((stringReader != null))
+                if ((StringReader != null))
                 {
-                    stringReader.Dispose();
+                    StringReader.Dispose();
                 }
             }
         }
@@ -4336,9 +4336,9 @@ namespace BabelMeta.Modules.Export.FugaXml
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlString = Serialize(encoding);
+                string xmlstring = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlString);
+                streamWriter.WriteLine(xmlstring);
                 streamWriter.Close();
             }
             finally
@@ -4397,10 +4397,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlString = sr.ReadToEnd();
+                string xmlstring = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlString);
+                return Deserialize(xmlstring);
             }
             finally
             {
@@ -4517,17 +4517,17 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         public static ingestionAlbumCover_art Deserialize(string xml)
         {
-            System.IO.StringReader stringReader = null;
+            System.IO.StringReader StringReader = null;
             try
             {
-                stringReader = new System.IO.StringReader(xml);
-                return ((ingestionAlbumCover_art)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
+                StringReader = new System.IO.StringReader(xml);
+                return ((ingestionAlbumCover_art)(Serializer.Deserialize(System.Xml.XmlReader.Create(StringReader))));
             }
             finally
             {
-                if ((stringReader != null))
+                if ((StringReader != null))
                 {
-                    stringReader.Dispose();
+                    StringReader.Dispose();
                 }
             }
         }
@@ -4568,9 +4568,9 @@ namespace BabelMeta.Modules.Export.FugaXml
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlString = Serialize(encoding);
+                string xmlstring = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlString);
+                streamWriter.WriteLine(xmlstring);
                 streamWriter.Close();
             }
             finally
@@ -4629,10 +4629,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlString = sr.ReadToEnd();
+                string xmlstring = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlString);
+                return Deserialize(xmlstring);
             }
             finally
             {
@@ -4750,17 +4750,17 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         public static ingestionAlbumCover_artImage Deserialize(string xml)
         {
-            System.IO.StringReader stringReader = null;
+            System.IO.StringReader StringReader = null;
             try
             {
-                stringReader = new System.IO.StringReader(xml);
-                return ((ingestionAlbumCover_artImage)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
+                StringReader = new System.IO.StringReader(xml);
+                return ((ingestionAlbumCover_artImage)(Serializer.Deserialize(System.Xml.XmlReader.Create(StringReader))));
             }
             finally
             {
-                if ((stringReader != null))
+                if ((StringReader != null))
                 {
-                    stringReader.Dispose();
+                    StringReader.Dispose();
                 }
             }
         }
@@ -4801,9 +4801,9 @@ namespace BabelMeta.Modules.Export.FugaXml
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlString = Serialize(encoding);
+                string xmlstring = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlString);
+                streamWriter.WriteLine(xmlstring);
                 streamWriter.Close();
             }
             finally
@@ -4862,10 +4862,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlString = sr.ReadToEnd();
+                string xmlstring = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlString);
+                return Deserialize(xmlstring);
             }
             finally
             {
@@ -5157,17 +5157,17 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         public static primary_artist Deserialize(string xml)
         {
-            System.IO.StringReader stringReader = null;
+            System.IO.StringReader StringReader = null;
             try
             {
-                stringReader = new System.IO.StringReader(xml);
-                return ((primary_artist)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
+                StringReader = new System.IO.StringReader(xml);
+                return ((primary_artist)(Serializer.Deserialize(System.Xml.XmlReader.Create(StringReader))));
             }
             finally
             {
-                if ((stringReader != null))
+                if ((StringReader != null))
                 {
-                    stringReader.Dispose();
+                    StringReader.Dispose();
                 }
             }
         }
@@ -5208,9 +5208,9 @@ namespace BabelMeta.Modules.Export.FugaXml
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlString = Serialize(encoding);
+                string xmlstring = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlString);
+                streamWriter.WriteLine(xmlstring);
                 streamWriter.Close();
             }
             finally
@@ -5269,10 +5269,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlString = sr.ReadToEnd();
+                string xmlstring = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlString);
+                return Deserialize(xmlstring);
             }
             finally
             {
@@ -5420,17 +5420,17 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         public static ingestionAlbumTracks Deserialize(string xml)
         {
-            System.IO.StringReader stringReader = null;
+            System.IO.StringReader StringReader = null;
             try
             {
-                stringReader = new System.IO.StringReader(xml);
-                return ((ingestionAlbumTracks)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
+                StringReader = new System.IO.StringReader(xml);
+                return ((ingestionAlbumTracks)(Serializer.Deserialize(System.Xml.XmlReader.Create(StringReader))));
             }
             finally
             {
-                if ((stringReader != null))
+                if ((StringReader != null))
                 {
-                    stringReader.Dispose();
+                    StringReader.Dispose();
                 }
             }
         }
@@ -5471,9 +5471,9 @@ namespace BabelMeta.Modules.Export.FugaXml
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlString = Serialize(encoding);
+                string xmlstring = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlString);
+                streamWriter.WriteLine(xmlstring);
                 streamWriter.Close();
             }
             finally
@@ -5532,10 +5532,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlString = sr.ReadToEnd();
+                string xmlstring = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlString);
+                return Deserialize(xmlstring);
             }
             finally
             {
@@ -5950,17 +5950,17 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         public static ingestionAlbumTracksClassical_track Deserialize(string xml)
         {
-            System.IO.StringReader stringReader = null;
+            System.IO.StringReader StringReader = null;
             try
             {
-                stringReader = new System.IO.StringReader(xml);
-                return ((ingestionAlbumTracksClassical_track)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
+                StringReader = new System.IO.StringReader(xml);
+                return ((ingestionAlbumTracksClassical_track)(Serializer.Deserialize(System.Xml.XmlReader.Create(StringReader))));
             }
             finally
             {
-                if ((stringReader != null))
+                if ((StringReader != null))
                 {
-                    stringReader.Dispose();
+                    StringReader.Dispose();
                 }
             }
         }
@@ -6001,9 +6001,9 @@ namespace BabelMeta.Modules.Export.FugaXml
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlString = Serialize(encoding);
+                string xmlstring = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlString);
+                streamWriter.WriteLine(xmlstring);
                 streamWriter.Close();
             }
             finally
@@ -6062,10 +6062,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlString = sr.ReadToEnd();
+                string xmlstring = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlString);
+                return Deserialize(xmlstring);
             }
             finally
             {
@@ -6307,17 +6307,17 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         public static resourcesAudio Deserialize(string xml)
         {
-            System.IO.StringReader stringReader = null;
+            System.IO.StringReader StringReader = null;
             try
             {
-                stringReader = new System.IO.StringReader(xml);
-                return ((resourcesAudio)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
+                StringReader = new System.IO.StringReader(xml);
+                return ((resourcesAudio)(Serializer.Deserialize(System.Xml.XmlReader.Create(StringReader))));
             }
             finally
             {
-                if ((stringReader != null))
+                if ((StringReader != null))
                 {
-                    stringReader.Dispose();
+                    StringReader.Dispose();
                 }
             }
         }
@@ -6358,9 +6358,9 @@ namespace BabelMeta.Modules.Export.FugaXml
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlString = Serialize(encoding);
+                string xmlstring = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlString);
+                streamWriter.WriteLine(xmlstring);
                 streamWriter.Close();
             }
             finally
@@ -6419,10 +6419,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlString = sr.ReadToEnd();
+                string xmlstring = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlString);
+                return Deserialize(xmlstring);
             }
             finally
             {
@@ -6806,17 +6806,17 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         public static ingestionAlbumTracksTrack Deserialize(string xml)
         {
-            System.IO.StringReader stringReader = null;
+            System.IO.StringReader StringReader = null;
             try
             {
-                stringReader = new System.IO.StringReader(xml);
-                return ((ingestionAlbumTracksTrack)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
+                StringReader = new System.IO.StringReader(xml);
+                return ((ingestionAlbumTracksTrack)(Serializer.Deserialize(System.Xml.XmlReader.Create(StringReader))));
             }
             finally
             {
-                if ((stringReader != null))
+                if ((StringReader != null))
                 {
-                    stringReader.Dispose();
+                    StringReader.Dispose();
                 }
             }
         }
@@ -6857,9 +6857,9 @@ namespace BabelMeta.Modules.Export.FugaXml
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlString = Serialize(encoding);
+                string xmlstring = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlString);
+                streamWriter.WriteLine(xmlstring);
                 streamWriter.Close();
             }
             finally
@@ -6918,10 +6918,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlString = sr.ReadToEnd();
+                string xmlstring = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlString);
+                return Deserialize(xmlstring);
             }
             finally
             {
@@ -7235,17 +7235,17 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         public static ingestionAlbumTracksVideo Deserialize(string xml)
         {
-            System.IO.StringReader stringReader = null;
+            System.IO.StringReader StringReader = null;
             try
             {
-                stringReader = new System.IO.StringReader(xml);
-                return ((ingestionAlbumTracksVideo)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
+                StringReader = new System.IO.StringReader(xml);
+                return ((ingestionAlbumTracksVideo)(Serializer.Deserialize(System.Xml.XmlReader.Create(StringReader))));
             }
             finally
             {
-                if ((stringReader != null))
+                if ((StringReader != null))
                 {
-                    stringReader.Dispose();
+                    StringReader.Dispose();
                 }
             }
         }
@@ -7286,9 +7286,9 @@ namespace BabelMeta.Modules.Export.FugaXml
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlString = Serialize(encoding);
+                string xmlstring = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlString);
+                streamWriter.WriteLine(xmlstring);
                 streamWriter.Close();
             }
             finally
@@ -7347,10 +7347,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlString = sr.ReadToEnd();
+                string xmlstring = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlString);
+                return Deserialize(xmlstring);
             }
             finally
             {
@@ -7491,17 +7491,17 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         public static ingestionAlbumTracksVideoResources Deserialize(string xml)
         {
-            System.IO.StringReader stringReader = null;
+            System.IO.StringReader StringReader = null;
             try
             {
-                stringReader = new System.IO.StringReader(xml);
-                return ((ingestionAlbumTracksVideoResources)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
+                StringReader = new System.IO.StringReader(xml);
+                return ((ingestionAlbumTracksVideoResources)(Serializer.Deserialize(System.Xml.XmlReader.Create(StringReader))));
             }
             finally
             {
-                if ((stringReader != null))
+                if ((StringReader != null))
                 {
-                    stringReader.Dispose();
+                    StringReader.Dispose();
                 }
             }
         }
@@ -7542,9 +7542,9 @@ namespace BabelMeta.Modules.Export.FugaXml
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlString = Serialize(encoding);
+                string xmlstring = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlString);
+                streamWriter.WriteLine(xmlstring);
                 streamWriter.Close();
             }
             finally
@@ -7603,10 +7603,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlString = sr.ReadToEnd();
+                string xmlstring = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlString);
+                return Deserialize(xmlstring);
             }
             finally
             {
@@ -7723,17 +7723,17 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         public static ingestionAlbumTracksVideoResourcesVideo Deserialize(string xml)
         {
-            System.IO.StringReader stringReader = null;
+            System.IO.StringReader StringReader = null;
             try
             {
-                stringReader = new System.IO.StringReader(xml);
-                return ((ingestionAlbumTracksVideoResourcesVideo)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
+                StringReader = new System.IO.StringReader(xml);
+                return ((ingestionAlbumTracksVideoResourcesVideo)(Serializer.Deserialize(System.Xml.XmlReader.Create(StringReader))));
             }
             finally
             {
-                if ((stringReader != null))
+                if ((StringReader != null))
                 {
-                    stringReader.Dispose();
+                    StringReader.Dispose();
                 }
             }
         }
@@ -7774,9 +7774,9 @@ namespace BabelMeta.Modules.Export.FugaXml
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlString = Serialize(encoding);
+                string xmlstring = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlString);
+                streamWriter.WriteLine(xmlstring);
                 streamWriter.Close();
             }
             finally
@@ -7835,10 +7835,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlString = sr.ReadToEnd();
+                string xmlstring = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlString);
+                return Deserialize(xmlstring);
             }
             finally
             {
@@ -7955,17 +7955,17 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         public static ingestionAlbumTracksVideoResourcesVideo_preview_image Deserialize(string xml)
         {
-            System.IO.StringReader stringReader = null;
+            System.IO.StringReader StringReader = null;
             try
             {
-                stringReader = new System.IO.StringReader(xml);
-                return ((ingestionAlbumTracksVideoResourcesVideo_preview_image)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
+                StringReader = new System.IO.StringReader(xml);
+                return ((ingestionAlbumTracksVideoResourcesVideo_preview_image)(Serializer.Deserialize(System.Xml.XmlReader.Create(StringReader))));
             }
             finally
             {
-                if ((stringReader != null))
+                if ((StringReader != null))
                 {
-                    stringReader.Dispose();
+                    StringReader.Dispose();
                 }
             }
         }
@@ -8006,9 +8006,9 @@ namespace BabelMeta.Modules.Export.FugaXml
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlString = Serialize(encoding);
+                string xmlstring = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlString);
+                streamWriter.WriteLine(xmlstring);
                 streamWriter.Close();
             }
             finally
@@ -8067,10 +8067,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlString = sr.ReadToEnd();
+                string xmlstring = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlString);
+                return Deserialize(xmlstring);
             }
             finally
             {
@@ -8264,17 +8264,17 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         public static schedule Deserialize(string xml)
         {
-            System.IO.StringReader stringReader = null;
+            System.IO.StringReader StringReader = null;
             try
             {
-                stringReader = new System.IO.StringReader(xml);
-                return ((schedule)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
+                StringReader = new System.IO.StringReader(xml);
+                return ((schedule)(Serializer.Deserialize(System.Xml.XmlReader.Create(StringReader))));
             }
             finally
             {
-                if ((stringReader != null))
+                if ((StringReader != null))
                 {
-                    stringReader.Dispose();
+                    StringReader.Dispose();
                 }
             }
         }
@@ -8315,9 +8315,9 @@ namespace BabelMeta.Modules.Export.FugaXml
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlString = Serialize(encoding);
+                string xmlstring = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlString);
+                streamWriter.WriteLine(xmlstring);
                 streamWriter.Close();
             }
             finally
@@ -8376,10 +8376,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlString = sr.ReadToEnd();
+                string xmlstring = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlString);
+                return Deserialize(xmlstring);
             }
             finally
             {
@@ -8513,17 +8513,17 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         public static scheduleDelivery Deserialize(string xml)
         {
-            System.IO.StringReader stringReader = null;
+            System.IO.StringReader StringReader = null;
             try
             {
-                stringReader = new System.IO.StringReader(xml);
-                return ((scheduleDelivery)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
+                StringReader = new System.IO.StringReader(xml);
+                return ((scheduleDelivery)(Serializer.Deserialize(System.Xml.XmlReader.Create(StringReader))));
             }
             finally
             {
-                if ((stringReader != null))
+                if ((StringReader != null))
                 {
-                    stringReader.Dispose();
+                    StringReader.Dispose();
                 }
             }
         }
@@ -8564,9 +8564,9 @@ namespace BabelMeta.Modules.Export.FugaXml
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlString = Serialize(encoding);
+                string xmlstring = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlString);
+                streamWriter.WriteLine(xmlstring);
                 streamWriter.Close();
             }
             finally
@@ -8625,10 +8625,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlString = sr.ReadToEnd();
+                string xmlstring = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlString);
+                return Deserialize(xmlstring);
             }
             finally
             {
@@ -8779,17 +8779,17 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         public static scheduleExclusion Deserialize(string xml)
         {
-            System.IO.StringReader stringReader = null;
+            System.IO.StringReader StringReader = null;
             try
             {
-                stringReader = new System.IO.StringReader(xml);
-                return ((scheduleExclusion)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
+                StringReader = new System.IO.StringReader(xml);
+                return ((scheduleExclusion)(Serializer.Deserialize(System.Xml.XmlReader.Create(StringReader))));
             }
             finally
             {
-                if ((stringReader != null))
+                if ((StringReader != null))
                 {
-                    stringReader.Dispose();
+                    StringReader.Dispose();
                 }
             }
         }
@@ -8830,9 +8830,9 @@ namespace BabelMeta.Modules.Export.FugaXml
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlString = Serialize(encoding);
+                string xmlstring = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlString);
+                streamWriter.WriteLine(xmlstring);
                 streamWriter.Close();
             }
             finally
@@ -8891,10 +8891,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlString = sr.ReadToEnd();
+                string xmlstring = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlString);
+                return Deserialize(xmlstring);
             }
             finally
             {
@@ -9022,17 +9022,17 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         public static resources Deserialize(string xml)
         {
-            System.IO.StringReader stringReader = null;
+            System.IO.StringReader StringReader = null;
             try
             {
-                stringReader = new System.IO.StringReader(xml);
-                return ((resources)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
+                StringReader = new System.IO.StringReader(xml);
+                return ((resources)(Serializer.Deserialize(System.Xml.XmlReader.Create(StringReader))));
             }
             finally
             {
-                if ((stringReader != null))
+                if ((StringReader != null))
                 {
-                    stringReader.Dispose();
+                    StringReader.Dispose();
                 }
             }
         }
@@ -9073,9 +9073,9 @@ namespace BabelMeta.Modules.Export.FugaXml
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlString = Serialize(encoding);
+                string xmlstring = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlString);
+                streamWriter.WriteLine(xmlstring);
                 streamWriter.Close();
             }
             finally
@@ -9134,10 +9134,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlString = sr.ReadToEnd();
+                string xmlstring = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlString);
+                return Deserialize(xmlstring);
             }
             finally
             {

@@ -88,6 +88,10 @@ namespace BabelMeta.Model
         {
             get
             {
+                if (Langs == null)
+                {
+                    return null;
+                }
                 return (Langs.Exists(l => l.IsDefault))
                     ? Langs.FirstOrDefault(l => l.IsDefault)
                     : null;

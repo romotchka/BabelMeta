@@ -15,7 +15,7 @@ namespace BabelMeta.Helpers
 {
     public static class Syntax
     {
-        public static String HierarchicalSeparator(Lang lang)
+        public static string HierarchicalSeparator(Lang lang)
         {
             switch (lang.ShortName)
             {
@@ -29,11 +29,11 @@ namespace BabelMeta.Helpers
         /// Expected format is yyyy-mm-dd[...]
         /// Returns DateTime extracted, or Now if an error occurs
         /// </summary>
-        /// <param name="dateString"></param>
+        /// <param name="datestring"></param>
         /// <returns></returns>
-        public static DateTime ToDateTime(this String dateString)
+        public static DateTime ToDateTime(this string datestring)
         {
-            string[] words = dateString.Split(new char[] { '-' });
+            string[] words = datestring.Split(new char[] { '-' });
 
             if (words != null && words.ToList().Count >= 3)
             {
@@ -57,11 +57,11 @@ namespace BabelMeta.Helpers
             return DateTime.Now;
         }
 
-        public static String GetFileNameFromFullPath(this String path)
+        public static string GetFileNameFromFullPath(this string path)
         {
-            if (String.IsNullOrEmpty(path))
+            if (string.IsNullOrEmpty(path))
             {
-                return String.Empty;
+                return string.Empty;
             }
             var pathElements = path.Split('\\');
             return pathElements[pathElements.Length - 1];

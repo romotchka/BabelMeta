@@ -9,6 +9,7 @@ using BabelMeta.Modules.Control;
 using BabelMeta.Modules.Export;
 using BabelMeta.Modules.Import;
 using BabelMeta.AppConfig;
+using BabelMeta.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -20,6 +21,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Runtime.Serialization.Formatters.Binary;
+using BabelMeta.Model.Config;
 
 namespace BabelMeta
 {
@@ -109,6 +111,63 @@ namespace BabelMeta
             }
         }
 
+        private void DeserializeBmdFile(string filePath)
+        {
+            if (string.IsNullOrEmpty(filePath))
+            {
+                return;
+            }
+
+            Stream stream;
+            BinaryFormatter binaryFormatter = new BinaryFormatter();
+
+            stream = File.Open(filePath, FileMode.Open);
+            binaryFormatter = new BinaryFormatter();
+
+            switch ((filePath.GetFileNameFromFullPath().ToLower().Split('.'))[0])
+            {
+                case "settings":
+                    CatalogContext.Instance.Settings = (CatalogSettings)binaryFormatter.Deserialize(stream);
+                    break;
+
+                case "langs":
+                    CatalogContext.Instance.Langs = (List<Lang>)binaryFormatter.Deserialize(stream);
+                    break;
+
+                case "tags":
+                    CatalogContext.Instance.Tags = (List<Tag>)binaryFormatter.Deserialize(stream);
+                    break;
+
+                case "roles":
+                    CatalogContext.Instance.Roles = (List<Role>)binaryFormatter.Deserialize(stream);
+                    break;
+
+                case "qualities":
+                    CatalogContext.Instance.Qualities = (List<Quality>)binaryFormatter.Deserialize(stream);
+                    break;
+
+                case "artists":
+                    CatalogContext.Instance.Artists = (List<Artist>)binaryFormatter.Deserialize(stream);
+                    break;
+
+                case "works":
+                    CatalogContext.Instance.Works = (List<Work>)binaryFormatter.Deserialize(stream);
+                    break;
+
+                case "isrcs":
+                    CatalogContext.Instance.Isrcs = (List<Isrc>)binaryFormatter.Deserialize(stream);
+                    break;
+
+                case "albums":
+                    CatalogContext.Instance.Albums = (List<Album>)binaryFormatter.Deserialize(stream);
+                    break;
+            }
+
+            stream.Close();
+
+        }
+
+
         /// <summary>
         /// Deserializes a CatalogContext from file
         /// </summary>
@@ -116,6 +175,37 @@ namespace BabelMeta
         /// <param name="e"></param>
         private void loadSessionToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            FolderBrowserDialog fbd = new FolderBrowserDialog();
+
+            fbd.Description = "Select a root folder to load session files.";
+            fbd.ShowDialog();
+
+            if (string.IsNullOrEmpty(fbd.SelectedPath))
+            {
+                return;
+            }
+
+            List<string> files = Directory.GetFiles(fbd.SelectedPath, "*.bmd").ToList();
+
+            CatalogContext.Instance.Init();
+            CatalogContext.Instance.Initialized = false;
+
+            try
+            {
+                foreach (var file in files)
+                {
+                    DeserializeBmdFile(file);
+                }
+
+                CatalogContext.Instance.Initialized = true;
+
+                Notify("Session loaded.");
+            }
+            catch (Exception)
+            {
+                Notify("Session not readable.");
+            }
+
 
         }
 
@@ -131,7 +221,7 @@ namespace BabelMeta
             fbd.Description = "Select a root folder to save session files.";
             fbd.ShowDialog();
 
-            if (String.IsNullOrEmpty(fbd.SelectedPath))
+            if (string.IsNullOrEmpty(fbd.SelectedPath))
             {
                 return;
             }
@@ -145,6 +235,12 @@ namespace BabelMeta
 
             try
             {
+                // Settings
+                stream = File.Open(fbd.SelectedPath + "Settings.bmd", FileMode.Create);
+
+                binaryFormatter.Serialize(stream, CatalogContext.Instance.Settings);
+                stream.Close();
+
                 // Langs
                 stream = File.Open(fbd.SelectedPath + "Langs.bmd", FileMode.Create);
 
@@ -227,7 +323,7 @@ namespace BabelMeta
             }
             else
             {
-                String message = "The imported model is corrupted:";
+                string message = "The imported model is corrupted:";
                 if (!CatalogContext.Instance.RedundantKeysChecked)
                 {
                     message += " Redundant keys exist.";
@@ -283,7 +379,7 @@ namespace BabelMeta
             fbd.Description = "Select a root folder for output sub-folders and XML files";
             fbd.ShowDialog();
 
-            if (String.IsNullOrEmpty(fbd.SelectedPath))
+            if (string.IsNullOrEmpty(fbd.SelectedPath))
             {
                 return;
             }
@@ -303,9 +399,9 @@ namespace BabelMeta
         /// Append message on top of Notification Zone
         /// </summary>
         /// <param name="message"></param>
-        private void Notify(String message)
+        private void Notify(string message)
         {
-            if (String.IsNullOrEmpty(message))
+            if (string.IsNullOrEmpty(message))
             {
                 return;
             }

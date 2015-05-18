@@ -18,13 +18,13 @@ namespace BabelMeta.Model
     {
         public Role()
         {
-            Name = String.Empty;
+            Name = string.Empty;
             Reference = null;
         }
 
         public Role(SerializationInfo info, StreamingContext ctxt)
         {
-            Name = (String)info.GetValue("BabelMeta.Model.Role.Name", typeof(String));
+            Name = (string)info.GetValue("BabelMeta.Model.Role.Name", typeof(string));
             Reference = (QualifiedName?)info.GetValue("BabelMeta.Model.Role.Reference", typeof(QualifiedName?));
         }
 
@@ -34,7 +34,7 @@ namespace BabelMeta.Model
             info.AddValue("BabelMeta.Model.Role.Reference", Reference);
         }
 
-        public String Name { get; set; }
+        public string Name { get; set; }
 
         public QualifiedName? Reference { get; set; }
 

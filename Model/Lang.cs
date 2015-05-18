@@ -18,15 +18,15 @@ namespace BabelMeta.Model
     {
         public Lang()
         {
-            LongName = String.Empty;
-            ShortName = String.Empty;
+            LongName = string.Empty;
+            ShortName = string.Empty;
             IsDefault = false;
         }
 
         public Lang(SerializationInfo info, StreamingContext ctxt)
         {
-            LongName = (String)info.GetValue("BabelMeta.Model.Lang.LongName", typeof(String));
-            ShortName = (String)info.GetValue("BabelMeta.Model.Lang.ShortName", typeof(String));
+            LongName = (string)info.GetValue("BabelMeta.Model.Lang.LongName", typeof(string));
+            ShortName = (string)info.GetValue("BabelMeta.Model.Lang.ShortName", typeof(string));
             IsDefault = (bool)info.GetValue("BabelMeta.Model.Lang.IsDefault", typeof(bool));
         }
 
@@ -37,9 +37,9 @@ namespace BabelMeta.Model
             info.AddValue("BabelMeta.Model.Lang.IsDefault", IsDefault);
         }
 
-        public String LongName { get; set; }
+        public string LongName { get; set; }
 
-        public String ShortName { get; set; }
+        public string ShortName { get; set; }
 
         public bool IsDefault { get; set; }
     }

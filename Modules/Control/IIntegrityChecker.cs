@@ -17,5 +17,6 @@ namespace BabelMeta.Modules.Control
         bool CheckRedundantKeys();
 
         bool CheckReferentialIntegrity();
+
     }
 }

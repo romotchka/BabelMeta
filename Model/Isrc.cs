@@ -19,14 +19,14 @@ namespace BabelMeta.Model
     {
         public Isrc()
         {
-            Id = String.Empty;
+            Id = string.Empty;
             Work = 0;
             Contributors = null;
-            CName = String.Empty;
+            CName = string.Empty;
             CYear = null;
-            PName = String.Empty;
+            PName = string.Empty;
             PYear = null;
-            RecordingLocation = String.Empty;
+            RecordingLocation = string.Empty;
             RecordingYear = null;
             AvailableSeparately = true;
             Tier = null;
@@ -34,14 +34,14 @@ namespace BabelMeta.Model
 
         public Isrc(SerializationInfo info, StreamingContext ctxt)
         {
-            Id = (String)info.GetValue("BabelMeta.Model.Isrc.Id", typeof(String));
+            Id = (string)info.GetValue("BabelMeta.Model.Isrc.Id", typeof(string));
             Work = (Int32)info.GetValue("BabelMeta.Model.Isrc.Work", typeof(Int32));
             Contributors = (Dictionary<Int32, Dictionary<Role, Quality>>)info.GetValue("BabelMeta.Model.Isrc.Contributors", typeof(Dictionary<Int32, Dictionary<Role, Quality>>));
-            CName = (String)info.GetValue("BabelMeta.Model.Isrc.CName", typeof(String));
+            CName = (string)info.GetValue("BabelMeta.Model.Isrc.CName", typeof(string));
             CYear = (Int16?)info.GetValue("BabelMeta.Model.Isrc.CYear", typeof(Int16?));
-            PName = (String)info.GetValue("BabelMeta.Model.Isrc.PName", typeof(String));
+            PName = (string)info.GetValue("BabelMeta.Model.Isrc.PName", typeof(string));
             PYear = (Int16?)info.GetValue("BabelMeta.Model.Isrc.PYear", typeof(Int16?));
-            RecordingLocation = (String)info.GetValue("BabelMeta.Model.Isrc.RecordingLocation", typeof(String));
+            RecordingLocation = (string)info.GetValue("BabelMeta.Model.Isrc.RecordingLocation", typeof(string));
             RecordingYear = (Int16?)info.GetValue("BabelMeta.Model.Isrc.RecordingYear", typeof(Int16?));
             AvailableSeparately = (bool)info.GetValue("BabelMeta.Model.Isrc.AvailableSeparately", typeof(bool));
             Tier = (CatalogTier?)info.GetValue("BabelMeta.Model.Isrc.Tier", typeof(CatalogTier?));
@@ -62,7 +62,7 @@ namespace BabelMeta.Model
             info.AddValue("BabelMeta.Model.Isrc.Tier", Tier);
         }
 
-        public String Id { get; set; }
+        public string Id { get; set; }
 
         public Int32 Work { get; set; }
 
@@ -71,15 +71,15 @@ namespace BabelMeta.Model
         /// </summary>
         public Dictionary<Int32, Dictionary<Role, Quality>> Contributors { get; set; }
 
-        public String CName { get; set; }
+        public string CName { get; set; }
 
         public Int16? CYear { get; set; }
 
-        public String PName { get; set; }
+        public string PName { get; set; }
 
         public Int16? PYear { get; set; }
 
-        public String RecordingLocation { get; set; }
+        public string RecordingLocation { get; set; }
 
         public Int16? RecordingYear { get; set; }
 

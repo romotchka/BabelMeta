@@ -19,6 +19,6 @@ namespace BabelMeta.Modules.Export
         /// <summary>
         /// The Generate method generates a set of output folders and files from CatalogContext.Albums
         /// </summary>
-        ReturnCodes Generate(String folder, MainFormViewModel viewModel = null);
+        ReturnCodes Generate(string folder, MainFormViewModel viewModel = null);
     }
 }

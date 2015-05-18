@@ -24,7 +24,7 @@ namespace BabelMeta.Model
             Title = null;
             MovementTitle = null;
             Contributors = null;
-            ClassicalCatalog = String.Empty;
+            ClassicalCatalog = string.Empty;
             Tonality = null;
             Year = null;
         }
@@ -34,12 +34,12 @@ namespace BabelMeta.Model
             Id = (Int32)info.GetValue("BabelMeta.Model.Work.Id", typeof(Int32));
             Parent = (Int32?)info.GetValue("BabelMeta.Model.Work.Parent", typeof(Int32?));
             MovementNumber = (Int16?)info.GetValue("BabelMeta.Model.Work.MovementNumber", typeof(Int16?));
-            Title = (Dictionary<Lang, String>)info.GetValue("BabelMeta.Model.Work.Title", typeof(Dictionary<Lang, String>));
-            MovementTitle = (Dictionary<Lang, String>)info.GetValue("BabelMeta.Model.Work.MovementTitle", typeof(Dictionary<Lang, String>));
+            Title = (Dictionary<string, string>)info.GetValue("BabelMeta.Model.Work.Title", typeof(Dictionary<string, string>));
+            MovementTitle = (Dictionary<string, string>)info.GetValue("BabelMeta.Model.Work.MovementTitle", typeof(Dictionary<string, string>));
             Contributors = (Dictionary<Int32, Role>)info.GetValue("BabelMeta.Model.Work.Contributors", typeof(Dictionary<Int32, Role>));
-            ClassicalCatalog = (String)info.GetValue("BabelMeta.Model.Work.ClassicalCatalog", typeof(String));
+            ClassicalCatalog = (string)info.GetValue("BabelMeta.Model.Work.ClassicalCatalog", typeof(string));
             Tonality = (Key?)info.GetValue("BabelMeta.Model.Work.Tonality", typeof(Key?));
-            Year = (Int16?)info.GetValue("BabelMeta.Model.Artist.Year", typeof(Int16?));
+            Year = (Int16?)info.GetValue("BabelMeta.Model.Work.Year", typeof(Int16?));
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -64,19 +64,19 @@ namespace BabelMeta.Model
         /// <summary>
         /// The field name is singular because it represents the same entry in different languages available
         /// </summary>
-        public Dictionary<Lang, String> Title { get; set; }
+        public Dictionary<string, string> Title { get; set; }
 
         /// <summary>
         /// The field name is singular because it represents the same entry in different languages available
         /// </summary>
-        public Dictionary<Lang, String> MovementTitle { get; set; }
+        public Dictionary<string, string> MovementTitle { get; set; }
 
         /// <summary>
         /// Work Contributor is e.g. the Composer or Arranger
         /// </summary>
         public Dictionary<Int32, Role> Contributors { get; set; }
 
-        public String ClassicalCatalog { get; set; }
+        public string ClassicalCatalog { get; set; }
 
         public Key? Tonality { get; set; }
 

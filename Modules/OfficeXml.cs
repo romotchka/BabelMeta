@@ -21,7 +21,7 @@ namespace BabelMeta.Modules
         public const string WorksheetCell = "Cell";
 
         public const string CellType = "ss:Type";
-        public const string CellTypeString = "String";
+        public const string CellTypestring = "string";
         public const string CellIndex = "ss:Index";
     }
 }
