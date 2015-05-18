@@ -210,7 +210,7 @@ namespace BabelMeta.Modules.Export
                                     (nameExtension.CompareTo("wav") == 0 || nameExtension.CompareTo("aif") == 0 || nameExtension.CompareTo("aiff") == 0)
                                 )
                             {
-                                var nameLeft = file.Substring(0, file.Length - nameExtension.Length);
+                                var nameLeft = file.Substring(0, file.Length - nameExtension.Length - 1);
                                 var nameElements = nameLeft.Split('-');
                                 var nameElementsCount = nameElements.ToList().Count();
                                 if (nameElementsCount < 3)
