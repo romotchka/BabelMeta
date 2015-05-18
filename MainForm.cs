@@ -103,6 +103,11 @@ namespace BabelMeta
 
                     // Call appropriate parser, depending on input format
                     ReturnCodes r = DefaultCatalogReader.Instance.Parse(openFileDialog, InputFormat.SelectedItem.ToString(), _viewModel);
+
+                    if (r == ReturnCodes.Ok)
+                    {
+                        Notify("Catalog parsing done.");
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -343,7 +348,7 @@ namespace BabelMeta
         /// <param name="e"></param>
         private void solsticeLegacyToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
-
+            Notify("Not implemented yet.");
         }
 
         /// <summary>
@@ -353,7 +358,7 @@ namespace BabelMeta
         /// <param name="e"></param>
         private void solsticeIgniterToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
-
+            Notify("Not implemented yet.");
         }
 
         /// <summary>
