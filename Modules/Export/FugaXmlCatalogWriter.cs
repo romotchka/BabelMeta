@@ -192,7 +192,7 @@ namespace BabelMeta.Modules.Export
                         var nameExtension = file.Split('.').Last().ToLower();
                         if (!String.IsNullOrEmpty(nameExtension) && nameExtension.CompareTo("pdf") == 0)
                         {
-                            return file.GetFileNameFromFullPath();
+                            return file;
                         }
                     }
                     break;
@@ -229,7 +229,7 @@ namespace BabelMeta.Modules.Export
                                     )
                                 {
                                     // Found !
-                                    return file.GetFileNameFromFullPath();
+                                    return file;
                                 }
                             }                            
                         }
@@ -245,7 +245,7 @@ namespace BabelMeta.Modules.Export
                                 (nameExtension.CompareTo("jpg") == 0 || nameExtension.CompareTo("jpeg") == 0 || nameExtension.CompareTo("png") == 0)
                             )
                         {
-                            return file.GetFileNameFromFullPath();
+                            return file;
                         }
                     }
                     break;
@@ -272,12 +272,17 @@ namespace BabelMeta.Modules.Export
             string attachmentFile = SearchFilename(files, FugaIngestionFileType.Attachment);
             if (!String.IsNullOrEmpty(attachmentFile))
             {
+                FileInfo f = new FileInfo(attachmentFile);
                 i.album.attachments = new List<attachment_type>();
                 i.album.attachments.Add(new attachment_type
                     {
                         name = "Booklet",
                         description = "Booklet",
-                        file = new file_type { name = attachmentFile },
+                        file = new file_type 
+                        { 
+                            name = attachmentFile.GetFileNameFromFullPath(),
+                            size = (ulong)f.Length,
+                        },
                     });
             }
 
@@ -296,12 +301,14 @@ namespace BabelMeta.Modules.Export
             var coverFile = SearchFilename(files, FugaIngestionFileType.Cover);
             if (!String.IsNullOrEmpty(coverFile))
             {
+                FileInfo f = new FileInfo(coverFile);
                 i.album.cover_art = new ingestionAlbumCover_art();
                 i.album.cover_art.image = new ingestionAlbumCover_artImage
                 {
                     file = new file_type
                     {
-                        name = coverFile,
+                        name = coverFile.GetFileNameFromFullPath(),
+                        size = (ulong)f.Length,
                     },
                 };
 
@@ -595,12 +602,14 @@ namespace BabelMeta.Modules.Export
                 var audioFilename = SearchFilename(files, FugaIngestionFileType.AudioTrack, new KeyValuePair<int, int>(volumeIndex, trackIndex));
                 if (!String.IsNullOrEmpty(audioFilename))
                 {
+                    FileInfo f = new FileInfo(audioFilename);
                     asset.resources = new List<resourcesAudio>();
                     asset.resources.Add(new resourcesAudio 
                     {
                         file = new file_type
                         {
-                            name = audioFilename,
+                            name = audioFilename.GetFileNameFromFullPath(),
+                            size = (ulong)f.Length,
                         }
                     });
                 }
