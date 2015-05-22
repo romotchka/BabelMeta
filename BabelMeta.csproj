@@ -74,6 +74,7 @@
     <Compile Include="Modules\Export\FugaXmlCatalogWriter.cs" />
     <Compile Include="Modules\Export\FugaXml\ingestion.designer.cs" />
     <Compile Include="Modules\Export\ICatalogWriter.cs" />
+    <Compile Include="Modules\Export\SolsticeCiSqlCatalogWriter.cs" />
     <Compile Include="Modules\Import\DefaultCatalogReader.cs" />
     <Compile Include="Modules\Import\ICatalogReader.cs" />
     <Compile Include="Modules\OfficeXml.cs" />
@@ -110,6 +111,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\" />
+    <Folder Include="Modules\Export\SolsticeCiSql\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Modules\Export\FugaXml\ingestion.xsd">
