@@ -391,7 +391,7 @@ namespace BabelMeta
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainForm";
-            this.Text = "Metadata Converter";
+            this.Text = "BabelMeta Converter";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.InputGroupBox.ResumeLayout(false);

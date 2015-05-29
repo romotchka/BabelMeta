@@ -53,7 +53,7 @@ namespace BabelMeta
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void openToolStripMenuItem_Click(object sender, System.EventArgs e)
+        private async void openToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
             Stream stream = null;
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -102,7 +102,7 @@ namespace BabelMeta
                     OutputProgressBar.Visible = false;
 
                     // Call appropriate parser, depending on input format
-                    ReturnCodes r = DefaultCatalogReader.Instance.Parse(openFileDialog, InputFormat.SelectedItem.ToString(), _viewModel);
+                    ReturnCodes r = await DefaultCatalogReader.Instance.Parse(openFileDialog, InputFormat.SelectedItem.ToString(), _viewModel);
 
                     if (r == ReturnCodes.Ok)
                     {

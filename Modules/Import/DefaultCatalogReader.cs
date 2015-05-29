@@ -126,7 +126,7 @@ namespace BabelMeta.Modules.Import
             }
         }
 
-        public ReturnCodes Parse(OpenFileDialog ofd, string formatType, MainFormViewModel viewModel = null)
+        public async Task<ReturnCodes> Parse(OpenFileDialog ofd, string formatType, MainFormViewModel viewModel = null)
         {
             if (ofd == null)
             {
@@ -183,7 +183,7 @@ namespace BabelMeta.Modules.Import
                 _mainFormViewModel.InputProgressBarMax = _initPayload + 1; // initial payload and 'symbolic' last bit of payload before last return 
             }
 
-            if (!IsValidWorkbook())
+            if (!(await IsValidWorkbook()))
             {
                 return ReturnCodes.ModulesImportDefaultParseInvalidWorkbook;
             }
@@ -208,18 +208,21 @@ namespace BabelMeta.Modules.Import
 
             }
 
-            ParseTags();
-            ParseRoles();
-            ParseQualities();
-            ParseArtists();
-            ParseWorks();
-            ParseIsrcs();
-            ParseAlbums();
-            ParseAssets();
+            await ParseTags();
+            await ParseRoles();
+            await ParseQualities();
+            await ParseArtists();
+            await ParseWorks();
+            await ParseIsrcs();
+            await ParseAlbums();
+            await ParseAssets();
 
             // Finalization
-            FinalizeAlbums();
-            FinalizeIsrcs();
+            await Task.Run(() =>
+            {
+                FinalizeAlbums();
+                FinalizeIsrcs();
+            });
 
             CatalogContext.Instance.Initialized = true;
             _mainFormViewModel.InputProgressBarValue = _mainFormViewModel.InputProgressBarMax;
@@ -254,7 +257,7 @@ namespace BabelMeta.Modules.Import
         /// Checks that Workbook embarks expected Worksheets
         /// </summary>
         /// <returns></returns>
-        private bool IsValidWorkbook()
+        private async Task<bool> IsValidWorkbook()
         {
             //if (string.IsNullOrEmpty(_formatType))
             //{
@@ -292,8 +295,11 @@ namespace BabelMeta.Modules.Import
             map = GetHeader("SETTINGS");
             if (!ExistsCellValueInRow("parameter", map, "SETTINGS")) return false;
             if (!ExistsCellValueInRow("value", map, "SETTINGS")) return false;
-            _settings = WorksheetActiveRows("SETTINGS");
-            ParseSettings(); // must be parsed first
+            await Task.Run(() =>
+            {
+                _settings = WorksheetActiveRows("SETTINGS");
+            });
+            await ParseSettings(); // must be parsed first
 
             // lang
             map = GetHeader("lang");
@@ -302,29 +308,41 @@ namespace BabelMeta.Modules.Import
             if (!ExistsCellValueInRow("long_name", map, "lang")) return false;
             if (!ExistsCellValueInRow("short_name", map, "lang")) return false;
             if (!ExistsCellValueInRow("default", map, "lang")) return false;
-            _langs = WorksheetActiveRows("lang");
-            ParseLangs(); // must be parsed second, because columns lang-dependent
+            await Task.Run(() =>
+            {
+                _langs = WorksheetActiveRows("lang");
+            });
+            await ParseLangs(); // must be parsed second, because columns lang-dependent
 
             // tag
             map = GetHeader("tag");
             if (!ExistsCellValueInRow("local_db", map, "tag")) return false;
             if (!ExistsCellValueInRow("partner_db", map, "tag")) return false;
             if (!ExistsCellValueInRow("tag_name", map, "tag")) return false;
-            _tags = WorksheetActiveRows("tag");
+            await Task.Run(() =>
+            {
+                _tags = WorksheetActiveRows("tag");
+            });
 
             // role
             map = GetHeader("role");
             if (!ExistsCellValueInRow("local_db", map, "role")) return false;
             if (!ExistsCellValueInRow("partner_db", map, "role")) return false;
             if (!ExistsCellValueInRow("role_name", map, "role")) return false;
-            _roles = WorksheetActiveRows("role");
+            await Task.Run(() =>
+            {
+                _roles = WorksheetActiveRows("role");
+            });
 
             // quality
             map = GetHeader("quality");
             if (!ExistsCellValueInRow("local_db", map, "quality")) return false;
             if (!ExistsCellValueInRow("partner_db", map, "quality")) return false;
             if (!ExistsCellValueInRow("quality_name", map, "quality")) return false;
-            _qualities = WorksheetActiveRows("quality");
+            await Task.Run(() =>
+            {
+                _qualities = WorksheetActiveRows("quality");
+            });
 
             // artist
             map = GetHeader("artist");
@@ -338,7 +356,10 @@ namespace BabelMeta.Modules.Import
                 if (!ExistsCellValueInRow("lastname_" + lang.ShortName, map, "artist")) return false;
                 if (!ExistsCellValueInRow("firstname_" + lang.ShortName, map, "artist")) return false;
             }
-            _artists = WorksheetActiveRows("artist");
+            await Task.Run(() =>
+            {
+                _artists = WorksheetActiveRows("artist");
+            });
 
             // work
             map = GetHeader("work");
@@ -367,7 +388,10 @@ namespace BabelMeta.Modules.Import
                 if (!ExistsCellValueInRow("title_" + lang.ShortName, map, "work")) return false;
                 if (!ExistsCellValueInRow("movement_title_" + lang.ShortName, map, "work")) return false;
             }
-            _works = WorksheetActiveRows("work");
+            await Task.Run(() =>
+            {
+                _works = WorksheetActiveRows("work");
+            });
 
             // isrc
             map = GetHeader("isrc");
@@ -396,7 +420,10 @@ namespace BabelMeta.Modules.Import
             if (!ExistsCellValueInRow("recording_year", map, "isrc")) return false;
             if (!ExistsCellValueInRow("available_separately", map, "isrc")) return false;
             if (!ExistsCellValueInRow("catalog_tier", map, "isrc")) return false;
-            _isrcs = WorksheetActiveRows("isrc");
+            await Task.Run(() =>
+            {
+                _isrcs = WorksheetActiveRows("isrc");
+            });
 
             // album
             map = GetHeader("album");
@@ -424,7 +451,10 @@ namespace BabelMeta.Modules.Import
             if (!ExistsCellValueInRow("recording_location", map, "album")) return false;
             if (!ExistsCellValueInRow("recording_year", map, "album")) return false;
             if (!ExistsCellValueInRow("redeliver", map, "album")) return false;
-            _albums = WorksheetActiveRows("album");
+            await Task.Run(() =>
+            {
+                _albums = WorksheetActiveRows("album");
+            });
 
             // asset
             map = GetHeader("asset");
@@ -434,7 +464,10 @@ namespace BabelMeta.Modules.Import
             if (!ExistsCellValueInRow("volume_index", map, "asset")) return false;
             if (!ExistsCellValueInRow("track_index", map, "asset")) return false;
             if (!ExistsCellValueInRow("isrc_id", map, "asset")) return false;
-            _assets = WorksheetActiveRows("asset");
+            await Task.Run(() =>
+            {
+                _assets = WorksheetActiveRows("asset");
+            });
 
             return true;
         }
@@ -751,7 +784,7 @@ namespace BabelMeta.Modules.Import
         /// <summary>
         /// Settings parser
         /// </summary>
-        private void ParseSettings()
+        private async Task ParseSettings()
         {
             if (_settings == null)
             {
@@ -760,7 +793,12 @@ namespace BabelMeta.Modules.Import
 
             foreach (object row in _settings)
             {
-                Dictionary<Int32, object> cells = CellMapByRow(row, "SETTINGS");
+                Dictionary<Int32, object> cells = null;
+                await Task.Run(() =>
+                {
+                    cells = CellMapByRow(row, "SETTINGS");
+                });
+                
                 if (cells != null && cells.Count > 0)
                 {
                     string parameter = CellContentWizard(cells, _worksheetColumns["SETTINGS"]["parameter"]);
@@ -825,7 +863,7 @@ namespace BabelMeta.Modules.Import
         /// Langs parser
         /// Since other worksheet rows count is unknown at this stage, do not update progress bar inside the function
         /// </summary>
-        private void ParseLangs()
+        private async Task ParseLangs()
         {
             if (_langs == null)
             {
@@ -834,7 +872,12 @@ namespace BabelMeta.Modules.Import
 
             foreach (object row in _langs)
             {
-                Dictionary<Int32, object> cells = CellMapByRow(row, "lang");
+                Dictionary<Int32, object> cells = null;
+                await Task.Run(() =>
+                {
+                    cells = CellMapByRow(row, "lang");
+                });
+
                 if (cells != null && cells.Count > 0)
                 {
                     Lang lang = new Lang
@@ -856,7 +899,7 @@ namespace BabelMeta.Modules.Import
         /// <summary>
         /// Tags parser
         /// </summary>
-        private void ParseTags()
+        private async Task ParseTags()
         {
             if (_tags == null)
             {
@@ -865,7 +908,12 @@ namespace BabelMeta.Modules.Import
 
             foreach (object row in _tags)
             {
-                Dictionary<Int32, object> cells = CellMapByRow(row, "tag");
+                Dictionary<Int32, object> cells = null;
+                await Task.Run(() =>
+                {
+                    cells = CellMapByRow(row, "tag");
+                });
+
                 if (cells != null && cells.Count > 0)
                 {
                     Tag tag = new Tag
@@ -889,7 +937,7 @@ namespace BabelMeta.Modules.Import
         /// <summary>
         /// Roles parser
         /// </summary>
-        private void ParseRoles()
+        private async Task ParseRoles()
         {
             if (_roles == null)
             {
@@ -898,7 +946,12 @@ namespace BabelMeta.Modules.Import
 
             foreach (object row in _roles)
             {
-                Dictionary<Int32, object> cells = CellMapByRow(row, "role");
+                Dictionary<Int32, object> cells = null;
+                await Task.Run(() =>
+                {
+                    cells = CellMapByRow(row, "role");
+                });
+
                 if (cells != null && cells.Count > 0)
                 {
                     Role role = new Role
@@ -930,7 +983,11 @@ namespace BabelMeta.Modules.Import
             }
         }
 
-        private void ParseQualities()
+        /// <summary>
+        /// Qualities parser
+        /// </summary>
+        /// <returns></returns>
+        private async Task ParseQualities()
         {
             if (_qualities == null)
             {
@@ -939,7 +996,12 @@ namespace BabelMeta.Modules.Import
 
             foreach (object row in _qualities)
             {
-                Dictionary<Int32, object> cells = CellMapByRow(row, "quality");
+                Dictionary<Int32, object> cells = null;
+                await Task.Run(() =>
+                {
+                    cells = CellMapByRow(row, "quality");
+                });
+
                 if (cells != null && cells.Count > 0)
                 {
                     Quality quality = new Quality
@@ -960,7 +1022,11 @@ namespace BabelMeta.Modules.Import
             }
         }
 
-        private void ParseArtists()
+        /// <summary>
+        /// Artists parser
+        /// </summary>
+        /// <returns></returns>
+        private async Task ParseArtists()
         {
             if (_artists == null)
             {
@@ -970,7 +1036,12 @@ namespace BabelMeta.Modules.Import
             // TODO replace Convert.ToInt by int.TryParse...
             foreach (object row in _artists)
             {
-                Dictionary<Int32, object> cells = CellMapByRow(row, "artist");
+                Dictionary<Int32, object> cells = null;
+                await Task.Run(() =>
+                {
+                    cells = CellMapByRow(row, "artist");
+                });
+
                 if (cells != null && cells.Count > 0)
                 {
                     Artist artist = new Artist
@@ -1033,7 +1104,7 @@ namespace BabelMeta.Modules.Import
         /// <summary>
         /// Works parser
         /// </summary>
-        private void ParseWorks()
+        private async Task ParseWorks()
         {
             if (_works == null)
             {
@@ -1043,7 +1114,12 @@ namespace BabelMeta.Modules.Import
             // TODO replace Convert.ToInt by int.TryParse...
             foreach (object row in _works)
             {
-                Dictionary<Int32, object> cells = CellMapByRow(row, "work");
+                Dictionary<Int32, object> cells = null;
+                await Task.Run(() =>
+                {
+                    cells = CellMapByRow(row, "work");
+                });
+
                 if (cells != null && cells.Count > 0)
                 {
 
@@ -1126,7 +1202,7 @@ namespace BabelMeta.Modules.Import
         /// <summary>
         /// Isrcs parser
         /// </summary>
-        private void ParseIsrcs()
+        private async Task ParseIsrcs()
         {
             if (_isrcs == null)
             {
@@ -1136,7 +1212,12 @@ namespace BabelMeta.Modules.Import
             // TODO replace Convert.ToInt by int.TryParse...
             foreach (object row in _isrcs)
             {
-                Dictionary<Int32, object> cells = CellMapByRow(row, "isrc");
+                Dictionary<Int32, object> cells = null;
+                await Task.Run(() =>
+                {
+                    cells = CellMapByRow(row, "isrc");
+                });
+
                 if (cells != null && cells.Count > 0)
                 {
                     Isrc isrc = new Isrc
@@ -1242,7 +1323,7 @@ namespace BabelMeta.Modules.Import
         /// <summary>
         /// Albums parser
         /// </summary>
-        private void ParseAlbums()
+        private async Task ParseAlbums()
         {
             if (_albums == null)
             {
@@ -1252,7 +1333,12 @@ namespace BabelMeta.Modules.Import
             // TODO replace Convert.ToInt by int.TryParse...
             foreach (object row in _albums)
             {
-                Dictionary<Int32, object> cells = CellMapByRow(row, "album");
+                Dictionary<Int32, object> cells = null;
+                await Task.Run(() =>
+                {
+                    cells = CellMapByRow(row, "album");
+                });
+
                 if (cells != null && cells.Count > 0)
                 {
                     {
@@ -1363,7 +1449,7 @@ namespace BabelMeta.Modules.Import
         /// <summary>
         /// Assets parser
         /// </summary>
-        private void ParseAssets()
+        private async Task ParseAssets()
         {
             if (_assets == null)
             {
@@ -1373,7 +1459,12 @@ namespace BabelMeta.Modules.Import
             // TODO replace Convert.ToInt by int.TryParse...
             foreach (object row in _assets)
             {
-                Dictionary<Int32, object> cells = CellMapByRow(row, "asset");
+                Dictionary<Int32, object> cells = null;
+                await Task.Run(() =>
+                {
+                    cells = CellMapByRow(row, "asset");
+                });
+
                 if (cells != null && cells.Count > 0)
                 {
                     Int32 albumId = Convert.ToInt32(CellContentWizard(cells, _worksheetColumns["asset"]["album_id"], "0"));
