@@ -66,5 +66,40 @@ namespace BabelMeta.Helpers
             var pathElements = path.Split('\\');
             return pathElements[pathElements.Length - 1];
         }
+
+        /// <summary>
+        /// Replaces the header by the expected Fuga header
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <returns></returns>
+        public static string WithFugaXmlHeader(this string stream)
+        {
+            if (string.IsNullOrEmpty(stream))
+            {
+                return string.Empty;
+            }
+
+            // Ensure no double space prevents pattern recognition
+            string modifiedStream = stream.Replace("  ", " ");
+
+            modifiedStream = modifiedStream.Replace(
+                "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                ,"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n");
+
+            modifiedStream = modifiedStream.Replace(
+                "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""
+                ,"xsi:noNamespaceSchemaLocation=\"http://fugamusic.com/docs/ingestion/ingestion.xsd\"");
+
+            modifiedStream = modifiedStream.Replace(
+                "xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\""
+                , "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"");
+
+            // For visibility only
+            modifiedStream = modifiedStream.Replace(
+                "><"
+                , ">\r\n<");
+
+            return modifiedStream;
+        }
     }
 }

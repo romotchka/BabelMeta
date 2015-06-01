@@ -162,7 +162,7 @@ namespace BabelMeta.Modules.Export
                 }
 
                 TextWriter tw = new StreamWriter(subfolder + i.album.upc_code + ".xml", false, Encoding.UTF8);
-                tw.Write(i.Serialize());
+                tw.Write(i.Serialize().WithFugaXmlHeader());
                 tw.Close();
 
             }      
