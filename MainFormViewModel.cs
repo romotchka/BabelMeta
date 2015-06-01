@@ -36,6 +36,10 @@ namespace BabelMeta
 
         private int _inputProgressBarValue = 0;
 
+
+        /// <summary>
+        /// Input progress bar value
+        /// </summary>
         public int InputProgressBarValue 
         {
             get { return _inputProgressBarValue; }
@@ -82,6 +86,9 @@ namespace BabelMeta
 
         private int _outputProgressBarValue = 0;
 
+        /// <summary>
+        /// Output progress bar value
+        /// </summary>
         public int OutputProgressBarValue 
         {
             get { return _outputProgressBarValue; }
@@ -128,6 +135,43 @@ namespace BabelMeta
             }
         }
 
+        private bool _filterArtistChecked = false;
+
+        /// <summary>
+        /// State of the filter for artists used in no album
+        /// </summary>
+        public bool FilterArtistChecked
+        {
+            get { return _filterArtistChecked; }
+            set
+            {
+                if (_filterArtistChecked == value)
+                {
+                    return;
+                }
+                _filterArtistChecked = value;
+                RaisePropertyChanged("FilterArtistChecked");
+            }
+        }
+
+        private bool _filterWorkChecked = false;
+
+        /// <summary>
+        /// State of the filter for works used in no album
+        /// </summary>
+        public bool FilterWorkChecked
+        {
+            get { return _filterWorkChecked; }
+            set
+            {
+                if (_filterWorkChecked == value)
+                {
+                    return;
+                }
+                _filterWorkChecked = value;
+                RaisePropertyChanged("FilterWorkChecked");
+            }
+        }
 
         #region PropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;

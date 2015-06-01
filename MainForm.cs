@@ -39,6 +39,9 @@ namespace BabelMeta
             CheckedPicto.DataBindings.Add(new Binding("Visible", _viewModel, "CheckedPictoVisibility"));
             WarningPicto.DataBindings.Add(new Binding("Visible", _viewModel, "WarningPictoVisibility"));
 
+            FilterArtistCheckBox.DataBindings.Add(new Binding("Checked", _viewModel, "FilterArtistChecked"));
+            FilterWorkCheckBox.DataBindings.Add(new Binding("Checked", _viewModel, "FilterWorkChecked"));
+
             InputFormat.SelectedIndex = 0;
     
         }
@@ -201,6 +204,10 @@ namespace BabelMeta
                 {
                     DeserializeBmdFile(file);
                 }
+
+                if (_viewModel.FilterArtistChecked) CatalogContext.Instance.FilterUnusedArtists();
+                else
+                if (_viewModel.FilterWorkChecked) CatalogContext.Instance.FilterUnusedWorks();
 
                 CatalogContext.Instance.Initialized = true;
 

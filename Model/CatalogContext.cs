@@ -128,5 +128,60 @@ namespace BabelMeta.Model
             _instance.Isrcs.Clear();
             _instance.Albums.Clear();
         }
+
+        /// <summary>
+        /// Removes from Catalog Artists not present in any album (and their works)
+        /// </summary>
+        public void FilterUnusedArtists()
+        {
+            if (Albums == null)
+            {
+                return;
+            }
+
+            Artists.RemoveAll(art =>
+                !Albums.Exists(alb =>
+                    alb.Assets.Values.ToList().Exists(vol =>
+                        vol.Values.ToList().Exists(ik =>
+                            Isrcs.Exists(isrc =>
+                                (
+                                    isrc.Id.CompareTo(ik) == 0
+                                    && Works.Exists(w =>
+                                        w.Id == isrc.Work
+                                        && w.Contributors.Keys.ToList().Contains(art.Id)
+                                    )
+                                )
+                            )
+                        )
+                    )
+                )
+            );
+
+            FilterUnusedWorks();
+        }
+
+        /// <summary>
+        /// Removes from Catalog Works not present in any album (and their sub-works)
+        /// </summary>
+        public void FilterUnusedWorks()
+        {
+            if (Albums == null)
+            {
+                return;
+            }
+
+            Works.RemoveAll(w =>
+                !Albums.Exists(alb =>
+                    alb.Assets.Values.ToList().Exists(vol =>
+                        vol.Values.ToList().Exists(ik =>
+                            Isrcs.Exists(isrc =>
+                                isrc.Id.CompareTo(ik) == 0
+                                && isrc.Work == w.Id
+                            )
+                        )
+                    )
+                )
+            );
+        }
     }
 }

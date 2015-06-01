@@ -217,11 +217,18 @@ namespace BabelMeta.Modules.Import
             await ParseAlbums();
             await ParseAssets();
 
-            // Finalization
+            // Finalization and filtering
             await Task.Run(() =>
             {
                 FinalizeAlbums();
                 FinalizeIsrcs();
+
+                if (_mainFormViewModel != null)
+                {
+                    if (_mainFormViewModel.FilterArtistChecked) CatalogContext.Instance.FilterUnusedArtists();
+                    else
+                    if (_mainFormViewModel.FilterWorkChecked) CatalogContext.Instance.FilterUnusedWorks();
+                }
             });
 
             CatalogContext.Instance.Initialized = true;
