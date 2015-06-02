@@ -4,6 +4,8 @@
  * romain.carbou@solstice-music.com
  */
 
+using BabelMeta.AppConfig;
+using BabelMeta.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,9 +16,33 @@ namespace BabelMeta.Modules.Export
 {
     public class SolsticeCiSqlCatalogWriter : ICatalogWriter
     {
-        public AppConfig.ReturnCodes Generate(string folder, MainFormViewModel viewModel = null)
+        MainFormViewModel _viewModel = null;
+
+        private string _sqlOutput;
+
+        public AppConfig.ReturnCodes Generate(object context, MainFormViewModel viewModel = null)
         {
+            _viewModel = viewModel;
+
+            if (!CatalogContext.Instance.Initialized)
+            {
+                return ReturnCodes.ModulesExportCatalogContextNotInitialized;
+            }
+
+            _sqlOutput = string.Empty;
+
+            GenerateLangs();
+
             throw new NotImplementedException();
+        }
+
+        private void GenerateLangs()
+        {
+            _sqlOutput += "# Langs \n\r";
+            foreach (var lang in CatalogContext.Instance.Langs)
+            {
+
+            }
         }
     }
 }

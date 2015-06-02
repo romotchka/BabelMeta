@@ -16,9 +16,6 @@ namespace BabelMeta.Modules.Export
 {
     public interface ICatalogWriter
     {
-        /// <summary>
-        /// The Generate method generates a set of output folders and files from CatalogContext.Albums
-        /// </summary>
-        ReturnCodes Generate(string folder, MainFormViewModel viewModel = null);
+        ReturnCodes Generate(object context, MainFormViewModel viewModel = null);
     }
 }

@@ -119,8 +119,9 @@ namespace BabelMeta.Modules.Export
         /// <param name="rootFolder"></param>
         /// <param name="viewModel"></param>
         /// <returns></returns>
-        public ReturnCodes Generate(string rootFolder, MainFormViewModel viewModel = null)
+        public ReturnCodes Generate(object context, MainFormViewModel viewModel = null)
         {
+            string rootFolder = (string)context;
             if (string.IsNullOrEmpty(rootFolder))
             {
                 return ReturnCodes.ModulesExportFugaXmlGenerateNullFolderName;
@@ -132,6 +133,11 @@ namespace BabelMeta.Modules.Export
             }
 
             _viewModel = viewModel;
+
+            if (!CatalogContext.Instance.Initialized)
+            {
+                return ReturnCodes.ModulesExportCatalogContextNotInitialized;
+            }
 
             foreach (Album album in CatalogContext.Instance.Albums)
             {
