@@ -25,7 +25,7 @@ namespace BabelMeta.Modules.Import
     /// This default Input format consists in a Excel 2003 XML export of worksheets:
     /// lang, role, tag, artist, work, isrc, featuring, album, asset
     /// </summary>
-    public class DefaultCatalogReader : ICatalogReader
+    public class TemplatedExcelCatalogReader : ICatalogReader
     {
         /// <summary>
         /// Excel format main object
@@ -105,21 +105,21 @@ namespace BabelMeta.Modules.Import
         private List<object> _albums;
         private List<object> _assets;
 
-        private static DefaultCatalogReader _instance;
+        private static TemplatedExcelCatalogReader _instance;
 
-        private DefaultCatalogReader()
+        private TemplatedExcelCatalogReader()
         {
             _worksheets = new Dictionary<string, object>();
             _worksheetColumns = new Dictionary<string, Dictionary<string, Int32>>();
         }
 
-        public static DefaultCatalogReader Instance
+        public static TemplatedExcelCatalogReader Instance
         {
             get
             {
                 if (_instance == null)
                 {
-                    _instance = new DefaultCatalogReader();
+                    _instance = new TemplatedExcelCatalogReader();
 
                 }
                 return _instance;

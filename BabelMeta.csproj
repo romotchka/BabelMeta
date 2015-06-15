@@ -74,8 +74,10 @@
     <Compile Include="Modules\Export\FugaXmlCatalogWriter.cs" />
     <Compile Include="Modules\Export\FugaXml\ingestion.designer.cs" />
     <Compile Include="Modules\Export\ICatalogWriter.cs" />
+    <Compile Include="Modules\Export\RightsUpJsonCatalogWriter.cs" />
     <Compile Include="Modules\Export\SolsticeCiSqlCatalogWriter.cs" />
-    <Compile Include="Modules\Import\DefaultCatalogReader.cs" />
+    <Compile Include="Modules\Import\SmartCatalogReader.cs" />
+    <Compile Include="Modules\Import\TemplatedExcelCatalogReader.cs" />
     <Compile Include="Modules\Import\ICatalogReader.cs" />
     <Compile Include="Modules\OfficeXml.cs" />
     <Compile Include="Program.cs" />
@@ -111,6 +113,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\" />
+    <Folder Include="Modules\Export\RightsUpJson\" />
     <Folder Include="Modules\Export\SolsticeCiSql\" />
   </ItemGroup>
   <ItemGroup>

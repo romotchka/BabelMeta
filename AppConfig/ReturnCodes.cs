@@ -1,7 +1,7 @@
 ﻿/*
- * Babel Meta
- * Copyright 2015 - Romain Carbou
- * romain.carbou@solstice-music.com
+ * Babel Meta - babelmeta.com
+ * Romain Carbou (romain@babelmeta.com)
+ * This is licensed software.
  */
 
 using System;

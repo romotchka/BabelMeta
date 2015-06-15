@@ -105,7 +105,7 @@ namespace BabelMeta
                     OutputProgressBar.Visible = false;
 
                     // Call appropriate parser, depending on input format
-                    ReturnCodes r = await DefaultCatalogReader.Instance.Parse(openFileDialog, InputFormat.SelectedItem.ToString(), _viewModel);
+                    ReturnCodes r = await TemplatedExcelCatalogReader.Instance.Parse(openFileDialog, InputFormat.SelectedItem.ToString(), _viewModel);
 
                     if (r == ReturnCodes.Ok)
                     {
