@@ -1,20 +1,37 @@
 ﻿/*
- * Babel Meta
- * Copyright 2015 - Romain Carbou
- * romain.carbou@solstice-music.com
+ *  Babel Meta - babelmeta.com
+ * 
+ *  The present software is licensed according to the MIT licence.
+ *  Copyright (c) 2015 Romain Carbou (romain@babelmeta.com)
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is
+ *  furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included in
+ *  all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE. 
  */
 
 using BabelMeta.Model.Config;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BabelMeta.Model
 {
     /// <summary>
-    /// Singleton object representing the whole catalog in interchange format between Input/Output
+    /// Singleton object representing the whole catalog in interchange format (internal).
+    /// This singleton should embark enough complexity to deal with any input or output metadata.
     /// </summary>
     public class CatalogContext
     {
@@ -50,6 +67,9 @@ namespace BabelMeta.Model
 
         internal bool _redundantKeysChecked = false;
 
+        /// <summary>
+        /// Determines whether redundant keys checking is active.
+        /// </summary>
         internal bool RedundantKeysChecked 
         {
             get 
@@ -64,6 +84,9 @@ namespace BabelMeta.Model
 
         internal bool _referentialIntegrityChecked = false;
 
+        /// <summary>
+        /// Determines whether referential integrity checking between linked entities (e.g. Artists/Works) is active.
+        /// </summary>
         internal bool ReferentialIntegrityChecked
         {
             get
@@ -84,6 +107,9 @@ namespace BabelMeta.Model
             }
         }
 
+        /// <summary>
+        /// Default language for output formats that request only 1 language.
+        /// </summary>
         public Lang DefaultLang
         {
             get
@@ -130,7 +156,7 @@ namespace BabelMeta.Model
         }
 
         /// <summary>
-        /// Removes from Catalog Artists not present in any album (and their works)
+        /// Removes from Catalog the Artists not present in any album (and their works)
         /// </summary>
         public void FilterUnusedArtists()
         {

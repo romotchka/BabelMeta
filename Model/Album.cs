@@ -1,25 +1,45 @@
 ﻿/*
- * Babel Meta
- * Copyright 2015 - Romain Carbou
- * romain.carbou@solstice-music.com
+ *  Babel Meta - babelmeta.com
+ * 
+ *  The present software is licensed according to the MIT licence.
+ *  Copyright (c) 2015 Romain Carbou (romain@babelmeta.com)
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is
+ *  furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included in
+ *  all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE. 
  */
 
 using BabelMeta.Model.Config;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BabelMeta.Model
 {
+    /// <summary>
+    /// Core model Album.
+    /// </summary>
     [Serializable()]
     public class Album : ISerializable
     {
         public Album()
         {
             Id = 0;
+            ActionTypeValue = ActionType.Insert;
             CName = string.Empty;
             CYear = null;
             PName = string.Empty;
@@ -41,6 +61,7 @@ namespace BabelMeta.Model
         public Album(SerializationInfo info, StreamingContext ctxt)
         {
             Id = (Int32)info.GetValue("BabelMeta.Model.Album.Id", typeof(Int32));
+            ActionTypeValue = (ActionType?)info.GetValue("BabelMeta.Model.Album.ActionTypeValue", typeof(ActionType?));
             CName = (string)info.GetValue("BabelMeta.Model.Album.CName", typeof(string));
             CYear = (Int16?)info.GetValue("BabelMeta.Model.Album.CYear", typeof(Int16?));
             PName = (string)info.GetValue("BabelMeta.Model.Album.PName", typeof(string));
@@ -65,6 +86,7 @@ namespace BabelMeta.Model
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("BabelMeta.Model.Album.Id", Id);
+            info.AddValue("BabelMeta.Model.Album.ActionTypeValue", ActionTypeValue);
             info.AddValue("BabelMeta.Model.Album.CName", CName);
             info.AddValue("BabelMeta.Model.Album.CYear", CYear);
             info.AddValue("BabelMeta.Model.Album.PName", PName);
@@ -86,7 +108,12 @@ namespace BabelMeta.Model
             info.AddValue("BabelMeta.Model.Album.TotalDiscs", TotalDiscs);
         }
 
+        /// <summary>
+        /// Album internal Id.
+        /// </summary>
         public Int32 Id { get; set; }
+
+        public ActionType? ActionTypeValue { get; set; }
 
         public string CName { get; set; }
 
@@ -102,6 +129,9 @@ namespace BabelMeta.Model
 
         public DateTime? OriginalReleaseDate { get; set; }
 
+        /// <summary>
+        /// UPC/EAN
+        /// </summary>
         public Int64? Ean { get; set; }
 
         /// <summary>
@@ -124,15 +154,22 @@ namespace BabelMeta.Model
         public bool Redeliver { get; set; }
 
         /// <summary>
-        /// Nested Dictionaries correspond to Volume index & Track index.
-        /// The string value is an Isrc id.
+        /// Nested Dictionaries correspond to Volume index, then Track index.
+        /// The string value is the Isrc Id.
+        /// E.g. in a 2-volume album, Assets[2][5] would represent Track 5 of Volume 2.
         /// </summary>
         public Dictionary<Int16, Dictionary<Int16, string>> Assets { get; set; }
 
-        // Deduced field
+        // Deduced field (from number of occurrences throughout Album)
         public Int32? PrimaryArtistId { get; set; }
 
-        // Deduced field
+        // Deduced field (from Assets)
         public Int16? TotalDiscs { get; set; }
+
+        public enum ActionType
+        {
+            Insert,
+            Update,
+        } 
     }
 }

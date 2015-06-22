@@ -1,7 +1,26 @@
 ﻿/*
- * Babel Meta
- * Copyright 2015 - Romain Carbou
- * romain.carbou@solstice-music.com
+ *  Babel Meta - babelmeta.com
+ * 
+ *  The present software is licensed according to the MIT licence.
+ *  Copyright (c) 2015 Romain Carbou (romain@babelmeta.com)
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is
+ *  furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included in
+ *  all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE. 
  */
 
 using BabelMeta.AppConfig;
@@ -13,7 +32,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
@@ -22,8 +40,9 @@ using Excel = Microsoft.Office.Interop.Excel;
 namespace BabelMeta.Modules.Import
 {
     /// <summary>
-    /// This default Input format consists in a Excel 2003 XML export of worksheets:
-    /// lang, role, tag, artist, work, isrc, featuring, album, asset
+    /// This default Input format consists in a Excel .xlsx or Excel 2003 XML (for small files) pre-formatted set of worksheets:
+    /// lang, role, tag, artist, work, isrc, featuring, album, asset.
+    /// Mandatory columns cannot be removed or renamed but can have any position in the worksheet. Additional columns with non-ambiguous names can be added everywhere in any worksheet.
     /// </summary>
     public class TemplatedExcelCatalogReader : ICatalogReader
     {
@@ -437,6 +456,7 @@ namespace BabelMeta.Modules.Import
             if (!ExistsCellValueInRow("local_db", map, "album")) return false;
             if (!ExistsCellValueInRow("partner_db", map, "album")) return false;
             if (!ExistsCellValueInRow("album_id", map, "album")) return false;
+            if (!ExistsCellValueInRow("action", map, "album")) return false;
             if (!ExistsCellValueInRow("c_name", map, "album")) return false;
             if (!ExistsCellValueInRow("c_year", map, "album")) return false;
             if (!ExistsCellValueInRow("p_name", map, "album")) return false;
@@ -631,7 +651,6 @@ namespace BabelMeta.Modules.Import
                     filteredRows.Add(row);
                 }
             }
-
 
             return filteredRows;
         }
@@ -1349,12 +1368,22 @@ namespace BabelMeta.Modules.Import
                 if (cells != null && cells.Count > 0)
                 {
                     {
-                        string datestring = CellContentWizard(cells, _worksheetColumns["album"]["consumer_release_date"]);
                         string genreTag = CellContentWizard(cells, _worksheetColumns["album"]["genre"]);
                         string subgenreTag = CellContentWizard(cells, _worksheetColumns["album"]["subgenre"]);
+                        Album.ActionType? actionTypeValue = null;
+                        switch (CellContentWizard(cells, _worksheetColumns["album"]["action"]).ToLower())
+                        {
+                            case "insert":
+                                actionTypeValue = Album.ActionType.Insert;
+                                break;
+                            case "update":
+                                actionTypeValue = Album.ActionType.Update;
+                                break;
+                        }
                         Album album = new Album
                         {
                             Id = Convert.ToInt32(CellContentWizard(cells, _worksheetColumns["album"]["album_id"], "0")),
+                            ActionTypeValue = actionTypeValue,
                             CName = CellContentWizard(cells, _worksheetColumns["album"]["c_name"]),
                             CYear = Convert.ToInt16(CellContentWizard(cells, _worksheetColumns["album"]["c_year"], "0")),
                             PName = CellContentWizard(cells, _worksheetColumns["album"]["p_name"]),
@@ -1388,22 +1417,31 @@ namespace BabelMeta.Modules.Import
                             continue;
                         }
 
+                        if (album.ActionTypeValue == null)
+                        {
+                            album.ActionTypeValue = Album.ActionType.Insert;
+                        }
+
                         if (string.IsNullOrEmpty(album.CName))
                         {
                             album.CName = CatalogContext.Instance.Settings.LabelDefault;
                         }
+
                         if (album.CYear < 1900 || album.CYear > 2100)
                         {
                             album.CYear = null;
                         }
+
                         if (string.IsNullOrEmpty(album.PName))
                         {
                             album.PName = CatalogContext.Instance.Settings.LabelDefault;
                         }
+
                         if (album.PYear < 1900 || album.PYear > 2100)
                         {
                             album.PYear = null;
                         }
+
                         if (album.RecordingYear < 1900 || album.RecordingYear > 2100)
                         {
                             album.RecordingYear = null;
