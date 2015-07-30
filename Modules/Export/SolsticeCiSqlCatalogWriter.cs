@@ -29,6 +29,9 @@ using System;
 
 namespace BabelMeta.Modules.Export
 {
+    /// <summary>
+    /// Implementation of ICatalogWriter interface generating Solstice (https://www.solstice-music.com) SQL ingestion script.
+    /// </summary>
     public class SolsticeCiSqlCatalogWriter : ICatalogWriter
     {
         MainFormViewModel _viewModel = null;

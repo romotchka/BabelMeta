@@ -28,6 +28,10 @@ using System.Threading.Tasks;
 
 namespace BabelMeta.Modules.Import
 {
+    /// <summary>
+    /// The Smart Catalog Reader permits to process input metadata without pre-formatted columns.
+    /// Column content is guessed according to various pattern matching filters and then confirmed manually by the user.
+    /// </summary>
     public class SmartCatalogReader : ICatalogReader
     {
         Task<AppConfig.ReturnCodes> ICatalogReader.Parse(System.Windows.Forms.OpenFileDialog ofd, string formatType, MainFormViewModel viewModel)

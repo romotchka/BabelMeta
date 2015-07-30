@@ -40,9 +40,10 @@ using Excel = Microsoft.Office.Interop.Excel;
 namespace BabelMeta.Modules.Import
 {
     /// <summary>
-    /// This default Input format consists in a Excel .xlsx or Excel 2003 XML (for small files) pre-formatted set of worksheets:
+    /// This default Input format consists in a Excel .xlsx or Excel 2003 XML (more efficient for *small* files) pre-formatted set of worksheets:
     /// lang, role, tag, artist, work, isrc, featuring, album, asset.
-    /// Mandatory columns cannot be removed or renamed but can have any position in the worksheet. Additional columns with non-ambiguous names can be added everywhere in any worksheet.
+    /// Mandatory columns cannot be removed or renamed but can have any position in the worksheet. 
+    /// Additional columns with non-ambiguous names can be added everywhere in any worksheet.
     /// </summary>
     public class TemplatedExcelCatalogReader : ICatalogReader
     {
@@ -311,9 +312,8 @@ namespace BabelMeta.Modules.Import
             if (!ExistsWorksheet("asset")) return false;
 
             // Check columns and identify their indexes
-            Dictionary<Int32, object> map = new Dictionary<Int32,object>(); // TODO remove call to constructor, map is a pointer
+            var map = new Dictionary<Int32,object>();
             int i;
-
 
             // Strict order so as to enable referential integrity check
 
@@ -325,7 +325,7 @@ namespace BabelMeta.Modules.Import
             {
                 _settings = WorksheetActiveRows("SETTINGS");
             });
-            await ParseSettings(); // must be parsed first
+            await ParseSettings(); // *must* be parsed first.
 
             // lang
             map = GetHeader("lang");
@@ -338,7 +338,7 @@ namespace BabelMeta.Modules.Import
             {
                 _langs = WorksheetActiveRows("lang");
             });
-            await ParseLangs(); // must be parsed second, because columns lang-dependent
+            await ParseLangs(); // *must* be parsed second, because column names can be language-dependent.
 
             // tag
             map = GetHeader("tag");
@@ -503,11 +503,11 @@ namespace BabelMeta.Modules.Import
         /// Returns a dictionary of cell objects (Key = column)
         /// </summary>
         /// <param name="row">
-        ///     For Excel, represents the row number
-        ///     For XML, represents the XmlNode row object
+        ///     For Excel .xls(x), represents the row number
+        ///     For Excel XML, represents the XmlNode row object
         /// </param>
         /// <param name="worksheetName">
-        ///     Used only in Excel format.
+        ///     Used only in Excel .xls(x) format.
         /// </param>
         /// <returns></returns>
         private Dictionary<Int32, object> CellMapByRow(object row, string worksheetName = "")
@@ -522,7 +522,7 @@ namespace BabelMeta.Modules.Import
                 return null;
             }
 
-            Dictionary<Int32, object> map = new Dictionary<Int32, object>();
+            var map = new Dictionary<Int32, object>();
             Int32 index = 1;
 
             switch (_formatType)
@@ -1668,7 +1668,12 @@ namespace BabelMeta.Modules.Import
             {
                 if (isrc.Tier == null)
                 {
-                    isrc.Tier = (CatalogContext.Instance.Albums.FirstOrDefault(a => a.Assets.Values.ToList().Exists(v => v.Values.ToList().Contains(isrc.Id)))).Tier;
+                    Album album = CatalogContext.Instance.Albums.FirstOrDefault(
+                            a => a.Assets.Values.ToList().Exists(v => v.Values.ToList().Contains(isrc.Id)));
+                    if (album != null)
+                    {
+                        isrc.Tier = album.Tier;
+                    };
                 }
             }
         }

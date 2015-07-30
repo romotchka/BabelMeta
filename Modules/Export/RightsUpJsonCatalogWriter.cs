@@ -28,6 +28,9 @@ using System;
 
 namespace BabelMeta.Modules.Export
 {
+    /// <summary>
+    /// Implementation of ICatalogWriter interface generating RightsUp (http://www.rightsup.com) ingestion files.
+    /// </summary>
     public class RightsUpJsonCatalogWriter : ICatalogWriter
     {
         ReturnCodes ICatalogWriter.Generate(object context, MainFormViewModel viewModel)

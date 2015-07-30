@@ -26,7 +26,7 @@
 namespace BabelMeta.Modules.Export
 {
     /// <summary>
-    /// File type of a Fuga ingestion item.
+    /// File type of a Fuga (http://www.fuga.com) ingestion item.
     /// </summary>
     public enum FugaIngestionFileType
     {

@@ -36,6 +36,11 @@ using System.Text;
 
 namespace BabelMeta.Modules.Export
 {
+    /// <summary>
+    /// Implementation of ICatalogWriter interface generating Fuga (http://www.fuga.com) ingestion files.
+    /// If the target repertoire matches the tree structure expected (one subfolder named according to the UPC/EAN of each album),
+    /// the Writer will scan audio files and attachments so as to include them in metadata.
+    /// </summary>
     public class FugaXmlCatalogWriter : ICatalogWriter
     {
         // Translation of standardized roles in platform-specific ones
