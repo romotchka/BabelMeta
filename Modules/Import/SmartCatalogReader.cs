@@ -34,7 +34,7 @@ namespace BabelMeta.Modules.Import
     /// </summary>
     public class SmartCatalogReader : ICatalogReader
     {
-        Task<AppConfig.ReturnCodes> ICatalogReader.Parse(System.Windows.Forms.OpenFileDialog ofd, string formatType, MainFormViewModel viewModel)
+        Task<AppConfig.ReturnCodes> ICatalogReader.Parse(System.Windows.Forms.OpenFileDialog ofd, FormatType formatType, MainFormViewModel viewModel)
         {
             throw new NotImplementedException();
         }

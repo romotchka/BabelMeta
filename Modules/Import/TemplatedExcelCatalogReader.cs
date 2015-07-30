@@ -64,7 +64,7 @@ namespace BabelMeta.Modules.Import
         /// 0: Excel XML 2003
         /// 1: Excel Workbook .xlsx
         /// </summary>
-        private string _formatType;
+        private FormatType _formatType;
 
         private MainFormViewModel _mainFormViewModel;
 
@@ -146,21 +146,14 @@ namespace BabelMeta.Modules.Import
             }
         }
 
-        public async Task<ReturnCodes> Parse(OpenFileDialog ofd, string formatType, MainFormViewModel viewModel = null)
+        public async Task<ReturnCodes> Parse(OpenFileDialog ofd, FormatType formatType, MainFormViewModel viewModel = null)
         {
             if (ofd == null)
             {
                 return ReturnCodes.ModulesImportDefaultParseEmptyStream;
             }
 
-            if (string.IsNullOrEmpty(formatType))
-            {
-                return ReturnCodes.ModulesImportDefaultParseUnknownFormat;
-            }
-
-            formatType = formatType.ToLower();
-            
-            if (formatType.CompareTo("xml") == 0 || formatType.CompareTo("excel") == 0)
+            if (formatType == FormatType.ExcelWorkbook || formatType == FormatType.ExcelXml2003)
             {
                 _formatType = formatType;
             }
@@ -171,7 +164,7 @@ namespace BabelMeta.Modules.Import
 
             switch (_formatType)
             {
-                case "excel":
+                case FormatType.ExcelWorkbook:
                     _excelLastRow = new Dictionary<string, Int32>();
                     _excelLastColumn = new Dictionary<string, Int32>();
                     if (string.IsNullOrEmpty(ofd.FileName))
@@ -185,7 +178,7 @@ namespace BabelMeta.Modules.Import
                         return ReturnCodes.ModulesImportDefaultParseEmptyStream;
                     }
                     break;
-                case "xml":
+                case FormatType.ExcelXml2003:
                     Stream s = ofd.OpenFile();
                     if (s == null)
                     {
@@ -266,10 +259,10 @@ namespace BabelMeta.Modules.Import
             Dictionary<Int32, object> map = null;
             switch (_formatType)
             {
-                case "excel":
+                case FormatType.ExcelWorkbook:
                     map = CellMapByRow(1, worksheetName);
                     break;
-                case "xml":
+                case FormatType.ExcelXml2003:
                     if ((XmlNode)(_worksheets[worksheetName]) == null)
                     { 
                         return null; 
@@ -292,8 +285,12 @@ namespace BabelMeta.Modules.Import
             //}
 
             if  (
-                    (_formatType.CompareTo("xml") == 0 && (_xmlDocument == null || _xmlDocument.DocumentElement == null))
-                    || (_formatType.CompareTo("excel") == 0 && (_excelDocument == null))
+                    (
+                        _formatType == FormatType.ExcelXml2003 
+                        && (_xmlDocument == null || _xmlDocument.DocumentElement == null)
+                    )
+                    || 
+                    (_formatType == FormatType.ExcelWorkbook && _excelDocument == null)
                 )
             {
                 return false;
@@ -315,7 +312,7 @@ namespace BabelMeta.Modules.Import
             var map = new Dictionary<Int32,object>();
             int i;
 
-            // Strict order so as to enable referential integrity check
+            // Don't change the order in the following section so as to enable referential integrity check.
 
             // SETTINGS
             map = GetHeader("SETTINGS");
@@ -325,7 +322,7 @@ namespace BabelMeta.Modules.Import
             {
                 _settings = WorksheetActiveRows("SETTINGS");
             });
-            await ParseSettings(); // *must* be parsed first.
+            await ParseSettings(); // *must* be parsed first!
 
             // lang
             map = GetHeader("lang");
@@ -338,7 +335,7 @@ namespace BabelMeta.Modules.Import
             {
                 _langs = WorksheetActiveRows("lang");
             });
-            await ParseLangs(); // *must* be parsed second, because column names can be language-dependent.
+            await ParseLangs(); // *must* be parsed second, because column names can be language-dependent!
 
             // tag
             map = GetHeader("tag");
@@ -397,7 +394,7 @@ namespace BabelMeta.Modules.Import
             if (!ExistsCellValueInRow("key", map, "work")) return false;
             if (!ExistsCellValueInRow("year", map, "work")) return false;
             i = 1;
-            while (
+            while   (
                         ExistsCellValueInRow("id_contributor" + i, map, "work")
                         && ExistsCellValueInRow("role_contributor" + i, map, "work")
                     )
@@ -426,10 +423,10 @@ namespace BabelMeta.Modules.Import
             if (!ExistsCellValueInRow("isrc_id", map, "isrc")) return false;
             if (!ExistsCellValueInRow("work_id", map, "isrc")) return false;
             i = 1;
-            while (
-                    ExistsCellValueInRow("id_contributor" + i, map, "isrc")
-                    && ExistsCellValueInRow("role_contributor" + i, map, "isrc")
-                    && ExistsCellValueInRow("quality_contributor" + i, map, "isrc")
+            while   (
+                        ExistsCellValueInRow("id_contributor" + i, map, "isrc")
+                        && ExistsCellValueInRow("role_contributor" + i, map, "isrc")
+                        && ExistsCellValueInRow("quality_contributor" + i, map, "isrc")
                     )
             {
                 i++;
@@ -527,7 +524,7 @@ namespace BabelMeta.Modules.Import
 
             switch (_formatType)
             {
-                case "excel":
+                case FormatType.ExcelWorkbook:
                     //if (string.IsNullOrEmpty(worksheetName) || !_worksheets.ContainsKey(worksheetName))
                     //{
                     //    return null;
@@ -547,7 +544,7 @@ namespace BabelMeta.Modules.Import
                     }
                     break;
 
-                case "xml":
+                case FormatType.ExcelXml2003:
                     foreach (XmlNode cell in ((XmlNode)row).ChildNodes.Cast<XmlNode>().Where(n => n.Name.CompareTo(OfficeXml.WorksheetCell) == 0))
                     {
                         // Cell index has priority over deduced index
@@ -591,7 +588,12 @@ namespace BabelMeta.Modules.Import
                 return null;
             }
 
-            if (_excelLastRow == null || !(_excelLastRow.ContainsKey(worksheetName)) || _excelLastColumn == null || !(_excelLastColumn.ContainsKey(worksheetName)))
+            if  (
+                    _excelLastRow == null 
+                    || !(_excelLastRow.ContainsKey(worksheetName)) 
+                    || _excelLastColumn == null 
+                    || !(_excelLastColumn.ContainsKey(worksheetName))
+                )
             {
                 return null;
             }
@@ -601,10 +603,10 @@ namespace BabelMeta.Modules.Import
 
             switch (_formatType)
             {
-                case "excel":
+                case FormatType.ExcelWorkbook:
                     rows = Enumerable.Range(1, _excelLastRow[worksheetName]).Cast<object>().ToList();
                     break;
-                case "xml":
+                case FormatType.ExcelXml2003:
                     rows = ((XmlNode)_worksheets[worksheetName]).ChildNodes.Cast<object>()
                     .Where(r => ((XmlNode)r).Name.CompareTo(OfficeXml.WorksheetRow) == 0)
                     .ToList();
@@ -630,12 +632,12 @@ namespace BabelMeta.Modules.Import
 
                 switch (_formatType)
                 {
-                    case "excel":
+                    case FormatType.ExcelWorkbook:
                         local = map.ContainsKey(_worksheetColumns[worksheetName]["local_db"]) && ((Range)map[_worksheetColumns[worksheetName]["local_db"]]).Value.ToString().ToLower().CompareTo("active") == 0;
                         partner = map.ContainsKey(_worksheetColumns[worksheetName]["partner_db"]) && ((Range)map[_worksheetColumns[worksheetName]["partner_db"]]).Value.ToString().ToLower().CompareTo("active") == 0;
                         break;
 
-                    case "xml":
+                    case FormatType.ExcelXml2003:
                         local = map.ContainsKey(_worksheetColumns[worksheetName]["local_db"]) && ((XmlNode)map[_worksheetColumns[worksheetName]["local_db"]]).InnerText.ToLower().CompareTo("active") == 0;
                         partner = map.ContainsKey(_worksheetColumns[worksheetName]["partner_db"]) && ((XmlNode)map[_worksheetColumns[worksheetName]["partner_db"]]).InnerText.ToLower().CompareTo("active") == 0;
                         break;
@@ -674,11 +676,11 @@ namespace BabelMeta.Modules.Import
 
             switch (_formatType)
             {
-                case "excel":
+                case FormatType.ExcelWorkbook:
                     element = map.FirstOrDefault(e => ((Range)e.Value).Value.ToString().Trim().CompareTo(cellValue) == 0);
                     break;
 
-                case "xml":
+                case FormatType.ExcelXml2003:
                     element = map.FirstOrDefault(e => ((XmlNode)e.Value).InnerText.Trim().CompareTo(cellValue) == 0);
                     break;
             }
@@ -714,7 +716,7 @@ namespace BabelMeta.Modules.Import
 
             switch (_formatType)
             {
-                case "excel":
+                case FormatType.ExcelWorkbook:
                     Sheets sheets = _excelDocument.Worksheets;
                     int sheetsCount = sheets.Count;
                     int index = 1;
@@ -737,7 +739,7 @@ namespace BabelMeta.Modules.Import
                     }
                     break;
 
-                case "xml":
+                case FormatType.ExcelXml2003:
                     XmlNode xmlWorksheet = _xmlDocument.DocumentElement.ChildNodes.Cast<XmlNode>()
                         .FirstOrDefault(
                             n =>
@@ -794,11 +796,11 @@ namespace BabelMeta.Modules.Import
             string v;
             switch (_formatType)
             {
-                case "excel":
+                case FormatType.ExcelWorkbook:
                     v = (trim) ? ((Range)o).Value.ToString().Trim() : ((Range)o).Value.ToString();
                     return (string.IsNullOrEmpty(v)) ? defaultValue : v;
 
-                case "xml":
+                case FormatType.ExcelXml2003:
                     v = (trim) ? ((XmlNode)(o)).InnerText.Trim() : ((XmlNode)(o)).InnerText;
                     return (string.IsNullOrEmpty(v)) ? defaultValue : v;
 

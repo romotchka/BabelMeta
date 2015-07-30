@@ -23,17 +23,12 @@
  *  THE SOFTWARE. 
  */
 
-using BabelMeta.AppConfig;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
-namespace BabelMeta.Modules.Import
+namespace BabelMeta.Modules
 {
-    public interface ICatalogReader
+    public enum FormatType
     {
-        /// <summary>
-        /// The Parse method refreshes the CatalogContext according to the Input data
-        /// </summary>
-        Task<ReturnCodes> Parse(OpenFileDialog ofd, FormatType formatType, MainFormViewModel viewModel = null); 
+        ExcelWorkbook,
+        ExcelXml2003,
+        Unknown,
     }
 }

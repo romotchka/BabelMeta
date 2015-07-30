@@ -26,6 +26,7 @@
 using BabelMeta.Model;
 using System;
 using System.Linq;
+using BabelMeta.Modules;
 
 namespace BabelMeta.Helpers
 {
@@ -122,6 +123,21 @@ namespace BabelMeta.Helpers
                 , ">\r\n<");
 
             return modifiedStream;
+        }
+
+        public static FormatType ToFormatType(this string s)
+        {
+            if (string.IsNullOrEmpty(s))
+            {
+                return FormatType.Unknown;
+            }
+            s = s.ToLower();
+            switch (s)
+            {
+                case "excel workbook": return FormatType.ExcelWorkbook;
+                case "excel xml 2003": return FormatType.ExcelXml2003;
+                default: return FormatType.Unknown;
+            }
         }
     }
 }

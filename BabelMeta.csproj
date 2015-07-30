@@ -76,6 +76,7 @@
     <Compile Include="Modules\Export\ICatalogWriter.cs" />
     <Compile Include="Modules\Export\RightsUpJsonCatalogWriter.cs" />
     <Compile Include="Modules\Export\SolsticeCiSqlCatalogWriter.cs" />
+    <Compile Include="Modules\FormatType.cs" />
     <Compile Include="Modules\Import\SmartCatalogReader.cs" />
     <Compile Include="Modules\Import\TemplatedExcelCatalogReader.cs" />
     <Compile Include="Modules\Import\ICatalogReader.cs" />

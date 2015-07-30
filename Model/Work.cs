@@ -96,7 +96,7 @@ namespace BabelMeta.Model
         public Dictionary<string, string> Title { get; set; }
 
         /// <summary>
-        /// Movement title when available, the different available languages.
+        /// Movement title when available, in the different available languages.
         /// </summary>
         public Dictionary<string, string> MovementTitle { get; set; }
 
