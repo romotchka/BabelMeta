@@ -56,7 +56,7 @@ namespace BabelMeta.Model
                     _instance.Tags = new List<Tag>();
                     _instance.Artists = new List<Artist>();
                     _instance.Works = new List<Work>();
-                    _instance.Isrcs = new List<Isrc>();
+                    _instance.Assets = new List<Asset>();
                     _instance.Albums = new List<Album>();
                 }
                 return _instance;
@@ -65,7 +65,7 @@ namespace BabelMeta.Model
 
         internal bool Initialized = false;
 
-        internal bool _redundantKeysChecked = false;
+        private bool _redundantKeysChecked = false;
 
         /// <summary>
         /// Determines whether redundant keys checking is active.
@@ -82,7 +82,7 @@ namespace BabelMeta.Model
             }
         }
 
-        internal bool _referentialIntegrityChecked = false;
+        private bool _referentialIntegrityChecked = false;
 
         /// <summary>
         /// Determines whether referential integrity checking between linked entities (e.g. Artists/Works) is active.
@@ -138,7 +138,7 @@ namespace BabelMeta.Model
 
         internal List<Work> Works;
 
-        internal List<Isrc> Isrcs;
+        internal List<Asset> Assets;
 
         internal List<Album> Albums;
 
@@ -151,7 +151,7 @@ namespace BabelMeta.Model
             _instance.Tags.Clear();
             _instance.Artists.Clear();
             _instance.Works.Clear();
-            _instance.Isrcs.Clear();
+            _instance.Assets.Clear();
             _instance.Albums.Clear();
         }
 
@@ -167,13 +167,13 @@ namespace BabelMeta.Model
 
             Artists.RemoveAll(art =>
                 !Albums.Exists(alb =>
-                    alb.Assets.Values.ToList().Exists(vol =>
+                    alb.Tracks.Values.ToList().Exists(vol =>
                         vol.Values.ToList().Exists(ik =>
-                            Isrcs.Exists(isrc =>
+                            Assets.Exists(asset =>
                                 (
-                                    isrc.Id.CompareTo(ik) == 0
+                                    System.String.Compare(asset.Id, ik, System.StringComparison.Ordinal) == 0
                                     && Works.Exists(w =>
-                                        w.Id == isrc.Work
+                                        w.Id == asset.Work
                                         && w.Contributors.Keys.ToList().Contains(art.Id)
                                     )
                                 )
@@ -198,11 +198,11 @@ namespace BabelMeta.Model
 
             Works.RemoveAll(w =>
                 !Albums.Exists(alb =>
-                    alb.Assets.Values.ToList().Exists(vol =>
+                    alb.Tracks.Values.ToList().Exists(vol =>
                         vol.Values.ToList().Exists(ik =>
-                            Isrcs.Exists(isrc =>
-                                isrc.Id.CompareTo(ik) == 0
-                                && isrc.Work == w.Id
+                            Assets.Exists(asset =>
+                                System.String.Compare(asset.Id, ik, System.StringComparison.Ordinal) == 0
+                                && asset.Work == w.Id
                             )
                         )
                     )

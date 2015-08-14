@@ -46,11 +46,11 @@ namespace BabelMeta.Model
 
         public Artist(SerializationInfo info, StreamingContext ctxt)
         {
-            Id = (Int32)info.GetValue("BabelMeta.Model.Artist.Id", typeof(Int32));
-            Birth = (Int16?)info.GetValue("BabelMeta.Model.Artist.Birth", typeof(Int16?));
-            Death = (Int16?)info.GetValue("BabelMeta.Model.Artist.Death", typeof(Int16?));
-            FirstName = (Dictionary<string, string>)info.GetValue("BabelMeta.Model.Artist.FirstName", typeof(Dictionary<string, string>));
-            LastName = (Dictionary<string, string>)info.GetValue("BabelMeta.Model.Artist.LastName", typeof(Dictionary<string, string>));
+            Id = (int)info.GetValue("BabelMeta.Model.Artist.Id", typeof(int));
+            Birth = (short?)info.GetValue("BabelMeta.Model.Artist.Birth", typeof(short?));
+            Death = (short?)info.GetValue("BabelMeta.Model.Artist.Death", typeof(short?));
+            FirstName = (Dictionary<String, String>)info.GetValue("BabelMeta.Model.Artist.FirstName", typeof(Dictionary<String, String>));
+            LastName = (Dictionary<String, String>)info.GetValue("BabelMeta.Model.Artist.LastName", typeof(Dictionary<String, String>));
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -62,20 +62,20 @@ namespace BabelMeta.Model
             info.AddValue("BabelMeta.Model.Artist.LastName", LastName);
         }
 
-        public Int32 Id { get; set; }
+        public int Id { get; set; }
 
-        public Int16? Birth { get; set; }
+        public short? Birth { get; set; }
 
-        public Int16? Death { get; set; }
+        public short? Death { get; set; }
 
         /// <summary>
         /// Artist first name, in different languages available.
         /// </summary>
-        public Dictionary<string, string> FirstName { get; set; }
+        public Dictionary<String, String> FirstName { get; set; }
 
         /// <summary>
         /// Artist last name, in different languages available.
         /// </summary>
-        public Dictionary<string, string> LastName { get; set; }
+        public Dictionary<String, String> LastName { get; set; }
     }
 }

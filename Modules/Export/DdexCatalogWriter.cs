@@ -23,19 +23,28 @@
  *  THE SOFTWARE. 
  */
 
+using BabelMeta.AppConfig;
+using BabelMeta.Model;
 using System;
-using System.Threading.Tasks;
 
-namespace BabelMeta.Modules.Import
+namespace BabelMeta.Modules.Export
 {
     /// <summary>
-    /// The Smart Catalog Reader permits to process input metadata without pre-formatted columns.
-    /// Column content is guessed according to various pattern matching filters and then confirmed manually by the user.
+    /// Implementation of ICatalogWriter interface generating DDEX-compliant (http://www.ddex.net) catalog.
     /// </summary>
-    public class SmartCatalogReader : ICatalogReader
+    public class DdexCatalogWriter : ICatalogWriter
     {
-        Task<AppConfig.ReturnCode> ICatalogReader.Parse(System.Windows.Forms.OpenFileDialog ofd, FileFormatType formatType, MainFormViewModel viewModel)
+        MainFormViewModel _viewModel = null;
+
+        ReturnCode ICatalogWriter.Generate(object context, MainFormViewModel viewModel)
         {
+            _viewModel = viewModel;
+
+            if (!CatalogContext.Instance.Initialized)
+            {
+                return ReturnCode.ModulesExportCatalogContextNotInitialized;
+            }
+
             throw new NotImplementedException();
         }
     }

@@ -32,6 +32,6 @@ namespace BabelMeta.Modules.Export
     /// </summary>
     public interface ICatalogWriter
     {
-        ReturnCodes Generate(object context, MainFormViewModel viewModel = null);
+        ReturnCode Generate(object context, MainFormViewModel viewModel = null);
     }
 }

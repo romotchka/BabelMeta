@@ -33,7 +33,7 @@ namespace BabelMeta.Modules.Export
     /// </summary>
     public class RightsUpJsonCatalogWriter : ICatalogWriter
     {
-        ReturnCodes ICatalogWriter.Generate(object context, MainFormViewModel viewModel)
+        ReturnCode ICatalogWriter.Generate(object context, MainFormViewModel viewModel)
         {
             throw new NotImplementedException();
         }

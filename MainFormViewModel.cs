@@ -23,6 +23,7 @@
  *  THE SOFTWARE. 
  */
 
+using System;
 using System.ComponentModel;
 
 namespace BabelMeta
@@ -196,7 +197,7 @@ namespace BabelMeta
         /// <summary>
         /// Raises <see cref="PropertyChanged"/> for the specified property.
         /// </summary>
-        protected void RaisePropertyChanged(string propertyName)
+        protected void RaisePropertyChanged(String propertyName)
         {
             var handler = PropertyChanged;
             if (handler != null)

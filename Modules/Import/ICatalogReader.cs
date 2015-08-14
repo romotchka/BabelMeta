@@ -34,6 +34,6 @@ namespace BabelMeta.Modules.Import
         /// <summary>
         /// The Parse method refreshes the CatalogContext according to the Input data
         /// </summary>
-        Task<ReturnCodes> Parse(OpenFileDialog ofd, FormatType formatType, MainFormViewModel viewModel = null); 
+        Task<ReturnCode> Parse(OpenFileDialog ofd, FileFormatType formatType, MainFormViewModel viewModel = null); 
     }
 }

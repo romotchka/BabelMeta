@@ -29,7 +29,7 @@ namespace BabelMeta.AppConfig
     /// ReturnCodes qualifies the output codes returned by functions wherever required in the solution.
     /// Please aim at keeping the running naming convention.
     /// </summary>
-    public enum ReturnCodes
+    public enum ReturnCode
     {
         Ok,
 

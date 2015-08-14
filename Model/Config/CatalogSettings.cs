@@ -36,24 +36,24 @@ namespace BabelMeta.Model.Config
     {
         public CatalogSettings()
         {
-            SupplierDefault = string.Empty;
-            LabelDefault = string.Empty;
-            COwnerDefault = string.Empty;
-            POwnerDefault = string.Empty;
+            SupplierDefault = String.Empty;
+            LabelDefault = String.Empty;
+            COwnerDefault = String.Empty;
+            POwnerDefault = String.Empty;
             CatalogTierDefault = CatalogTier.Front;
-            MainGenreDefault = string.Empty;
+            MainGenreDefault = String.Empty;
             FormatDefault = ProductFormat.Album;
             AvailableSeparatelyDefault = true;
         }
 
         public CatalogSettings(SerializationInfo info, StreamingContext ctxt)
         {
-            SupplierDefault = (string)info.GetValue("BabelMeta.Model.CatalogSettings.SupplierDefault", typeof(string));
-            LabelDefault = (string)info.GetValue("BabelMeta.Model.CatalogSettings.LabelDefault", typeof(string));
-            COwnerDefault = (string)info.GetValue("BabelMeta.Model.CatalogSettings.COwnerDefault", typeof(string));
-            POwnerDefault = (string)info.GetValue("BabelMeta.Model.CatalogSettings.POwnerDefault", typeof(string));
+            SupplierDefault = (String)info.GetValue("BabelMeta.Model.CatalogSettings.SupplierDefault", typeof(String));
+            LabelDefault = (String)info.GetValue("BabelMeta.Model.CatalogSettings.LabelDefault", typeof(String));
+            COwnerDefault = (String)info.GetValue("BabelMeta.Model.CatalogSettings.COwnerDefault", typeof(String));
+            POwnerDefault = (String)info.GetValue("BabelMeta.Model.CatalogSettings.POwnerDefault", typeof(String));
             CatalogTierDefault = (CatalogTier)info.GetValue("BabelMeta.Model.CatalogSettings.CatalogTierDefault", typeof(CatalogTier));
-            MainGenreDefault = (string)info.GetValue("BabelMeta.Model.CatalogSettings.MainGenreDefault", typeof(string));
+            MainGenreDefault = (String)info.GetValue("BabelMeta.Model.CatalogSettings.MainGenreDefault", typeof(String));
             FormatDefault = (ProductFormat)info.GetValue("BabelMeta.Model.CatalogSettings.FormatDefault", typeof(ProductFormat));
             AvailableSeparatelyDefault = (bool)info.GetValue("BabelMeta.Model.CatalogSettings.AvailableSeparatelyDefault", typeof(bool));
         }
@@ -70,17 +70,17 @@ namespace BabelMeta.Model.Config
             info.AddValue("BabelMeta.Model.CatalogSettings.AvailableSeparatelyDefault", AvailableSeparatelyDefault);
         }
 
-        public string SupplierDefault { get; set; }
+        public String SupplierDefault { get; set; }
 
-        public string LabelDefault { get; set; }
+        public String LabelDefault { get; set; }
 
-        public string COwnerDefault { get; set; }
+        public String COwnerDefault { get; set; }
 
-        public string POwnerDefault { get; set; }
+        public String POwnerDefault { get; set; }
 
         public CatalogTier CatalogTierDefault { get; set; }
 
-        public string MainGenreDefault { get; set; }
+        public String MainGenreDefault { get; set; }
 
         public ProductFormat FormatDefault { get; set; }
 

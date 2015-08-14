@@ -36,15 +36,15 @@ namespace BabelMeta.Model
     {
         public Lang()
         {
-            LongName = string.Empty;
-            ShortName = string.Empty;
+            LongName = String.Empty;
+            ShortName = String.Empty;
             IsDefault = false;
         }
 
         public Lang(SerializationInfo info, StreamingContext ctxt)
         {
-            LongName = (string)info.GetValue("BabelMeta.Model.Lang.LongName", typeof(string));
-            ShortName = (string)info.GetValue("BabelMeta.Model.Lang.ShortName", typeof(string));
+            LongName = (String)info.GetValue("BabelMeta.Model.Lang.LongName", typeof(String));
+            ShortName = (String)info.GetValue("BabelMeta.Model.Lang.ShortName", typeof(String));
             IsDefault = (bool)info.GetValue("BabelMeta.Model.Lang.IsDefault", typeof(bool));
         }
 
@@ -58,12 +58,12 @@ namespace BabelMeta.Model
         /// <summary>
         /// Full language name, informative.
         /// </summary>
-        public string LongName { get; set; }
+        public String LongName { get; set; }
 
         /// <summary>
         /// ISO 639-1 2-character language abbreviation, used as unique Id.
         /// </summary>
-        public string ShortName { get; set; }
+        public String ShortName { get; set; }
 
         /// <summary>
         /// Determines whether that language, application-wise, is the default one (e.g. for output data generation).

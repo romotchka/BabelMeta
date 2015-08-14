@@ -29,19 +29,19 @@ using System.Runtime.Serialization;
 namespace BabelMeta.Model
 {
     /// <summary>
-    /// Any re-usable string present in the metadata.
+    /// Any re-usable String present in the metadata.
     /// </summary>
     [Serializable()]
     public class Tag : ISerializable
     {
         public Tag()
         {
-            Name = string.Empty;
+            Name = String.Empty;
         }
 
         public Tag(SerializationInfo info, StreamingContext ctxt)
         {
-            Name = (string)info.GetValue("BabelMeta.Model.Tag.Name", typeof(string));
+            Name = (String)info.GetValue("BabelMeta.Model.Tag.Name", typeof(String));
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -52,6 +52,6 @@ namespace BabelMeta.Model
         /// <summary>
         /// Name should be unique.
         /// </summary>
-        public string Name { get; set; }
+        public String Name { get; set; }
     }
 }

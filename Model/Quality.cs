@@ -36,12 +36,12 @@ namespace BabelMeta.Model
     {
         public Quality()
         {
-            Name = string.Empty;
+            Name = String.Empty;
         }
 
         public Quality(SerializationInfo info, StreamingContext ctxt)
         {
-            Name = (string)info.GetValue("BabelMeta.Model.Quality.Name", typeof(string));
+            Name = (String)info.GetValue("BabelMeta.Model.Quality.Name", typeof(String));
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -49,6 +49,6 @@ namespace BabelMeta.Model
             info.AddValue("BabelMeta.Model.Quality.Name", Name);
         }
 
-        public string Name { get; set; }
+        public String Name { get; set; }
     }
 }

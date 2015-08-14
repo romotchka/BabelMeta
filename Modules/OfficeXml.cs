@@ -23,6 +23,8 @@
  *  THE SOFTWARE. 
  */
 
+using System;
+
 namespace BabelMeta.Modules
 {
     /// <summary>
@@ -30,14 +32,14 @@ namespace BabelMeta.Modules
     /// </summary>
     public static class OfficeXml
     {
-        public const string Worksheet = "ss:Worksheet";
-        public const string WorksheetName = "ss:Name";
-        public const string WorksheetTable = "Table";
-        public const string WorksheetRow = "Row";
-        public const string WorksheetCell = "Cell";
+        public const String Worksheet = "ss:Worksheet";
+        public const String WorksheetName = "ss:Name";
+        public const String WorksheetTable = "Table";
+        public const String WorksheetRow = "Row";
+        public const String WorksheetCell = "Cell";
 
-        public const string CellType = "ss:Type";
-        public const string CellTypestring = "string";
-        public const string CellIndex = "ss:Index";
+        public const String CellType = "ss:Type";
+        public const String CellTypeString = "String";
+        public const String CellIndex = "ss:Index";
     }
 }

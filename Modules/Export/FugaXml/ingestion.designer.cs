@@ -53,7 +53,7 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         private ingestionAlbum albumField;
 
-        private string noNamespaceSchemaLocationField;
+        private String noNamespaceSchemaLocationField;
 
         private static System.Xml.Serialization.XmlSerializer serializer;
 
@@ -62,7 +62,7 @@ namespace BabelMeta.Modules.Export.FugaXml
         public ingestionAlbum album { get; set; }
 
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string noNamespaceSchemaLocation { get; set; }
+        public String noNamespaceSchemaLocation { get; set; }
 
 
         public ingestion()
@@ -86,8 +86,8 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Serializes current ingestion object into an XML document
         /// </summary>
-        /// <returns>string XML value</returns>
-        public virtual string Serialize(System.Text.Encoding encoding)
+        /// <returns>String XML value</returns>
+        public virtual String Serialize(System.Text.Encoding encoding)
         {
             System.IO.StreamReader streamReader = null;
             System.IO.MemoryStream memoryStream = null;
@@ -115,7 +115,7 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual string Serialize()
+        public virtual String Serialize()
         {
             return Serialize(Encoding.UTF8);
         }
@@ -123,11 +123,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes workflow markup into an ingestion object
         /// </summary>
-        /// <param name="xml">string workflow markup to deserialize</param>
+        /// <param name="xml">String workflow markup to deserialize</param>
         /// <param name="obj">Output ingestion object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool Deserialize(string xml, out ingestion obj, out System.Exception exception)
+        public static bool Deserialize(String xml, out ingestion obj, out System.Exception exception)
         {
             exception = null;
             obj = default(ingestion);
@@ -143,13 +143,13 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool Deserialize(string xml, out ingestion obj)
+        public static bool Deserialize(String xml, out ingestion obj)
         {
             System.Exception exception = null;
             return Deserialize(xml, out obj, out exception);
         }
 
-        public static ingestion Deserialize(string xml)
+        public static ingestion Deserialize(String xml)
         {
             System.IO.StringReader StringReader = null;
             try
@@ -172,7 +172,7 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <param name="fileName">full path of outupt xml file</param>
         /// <param name="exception">output Exception value if failed</param>
         /// <returns>true if can serialize and save into file; otherwise, false</returns>
-        public virtual bool SaveToFile(string fileName, System.Text.Encoding encoding, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, System.Text.Encoding encoding, out System.Exception exception)
         {
             exception = null;
             try
@@ -187,24 +187,24 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual bool SaveToFile(string fileName, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, out System.Exception exception)
         {
             return SaveToFile(fileName, Encoding.UTF8, out exception);
         }
 
-        public virtual void SaveToFile(string fileName)
+        public virtual void SaveToFile(String fileName)
         {
             SaveToFile(fileName, Encoding.UTF8);
         }
 
-        public virtual void SaveToFile(string fileName, System.Text.Encoding encoding)
+        public virtual void SaveToFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlstring = Serialize(encoding);
+                String xmlString = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlstring);
+                streamWriter.WriteLine(xmlString);
                 streamWriter.Close();
             }
             finally
@@ -219,11 +219,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes xml markup from file into an ingestion object
         /// </summary>
-        /// <param name="fileName">string xml file to load and deserialize</param>
+        /// <param name="fileName">String xml file to load and deserialize</param>
         /// <param name="obj">Output ingestion object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool LoadFromFile(string fileName, System.Text.Encoding encoding, out ingestion obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, System.Text.Encoding encoding, out ingestion obj, out System.Exception exception)
         {
             exception = null;
             obj = default(ingestion);
@@ -239,23 +239,23 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool LoadFromFile(string fileName, out ingestion obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, out ingestion obj, out System.Exception exception)
         {
             return LoadFromFile(fileName, Encoding.UTF8, out obj, out exception);
         }
 
-        public static bool LoadFromFile(string fileName, out ingestion obj)
+        public static bool LoadFromFile(String fileName, out ingestion obj)
         {
             System.Exception exception = null;
             return LoadFromFile(fileName, out obj, out exception);
         }
 
-        public static ingestion LoadFromFile(string fileName)
+        public static ingestion LoadFromFile(String fileName)
         {
             return LoadFromFile(fileName, Encoding.UTF8);
         }
 
-        public static ingestion LoadFromFile(string fileName, System.Text.Encoding encoding)
+        public static ingestion LoadFromFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.FileStream file = null;
             System.IO.StreamReader sr = null;
@@ -263,10 +263,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlstring = sr.ReadToEnd();
+                String xmlString = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlstring);
+                return Deserialize(xmlString);
             }
             finally
             {
@@ -303,39 +303,39 @@ namespace BabelMeta.Modules.Export.FugaXml
     public partial class ingestionAlbum
     {
 
-        private string album_notesField;
+        private String album_notesField;
 
         private bool alternate_genreFieldSpecified;
 
-        private string alternate_subgenreField;
+        private String alternate_subgenreField;
 
         private List<attachment_type> attachmentsField;
 
-        private string c_line_textField;
+        private String c_line_textField;
 
-        private string c_line_yearField;
+        private String c_line_yearField;
 
-        private string catalog_numberField;
+        private String catalog_numberField;
 
-        private string supplierField;
+        private String supplierField;
 
         private ingestionAlbumCover_art cover_artField;
 
         private System.DateTime consumer_release_dateField;
 
-        private string fuga_idField;
+        private String fuga_idField;
 
-        private string labelField;
+        private String labelField;
 
-        private string main_subgenreField;
+        private String main_subgenreField;
 
-        private string display_artistField;
+        private String display_artistField;
 
-        private string nameField;
+        private String nameField;
 
-        private string p_line_textField;
+        private String p_line_textField;
 
-        private string p_line_yearField;
+        private String p_line_yearField;
 
         private bool catalog_tierFieldSpecified;
 
@@ -355,33 +355,33 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         private List<artist> additional_artistsField;
 
-        private string recording_yearField;
+        private String recording_yearField;
 
-        private string recording_locationField;
+        private String recording_locationField;
 
         private redeliveries_type redeliveriesField;
 
-        private string release_versionField;
+        private String release_versionField;
 
         private List<territory_code> territoriesField;
 
-        private string total_discsField;
+        private String total_discsField;
 
-        private string extra1Field;
+        private String extra1Field;
 
-        private string extra2Field;
+        private String extra2Field;
 
-        private string extra3Field;
+        private String extra3Field;
 
-        private string extra4Field;
+        private String extra4Field;
 
-        private string extra5Field;
+        private String extra5Field;
 
-        private string extra6Field;
+        private String extra6Field;
 
-        private string extra7Field;
+        private String extra7Field;
 
-        private string extra8Field;
+        private String extra8Field;
 
         private System.DateTime extra9Field;
 
@@ -393,7 +393,7 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         private ingestionAlbumTracks tracksField;
 
-        private string upc_codeField;
+        private String upc_codeField;
 
         private schedule scheduleField;
 
@@ -401,23 +401,23 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         private static System.Xml.Serialization.XmlSerializer serializer;
 
-        public string album_notes { get; set; }
+        public String album_notes { get; set; }
 
         public genre_type alternate_genre { get; set; }
 
         [System.Xml.Serialization.XmlIgnoreAttribute()]
         public bool alternate_genreSpecified { get; set; }
 
-        public string alternate_subgenre { get; set; }
+        public String alternate_subgenre { get; set; }
 
-        public string c_line_text { get; set; }
+        public String c_line_text { get; set; }
 
         [System.Xml.Serialization.XmlElementAttribute(DataType = "integer")]
-        public string c_line_year { get; set; }
+        public String c_line_year { get; set; }
 
-        public string catalog_number { get; set; }
+        public String catalog_number { get; set; }
 
-        public string supplier { get; set; }
+        public String supplier { get; set; }
 
         public ingestionAlbumCover_art cover_art { get; set; }
 
@@ -425,22 +425,22 @@ namespace BabelMeta.Modules.Export.FugaXml
         public System.DateTime consumer_release_date { get; set; }
 
         [System.Xml.Serialization.XmlElementAttribute(DataType = "integer")]
-        public string fuga_id { get; set; }
+        public String fuga_id { get; set; }
 
-        public string label { get; set; }
+        public String label { get; set; }
 
         public genre_type main_genre { get; set; }
 
-        public string main_subgenre { get; set; }
+        public String main_subgenre { get; set; }
 
-        public string display_artist { get; set; }
+        public String display_artist { get; set; }
 
-        public string name { get; set; }
+        public String name { get; set; }
 
-        public string p_line_text { get; set; }
+        public String p_line_text { get; set; }
 
         [System.Xml.Serialization.XmlElementAttribute(DataType = "integer")]
-        public string p_line_year { get; set; }
+        public String p_line_year { get; set; }
 
         public ingestionAlbumCatalog_tier catalog_tier { get; set; }
 
@@ -466,34 +466,34 @@ namespace BabelMeta.Modules.Export.FugaXml
         public primary_artist primary_artist { get; set; }
 
         [System.Xml.Serialization.XmlElementAttribute(DataType = "integer")]
-        public string recording_year { get; set; }
+        public String recording_year { get; set; }
 
-        public string recording_location { get; set; }
+        public String recording_location { get; set; }
 
         public redeliveries_type redeliveries { get; set; }
 
         public ingestionAlbumRelease_format_type release_format_type { get; set; }
 
-        public string release_version { get; set; }
+        public String release_version { get; set; }
 
         [System.Xml.Serialization.XmlElementAttribute(DataType = "nonNegativeInteger")]
-        public string total_discs { get; set; }
+        public String total_discs { get; set; }
 
-        public string extra1 { get; set; }
+        public String extra1 { get; set; }
 
-        public string extra2 { get; set; }
+        public String extra2 { get; set; }
 
-        public string extra3 { get; set; }
+        public String extra3 { get; set; }
 
-        public string extra4 { get; set; }
+        public String extra4 { get; set; }
 
-        public string extra5 { get; set; }
+        public String extra5 { get; set; }
 
-        public string extra6 { get; set; }
+        public String extra6 { get; set; }
 
-        public string extra7 { get; set; }
+        public String extra7 { get; set; }
 
-        public string extra8 { get; set; }
+        public String extra8 { get; set; }
 
         [System.Xml.Serialization.XmlElementAttribute(DataType = "date")]
         public System.DateTime extra9 { get; set; }
@@ -509,7 +509,7 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         public ingestionAlbumTracks tracks { get; set; }
 
-        public string upc_code { get; set; }
+        public String upc_code { get; set; }
 
         public schedule schedule { get; set; }
 
@@ -623,8 +623,8 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Serializes current ingestionAlbum object into an XML document
         /// </summary>
-        /// <returns>string XML value</returns>
-        public virtual string Serialize(System.Text.Encoding encoding)
+        /// <returns>String XML value</returns>
+        public virtual String Serialize(System.Text.Encoding encoding)
         {
             System.IO.StreamReader streamReader = null;
             System.IO.MemoryStream memoryStream = null;
@@ -652,7 +652,7 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual string Serialize()
+        public virtual String Serialize()
         {
             return Serialize(Encoding.UTF8);
         }
@@ -660,11 +660,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes workflow markup into an ingestionAlbum object
         /// </summary>
-        /// <param name="xml">string workflow markup to deserialize</param>
+        /// <param name="xml">String workflow markup to deserialize</param>
         /// <param name="obj">Output ingestionAlbum object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool Deserialize(string xml, out ingestionAlbum obj, out System.Exception exception)
+        public static bool Deserialize(String xml, out ingestionAlbum obj, out System.Exception exception)
         {
             exception = null;
             obj = default(ingestionAlbum);
@@ -680,13 +680,13 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool Deserialize(string xml, out ingestionAlbum obj)
+        public static bool Deserialize(String xml, out ingestionAlbum obj)
         {
             System.Exception exception = null;
             return Deserialize(xml, out obj, out exception);
         }
 
-        public static ingestionAlbum Deserialize(string xml)
+        public static ingestionAlbum Deserialize(String xml)
         {
             System.IO.StringReader StringReader = null;
             try
@@ -709,7 +709,7 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <param name="fileName">full path of outupt xml file</param>
         /// <param name="exception">output Exception value if failed</param>
         /// <returns>true if can serialize and save into file; otherwise, false</returns>
-        public virtual bool SaveToFile(string fileName, System.Text.Encoding encoding, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, System.Text.Encoding encoding, out System.Exception exception)
         {
             exception = null;
             try
@@ -724,24 +724,24 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual bool SaveToFile(string fileName, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, out System.Exception exception)
         {
             return SaveToFile(fileName, Encoding.UTF8, out exception);
         }
 
-        public virtual void SaveToFile(string fileName)
+        public virtual void SaveToFile(String fileName)
         {
             SaveToFile(fileName, Encoding.UTF8);
         }
 
-        public virtual void SaveToFile(string fileName, System.Text.Encoding encoding)
+        public virtual void SaveToFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlstring = Serialize(encoding);
+                String xmlString = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlstring);
+                streamWriter.WriteLine(xmlString);
                 streamWriter.Close();
             }
             finally
@@ -756,11 +756,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes xml markup from file into an ingestionAlbum object
         /// </summary>
-        /// <param name="fileName">string xml file to load and deserialize</param>
+        /// <param name="fileName">String xml file to load and deserialize</param>
         /// <param name="obj">Output ingestionAlbum object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool LoadFromFile(string fileName, System.Text.Encoding encoding, out ingestionAlbum obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, System.Text.Encoding encoding, out ingestionAlbum obj, out System.Exception exception)
         {
             exception = null;
             obj = default(ingestionAlbum);
@@ -776,23 +776,23 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool LoadFromFile(string fileName, out ingestionAlbum obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, out ingestionAlbum obj, out System.Exception exception)
         {
             return LoadFromFile(fileName, Encoding.UTF8, out obj, out exception);
         }
 
-        public static bool LoadFromFile(string fileName, out ingestionAlbum obj)
+        public static bool LoadFromFile(String fileName, out ingestionAlbum obj)
         {
             System.Exception exception = null;
             return LoadFromFile(fileName, out obj, out exception);
         }
 
-        public static ingestionAlbum LoadFromFile(string fileName)
+        public static ingestionAlbum LoadFromFile(String fileName)
         {
             return LoadFromFile(fileName, Encoding.UTF8);
         }
 
-        public static ingestionAlbum LoadFromFile(string fileName, System.Text.Encoding encoding)
+        public static ingestionAlbum LoadFromFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.FileStream file = null;
             System.IO.StreamReader sr = null;
@@ -800,10 +800,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlstring = sr.ReadToEnd();
+                String xmlString = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlstring);
+                return Deserialize(xmlString);
             }
             finally
             {
@@ -914,17 +914,17 @@ namespace BabelMeta.Modules.Export.FugaXml
     public partial class attachment_type
     {
 
-        private string nameField;
+        private String nameField;
 
-        private string descriptionField;
+        private String descriptionField;
 
         private file_type fileField;
 
         private static System.Xml.Serialization.XmlSerializer serializer;
 
-        public string name { get; set; }
+        public String name { get; set; }
 
-        public string description { get; set; }
+        public String description { get; set; }
 
         [System.Xml.Serialization.XmlElementAttribute("attachment_type")]
         public attachment_typeAttachment_type attachment_type1 { get; set; }
@@ -953,8 +953,8 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Serializes current attachment_type object into an XML document
         /// </summary>
-        /// <returns>string XML value</returns>
-        public virtual string Serialize(System.Text.Encoding encoding)
+        /// <returns>String XML value</returns>
+        public virtual String Serialize(System.Text.Encoding encoding)
         {
             System.IO.StreamReader streamReader = null;
             System.IO.MemoryStream memoryStream = null;
@@ -982,7 +982,7 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual string Serialize()
+        public virtual String Serialize()
         {
             return Serialize(Encoding.UTF8);
         }
@@ -990,11 +990,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes workflow markup into an attachment_type object
         /// </summary>
-        /// <param name="xml">string workflow markup to deserialize</param>
+        /// <param name="xml">String workflow markup to deserialize</param>
         /// <param name="obj">Output attachment_type object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool Deserialize(string xml, out attachment_type obj, out System.Exception exception)
+        public static bool Deserialize(String xml, out attachment_type obj, out System.Exception exception)
         {
             exception = null;
             obj = default(attachment_type);
@@ -1010,13 +1010,13 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool Deserialize(string xml, out attachment_type obj)
+        public static bool Deserialize(String xml, out attachment_type obj)
         {
             System.Exception exception = null;
             return Deserialize(xml, out obj, out exception);
         }
 
-        public static attachment_type Deserialize(string xml)
+        public static attachment_type Deserialize(String xml)
         {
             System.IO.StringReader StringReader = null;
             try
@@ -1039,7 +1039,7 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <param name="fileName">full path of outupt xml file</param>
         /// <param name="exception">output Exception value if failed</param>
         /// <returns>true if can serialize and save into file; otherwise, false</returns>
-        public virtual bool SaveToFile(string fileName, System.Text.Encoding encoding, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, System.Text.Encoding encoding, out System.Exception exception)
         {
             exception = null;
             try
@@ -1054,24 +1054,24 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual bool SaveToFile(string fileName, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, out System.Exception exception)
         {
             return SaveToFile(fileName, Encoding.UTF8, out exception);
         }
 
-        public virtual void SaveToFile(string fileName)
+        public virtual void SaveToFile(String fileName)
         {
             SaveToFile(fileName, Encoding.UTF8);
         }
 
-        public virtual void SaveToFile(string fileName, System.Text.Encoding encoding)
+        public virtual void SaveToFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlstring = Serialize(encoding);
+                String xmlString = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlstring);
+                streamWriter.WriteLine(xmlString);
                 streamWriter.Close();
             }
             finally
@@ -1086,11 +1086,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes xml markup from file into an attachment_type object
         /// </summary>
-        /// <param name="fileName">string xml file to load and deserialize</param>
+        /// <param name="fileName">String xml file to load and deserialize</param>
         /// <param name="obj">Output attachment_type object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool LoadFromFile(string fileName, System.Text.Encoding encoding, out attachment_type obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, System.Text.Encoding encoding, out attachment_type obj, out System.Exception exception)
         {
             exception = null;
             obj = default(attachment_type);
@@ -1106,23 +1106,23 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool LoadFromFile(string fileName, out attachment_type obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, out attachment_type obj, out System.Exception exception)
         {
             return LoadFromFile(fileName, Encoding.UTF8, out obj, out exception);
         }
 
-        public static bool LoadFromFile(string fileName, out attachment_type obj)
+        public static bool LoadFromFile(String fileName, out attachment_type obj)
         {
             System.Exception exception = null;
             return LoadFromFile(fileName, out obj, out exception);
         }
 
-        public static attachment_type LoadFromFile(string fileName)
+        public static attachment_type LoadFromFile(String fileName)
         {
             return LoadFromFile(fileName, Encoding.UTF8);
         }
 
-        public static attachment_type LoadFromFile(string fileName, System.Text.Encoding encoding)
+        public static attachment_type LoadFromFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.FileStream file = null;
             System.IO.StreamReader sr = null;
@@ -1130,10 +1130,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlstring = sr.ReadToEnd();
+                String xmlString = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlstring);
+                return Deserialize(xmlString);
             }
             finally
             {
@@ -1170,19 +1170,19 @@ namespace BabelMeta.Modules.Export.FugaXml
     public partial class file_type
     {
 
-        private string nameField;
+        private String nameField;
 
-        private string crc32_checksumField;
+        private String crc32_checksumField;
 
         private ulong sizeField;
 
         private static System.Xml.Serialization.XmlSerializer serializer;
 
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
-        public string name { get; set; }
+        public String name { get; set; }
 
         [System.Xml.Serialization.XmlElementAttribute(Order = 1)]
-        public string crc32_checksum { get; set; }
+        public String crc32_checksum { get; set; }
 
         [System.Xml.Serialization.XmlElementAttribute(Order = 2)]
         public ulong size { get; set; }
@@ -1204,8 +1204,8 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Serializes current file_type object into an XML document
         /// </summary>
-        /// <returns>string XML value</returns>
-        public virtual string Serialize(System.Text.Encoding encoding)
+        /// <returns>String XML value</returns>
+        public virtual String Serialize(System.Text.Encoding encoding)
         {
             System.IO.StreamReader streamReader = null;
             System.IO.MemoryStream memoryStream = null;
@@ -1233,7 +1233,7 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual string Serialize()
+        public virtual String Serialize()
         {
             return Serialize(Encoding.UTF8);
         }
@@ -1241,11 +1241,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes workflow markup into an file_type object
         /// </summary>
-        /// <param name="xml">string workflow markup to deserialize</param>
+        /// <param name="xml">String workflow markup to deserialize</param>
         /// <param name="obj">Output file_type object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool Deserialize(string xml, out file_type obj, out System.Exception exception)
+        public static bool Deserialize(String xml, out file_type obj, out System.Exception exception)
         {
             exception = null;
             obj = default(file_type);
@@ -1261,13 +1261,13 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool Deserialize(string xml, out file_type obj)
+        public static bool Deserialize(String xml, out file_type obj)
         {
             System.Exception exception = null;
             return Deserialize(xml, out obj, out exception);
         }
 
-        public static file_type Deserialize(string xml)
+        public static file_type Deserialize(String xml)
         {
             System.IO.StringReader StringReader = null;
             try
@@ -1290,7 +1290,7 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <param name="fileName">full path of outupt xml file</param>
         /// <param name="exception">output Exception value if failed</param>
         /// <returns>true if can serialize and save into file; otherwise, false</returns>
-        public virtual bool SaveToFile(string fileName, System.Text.Encoding encoding, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, System.Text.Encoding encoding, out System.Exception exception)
         {
             exception = null;
             try
@@ -1305,24 +1305,24 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual bool SaveToFile(string fileName, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, out System.Exception exception)
         {
             return SaveToFile(fileName, Encoding.UTF8, out exception);
         }
 
-        public virtual void SaveToFile(string fileName)
+        public virtual void SaveToFile(String fileName)
         {
             SaveToFile(fileName, Encoding.UTF8);
         }
 
-        public virtual void SaveToFile(string fileName, System.Text.Encoding encoding)
+        public virtual void SaveToFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlstring = Serialize(encoding);
+                String xmlString = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlstring);
+                streamWriter.WriteLine(xmlString);
                 streamWriter.Close();
             }
             finally
@@ -1337,11 +1337,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes xml markup from file into an file_type object
         /// </summary>
-        /// <param name="fileName">string xml file to load and deserialize</param>
+        /// <param name="fileName">String xml file to load and deserialize</param>
         /// <param name="obj">Output file_type object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool LoadFromFile(string fileName, System.Text.Encoding encoding, out file_type obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, System.Text.Encoding encoding, out file_type obj, out System.Exception exception)
         {
             exception = null;
             obj = default(file_type);
@@ -1357,23 +1357,23 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool LoadFromFile(string fileName, out file_type obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, out file_type obj, out System.Exception exception)
         {
             return LoadFromFile(fileName, Encoding.UTF8, out obj, out exception);
         }
 
-        public static bool LoadFromFile(string fileName, out file_type obj)
+        public static bool LoadFromFile(String fileName, out file_type obj)
         {
             System.Exception exception = null;
             return LoadFromFile(fileName, out obj, out exception);
         }
 
-        public static file_type LoadFromFile(string fileName)
+        public static file_type LoadFromFile(String fileName)
         {
             return LoadFromFile(fileName, Encoding.UTF8);
         }
 
-        public static file_type LoadFromFile(string fileName, System.Text.Encoding encoding)
+        public static file_type LoadFromFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.FileStream file = null;
             System.IO.StreamReader sr = null;
@@ -1381,10 +1381,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlstring = sr.ReadToEnd();
+                String xmlString = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlstring);
+                return Deserialize(xmlString);
             }
             finally
             {
@@ -1408,7 +1408,7 @@ namespace BabelMeta.Modules.Export.FugaXml
     public partial class territory_release_date_type
     {
 
-        private string territory_groupField;
+        private String territory_groupField;
 
         private System.DateTime release_dateField;
 
@@ -1418,7 +1418,7 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         private static System.Xml.Serialization.XmlSerializer serializer;
 
-        public string territory_group { get; set; }
+        public String territory_group { get; set; }
 
         [System.Xml.Serialization.XmlElementAttribute(DataType = "date")]
         public System.DateTime release_date { get; set; }
@@ -1446,8 +1446,8 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Serializes current territory_release_date_type object into an XML document
         /// </summary>
-        /// <returns>string XML value</returns>
-        public virtual string Serialize(System.Text.Encoding encoding)
+        /// <returns>String XML value</returns>
+        public virtual String Serialize(System.Text.Encoding encoding)
         {
             System.IO.StreamReader streamReader = null;
             System.IO.MemoryStream memoryStream = null;
@@ -1475,7 +1475,7 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual string Serialize()
+        public virtual String Serialize()
         {
             return Serialize(Encoding.UTF8);
         }
@@ -1483,11 +1483,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes workflow markup into an territory_release_date_type object
         /// </summary>
-        /// <param name="xml">string workflow markup to deserialize</param>
+        /// <param name="xml">String workflow markup to deserialize</param>
         /// <param name="obj">Output territory_release_date_type object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool Deserialize(string xml, out territory_release_date_type obj, out System.Exception exception)
+        public static bool Deserialize(String xml, out territory_release_date_type obj, out System.Exception exception)
         {
             exception = null;
             obj = default(territory_release_date_type);
@@ -1503,13 +1503,13 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool Deserialize(string xml, out territory_release_date_type obj)
+        public static bool Deserialize(String xml, out territory_release_date_type obj)
         {
             System.Exception exception = null;
             return Deserialize(xml, out obj, out exception);
         }
 
-        public static territory_release_date_type Deserialize(string xml)
+        public static territory_release_date_type Deserialize(String xml)
         {
             System.IO.StringReader StringReader = null;
             try
@@ -1532,7 +1532,7 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <param name="fileName">full path of outupt xml file</param>
         /// <param name="exception">output Exception value if failed</param>
         /// <returns>true if can serialize and save into file; otherwise, false</returns>
-        public virtual bool SaveToFile(string fileName, System.Text.Encoding encoding, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, System.Text.Encoding encoding, out System.Exception exception)
         {
             exception = null;
             try
@@ -1547,24 +1547,24 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual bool SaveToFile(string fileName, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, out System.Exception exception)
         {
             return SaveToFile(fileName, Encoding.UTF8, out exception);
         }
 
-        public virtual void SaveToFile(string fileName)
+        public virtual void SaveToFile(String fileName)
         {
             SaveToFile(fileName, Encoding.UTF8);
         }
 
-        public virtual void SaveToFile(string fileName, System.Text.Encoding encoding)
+        public virtual void SaveToFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlstring = Serialize(encoding);
+                String xmlString = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlstring);
+                streamWriter.WriteLine(xmlString);
                 streamWriter.Close();
             }
             finally
@@ -1579,11 +1579,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes xml markup from file into an territory_release_date_type object
         /// </summary>
-        /// <param name="fileName">string xml file to load and deserialize</param>
+        /// <param name="fileName">String xml file to load and deserialize</param>
         /// <param name="obj">Output territory_release_date_type object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool LoadFromFile(string fileName, System.Text.Encoding encoding, out territory_release_date_type obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, System.Text.Encoding encoding, out territory_release_date_type obj, out System.Exception exception)
         {
             exception = null;
             obj = default(territory_release_date_type);
@@ -1599,23 +1599,23 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool LoadFromFile(string fileName, out territory_release_date_type obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, out territory_release_date_type obj, out System.Exception exception)
         {
             return LoadFromFile(fileName, Encoding.UTF8, out obj, out exception);
         }
 
-        public static bool LoadFromFile(string fileName, out territory_release_date_type obj)
+        public static bool LoadFromFile(String fileName, out territory_release_date_type obj)
         {
             System.Exception exception = null;
             return LoadFromFile(fileName, out obj, out exception);
         }
 
-        public static territory_release_date_type LoadFromFile(string fileName)
+        public static territory_release_date_type LoadFromFile(String fileName)
         {
             return LoadFromFile(fileName, Encoding.UTF8);
         }
 
-        public static territory_release_date_type LoadFromFile(string fileName, System.Text.Encoding encoding)
+        public static territory_release_date_type LoadFromFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.FileStream file = null;
             System.IO.StreamReader sr = null;
@@ -1623,10 +1623,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlstring = sr.ReadToEnd();
+                String xmlString = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlstring);
+                return Deserialize(xmlString);
             }
             finally
             {
@@ -1694,8 +1694,8 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Serializes current usage_right_type object into an XML document
         /// </summary>
-        /// <returns>string XML value</returns>
-        public virtual string Serialize(System.Text.Encoding encoding)
+        /// <returns>String XML value</returns>
+        public virtual String Serialize(System.Text.Encoding encoding)
         {
             System.IO.StreamReader streamReader = null;
             System.IO.MemoryStream memoryStream = null;
@@ -1723,7 +1723,7 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual string Serialize()
+        public virtual String Serialize()
         {
             return Serialize(Encoding.UTF8);
         }
@@ -1731,11 +1731,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes workflow markup into an usage_right_type object
         /// </summary>
-        /// <param name="xml">string workflow markup to deserialize</param>
+        /// <param name="xml">String workflow markup to deserialize</param>
         /// <param name="obj">Output usage_right_type object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool Deserialize(string xml, out usage_right_type obj, out System.Exception exception)
+        public static bool Deserialize(String xml, out usage_right_type obj, out System.Exception exception)
         {
             exception = null;
             obj = default(usage_right_type);
@@ -1751,13 +1751,13 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool Deserialize(string xml, out usage_right_type obj)
+        public static bool Deserialize(String xml, out usage_right_type obj)
         {
             System.Exception exception = null;
             return Deserialize(xml, out obj, out exception);
         }
 
-        public static usage_right_type Deserialize(string xml)
+        public static usage_right_type Deserialize(String xml)
         {
             System.IO.StringReader StringReader = null;
             try
@@ -1780,7 +1780,7 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <param name="fileName">full path of outupt xml file</param>
         /// <param name="exception">output Exception value if failed</param>
         /// <returns>true if can serialize and save into file; otherwise, false</returns>
-        public virtual bool SaveToFile(string fileName, System.Text.Encoding encoding, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, System.Text.Encoding encoding, out System.Exception exception)
         {
             exception = null;
             try
@@ -1795,24 +1795,24 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual bool SaveToFile(string fileName, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, out System.Exception exception)
         {
             return SaveToFile(fileName, Encoding.UTF8, out exception);
         }
 
-        public virtual void SaveToFile(string fileName)
+        public virtual void SaveToFile(String fileName)
         {
             SaveToFile(fileName, Encoding.UTF8);
         }
 
-        public virtual void SaveToFile(string fileName, System.Text.Encoding encoding)
+        public virtual void SaveToFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlstring = Serialize(encoding);
+                String xmlString = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlstring);
+                streamWriter.WriteLine(xmlString);
                 streamWriter.Close();
             }
             finally
@@ -1827,11 +1827,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes xml markup from file into an usage_right_type object
         /// </summary>
-        /// <param name="fileName">string xml file to load and deserialize</param>
+        /// <param name="fileName">String xml file to load and deserialize</param>
         /// <param name="obj">Output usage_right_type object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool LoadFromFile(string fileName, System.Text.Encoding encoding, out usage_right_type obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, System.Text.Encoding encoding, out usage_right_type obj, out System.Exception exception)
         {
             exception = null;
             obj = default(usage_right_type);
@@ -1847,23 +1847,23 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool LoadFromFile(string fileName, out usage_right_type obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, out usage_right_type obj, out System.Exception exception)
         {
             return LoadFromFile(fileName, Encoding.UTF8, out obj, out exception);
         }
 
-        public static bool LoadFromFile(string fileName, out usage_right_type obj)
+        public static bool LoadFromFile(String fileName, out usage_right_type obj)
         {
             System.Exception exception = null;
             return LoadFromFile(fileName, out obj, out exception);
         }
 
-        public static usage_right_type LoadFromFile(string fileName)
+        public static usage_right_type LoadFromFile(String fileName)
         {
             return LoadFromFile(fileName, Encoding.UTF8);
         }
 
-        public static usage_right_type LoadFromFile(string fileName, System.Text.Encoding encoding)
+        public static usage_right_type LoadFromFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.FileStream file = null;
             System.IO.StreamReader sr = null;
@@ -1871,10 +1871,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlstring = sr.ReadToEnd();
+                String xmlString = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlstring);
+                return Deserialize(xmlString);
             }
             finally
             {
@@ -1898,14 +1898,14 @@ namespace BabelMeta.Modules.Export.FugaXml
     public partial class organization_type
     {
 
-        private string itemField;
+        private String itemField;
 
         private static System.Xml.Serialization.XmlSerializer serializer;
 
-        [System.Xml.Serialization.XmlElementAttribute("id", typeof(string), DataType = "integer", Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("name", typeof(string), Order = 0)]
+        [System.Xml.Serialization.XmlElementAttribute("id", typeof(String), DataType = "integer", Order = 0)]
+        [System.Xml.Serialization.XmlElementAttribute("name", typeof(String), Order = 0)]
         [System.Xml.Serialization.XmlChoiceIdentifierAttribute("ItemElementName")]
-        public string Item { get; set; }
+        public String Item { get; set; }
 
         [System.Xml.Serialization.XmlElementAttribute(Order = 1)]
         [System.Xml.Serialization.XmlIgnoreAttribute()]
@@ -1928,8 +1928,8 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Serializes current organization_type object into an XML document
         /// </summary>
-        /// <returns>string XML value</returns>
-        public virtual string Serialize(System.Text.Encoding encoding)
+        /// <returns>String XML value</returns>
+        public virtual String Serialize(System.Text.Encoding encoding)
         {
             System.IO.StreamReader streamReader = null;
             System.IO.MemoryStream memoryStream = null;
@@ -1957,7 +1957,7 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual string Serialize()
+        public virtual String Serialize()
         {
             return Serialize(Encoding.UTF8);
         }
@@ -1965,11 +1965,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes workflow markup into an organization_type object
         /// </summary>
-        /// <param name="xml">string workflow markup to deserialize</param>
+        /// <param name="xml">String workflow markup to deserialize</param>
         /// <param name="obj">Output organization_type object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool Deserialize(string xml, out organization_type obj, out System.Exception exception)
+        public static bool Deserialize(String xml, out organization_type obj, out System.Exception exception)
         {
             exception = null;
             obj = default(organization_type);
@@ -1985,13 +1985,13 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool Deserialize(string xml, out organization_type obj)
+        public static bool Deserialize(String xml, out organization_type obj)
         {
             System.Exception exception = null;
             return Deserialize(xml, out obj, out exception);
         }
 
-        public static organization_type Deserialize(string xml)
+        public static organization_type Deserialize(String xml)
         {
             System.IO.StringReader StringReader = null;
             try
@@ -2014,7 +2014,7 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <param name="fileName">full path of outupt xml file</param>
         /// <param name="exception">output Exception value if failed</param>
         /// <returns>true if can serialize and save into file; otherwise, false</returns>
-        public virtual bool SaveToFile(string fileName, System.Text.Encoding encoding, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, System.Text.Encoding encoding, out System.Exception exception)
         {
             exception = null;
             try
@@ -2029,24 +2029,24 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual bool SaveToFile(string fileName, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, out System.Exception exception)
         {
             return SaveToFile(fileName, Encoding.UTF8, out exception);
         }
 
-        public virtual void SaveToFile(string fileName)
+        public virtual void SaveToFile(String fileName)
         {
             SaveToFile(fileName, Encoding.UTF8);
         }
 
-        public virtual void SaveToFile(string fileName, System.Text.Encoding encoding)
+        public virtual void SaveToFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlstring = Serialize(encoding);
+                String xmlString = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlstring);
+                streamWriter.WriteLine(xmlString);
                 streamWriter.Close();
             }
             finally
@@ -2061,11 +2061,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes xml markup from file into an organization_type object
         /// </summary>
-        /// <param name="fileName">string xml file to load and deserialize</param>
+        /// <param name="fileName">String xml file to load and deserialize</param>
         /// <param name="obj">Output organization_type object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool LoadFromFile(string fileName, System.Text.Encoding encoding, out organization_type obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, System.Text.Encoding encoding, out organization_type obj, out System.Exception exception)
         {
             exception = null;
             obj = default(organization_type);
@@ -2081,23 +2081,23 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool LoadFromFile(string fileName, out organization_type obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, out organization_type obj, out System.Exception exception)
         {
             return LoadFromFile(fileName, Encoding.UTF8, out obj, out exception);
         }
 
-        public static bool LoadFromFile(string fileName, out organization_type obj)
+        public static bool LoadFromFile(String fileName, out organization_type obj)
         {
             System.Exception exception = null;
             return LoadFromFile(fileName, out obj, out exception);
         }
 
-        public static organization_type LoadFromFile(string fileName)
+        public static organization_type LoadFromFile(String fileName)
         {
             return LoadFromFile(fileName, Encoding.UTF8);
         }
 
-        public static organization_type LoadFromFile(string fileName, System.Text.Encoding encoding)
+        public static organization_type LoadFromFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.FileStream file = null;
             System.IO.StreamReader sr = null;
@@ -2105,10 +2105,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlstring = sr.ReadToEnd();
+                String xmlString = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlstring);
+                return Deserialize(xmlString);
             }
             finally
             {
@@ -2227,8 +2227,8 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Serializes current redeliveries_type object into an XML document
         /// </summary>
-        /// <returns>string XML value</returns>
-        public virtual string Serialize(System.Text.Encoding encoding)
+        /// <returns>String XML value</returns>
+        public virtual String Serialize(System.Text.Encoding encoding)
         {
             System.IO.StreamReader streamReader = null;
             System.IO.MemoryStream memoryStream = null;
@@ -2256,7 +2256,7 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual string Serialize()
+        public virtual String Serialize()
         {
             return Serialize(Encoding.UTF8);
         }
@@ -2264,11 +2264,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes workflow markup into an redeliveries_type object
         /// </summary>
-        /// <param name="xml">string workflow markup to deserialize</param>
+        /// <param name="xml">String workflow markup to deserialize</param>
         /// <param name="obj">Output redeliveries_type object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool Deserialize(string xml, out redeliveries_type obj, out System.Exception exception)
+        public static bool Deserialize(String xml, out redeliveries_type obj, out System.Exception exception)
         {
             exception = null;
             obj = default(redeliveries_type);
@@ -2284,13 +2284,13 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool Deserialize(string xml, out redeliveries_type obj)
+        public static bool Deserialize(String xml, out redeliveries_type obj)
         {
             System.Exception exception = null;
             return Deserialize(xml, out obj, out exception);
         }
 
-        public static redeliveries_type Deserialize(string xml)
+        public static redeliveries_type Deserialize(String xml)
         {
             System.IO.StringReader StringReader = null;
             try
@@ -2313,7 +2313,7 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <param name="fileName">full path of outupt xml file</param>
         /// <param name="exception">output Exception value if failed</param>
         /// <returns>true if can serialize and save into file; otherwise, false</returns>
-        public virtual bool SaveToFile(string fileName, System.Text.Encoding encoding, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, System.Text.Encoding encoding, out System.Exception exception)
         {
             exception = null;
             try
@@ -2328,24 +2328,24 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual bool SaveToFile(string fileName, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, out System.Exception exception)
         {
             return SaveToFile(fileName, Encoding.UTF8, out exception);
         }
 
-        public virtual void SaveToFile(string fileName)
+        public virtual void SaveToFile(String fileName)
         {
             SaveToFile(fileName, Encoding.UTF8);
         }
 
-        public virtual void SaveToFile(string fileName, System.Text.Encoding encoding)
+        public virtual void SaveToFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlstring = Serialize(encoding);
+                String xmlString = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlstring);
+                streamWriter.WriteLine(xmlString);
                 streamWriter.Close();
             }
             finally
@@ -2360,11 +2360,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes xml markup from file into an redeliveries_type object
         /// </summary>
-        /// <param name="fileName">string xml file to load and deserialize</param>
+        /// <param name="fileName">String xml file to load and deserialize</param>
         /// <param name="obj">Output redeliveries_type object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool LoadFromFile(string fileName, System.Text.Encoding encoding, out redeliveries_type obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, System.Text.Encoding encoding, out redeliveries_type obj, out System.Exception exception)
         {
             exception = null;
             obj = default(redeliveries_type);
@@ -2380,23 +2380,23 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool LoadFromFile(string fileName, out redeliveries_type obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, out redeliveries_type obj, out System.Exception exception)
         {
             return LoadFromFile(fileName, Encoding.UTF8, out obj, out exception);
         }
 
-        public static bool LoadFromFile(string fileName, out redeliveries_type obj)
+        public static bool LoadFromFile(String fileName, out redeliveries_type obj)
         {
             System.Exception exception = null;
             return LoadFromFile(fileName, out obj, out exception);
         }
 
-        public static redeliveries_type LoadFromFile(string fileName)
+        public static redeliveries_type LoadFromFile(String fileName)
         {
             return LoadFromFile(fileName, Encoding.UTF8);
         }
 
-        public static redeliveries_type LoadFromFile(string fileName, System.Text.Encoding encoding)
+        public static redeliveries_type LoadFromFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.FileStream file = null;
             System.IO.StreamReader sr = null;
@@ -2404,10 +2404,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlstring = sr.ReadToEnd();
+                String xmlString = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlstring);
+                return Deserialize(xmlString);
             }
             finally
             {
@@ -2433,7 +2433,7 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         private organization_type organizationField;
 
-        private string tierField;
+        private String tierField;
 
         private System.DateTime start_dateField;
 
@@ -2447,7 +2447,7 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         public territory_code territory { get; set; }
 
-        public string tier { get; set; }
+        public String tier { get; set; }
 
         [System.Xml.Serialization.XmlElementAttribute(DataType = "date")]
         public System.DateTime start_date { get; set; }
@@ -2480,8 +2480,8 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Serializes current pricing_interval_type object into an XML document
         /// </summary>
-        /// <returns>string XML value</returns>
-        public virtual string Serialize(System.Text.Encoding encoding)
+        /// <returns>String XML value</returns>
+        public virtual String Serialize(System.Text.Encoding encoding)
         {
             System.IO.StreamReader streamReader = null;
             System.IO.MemoryStream memoryStream = null;
@@ -2509,7 +2509,7 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual string Serialize()
+        public virtual String Serialize()
         {
             return Serialize(Encoding.UTF8);
         }
@@ -2517,11 +2517,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes workflow markup into an pricing_interval_type object
         /// </summary>
-        /// <param name="xml">string workflow markup to deserialize</param>
+        /// <param name="xml">String workflow markup to deserialize</param>
         /// <param name="obj">Output pricing_interval_type object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool Deserialize(string xml, out pricing_interval_type obj, out System.Exception exception)
+        public static bool Deserialize(String xml, out pricing_interval_type obj, out System.Exception exception)
         {
             exception = null;
             obj = default(pricing_interval_type);
@@ -2537,13 +2537,13 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool Deserialize(string xml, out pricing_interval_type obj)
+        public static bool Deserialize(String xml, out pricing_interval_type obj)
         {
             System.Exception exception = null;
             return Deserialize(xml, out obj, out exception);
         }
 
-        public static pricing_interval_type Deserialize(string xml)
+        public static pricing_interval_type Deserialize(String xml)
         {
             System.IO.StringReader StringReader = null;
             try
@@ -2566,7 +2566,7 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <param name="fileName">full path of outupt xml file</param>
         /// <param name="exception">output Exception value if failed</param>
         /// <returns>true if can serialize and save into file; otherwise, false</returns>
-        public virtual bool SaveToFile(string fileName, System.Text.Encoding encoding, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, System.Text.Encoding encoding, out System.Exception exception)
         {
             exception = null;
             try
@@ -2581,24 +2581,24 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual bool SaveToFile(string fileName, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, out System.Exception exception)
         {
             return SaveToFile(fileName, Encoding.UTF8, out exception);
         }
 
-        public virtual void SaveToFile(string fileName)
+        public virtual void SaveToFile(String fileName)
         {
             SaveToFile(fileName, Encoding.UTF8);
         }
 
-        public virtual void SaveToFile(string fileName, System.Text.Encoding encoding)
+        public virtual void SaveToFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlstring = Serialize(encoding);
+                String xmlString = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlstring);
+                streamWriter.WriteLine(xmlString);
                 streamWriter.Close();
             }
             finally
@@ -2613,11 +2613,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes xml markup from file into an pricing_interval_type object
         /// </summary>
-        /// <param name="fileName">string xml file to load and deserialize</param>
+        /// <param name="fileName">String xml file to load and deserialize</param>
         /// <param name="obj">Output pricing_interval_type object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool LoadFromFile(string fileName, System.Text.Encoding encoding, out pricing_interval_type obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, System.Text.Encoding encoding, out pricing_interval_type obj, out System.Exception exception)
         {
             exception = null;
             obj = default(pricing_interval_type);
@@ -2633,23 +2633,23 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool LoadFromFile(string fileName, out pricing_interval_type obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, out pricing_interval_type obj, out System.Exception exception)
         {
             return LoadFromFile(fileName, Encoding.UTF8, out obj, out exception);
         }
 
-        public static bool LoadFromFile(string fileName, out pricing_interval_type obj)
+        public static bool LoadFromFile(String fileName, out pricing_interval_type obj)
         {
             System.Exception exception = null;
             return LoadFromFile(fileName, out obj, out exception);
         }
 
-        public static pricing_interval_type LoadFromFile(string fileName)
+        public static pricing_interval_type LoadFromFile(String fileName)
         {
             return LoadFromFile(fileName, Encoding.UTF8);
         }
 
-        public static pricing_interval_type LoadFromFile(string fileName, System.Text.Encoding encoding)
+        public static pricing_interval_type LoadFromFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.FileStream file = null;
             System.IO.StreamReader sr = null;
@@ -2657,10 +2657,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlstring = sr.ReadToEnd();
+                String xmlString = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlstring);
+                return Deserialize(xmlString);
             }
             finally
             {
@@ -3446,7 +3446,7 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         private organization_type organizationField;
 
-        private string tierField;
+        private String tierField;
 
         private double priceField;
 
@@ -3458,7 +3458,7 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         public territory_code territory { get; set; }
 
-        public string tier { get; set; }
+        public String tier { get; set; }
 
         public double price { get; set; }
 
@@ -3487,8 +3487,8 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Serializes current pricing_type object into an XML document
         /// </summary>
-        /// <returns>string XML value</returns>
-        public virtual string Serialize(System.Text.Encoding encoding)
+        /// <returns>String XML value</returns>
+        public virtual String Serialize(System.Text.Encoding encoding)
         {
             System.IO.StreamReader streamReader = null;
             System.IO.MemoryStream memoryStream = null;
@@ -3516,7 +3516,7 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual string Serialize()
+        public virtual String Serialize()
         {
             return Serialize(Encoding.UTF8);
         }
@@ -3524,11 +3524,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes workflow markup into an pricing_type object
         /// </summary>
-        /// <param name="xml">string workflow markup to deserialize</param>
+        /// <param name="xml">String workflow markup to deserialize</param>
         /// <param name="obj">Output pricing_type object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool Deserialize(string xml, out pricing_type obj, out System.Exception exception)
+        public static bool Deserialize(String xml, out pricing_type obj, out System.Exception exception)
         {
             exception = null;
             obj = default(pricing_type);
@@ -3544,13 +3544,13 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool Deserialize(string xml, out pricing_type obj)
+        public static bool Deserialize(String xml, out pricing_type obj)
         {
             System.Exception exception = null;
             return Deserialize(xml, out obj, out exception);
         }
 
-        public static pricing_type Deserialize(string xml)
+        public static pricing_type Deserialize(String xml)
         {
             System.IO.StringReader StringReader = null;
             try
@@ -3573,7 +3573,7 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <param name="fileName">full path of outupt xml file</param>
         /// <param name="exception">output Exception value if failed</param>
         /// <returns>true if can serialize and save into file; otherwise, false</returns>
-        public virtual bool SaveToFile(string fileName, System.Text.Encoding encoding, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, System.Text.Encoding encoding, out System.Exception exception)
         {
             exception = null;
             try
@@ -3588,24 +3588,24 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual bool SaveToFile(string fileName, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, out System.Exception exception)
         {
             return SaveToFile(fileName, Encoding.UTF8, out exception);
         }
 
-        public virtual void SaveToFile(string fileName)
+        public virtual void SaveToFile(String fileName)
         {
             SaveToFile(fileName, Encoding.UTF8);
         }
 
-        public virtual void SaveToFile(string fileName, System.Text.Encoding encoding)
+        public virtual void SaveToFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlstring = Serialize(encoding);
+                String xmlString = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlstring);
+                streamWriter.WriteLine(xmlString);
                 streamWriter.Close();
             }
             finally
@@ -3620,11 +3620,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes xml markup from file into an pricing_type object
         /// </summary>
-        /// <param name="fileName">string xml file to load and deserialize</param>
+        /// <param name="fileName">String xml file to load and deserialize</param>
         /// <param name="obj">Output pricing_type object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool LoadFromFile(string fileName, System.Text.Encoding encoding, out pricing_type obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, System.Text.Encoding encoding, out pricing_type obj, out System.Exception exception)
         {
             exception = null;
             obj = default(pricing_type);
@@ -3640,23 +3640,23 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool LoadFromFile(string fileName, out pricing_type obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, out pricing_type obj, out System.Exception exception)
         {
             return LoadFromFile(fileName, Encoding.UTF8, out obj, out exception);
         }
 
-        public static bool LoadFromFile(string fileName, out pricing_type obj)
+        public static bool LoadFromFile(String fileName, out pricing_type obj)
         {
             System.Exception exception = null;
             return LoadFromFile(fileName, out obj, out exception);
         }
 
-        public static pricing_type LoadFromFile(string fileName)
+        public static pricing_type LoadFromFile(String fileName)
         {
             return LoadFromFile(fileName, Encoding.UTF8);
         }
 
-        public static pricing_type LoadFromFile(string fileName, System.Text.Encoding encoding)
+        public static pricing_type LoadFromFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.FileStream file = null;
             System.IO.StreamReader sr = null;
@@ -3664,10 +3664,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlstring = sr.ReadToEnd();
+                String xmlString = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlstring);
+                return Deserialize(xmlString);
             }
             finally
             {
@@ -3692,21 +3692,21 @@ namespace BabelMeta.Modules.Export.FugaXml
     public partial class artist
     {
 
-        private string biographyField;
+        private String biographyField;
 
-        private string nameField;
+        private String nameField;
 
-        private string websiteField;
+        private String websiteField;
 
         private bool primary_artistField;
 
         private static System.Xml.Serialization.XmlSerializer serializer;
 
-        public string biography { get; set; }
+        public String biography { get; set; }
 
-        public string name { get; set; }
+        public String name { get; set; }
 
-        public string website { get; set; }
+        public String website { get; set; }
 
         public bool primary_artist { get; set; }
 
@@ -3727,8 +3727,8 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Serializes current artist object into an XML document
         /// </summary>
-        /// <returns>string XML value</returns>
-        public virtual string Serialize(System.Text.Encoding encoding)
+        /// <returns>String XML value</returns>
+        public virtual String Serialize(System.Text.Encoding encoding)
         {
             System.IO.StreamReader streamReader = null;
             System.IO.MemoryStream memoryStream = null;
@@ -3756,7 +3756,7 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual string Serialize()
+        public virtual String Serialize()
         {
             return Serialize(Encoding.UTF8);
         }
@@ -3764,11 +3764,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes workflow markup into an artist object
         /// </summary>
-        /// <param name="xml">string workflow markup to deserialize</param>
+        /// <param name="xml">String workflow markup to deserialize</param>
         /// <param name="obj">Output artist object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool Deserialize(string xml, out artist obj, out System.Exception exception)
+        public static bool Deserialize(String xml, out artist obj, out System.Exception exception)
         {
             exception = null;
             obj = default(artist);
@@ -3784,13 +3784,13 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool Deserialize(string xml, out artist obj)
+        public static bool Deserialize(String xml, out artist obj)
         {
             System.Exception exception = null;
             return Deserialize(xml, out obj, out exception);
         }
 
-        public static artist Deserialize(string xml)
+        public static artist Deserialize(String xml)
         {
             System.IO.StringReader StringReader = null;
             try
@@ -3813,7 +3813,7 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <param name="fileName">full path of outupt xml file</param>
         /// <param name="exception">output Exception value if failed</param>
         /// <returns>true if can serialize and save into file; otherwise, false</returns>
-        public virtual bool SaveToFile(string fileName, System.Text.Encoding encoding, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, System.Text.Encoding encoding, out System.Exception exception)
         {
             exception = null;
             try
@@ -3828,24 +3828,24 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual bool SaveToFile(string fileName, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, out System.Exception exception)
         {
             return SaveToFile(fileName, Encoding.UTF8, out exception);
         }
 
-        public virtual void SaveToFile(string fileName)
+        public virtual void SaveToFile(String fileName)
         {
             SaveToFile(fileName, Encoding.UTF8);
         }
 
-        public virtual void SaveToFile(string fileName, System.Text.Encoding encoding)
+        public virtual void SaveToFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlstring = Serialize(encoding);
+                String xmlString = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlstring);
+                streamWriter.WriteLine(xmlString);
                 streamWriter.Close();
             }
             finally
@@ -3860,11 +3860,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes xml markup from file into an artist object
         /// </summary>
-        /// <param name="fileName">string xml file to load and deserialize</param>
+        /// <param name="fileName">String xml file to load and deserialize</param>
         /// <param name="obj">Output artist object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool LoadFromFile(string fileName, System.Text.Encoding encoding, out artist obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, System.Text.Encoding encoding, out artist obj, out System.Exception exception)
         {
             exception = null;
             obj = default(artist);
@@ -3880,23 +3880,23 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool LoadFromFile(string fileName, out artist obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, out artist obj, out System.Exception exception)
         {
             return LoadFromFile(fileName, Encoding.UTF8, out obj, out exception);
         }
 
-        public static bool LoadFromFile(string fileName, out artist obj)
+        public static bool LoadFromFile(String fileName, out artist obj)
         {
             System.Exception exception = null;
             return LoadFromFile(fileName, out obj, out exception);
         }
 
-        public static artist LoadFromFile(string fileName)
+        public static artist LoadFromFile(String fileName)
         {
             return LoadFromFile(fileName, Encoding.UTF8);
         }
 
-        public static artist LoadFromFile(string fileName, System.Text.Encoding encoding)
+        public static artist LoadFromFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.FileStream file = null;
             System.IO.StreamReader sr = null;
@@ -3904,10 +3904,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlstring = sr.ReadToEnd();
+                String xmlString = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlstring);
+                return Deserialize(xmlString);
             }
             finally
             {
@@ -3932,11 +3932,11 @@ namespace BabelMeta.Modules.Export.FugaXml
     public partial class contributor
     {
 
-        private string nameField;
+        private String nameField;
 
         private static System.Xml.Serialization.XmlSerializer serializer;
 
-        public string name { get; set; }
+        public String name { get; set; }
 
         public contributorRole role { get; set; }
 
@@ -3957,8 +3957,8 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Serializes current contributor object into an XML document
         /// </summary>
-        /// <returns>string XML value</returns>
-        public virtual string Serialize(System.Text.Encoding encoding)
+        /// <returns>String XML value</returns>
+        public virtual String Serialize(System.Text.Encoding encoding)
         {
             System.IO.StreamReader streamReader = null;
             System.IO.MemoryStream memoryStream = null;
@@ -3986,7 +3986,7 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual string Serialize()
+        public virtual String Serialize()
         {
             return Serialize(Encoding.UTF8);
         }
@@ -3994,11 +3994,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes workflow markup into an contributor object
         /// </summary>
-        /// <param name="xml">string workflow markup to deserialize</param>
+        /// <param name="xml">String workflow markup to deserialize</param>
         /// <param name="obj">Output contributor object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool Deserialize(string xml, out contributor obj, out System.Exception exception)
+        public static bool Deserialize(String xml, out contributor obj, out System.Exception exception)
         {
             exception = null;
             obj = default(contributor);
@@ -4014,13 +4014,13 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool Deserialize(string xml, out contributor obj)
+        public static bool Deserialize(String xml, out contributor obj)
         {
             System.Exception exception = null;
             return Deserialize(xml, out obj, out exception);
         }
 
-        public static contributor Deserialize(string xml)
+        public static contributor Deserialize(String xml)
         {
             System.IO.StringReader StringReader = null;
             try
@@ -4043,7 +4043,7 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <param name="fileName">full path of outupt xml file</param>
         /// <param name="exception">output Exception value if failed</param>
         /// <returns>true if can serialize and save into file; otherwise, false</returns>
-        public virtual bool SaveToFile(string fileName, System.Text.Encoding encoding, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, System.Text.Encoding encoding, out System.Exception exception)
         {
             exception = null;
             try
@@ -4058,24 +4058,24 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual bool SaveToFile(string fileName, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, out System.Exception exception)
         {
             return SaveToFile(fileName, Encoding.UTF8, out exception);
         }
 
-        public virtual void SaveToFile(string fileName)
+        public virtual void SaveToFile(String fileName)
         {
             SaveToFile(fileName, Encoding.UTF8);
         }
 
-        public virtual void SaveToFile(string fileName, System.Text.Encoding encoding)
+        public virtual void SaveToFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlstring = Serialize(encoding);
+                String xmlString = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlstring);
+                streamWriter.WriteLine(xmlString);
                 streamWriter.Close();
             }
             finally
@@ -4090,11 +4090,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes xml markup from file into an contributor object
         /// </summary>
-        /// <param name="fileName">string xml file to load and deserialize</param>
+        /// <param name="fileName">String xml file to load and deserialize</param>
         /// <param name="obj">Output contributor object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool LoadFromFile(string fileName, System.Text.Encoding encoding, out contributor obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, System.Text.Encoding encoding, out contributor obj, out System.Exception exception)
         {
             exception = null;
             obj = default(contributor);
@@ -4110,23 +4110,23 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool LoadFromFile(string fileName, out contributor obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, out contributor obj, out System.Exception exception)
         {
             return LoadFromFile(fileName, Encoding.UTF8, out obj, out exception);
         }
 
-        public static bool LoadFromFile(string fileName, out contributor obj)
+        public static bool LoadFromFile(String fileName, out contributor obj)
         {
             System.Exception exception = null;
             return LoadFromFile(fileName, out obj, out exception);
         }
 
-        public static contributor LoadFromFile(string fileName)
+        public static contributor LoadFromFile(String fileName)
         {
             return LoadFromFile(fileName, Encoding.UTF8);
         }
 
-        public static contributor LoadFromFile(string fileName, System.Text.Encoding encoding)
+        public static contributor LoadFromFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.FileStream file = null;
             System.IO.StreamReader sr = null;
@@ -4134,10 +4134,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlstring = sr.ReadToEnd();
+                String xmlString = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlstring);
+                return Deserialize(xmlString);
             }
             finally
             {
@@ -4218,15 +4218,15 @@ namespace BabelMeta.Modules.Export.FugaXml
     public partial class publisher
     {
 
-        private string publisher_nameField;
+        private String publisher_nameField;
 
-        private string writer_nameField;
+        private String writer_nameField;
 
         private static System.Xml.Serialization.XmlSerializer serializer;
 
-        public string publisher_name { get; set; }
+        public String publisher_name { get; set; }
 
-        public string writer_name { get; set; }
+        public String writer_name { get; set; }
 
 
         private static System.Xml.Serialization.XmlSerializer Serializer
@@ -4245,8 +4245,8 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Serializes current publisher object into an XML document
         /// </summary>
-        /// <returns>string XML value</returns>
-        public virtual string Serialize(System.Text.Encoding encoding)
+        /// <returns>String XML value</returns>
+        public virtual String Serialize(System.Text.Encoding encoding)
         {
             System.IO.StreamReader streamReader = null;
             System.IO.MemoryStream memoryStream = null;
@@ -4274,7 +4274,7 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual string Serialize()
+        public virtual String Serialize()
         {
             return Serialize(Encoding.UTF8);
         }
@@ -4282,11 +4282,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes workflow markup into an publisher object
         /// </summary>
-        /// <param name="xml">string workflow markup to deserialize</param>
+        /// <param name="xml">String workflow markup to deserialize</param>
         /// <param name="obj">Output publisher object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool Deserialize(string xml, out publisher obj, out System.Exception exception)
+        public static bool Deserialize(String xml, out publisher obj, out System.Exception exception)
         {
             exception = null;
             obj = default(publisher);
@@ -4302,13 +4302,13 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool Deserialize(string xml, out publisher obj)
+        public static bool Deserialize(String xml, out publisher obj)
         {
             System.Exception exception = null;
             return Deserialize(xml, out obj, out exception);
         }
 
-        public static publisher Deserialize(string xml)
+        public static publisher Deserialize(String xml)
         {
             System.IO.StringReader StringReader = null;
             try
@@ -4331,7 +4331,7 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <param name="fileName">full path of outupt xml file</param>
         /// <param name="exception">output Exception value if failed</param>
         /// <returns>true if can serialize and save into file; otherwise, false</returns>
-        public virtual bool SaveToFile(string fileName, System.Text.Encoding encoding, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, System.Text.Encoding encoding, out System.Exception exception)
         {
             exception = null;
             try
@@ -4346,24 +4346,24 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual bool SaveToFile(string fileName, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, out System.Exception exception)
         {
             return SaveToFile(fileName, Encoding.UTF8, out exception);
         }
 
-        public virtual void SaveToFile(string fileName)
+        public virtual void SaveToFile(String fileName)
         {
             SaveToFile(fileName, Encoding.UTF8);
         }
 
-        public virtual void SaveToFile(string fileName, System.Text.Encoding encoding)
+        public virtual void SaveToFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlstring = Serialize(encoding);
+                String xmlString = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlstring);
+                streamWriter.WriteLine(xmlString);
                 streamWriter.Close();
             }
             finally
@@ -4378,11 +4378,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes xml markup from file into an publisher object
         /// </summary>
-        /// <param name="fileName">string xml file to load and deserialize</param>
+        /// <param name="fileName">String xml file to load and deserialize</param>
         /// <param name="obj">Output publisher object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool LoadFromFile(string fileName, System.Text.Encoding encoding, out publisher obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, System.Text.Encoding encoding, out publisher obj, out System.Exception exception)
         {
             exception = null;
             obj = default(publisher);
@@ -4398,23 +4398,23 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool LoadFromFile(string fileName, out publisher obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, out publisher obj, out System.Exception exception)
         {
             return LoadFromFile(fileName, Encoding.UTF8, out obj, out exception);
         }
 
-        public static bool LoadFromFile(string fileName, out publisher obj)
+        public static bool LoadFromFile(String fileName, out publisher obj)
         {
             System.Exception exception = null;
             return LoadFromFile(fileName, out obj, out exception);
         }
 
-        public static publisher LoadFromFile(string fileName)
+        public static publisher LoadFromFile(String fileName)
         {
             return LoadFromFile(fileName, Encoding.UTF8);
         }
 
-        public static publisher LoadFromFile(string fileName, System.Text.Encoding encoding)
+        public static publisher LoadFromFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.FileStream file = null;
             System.IO.StreamReader sr = null;
@@ -4422,10 +4422,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlstring = sr.ReadToEnd();
+                String xmlString = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlstring);
+                return Deserialize(xmlString);
             }
             finally
             {
@@ -4477,8 +4477,8 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Serializes current ingestionAlbumCover_art object into an XML document
         /// </summary>
-        /// <returns>string XML value</returns>
-        public virtual string Serialize(System.Text.Encoding encoding)
+        /// <returns>String XML value</returns>
+        public virtual String Serialize(System.Text.Encoding encoding)
         {
             System.IO.StreamReader streamReader = null;
             System.IO.MemoryStream memoryStream = null;
@@ -4506,7 +4506,7 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual string Serialize()
+        public virtual String Serialize()
         {
             return Serialize(Encoding.UTF8);
         }
@@ -4514,11 +4514,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes workflow markup into an ingestionAlbumCover_art object
         /// </summary>
-        /// <param name="xml">string workflow markup to deserialize</param>
+        /// <param name="xml">String workflow markup to deserialize</param>
         /// <param name="obj">Output ingestionAlbumCover_art object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool Deserialize(string xml, out ingestionAlbumCover_art obj, out System.Exception exception)
+        public static bool Deserialize(String xml, out ingestionAlbumCover_art obj, out System.Exception exception)
         {
             exception = null;
             obj = default(ingestionAlbumCover_art);
@@ -4534,13 +4534,13 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool Deserialize(string xml, out ingestionAlbumCover_art obj)
+        public static bool Deserialize(String xml, out ingestionAlbumCover_art obj)
         {
             System.Exception exception = null;
             return Deserialize(xml, out obj, out exception);
         }
 
-        public static ingestionAlbumCover_art Deserialize(string xml)
+        public static ingestionAlbumCover_art Deserialize(String xml)
         {
             System.IO.StringReader StringReader = null;
             try
@@ -4563,7 +4563,7 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <param name="fileName">full path of outupt xml file</param>
         /// <param name="exception">output Exception value if failed</param>
         /// <returns>true if can serialize and save into file; otherwise, false</returns>
-        public virtual bool SaveToFile(string fileName, System.Text.Encoding encoding, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, System.Text.Encoding encoding, out System.Exception exception)
         {
             exception = null;
             try
@@ -4578,24 +4578,24 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual bool SaveToFile(string fileName, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, out System.Exception exception)
         {
             return SaveToFile(fileName, Encoding.UTF8, out exception);
         }
 
-        public virtual void SaveToFile(string fileName)
+        public virtual void SaveToFile(String fileName)
         {
             SaveToFile(fileName, Encoding.UTF8);
         }
 
-        public virtual void SaveToFile(string fileName, System.Text.Encoding encoding)
+        public virtual void SaveToFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlstring = Serialize(encoding);
+                String xmlString = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlstring);
+                streamWriter.WriteLine(xmlString);
                 streamWriter.Close();
             }
             finally
@@ -4610,11 +4610,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes xml markup from file into an ingestionAlbumCover_art object
         /// </summary>
-        /// <param name="fileName">string xml file to load and deserialize</param>
+        /// <param name="fileName">String xml file to load and deserialize</param>
         /// <param name="obj">Output ingestionAlbumCover_art object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool LoadFromFile(string fileName, System.Text.Encoding encoding, out ingestionAlbumCover_art obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, System.Text.Encoding encoding, out ingestionAlbumCover_art obj, out System.Exception exception)
         {
             exception = null;
             obj = default(ingestionAlbumCover_art);
@@ -4630,23 +4630,23 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool LoadFromFile(string fileName, out ingestionAlbumCover_art obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, out ingestionAlbumCover_art obj, out System.Exception exception)
         {
             return LoadFromFile(fileName, Encoding.UTF8, out obj, out exception);
         }
 
-        public static bool LoadFromFile(string fileName, out ingestionAlbumCover_art obj)
+        public static bool LoadFromFile(String fileName, out ingestionAlbumCover_art obj)
         {
             System.Exception exception = null;
             return LoadFromFile(fileName, out obj, out exception);
         }
 
-        public static ingestionAlbumCover_art LoadFromFile(string fileName)
+        public static ingestionAlbumCover_art LoadFromFile(String fileName)
         {
             return LoadFromFile(fileName, Encoding.UTF8);
         }
 
-        public static ingestionAlbumCover_art LoadFromFile(string fileName, System.Text.Encoding encoding)
+        public static ingestionAlbumCover_art LoadFromFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.FileStream file = null;
             System.IO.StreamReader sr = null;
@@ -4654,10 +4654,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlstring = sr.ReadToEnd();
+                String xmlString = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlstring);
+                return Deserialize(xmlString);
             }
             finally
             {
@@ -4710,8 +4710,8 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Serializes current ingestionAlbumCover_artImage object into an XML document
         /// </summary>
-        /// <returns>string XML value</returns>
-        public virtual string Serialize(System.Text.Encoding encoding)
+        /// <returns>String XML value</returns>
+        public virtual String Serialize(System.Text.Encoding encoding)
         {
             System.IO.StreamReader streamReader = null;
             System.IO.MemoryStream memoryStream = null;
@@ -4739,7 +4739,7 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual string Serialize()
+        public virtual String Serialize()
         {
             return Serialize(Encoding.UTF8);
         }
@@ -4747,11 +4747,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes workflow markup into an ingestionAlbumCover_artImage object
         /// </summary>
-        /// <param name="xml">string workflow markup to deserialize</param>
+        /// <param name="xml">String workflow markup to deserialize</param>
         /// <param name="obj">Output ingestionAlbumCover_artImage object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool Deserialize(string xml, out ingestionAlbumCover_artImage obj, out System.Exception exception)
+        public static bool Deserialize(String xml, out ingestionAlbumCover_artImage obj, out System.Exception exception)
         {
             exception = null;
             obj = default(ingestionAlbumCover_artImage);
@@ -4767,13 +4767,13 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool Deserialize(string xml, out ingestionAlbumCover_artImage obj)
+        public static bool Deserialize(String xml, out ingestionAlbumCover_artImage obj)
         {
             System.Exception exception = null;
             return Deserialize(xml, out obj, out exception);
         }
 
-        public static ingestionAlbumCover_artImage Deserialize(string xml)
+        public static ingestionAlbumCover_artImage Deserialize(String xml)
         {
             System.IO.StringReader StringReader = null;
             try
@@ -4796,7 +4796,7 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <param name="fileName">full path of outupt xml file</param>
         /// <param name="exception">output Exception value if failed</param>
         /// <returns>true if can serialize and save into file; otherwise, false</returns>
-        public virtual bool SaveToFile(string fileName, System.Text.Encoding encoding, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, System.Text.Encoding encoding, out System.Exception exception)
         {
             exception = null;
             try
@@ -4811,24 +4811,24 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual bool SaveToFile(string fileName, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, out System.Exception exception)
         {
             return SaveToFile(fileName, Encoding.UTF8, out exception);
         }
 
-        public virtual void SaveToFile(string fileName)
+        public virtual void SaveToFile(String fileName)
         {
             SaveToFile(fileName, Encoding.UTF8);
         }
 
-        public virtual void SaveToFile(string fileName, System.Text.Encoding encoding)
+        public virtual void SaveToFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlstring = Serialize(encoding);
+                String xmlString = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlstring);
+                streamWriter.WriteLine(xmlString);
                 streamWriter.Close();
             }
             finally
@@ -4843,11 +4843,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes xml markup from file into an ingestionAlbumCover_artImage object
         /// </summary>
-        /// <param name="fileName">string xml file to load and deserialize</param>
+        /// <param name="fileName">String xml file to load and deserialize</param>
         /// <param name="obj">Output ingestionAlbumCover_artImage object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool LoadFromFile(string fileName, System.Text.Encoding encoding, out ingestionAlbumCover_artImage obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, System.Text.Encoding encoding, out ingestionAlbumCover_artImage obj, out System.Exception exception)
         {
             exception = null;
             obj = default(ingestionAlbumCover_artImage);
@@ -4863,23 +4863,23 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool LoadFromFile(string fileName, out ingestionAlbumCover_artImage obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, out ingestionAlbumCover_artImage obj, out System.Exception exception)
         {
             return LoadFromFile(fileName, Encoding.UTF8, out obj, out exception);
         }
 
-        public static bool LoadFromFile(string fileName, out ingestionAlbumCover_artImage obj)
+        public static bool LoadFromFile(String fileName, out ingestionAlbumCover_artImage obj)
         {
             System.Exception exception = null;
             return LoadFromFile(fileName, out obj, out exception);
         }
 
-        public static ingestionAlbumCover_artImage LoadFromFile(string fileName)
+        public static ingestionAlbumCover_artImage LoadFromFile(String fileName)
         {
             return LoadFromFile(fileName, Encoding.UTF8);
         }
 
-        public static ingestionAlbumCover_artImage LoadFromFile(string fileName, System.Text.Encoding encoding)
+        public static ingestionAlbumCover_artImage LoadFromFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.FileStream file = null;
             System.IO.StreamReader sr = null;
@@ -4887,10 +4887,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlstring = sr.ReadToEnd();
+                String xmlString = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlstring);
+                return Deserialize(xmlString);
             }
             finally
             {
@@ -5086,19 +5086,19 @@ namespace BabelMeta.Modules.Export.FugaXml
     public partial class primary_artist
     {
 
-        private string biographyField;
+        private String biographyField;
 
-        private string nameField;
+        private String nameField;
 
-        private string websiteField;
+        private String websiteField;
 
         private static System.Xml.Serialization.XmlSerializer serializer;
 
-        public string biography { get; set; }
+        public String biography { get; set; }
 
-        public string name { get; set; }
+        public String name { get; set; }
 
-        public string website { get; set; }
+        public String website { get; set; }
 
 
         private static System.Xml.Serialization.XmlSerializer Serializer
@@ -5117,8 +5117,8 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Serializes current primary_artist object into an XML document
         /// </summary>
-        /// <returns>string XML value</returns>
-        public virtual string Serialize(System.Text.Encoding encoding)
+        /// <returns>String XML value</returns>
+        public virtual String Serialize(System.Text.Encoding encoding)
         {
             System.IO.StreamReader streamReader = null;
             System.IO.MemoryStream memoryStream = null;
@@ -5146,7 +5146,7 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual string Serialize()
+        public virtual String Serialize()
         {
             return Serialize(Encoding.UTF8);
         }
@@ -5154,11 +5154,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes workflow markup into an primary_artist object
         /// </summary>
-        /// <param name="xml">string workflow markup to deserialize</param>
+        /// <param name="xml">String workflow markup to deserialize</param>
         /// <param name="obj">Output primary_artist object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool Deserialize(string xml, out primary_artist obj, out System.Exception exception)
+        public static bool Deserialize(String xml, out primary_artist obj, out System.Exception exception)
         {
             exception = null;
             obj = default(primary_artist);
@@ -5174,13 +5174,13 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool Deserialize(string xml, out primary_artist obj)
+        public static bool Deserialize(String xml, out primary_artist obj)
         {
             System.Exception exception = null;
             return Deserialize(xml, out obj, out exception);
         }
 
-        public static primary_artist Deserialize(string xml)
+        public static primary_artist Deserialize(String xml)
         {
             System.IO.StringReader StringReader = null;
             try
@@ -5203,7 +5203,7 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <param name="fileName">full path of outupt xml file</param>
         /// <param name="exception">output Exception value if failed</param>
         /// <returns>true if can serialize and save into file; otherwise, false</returns>
-        public virtual bool SaveToFile(string fileName, System.Text.Encoding encoding, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, System.Text.Encoding encoding, out System.Exception exception)
         {
             exception = null;
             try
@@ -5218,24 +5218,24 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual bool SaveToFile(string fileName, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, out System.Exception exception)
         {
             return SaveToFile(fileName, Encoding.UTF8, out exception);
         }
 
-        public virtual void SaveToFile(string fileName)
+        public virtual void SaveToFile(String fileName)
         {
             SaveToFile(fileName, Encoding.UTF8);
         }
 
-        public virtual void SaveToFile(string fileName, System.Text.Encoding encoding)
+        public virtual void SaveToFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlstring = Serialize(encoding);
+                String xmlString = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlstring);
+                streamWriter.WriteLine(xmlString);
                 streamWriter.Close();
             }
             finally
@@ -5250,11 +5250,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes xml markup from file into an primary_artist object
         /// </summary>
-        /// <param name="fileName">string xml file to load and deserialize</param>
+        /// <param name="fileName">String xml file to load and deserialize</param>
         /// <param name="obj">Output primary_artist object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool LoadFromFile(string fileName, System.Text.Encoding encoding, out primary_artist obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, System.Text.Encoding encoding, out primary_artist obj, out System.Exception exception)
         {
             exception = null;
             obj = default(primary_artist);
@@ -5270,23 +5270,23 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool LoadFromFile(string fileName, out primary_artist obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, out primary_artist obj, out System.Exception exception)
         {
             return LoadFromFile(fileName, Encoding.UTF8, out obj, out exception);
         }
 
-        public static bool LoadFromFile(string fileName, out primary_artist obj)
+        public static bool LoadFromFile(String fileName, out primary_artist obj)
         {
             System.Exception exception = null;
             return LoadFromFile(fileName, out obj, out exception);
         }
 
-        public static primary_artist LoadFromFile(string fileName)
+        public static primary_artist LoadFromFile(String fileName)
         {
             return LoadFromFile(fileName, Encoding.UTF8);
         }
 
-        public static primary_artist LoadFromFile(string fileName, System.Text.Encoding encoding)
+        public static primary_artist LoadFromFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.FileStream file = null;
             System.IO.StreamReader sr = null;
@@ -5294,10 +5294,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlstring = sr.ReadToEnd();
+                String xmlString = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlstring);
+                return Deserialize(xmlString);
             }
             finally
             {
@@ -5380,8 +5380,8 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Serializes current ingestionAlbumTracks object into an XML document
         /// </summary>
-        /// <returns>string XML value</returns>
-        public virtual string Serialize(System.Text.Encoding encoding)
+        /// <returns>String XML value</returns>
+        public virtual String Serialize(System.Text.Encoding encoding)
         {
             System.IO.StreamReader streamReader = null;
             System.IO.MemoryStream memoryStream = null;
@@ -5409,7 +5409,7 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual string Serialize()
+        public virtual String Serialize()
         {
             return Serialize(Encoding.UTF8);
         }
@@ -5417,11 +5417,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes workflow markup into an ingestionAlbumTracks object
         /// </summary>
-        /// <param name="xml">string workflow markup to deserialize</param>
+        /// <param name="xml">String workflow markup to deserialize</param>
         /// <param name="obj">Output ingestionAlbumTracks object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool Deserialize(string xml, out ingestionAlbumTracks obj, out System.Exception exception)
+        public static bool Deserialize(String xml, out ingestionAlbumTracks obj, out System.Exception exception)
         {
             exception = null;
             obj = default(ingestionAlbumTracks);
@@ -5437,13 +5437,13 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool Deserialize(string xml, out ingestionAlbumTracks obj)
+        public static bool Deserialize(String xml, out ingestionAlbumTracks obj)
         {
             System.Exception exception = null;
             return Deserialize(xml, out obj, out exception);
         }
 
-        public static ingestionAlbumTracks Deserialize(string xml)
+        public static ingestionAlbumTracks Deserialize(String xml)
         {
             System.IO.StringReader StringReader = null;
             try
@@ -5466,7 +5466,7 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <param name="fileName">full path of outupt xml file</param>
         /// <param name="exception">output Exception value if failed</param>
         /// <returns>true if can serialize and save into file; otherwise, false</returns>
-        public virtual bool SaveToFile(string fileName, System.Text.Encoding encoding, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, System.Text.Encoding encoding, out System.Exception exception)
         {
             exception = null;
             try
@@ -5481,24 +5481,24 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual bool SaveToFile(string fileName, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, out System.Exception exception)
         {
             return SaveToFile(fileName, Encoding.UTF8, out exception);
         }
 
-        public virtual void SaveToFile(string fileName)
+        public virtual void SaveToFile(String fileName)
         {
             SaveToFile(fileName, Encoding.UTF8);
         }
 
-        public virtual void SaveToFile(string fileName, System.Text.Encoding encoding)
+        public virtual void SaveToFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlstring = Serialize(encoding);
+                String xmlString = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlstring);
+                streamWriter.WriteLine(xmlString);
                 streamWriter.Close();
             }
             finally
@@ -5513,11 +5513,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes xml markup from file into an ingestionAlbumTracks object
         /// </summary>
-        /// <param name="fileName">string xml file to load and deserialize</param>
+        /// <param name="fileName">String xml file to load and deserialize</param>
         /// <param name="obj">Output ingestionAlbumTracks object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool LoadFromFile(string fileName, System.Text.Encoding encoding, out ingestionAlbumTracks obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, System.Text.Encoding encoding, out ingestionAlbumTracks obj, out System.Exception exception)
         {
             exception = null;
             obj = default(ingestionAlbumTracks);
@@ -5533,23 +5533,23 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool LoadFromFile(string fileName, out ingestionAlbumTracks obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, out ingestionAlbumTracks obj, out System.Exception exception)
         {
             return LoadFromFile(fileName, Encoding.UTF8, out obj, out exception);
         }
 
-        public static bool LoadFromFile(string fileName, out ingestionAlbumTracks obj)
+        public static bool LoadFromFile(String fileName, out ingestionAlbumTracks obj)
         {
             System.Exception exception = null;
             return LoadFromFile(fileName, out obj, out exception);
         }
 
-        public static ingestionAlbumTracks LoadFromFile(string fileName)
+        public static ingestionAlbumTracks LoadFromFile(String fileName)
         {
             return LoadFromFile(fileName, Encoding.UTF8);
         }
 
-        public static ingestionAlbumTracks LoadFromFile(string fileName, System.Text.Encoding encoding)
+        public static ingestionAlbumTracks LoadFromFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.FileStream file = null;
             System.IO.StreamReader sr = null;
@@ -5557,10 +5557,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlstring = sr.ReadToEnd();
+                String xmlString = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlstring);
+                return Deserialize(xmlString);
             }
             finally
             {
@@ -5590,25 +5590,25 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         private bool alternate_genreFieldSpecified;
 
-        private string alternate_subgenreField;
+        private String alternate_subgenreField;
 
         private bool available_separatelyField;
 
-        private string classical_catalogField;
+        private String classical_catalogField;
 
         private List<contributor> contributorsField;
 
-        private string display_titleField;
+        private String display_titleField;
 
-        private string isrc_codeField;
+        private String isrc_codeField;
 
-        private string lyricsField;
+        private String lyricsField;
 
-        private string main_subgenreField;
+        private String main_subgenreField;
 
-        private string movementField;
+        private String movementField;
 
-        private string movement_numberField;
+        private String movement_numberField;
 
         private bool keyFieldSpecified;
 
@@ -5616,13 +5616,13 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         private bool always_send_display_titleFieldSpecified;
 
-        private string on_discField;
+        private String on_discField;
 
         private bool preorder_typeFieldSpecified;
 
-        private string preview_lengthField;
+        private String preview_lengthField;
 
-        private string preview_startField;
+        private String preview_startField;
 
         private primary_artist primary_artistField;
 
@@ -5630,9 +5630,9 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         private List<publisher> publishersField;
 
-        private string recording_yearField;
+        private String recording_yearField;
 
-        private string recording_locationField;
+        private String recording_locationField;
 
         private redeliveries_type redeliveries_of_associatedField;
 
@@ -5640,35 +5640,35 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         private bool rights_contract_begin_dateFieldSpecified;
 
-        private string rights_holder_nameField;
+        private String rights_holder_nameField;
 
-        private string rights_ownership_nameField;
+        private String rights_ownership_nameField;
 
-        private string country_of_commissioningField;
+        private String country_of_commissioningField;
 
-        private string country_of_recordingField;
+        private String country_of_recordingField;
 
-        private string p_line_textField;
+        private String p_line_textField;
 
-        private string p_line_yearField;
+        private String p_line_yearField;
 
         private bool catalog_tierFieldSpecified;
 
-        private string extra1Field;
+        private String extra1Field;
 
-        private string extra2Field;
+        private String extra2Field;
 
-        private string extra3Field;
+        private String extra3Field;
 
-        private string extra4Field;
+        private String extra4Field;
 
-        private string extra5Field;
+        private String extra5Field;
 
-        private string extra6Field;
+        private String extra6Field;
 
-        private string extra7Field;
+        private String extra7Field;
 
-        private string extra8Field;
+        private String extra8Field;
 
         private System.DateTime extra9Field;
 
@@ -5680,15 +5680,15 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         private List<resourcesAudio> resourcesField;
 
-        private string sequence_numberField;
+        private String sequence_numberField;
 
-        private string track_notesField;
+        private String track_notesField;
 
-        private string track_versionField;
+        private String track_versionField;
 
         private List<usage_right_type> usage_rightsField;
 
-        private string workField;
+        private String workField;
 
         private static System.Xml.Serialization.XmlSerializer serializer;
 
@@ -5702,24 +5702,24 @@ namespace BabelMeta.Modules.Export.FugaXml
         [System.Xml.Serialization.XmlIgnoreAttribute()]
         public bool alternate_genreSpecified { get; set; }
 
-        public string alternate_subgenre { get; set; }
+        public String alternate_subgenre { get; set; }
 
         public bool available_separately { get; set; }
 
-        public string classical_catalog { get; set; }
+        public String classical_catalog { get; set; }
 
-        public string display_title { get; set; }
+        public String display_title { get; set; }
 
-        public string isrc_code { get; set; }
+        public String isrc_code { get; set; }
 
-        public string lyrics { get; set; }
+        public String lyrics { get; set; }
 
-        public string main_subgenre { get; set; }
+        public String main_subgenre { get; set; }
 
-        public string movement { get; set; }
+        public String movement { get; set; }
 
         [System.Xml.Serialization.XmlElementAttribute(DataType = "nonNegativeInteger")]
-        public string movement_number { get; set; }
+        public String movement_number { get; set; }
 
         public ingestionAlbumTracksClassical_trackKey key { get; set; }
 
@@ -5732,7 +5732,7 @@ namespace BabelMeta.Modules.Export.FugaXml
         public bool always_send_display_titleSpecified { get; set; }
 
         [System.Xml.Serialization.XmlElementAttribute(DataType = "nonNegativeInteger")]
-        public string on_disc { get; set; }
+        public String on_disc { get; set; }
 
         public parental_advisory parental_advisory { get; set; }
 
@@ -5742,17 +5742,17 @@ namespace BabelMeta.Modules.Export.FugaXml
         public bool preorder_typeSpecified { get; set; }
 
         [System.Xml.Serialization.XmlElementAttribute(DataType = "nonNegativeInteger")]
-        public string preview_length { get; set; }
+        public String preview_length { get; set; }
 
         [System.Xml.Serialization.XmlElementAttribute(DataType = "nonNegativeInteger")]
-        public string preview_start { get; set; }
+        public String preview_start { get; set; }
 
         public primary_artist primary_artist { get; set; }
 
         [System.Xml.Serialization.XmlElementAttribute(DataType = "integer")]
-        public string recording_year { get; set; }
+        public String recording_year { get; set; }
 
-        public string recording_location { get; set; }
+        public String recording_location { get; set; }
 
         public redeliveries_type redeliveries_of_associated { get; set; }
 
@@ -5762,39 +5762,39 @@ namespace BabelMeta.Modules.Export.FugaXml
         [System.Xml.Serialization.XmlIgnoreAttribute()]
         public bool rights_contract_begin_dateSpecified { get; set; }
 
-        public string rights_holder_name { get; set; }
+        public String rights_holder_name { get; set; }
 
-        public string rights_ownership_name { get; set; }
+        public String rights_ownership_name { get; set; }
 
-        public string country_of_commissioning { get; set; }
+        public String country_of_commissioning { get; set; }
 
-        public string country_of_recording { get; set; }
+        public String country_of_recording { get; set; }
 
-        public string p_line_text { get; set; }
+        public String p_line_text { get; set; }
 
         [System.Xml.Serialization.XmlElementAttribute(DataType = "integer")]
-        public string p_line_year { get; set; }
+        public String p_line_year { get; set; }
 
         public ingestionAlbumTracksClassical_trackCatalog_tier catalog_tier { get; set; }
 
         [System.Xml.Serialization.XmlIgnoreAttribute()]
         public bool catalog_tierSpecified { get; set; }
 
-        public string extra1 { get; set; }
+        public String extra1 { get; set; }
 
-        public string extra2 { get; set; }
+        public String extra2 { get; set; }
 
-        public string extra3 { get; set; }
+        public String extra3 { get; set; }
 
-        public string extra4 { get; set; }
+        public String extra4 { get; set; }
 
-        public string extra5 { get; set; }
+        public String extra5 { get; set; }
 
-        public string extra6 { get; set; }
+        public String extra6 { get; set; }
 
-        public string extra7 { get; set; }
+        public String extra7 { get; set; }
 
-        public string extra8 { get; set; }
+        public String extra8 { get; set; }
 
         [System.Xml.Serialization.XmlElementAttribute(DataType = "date")]
         public System.DateTime extra9 { get; set; }
@@ -5809,13 +5809,13 @@ namespace BabelMeta.Modules.Export.FugaXml
         public bool extra10Specified { get; set; }
 
         [System.Xml.Serialization.XmlElementAttribute(DataType = "nonNegativeInteger")]
-        public string sequence_number { get; set; }
+        public String sequence_number { get; set; }
 
-        public string track_notes { get; set; }
+        public String track_notes { get; set; }
 
-        public string track_version { get; set; }
+        public String track_version { get; set; }
 
-        public string work { get; set; }
+        public String work { get; set; }
 
 
         public ingestionAlbumTracksClassical_track()
@@ -5910,8 +5910,8 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Serializes current ingestionAlbumTracksClassical_track object into an XML document
         /// </summary>
-        /// <returns>string XML value</returns>
-        public virtual string Serialize(System.Text.Encoding encoding)
+        /// <returns>String XML value</returns>
+        public virtual String Serialize(System.Text.Encoding encoding)
         {
             System.IO.StreamReader streamReader = null;
             System.IO.MemoryStream memoryStream = null;
@@ -5939,7 +5939,7 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual string Serialize()
+        public virtual String Serialize()
         {
             return Serialize(Encoding.UTF8);
         }
@@ -5947,11 +5947,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes workflow markup into an ingestionAlbumTracksClassical_track object
         /// </summary>
-        /// <param name="xml">string workflow markup to deserialize</param>
+        /// <param name="xml">String workflow markup to deserialize</param>
         /// <param name="obj">Output ingestionAlbumTracksClassical_track object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool Deserialize(string xml, out ingestionAlbumTracksClassical_track obj, out System.Exception exception)
+        public static bool Deserialize(String xml, out ingestionAlbumTracksClassical_track obj, out System.Exception exception)
         {
             exception = null;
             obj = default(ingestionAlbumTracksClassical_track);
@@ -5967,13 +5967,13 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool Deserialize(string xml, out ingestionAlbumTracksClassical_track obj)
+        public static bool Deserialize(String xml, out ingestionAlbumTracksClassical_track obj)
         {
             System.Exception exception = null;
             return Deserialize(xml, out obj, out exception);
         }
 
-        public static ingestionAlbumTracksClassical_track Deserialize(string xml)
+        public static ingestionAlbumTracksClassical_track Deserialize(String xml)
         {
             System.IO.StringReader StringReader = null;
             try
@@ -5996,7 +5996,7 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <param name="fileName">full path of outupt xml file</param>
         /// <param name="exception">output Exception value if failed</param>
         /// <returns>true if can serialize and save into file; otherwise, false</returns>
-        public virtual bool SaveToFile(string fileName, System.Text.Encoding encoding, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, System.Text.Encoding encoding, out System.Exception exception)
         {
             exception = null;
             try
@@ -6011,24 +6011,24 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual bool SaveToFile(string fileName, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, out System.Exception exception)
         {
             return SaveToFile(fileName, Encoding.UTF8, out exception);
         }
 
-        public virtual void SaveToFile(string fileName)
+        public virtual void SaveToFile(String fileName)
         {
             SaveToFile(fileName, Encoding.UTF8);
         }
 
-        public virtual void SaveToFile(string fileName, System.Text.Encoding encoding)
+        public virtual void SaveToFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlstring = Serialize(encoding);
+                String xmlString = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlstring);
+                streamWriter.WriteLine(xmlString);
                 streamWriter.Close();
             }
             finally
@@ -6043,11 +6043,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes xml markup from file into an ingestionAlbumTracksClassical_track object
         /// </summary>
-        /// <param name="fileName">string xml file to load and deserialize</param>
+        /// <param name="fileName">String xml file to load and deserialize</param>
         /// <param name="obj">Output ingestionAlbumTracksClassical_track object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool LoadFromFile(string fileName, System.Text.Encoding encoding, out ingestionAlbumTracksClassical_track obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, System.Text.Encoding encoding, out ingestionAlbumTracksClassical_track obj, out System.Exception exception)
         {
             exception = null;
             obj = default(ingestionAlbumTracksClassical_track);
@@ -6063,23 +6063,23 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool LoadFromFile(string fileName, out ingestionAlbumTracksClassical_track obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, out ingestionAlbumTracksClassical_track obj, out System.Exception exception)
         {
             return LoadFromFile(fileName, Encoding.UTF8, out obj, out exception);
         }
 
-        public static bool LoadFromFile(string fileName, out ingestionAlbumTracksClassical_track obj)
+        public static bool LoadFromFile(String fileName, out ingestionAlbumTracksClassical_track obj)
         {
             System.Exception exception = null;
             return LoadFromFile(fileName, out obj, out exception);
         }
 
-        public static ingestionAlbumTracksClassical_track LoadFromFile(string fileName)
+        public static ingestionAlbumTracksClassical_track LoadFromFile(String fileName)
         {
             return LoadFromFile(fileName, Encoding.UTF8);
         }
 
-        public static ingestionAlbumTracksClassical_track LoadFromFile(string fileName, System.Text.Encoding encoding)
+        public static ingestionAlbumTracksClassical_track LoadFromFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.FileStream file = null;
             System.IO.StreamReader sr = null;
@@ -6087,10 +6087,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlstring = sr.ReadToEnd();
+                String xmlString = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlstring);
+                return Deserialize(xmlString);
             }
             finally
             {
@@ -6267,8 +6267,8 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Serializes current resourcesAudio object into an XML document
         /// </summary>
-        /// <returns>string XML value</returns>
-        public virtual string Serialize(System.Text.Encoding encoding)
+        /// <returns>String XML value</returns>
+        public virtual String Serialize(System.Text.Encoding encoding)
         {
             System.IO.StreamReader streamReader = null;
             System.IO.MemoryStream memoryStream = null;
@@ -6296,7 +6296,7 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual string Serialize()
+        public virtual String Serialize()
         {
             return Serialize(Encoding.UTF8);
         }
@@ -6304,11 +6304,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes workflow markup into an resourcesAudio object
         /// </summary>
-        /// <param name="xml">string workflow markup to deserialize</param>
+        /// <param name="xml">String workflow markup to deserialize</param>
         /// <param name="obj">Output resourcesAudio object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool Deserialize(string xml, out resourcesAudio obj, out System.Exception exception)
+        public static bool Deserialize(String xml, out resourcesAudio obj, out System.Exception exception)
         {
             exception = null;
             obj = default(resourcesAudio);
@@ -6324,13 +6324,13 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool Deserialize(string xml, out resourcesAudio obj)
+        public static bool Deserialize(String xml, out resourcesAudio obj)
         {
             System.Exception exception = null;
             return Deserialize(xml, out obj, out exception);
         }
 
-        public static resourcesAudio Deserialize(string xml)
+        public static resourcesAudio Deserialize(String xml)
         {
             System.IO.StringReader StringReader = null;
             try
@@ -6353,7 +6353,7 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <param name="fileName">full path of outupt xml file</param>
         /// <param name="exception">output Exception value if failed</param>
         /// <returns>true if can serialize and save into file; otherwise, false</returns>
-        public virtual bool SaveToFile(string fileName, System.Text.Encoding encoding, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, System.Text.Encoding encoding, out System.Exception exception)
         {
             exception = null;
             try
@@ -6368,24 +6368,24 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual bool SaveToFile(string fileName, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, out System.Exception exception)
         {
             return SaveToFile(fileName, Encoding.UTF8, out exception);
         }
 
-        public virtual void SaveToFile(string fileName)
+        public virtual void SaveToFile(String fileName)
         {
             SaveToFile(fileName, Encoding.UTF8);
         }
 
-        public virtual void SaveToFile(string fileName, System.Text.Encoding encoding)
+        public virtual void SaveToFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlstring = Serialize(encoding);
+                String xmlString = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlstring);
+                streamWriter.WriteLine(xmlString);
                 streamWriter.Close();
             }
             finally
@@ -6400,11 +6400,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes xml markup from file into an resourcesAudio object
         /// </summary>
-        /// <param name="fileName">string xml file to load and deserialize</param>
+        /// <param name="fileName">String xml file to load and deserialize</param>
         /// <param name="obj">Output resourcesAudio object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool LoadFromFile(string fileName, System.Text.Encoding encoding, out resourcesAudio obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, System.Text.Encoding encoding, out resourcesAudio obj, out System.Exception exception)
         {
             exception = null;
             obj = default(resourcesAudio);
@@ -6420,23 +6420,23 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool LoadFromFile(string fileName, out resourcesAudio obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, out resourcesAudio obj, out System.Exception exception)
         {
             return LoadFromFile(fileName, Encoding.UTF8, out obj, out exception);
         }
 
-        public static bool LoadFromFile(string fileName, out resourcesAudio obj)
+        public static bool LoadFromFile(String fileName, out resourcesAudio obj)
         {
             System.Exception exception = null;
             return LoadFromFile(fileName, out obj, out exception);
         }
 
-        public static resourcesAudio LoadFromFile(string fileName)
+        public static resourcesAudio LoadFromFile(String fileName)
         {
             return LoadFromFile(fileName, Encoding.UTF8);
         }
 
-        public static resourcesAudio LoadFromFile(string fileName, System.Text.Encoding encoding)
+        public static resourcesAudio LoadFromFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.FileStream file = null;
             System.IO.StreamReader sr = null;
@@ -6444,10 +6444,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlstring = sr.ReadToEnd();
+                String xmlString = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlstring);
+                return Deserialize(xmlString);
             }
             finally
             {
@@ -6477,27 +6477,27 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         private bool alternate_genreFieldSpecified;
 
-        private string alternate_subgenreField;
+        private String alternate_subgenreField;
 
         private bool available_separatelyField;
 
         private List<contributor> contributorsField;
 
-        private string isrc_codeField;
+        private String isrc_codeField;
 
-        private string lyricsField;
+        private String lyricsField;
 
-        private string main_subgenreField;
+        private String main_subgenreField;
 
-        private string nameField;
+        private String nameField;
 
-        private string on_discField;
+        private String on_discField;
 
         private bool preorder_typeFieldSpecified;
 
-        private string preview_lengthField;
+        private String preview_lengthField;
 
-        private string preview_startField;
+        private String preview_startField;
 
         private primary_artist primary_artistField;
 
@@ -6505,9 +6505,9 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         private List<publisher> publishersField;
 
-        private string recording_yearField;
+        private String recording_yearField;
 
-        private string recording_locationField;
+        private String recording_locationField;
 
         private redeliveries_type redeliveries_of_associatedField;
 
@@ -6515,37 +6515,37 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         private bool rights_contract_begin_dateFieldSpecified;
 
-        private string rights_holder_nameField;
+        private String rights_holder_nameField;
 
-        private string rights_ownership_nameField;
+        private String rights_ownership_nameField;
 
-        private string country_of_commissioningField;
+        private String country_of_commissioningField;
 
-        private string country_of_recordingField;
+        private String country_of_recordingField;
 
-        private string p_line_textField;
+        private String p_line_textField;
 
-        private string p_line_yearField;
+        private String p_line_yearField;
 
         private bool catalog_tierFieldSpecified;
 
         private List<resourcesAudio> resourcesField;
 
-        private string extra1Field;
+        private String extra1Field;
 
-        private string extra2Field;
+        private String extra2Field;
 
-        private string extra3Field;
+        private String extra3Field;
 
-        private string extra4Field;
+        private String extra4Field;
 
-        private string extra5Field;
+        private String extra5Field;
 
-        private string extra6Field;
+        private String extra6Field;
 
-        private string extra7Field;
+        private String extra7Field;
 
-        private string extra8Field;
+        private String extra8Field;
 
         private System.DateTime extra9Field;
 
@@ -6555,11 +6555,11 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         private bool extra10FieldSpecified;
 
-        private string sequence_numberField;
+        private String sequence_numberField;
 
-        private string track_notesField;
+        private String track_notesField;
 
-        private string track_versionField;
+        private String track_versionField;
 
         private List<usage_right_type> usage_rightsField;
 
@@ -6575,22 +6575,22 @@ namespace BabelMeta.Modules.Export.FugaXml
         [System.Xml.Serialization.XmlIgnoreAttribute()]
         public bool alternate_genreSpecified { get; set; }
 
-        public string alternate_subgenre { get; set; }
+        public String alternate_subgenre { get; set; }
 
         public bool available_separately { get; set; }
 
-        public string isrc_code { get; set; }
+        public String isrc_code { get; set; }
 
-        public string lyrics { get; set; }
+        public String lyrics { get; set; }
 
         public genre_type main_genre { get; set; }
 
-        public string main_subgenre { get; set; }
+        public String main_subgenre { get; set; }
 
-        public string name { get; set; }
+        public String name { get; set; }
 
         [System.Xml.Serialization.XmlElementAttribute(DataType = "nonNegativeInteger")]
-        public string on_disc { get; set; }
+        public String on_disc { get; set; }
 
         public parental_advisory parental_advisory { get; set; }
 
@@ -6600,17 +6600,17 @@ namespace BabelMeta.Modules.Export.FugaXml
         public bool preorder_typeSpecified { get; set; }
 
         [System.Xml.Serialization.XmlElementAttribute(DataType = "nonNegativeInteger")]
-        public string preview_length { get; set; }
+        public String preview_length { get; set; }
 
         [System.Xml.Serialization.XmlElementAttribute(DataType = "nonNegativeInteger")]
-        public string preview_start { get; set; }
+        public String preview_start { get; set; }
 
         public primary_artist primary_artist { get; set; }
 
         [System.Xml.Serialization.XmlElementAttribute(DataType = "integer")]
-        public string recording_year { get; set; }
+        public String recording_year { get; set; }
 
-        public string recording_location { get; set; }
+        public String recording_location { get; set; }
 
         public redeliveries_type redeliveries_of_associated { get; set; }
 
@@ -6620,39 +6620,39 @@ namespace BabelMeta.Modules.Export.FugaXml
         [System.Xml.Serialization.XmlIgnoreAttribute()]
         public bool rights_contract_begin_dateSpecified { get; set; }
 
-        public string rights_holder_name { get; set; }
+        public String rights_holder_name { get; set; }
 
-        public string rights_ownership_name { get; set; }
+        public String rights_ownership_name { get; set; }
 
-        public string country_of_commissioning { get; set; }
+        public String country_of_commissioning { get; set; }
 
-        public string country_of_recording { get; set; }
+        public String country_of_recording { get; set; }
 
-        public string p_line_text { get; set; }
+        public String p_line_text { get; set; }
 
         [System.Xml.Serialization.XmlElementAttribute(DataType = "integer")]
-        public string p_line_year { get; set; }
+        public String p_line_year { get; set; }
 
         public ingestionAlbumTracksTrackCatalog_tier catalog_tier { get; set; }
 
         [System.Xml.Serialization.XmlIgnoreAttribute()]
         public bool catalog_tierSpecified { get; set; }
 
-        public string extra1 { get; set; }
+        public String extra1 { get; set; }
 
-        public string extra2 { get; set; }
+        public String extra2 { get; set; }
 
-        public string extra3 { get; set; }
+        public String extra3 { get; set; }
 
-        public string extra4 { get; set; }
+        public String extra4 { get; set; }
 
-        public string extra5 { get; set; }
+        public String extra5 { get; set; }
 
-        public string extra6 { get; set; }
+        public String extra6 { get; set; }
 
-        public string extra7 { get; set; }
+        public String extra7 { get; set; }
 
-        public string extra8 { get; set; }
+        public String extra8 { get; set; }
 
         [System.Xml.Serialization.XmlElementAttribute(DataType = "date")]
         public System.DateTime extra9 { get; set; }
@@ -6667,11 +6667,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         public bool extra10Specified { get; set; }
 
         [System.Xml.Serialization.XmlElementAttribute(DataType = "nonNegativeInteger")]
-        public string sequence_number { get; set; }
+        public String sequence_number { get; set; }
 
-        public string track_notes { get; set; }
+        public String track_notes { get; set; }
 
-        public string track_version { get; set; }
+        public String track_version { get; set; }
 
 
         public ingestionAlbumTracksTrack()
@@ -6766,8 +6766,8 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Serializes current ingestionAlbumTracksTrack object into an XML document
         /// </summary>
-        /// <returns>string XML value</returns>
-        public virtual string Serialize(System.Text.Encoding encoding)
+        /// <returns>String XML value</returns>
+        public virtual String Serialize(System.Text.Encoding encoding)
         {
             System.IO.StreamReader streamReader = null;
             System.IO.MemoryStream memoryStream = null;
@@ -6795,7 +6795,7 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual string Serialize()
+        public virtual String Serialize()
         {
             return Serialize(Encoding.UTF8);
         }
@@ -6803,11 +6803,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes workflow markup into an ingestionAlbumTracksTrack object
         /// </summary>
-        /// <param name="xml">string workflow markup to deserialize</param>
+        /// <param name="xml">String workflow markup to deserialize</param>
         /// <param name="obj">Output ingestionAlbumTracksTrack object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool Deserialize(string xml, out ingestionAlbumTracksTrack obj, out System.Exception exception)
+        public static bool Deserialize(String xml, out ingestionAlbumTracksTrack obj, out System.Exception exception)
         {
             exception = null;
             obj = default(ingestionAlbumTracksTrack);
@@ -6823,13 +6823,13 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool Deserialize(string xml, out ingestionAlbumTracksTrack obj)
+        public static bool Deserialize(String xml, out ingestionAlbumTracksTrack obj)
         {
             System.Exception exception = null;
             return Deserialize(xml, out obj, out exception);
         }
 
-        public static ingestionAlbumTracksTrack Deserialize(string xml)
+        public static ingestionAlbumTracksTrack Deserialize(String xml)
         {
             System.IO.StringReader StringReader = null;
             try
@@ -6852,7 +6852,7 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <param name="fileName">full path of outupt xml file</param>
         /// <param name="exception">output Exception value if failed</param>
         /// <returns>true if can serialize and save into file; otherwise, false</returns>
-        public virtual bool SaveToFile(string fileName, System.Text.Encoding encoding, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, System.Text.Encoding encoding, out System.Exception exception)
         {
             exception = null;
             try
@@ -6867,24 +6867,24 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual bool SaveToFile(string fileName, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, out System.Exception exception)
         {
             return SaveToFile(fileName, Encoding.UTF8, out exception);
         }
 
-        public virtual void SaveToFile(string fileName)
+        public virtual void SaveToFile(String fileName)
         {
             SaveToFile(fileName, Encoding.UTF8);
         }
 
-        public virtual void SaveToFile(string fileName, System.Text.Encoding encoding)
+        public virtual void SaveToFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlstring = Serialize(encoding);
+                String xmlString = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlstring);
+                streamWriter.WriteLine(xmlString);
                 streamWriter.Close();
             }
             finally
@@ -6899,11 +6899,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes xml markup from file into an ingestionAlbumTracksTrack object
         /// </summary>
-        /// <param name="fileName">string xml file to load and deserialize</param>
+        /// <param name="fileName">String xml file to load and deserialize</param>
         /// <param name="obj">Output ingestionAlbumTracksTrack object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool LoadFromFile(string fileName, System.Text.Encoding encoding, out ingestionAlbumTracksTrack obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, System.Text.Encoding encoding, out ingestionAlbumTracksTrack obj, out System.Exception exception)
         {
             exception = null;
             obj = default(ingestionAlbumTracksTrack);
@@ -6919,23 +6919,23 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool LoadFromFile(string fileName, out ingestionAlbumTracksTrack obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, out ingestionAlbumTracksTrack obj, out System.Exception exception)
         {
             return LoadFromFile(fileName, Encoding.UTF8, out obj, out exception);
         }
 
-        public static bool LoadFromFile(string fileName, out ingestionAlbumTracksTrack obj)
+        public static bool LoadFromFile(String fileName, out ingestionAlbumTracksTrack obj)
         {
             System.Exception exception = null;
             return LoadFromFile(fileName, out obj, out exception);
         }
 
-        public static ingestionAlbumTracksTrack LoadFromFile(string fileName)
+        public static ingestionAlbumTracksTrack LoadFromFile(String fileName)
         {
             return LoadFromFile(fileName, Encoding.UTF8);
         }
 
-        public static ingestionAlbumTracksTrack LoadFromFile(string fileName, System.Text.Encoding encoding)
+        public static ingestionAlbumTracksTrack LoadFromFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.FileStream file = null;
             System.IO.StreamReader sr = null;
@@ -6943,10 +6943,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlstring = sr.ReadToEnd();
+                String xmlString = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlstring);
+                return Deserialize(xmlString);
             }
             finally
             {
@@ -6989,33 +6989,33 @@ namespace BabelMeta.Modules.Export.FugaXml
     public partial class ingestionAlbumTracksVideo
     {
 
-        private string nameField;
+        private String nameField;
 
-        private string isrc_codeField;
+        private String isrc_codeField;
 
         private primary_artist primary_artistField;
 
         private List<artist> additional_artistsField;
 
-        private string display_artistField;
+        private String display_artistField;
 
         private List<contributor> contributorsField;
 
-        private string sequence_numberField;
+        private String sequence_numberField;
 
-        private string video_versionField;
+        private String video_versionField;
 
         private bool catalog_tierFieldSpecified;
 
-        private string on_discField;
+        private String on_discField;
 
         private bool available_separatelyField;
 
         private bool parental_advisoryFieldSpecified;
 
-        private string p_line_textField;
+        private String p_line_textField;
 
-        private string p_line_yearField;
+        private String p_line_yearField;
 
         private List<publisher> publishersField;
 
@@ -7025,25 +7025,25 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         private bool allow_preorder_previewFieldSpecified;
 
-        private string recording_yearField;
+        private String recording_yearField;
 
-        private string recording_locationField;
+        private String recording_locationField;
 
         private System.DateTime rights_contract_begin_dateField;
 
         private bool rights_contract_begin_dateFieldSpecified;
 
-        private string rights_holder_nameField;
+        private String rights_holder_nameField;
 
-        private string rights_ownership_nameField;
+        private String rights_ownership_nameField;
 
-        private string country_of_commissioningField;
+        private String country_of_commissioningField;
 
-        private string country_of_recordingField;
+        private String country_of_recordingField;
 
-        private string preview_lengthField;
+        private String preview_lengthField;
 
-        private string preview_startField;
+        private String preview_startField;
 
         private ingestionAlbumTracksVideoResources resourcesField;
 
@@ -7053,20 +7053,20 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         private static System.Xml.Serialization.XmlSerializer serializer;
 
-        public string name { get; set; }
+        public String name { get; set; }
 
-        public string isrc_code { get; set; }
+        public String isrc_code { get; set; }
 
         public genre_type main_genre { get; set; }
 
         public primary_artist primary_artist { get; set; }
 
-        public string display_artist { get; set; }
+        public String display_artist { get; set; }
 
         [System.Xml.Serialization.XmlElementAttribute(DataType = "nonNegativeInteger")]
-        public string sequence_number { get; set; }
+        public String sequence_number { get; set; }
 
-        public string video_version { get; set; }
+        public String video_version { get; set; }
 
         public ingestionAlbumTracksVideoCatalog_tier catalog_tier { get; set; }
 
@@ -7074,7 +7074,7 @@ namespace BabelMeta.Modules.Export.FugaXml
         public bool catalog_tierSpecified { get; set; }
 
         [System.Xml.Serialization.XmlElementAttribute(DataType = "nonNegativeInteger")]
-        public string on_disc { get; set; }
+        public String on_disc { get; set; }
 
         public bool available_separately { get; set; }
 
@@ -7083,10 +7083,10 @@ namespace BabelMeta.Modules.Export.FugaXml
         [System.Xml.Serialization.XmlIgnoreAttribute()]
         public bool parental_advisorySpecified { get; set; }
 
-        public string p_line_text { get; set; }
+        public String p_line_text { get; set; }
 
         [System.Xml.Serialization.XmlElementAttribute(DataType = "integer")]
-        public string p_line_year { get; set; }
+        public String p_line_year { get; set; }
 
         public preorder_type preorder_type { get; set; }
 
@@ -7099,9 +7099,9 @@ namespace BabelMeta.Modules.Export.FugaXml
         public bool allow_preorder_previewSpecified { get; set; }
 
         [System.Xml.Serialization.XmlElementAttribute(DataType = "integer")]
-        public string recording_year { get; set; }
+        public String recording_year { get; set; }
 
-        public string recording_location { get; set; }
+        public String recording_location { get; set; }
 
         [System.Xml.Serialization.XmlElementAttribute(DataType = "date")]
         public System.DateTime rights_contract_begin_date { get; set; }
@@ -7109,19 +7109,19 @@ namespace BabelMeta.Modules.Export.FugaXml
         [System.Xml.Serialization.XmlIgnoreAttribute()]
         public bool rights_contract_begin_dateSpecified { get; set; }
 
-        public string rights_holder_name { get; set; }
+        public String rights_holder_name { get; set; }
 
-        public string rights_ownership_name { get; set; }
+        public String rights_ownership_name { get; set; }
 
-        public string country_of_commissioning { get; set; }
+        public String country_of_commissioning { get; set; }
 
-        public string country_of_recording { get; set; }
-
-        [System.Xml.Serialization.XmlElementAttribute(DataType = "nonNegativeInteger")]
-        public string preview_length { get; set; }
+        public String country_of_recording { get; set; }
 
         [System.Xml.Serialization.XmlElementAttribute(DataType = "nonNegativeInteger")]
-        public string preview_start { get; set; }
+        public String preview_length { get; set; }
+
+        [System.Xml.Serialization.XmlElementAttribute(DataType = "nonNegativeInteger")]
+        public String preview_start { get; set; }
 
         public ingestionAlbumTracksVideoResources resources { get; set; }
 
@@ -7195,8 +7195,8 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Serializes current ingestionAlbumTracksVideo object into an XML document
         /// </summary>
-        /// <returns>string XML value</returns>
-        public virtual string Serialize(System.Text.Encoding encoding)
+        /// <returns>String XML value</returns>
+        public virtual String Serialize(System.Text.Encoding encoding)
         {
             System.IO.StreamReader streamReader = null;
             System.IO.MemoryStream memoryStream = null;
@@ -7224,7 +7224,7 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual string Serialize()
+        public virtual String Serialize()
         {
             return Serialize(Encoding.UTF8);
         }
@@ -7232,11 +7232,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes workflow markup into an ingestionAlbumTracksVideo object
         /// </summary>
-        /// <param name="xml">string workflow markup to deserialize</param>
+        /// <param name="xml">String workflow markup to deserialize</param>
         /// <param name="obj">Output ingestionAlbumTracksVideo object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool Deserialize(string xml, out ingestionAlbumTracksVideo obj, out System.Exception exception)
+        public static bool Deserialize(String xml, out ingestionAlbumTracksVideo obj, out System.Exception exception)
         {
             exception = null;
             obj = default(ingestionAlbumTracksVideo);
@@ -7252,13 +7252,13 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool Deserialize(string xml, out ingestionAlbumTracksVideo obj)
+        public static bool Deserialize(String xml, out ingestionAlbumTracksVideo obj)
         {
             System.Exception exception = null;
             return Deserialize(xml, out obj, out exception);
         }
 
-        public static ingestionAlbumTracksVideo Deserialize(string xml)
+        public static ingestionAlbumTracksVideo Deserialize(String xml)
         {
             System.IO.StringReader StringReader = null;
             try
@@ -7281,7 +7281,7 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <param name="fileName">full path of outupt xml file</param>
         /// <param name="exception">output Exception value if failed</param>
         /// <returns>true if can serialize and save into file; otherwise, false</returns>
-        public virtual bool SaveToFile(string fileName, System.Text.Encoding encoding, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, System.Text.Encoding encoding, out System.Exception exception)
         {
             exception = null;
             try
@@ -7296,24 +7296,24 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual bool SaveToFile(string fileName, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, out System.Exception exception)
         {
             return SaveToFile(fileName, Encoding.UTF8, out exception);
         }
 
-        public virtual void SaveToFile(string fileName)
+        public virtual void SaveToFile(String fileName)
         {
             SaveToFile(fileName, Encoding.UTF8);
         }
 
-        public virtual void SaveToFile(string fileName, System.Text.Encoding encoding)
+        public virtual void SaveToFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlstring = Serialize(encoding);
+                String xmlString = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlstring);
+                streamWriter.WriteLine(xmlString);
                 streamWriter.Close();
             }
             finally
@@ -7328,11 +7328,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes xml markup from file into an ingestionAlbumTracksVideo object
         /// </summary>
-        /// <param name="fileName">string xml file to load and deserialize</param>
+        /// <param name="fileName">String xml file to load and deserialize</param>
         /// <param name="obj">Output ingestionAlbumTracksVideo object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool LoadFromFile(string fileName, System.Text.Encoding encoding, out ingestionAlbumTracksVideo obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, System.Text.Encoding encoding, out ingestionAlbumTracksVideo obj, out System.Exception exception)
         {
             exception = null;
             obj = default(ingestionAlbumTracksVideo);
@@ -7348,23 +7348,23 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool LoadFromFile(string fileName, out ingestionAlbumTracksVideo obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, out ingestionAlbumTracksVideo obj, out System.Exception exception)
         {
             return LoadFromFile(fileName, Encoding.UTF8, out obj, out exception);
         }
 
-        public static bool LoadFromFile(string fileName, out ingestionAlbumTracksVideo obj)
+        public static bool LoadFromFile(String fileName, out ingestionAlbumTracksVideo obj)
         {
             System.Exception exception = null;
             return LoadFromFile(fileName, out obj, out exception);
         }
 
-        public static ingestionAlbumTracksVideo LoadFromFile(string fileName)
+        public static ingestionAlbumTracksVideo LoadFromFile(String fileName)
         {
             return LoadFromFile(fileName, Encoding.UTF8);
         }
 
-        public static ingestionAlbumTracksVideo LoadFromFile(string fileName, System.Text.Encoding encoding)
+        public static ingestionAlbumTracksVideo LoadFromFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.FileStream file = null;
             System.IO.StreamReader sr = null;
@@ -7372,10 +7372,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlstring = sr.ReadToEnd();
+                String xmlString = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlstring);
+                return Deserialize(xmlString);
             }
             finally
             {
@@ -7451,8 +7451,8 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Serializes current ingestionAlbumTracksVideoResources object into an XML document
         /// </summary>
-        /// <returns>string XML value</returns>
-        public virtual string Serialize(System.Text.Encoding encoding)
+        /// <returns>String XML value</returns>
+        public virtual String Serialize(System.Text.Encoding encoding)
         {
             System.IO.StreamReader streamReader = null;
             System.IO.MemoryStream memoryStream = null;
@@ -7480,7 +7480,7 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual string Serialize()
+        public virtual String Serialize()
         {
             return Serialize(Encoding.UTF8);
         }
@@ -7488,11 +7488,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes workflow markup into an ingestionAlbumTracksVideoResources object
         /// </summary>
-        /// <param name="xml">string workflow markup to deserialize</param>
+        /// <param name="xml">String workflow markup to deserialize</param>
         /// <param name="obj">Output ingestionAlbumTracksVideoResources object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool Deserialize(string xml, out ingestionAlbumTracksVideoResources obj, out System.Exception exception)
+        public static bool Deserialize(String xml, out ingestionAlbumTracksVideoResources obj, out System.Exception exception)
         {
             exception = null;
             obj = default(ingestionAlbumTracksVideoResources);
@@ -7508,13 +7508,13 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool Deserialize(string xml, out ingestionAlbumTracksVideoResources obj)
+        public static bool Deserialize(String xml, out ingestionAlbumTracksVideoResources obj)
         {
             System.Exception exception = null;
             return Deserialize(xml, out obj, out exception);
         }
 
-        public static ingestionAlbumTracksVideoResources Deserialize(string xml)
+        public static ingestionAlbumTracksVideoResources Deserialize(String xml)
         {
             System.IO.StringReader StringReader = null;
             try
@@ -7537,7 +7537,7 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <param name="fileName">full path of outupt xml file</param>
         /// <param name="exception">output Exception value if failed</param>
         /// <returns>true if can serialize and save into file; otherwise, false</returns>
-        public virtual bool SaveToFile(string fileName, System.Text.Encoding encoding, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, System.Text.Encoding encoding, out System.Exception exception)
         {
             exception = null;
             try
@@ -7552,24 +7552,24 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual bool SaveToFile(string fileName, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, out System.Exception exception)
         {
             return SaveToFile(fileName, Encoding.UTF8, out exception);
         }
 
-        public virtual void SaveToFile(string fileName)
+        public virtual void SaveToFile(String fileName)
         {
             SaveToFile(fileName, Encoding.UTF8);
         }
 
-        public virtual void SaveToFile(string fileName, System.Text.Encoding encoding)
+        public virtual void SaveToFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlstring = Serialize(encoding);
+                String xmlString = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlstring);
+                streamWriter.WriteLine(xmlString);
                 streamWriter.Close();
             }
             finally
@@ -7584,11 +7584,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes xml markup from file into an ingestionAlbumTracksVideoResources object
         /// </summary>
-        /// <param name="fileName">string xml file to load and deserialize</param>
+        /// <param name="fileName">String xml file to load and deserialize</param>
         /// <param name="obj">Output ingestionAlbumTracksVideoResources object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool LoadFromFile(string fileName, System.Text.Encoding encoding, out ingestionAlbumTracksVideoResources obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, System.Text.Encoding encoding, out ingestionAlbumTracksVideoResources obj, out System.Exception exception)
         {
             exception = null;
             obj = default(ingestionAlbumTracksVideoResources);
@@ -7604,23 +7604,23 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool LoadFromFile(string fileName, out ingestionAlbumTracksVideoResources obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, out ingestionAlbumTracksVideoResources obj, out System.Exception exception)
         {
             return LoadFromFile(fileName, Encoding.UTF8, out obj, out exception);
         }
 
-        public static bool LoadFromFile(string fileName, out ingestionAlbumTracksVideoResources obj)
+        public static bool LoadFromFile(String fileName, out ingestionAlbumTracksVideoResources obj)
         {
             System.Exception exception = null;
             return LoadFromFile(fileName, out obj, out exception);
         }
 
-        public static ingestionAlbumTracksVideoResources LoadFromFile(string fileName)
+        public static ingestionAlbumTracksVideoResources LoadFromFile(String fileName)
         {
             return LoadFromFile(fileName, Encoding.UTF8);
         }
 
-        public static ingestionAlbumTracksVideoResources LoadFromFile(string fileName, System.Text.Encoding encoding)
+        public static ingestionAlbumTracksVideoResources LoadFromFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.FileStream file = null;
             System.IO.StreamReader sr = null;
@@ -7628,10 +7628,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlstring = sr.ReadToEnd();
+                String xmlString = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlstring);
+                return Deserialize(xmlString);
             }
             finally
             {
@@ -7683,8 +7683,8 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Serializes current ingestionAlbumTracksVideoResourcesVideo object into an XML document
         /// </summary>
-        /// <returns>string XML value</returns>
-        public virtual string Serialize(System.Text.Encoding encoding)
+        /// <returns>String XML value</returns>
+        public virtual String Serialize(System.Text.Encoding encoding)
         {
             System.IO.StreamReader streamReader = null;
             System.IO.MemoryStream memoryStream = null;
@@ -7712,7 +7712,7 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual string Serialize()
+        public virtual String Serialize()
         {
             return Serialize(Encoding.UTF8);
         }
@@ -7720,11 +7720,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes workflow markup into an ingestionAlbumTracksVideoResourcesVideo object
         /// </summary>
-        /// <param name="xml">string workflow markup to deserialize</param>
+        /// <param name="xml">String workflow markup to deserialize</param>
         /// <param name="obj">Output ingestionAlbumTracksVideoResourcesVideo object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool Deserialize(string xml, out ingestionAlbumTracksVideoResourcesVideo obj, out System.Exception exception)
+        public static bool Deserialize(String xml, out ingestionAlbumTracksVideoResourcesVideo obj, out System.Exception exception)
         {
             exception = null;
             obj = default(ingestionAlbumTracksVideoResourcesVideo);
@@ -7740,13 +7740,13 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool Deserialize(string xml, out ingestionAlbumTracksVideoResourcesVideo obj)
+        public static bool Deserialize(String xml, out ingestionAlbumTracksVideoResourcesVideo obj)
         {
             System.Exception exception = null;
             return Deserialize(xml, out obj, out exception);
         }
 
-        public static ingestionAlbumTracksVideoResourcesVideo Deserialize(string xml)
+        public static ingestionAlbumTracksVideoResourcesVideo Deserialize(String xml)
         {
             System.IO.StringReader StringReader = null;
             try
@@ -7769,7 +7769,7 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <param name="fileName">full path of outupt xml file</param>
         /// <param name="exception">output Exception value if failed</param>
         /// <returns>true if can serialize and save into file; otherwise, false</returns>
-        public virtual bool SaveToFile(string fileName, System.Text.Encoding encoding, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, System.Text.Encoding encoding, out System.Exception exception)
         {
             exception = null;
             try
@@ -7784,24 +7784,24 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual bool SaveToFile(string fileName, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, out System.Exception exception)
         {
             return SaveToFile(fileName, Encoding.UTF8, out exception);
         }
 
-        public virtual void SaveToFile(string fileName)
+        public virtual void SaveToFile(String fileName)
         {
             SaveToFile(fileName, Encoding.UTF8);
         }
 
-        public virtual void SaveToFile(string fileName, System.Text.Encoding encoding)
+        public virtual void SaveToFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlstring = Serialize(encoding);
+                String xmlString = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlstring);
+                streamWriter.WriteLine(xmlString);
                 streamWriter.Close();
             }
             finally
@@ -7816,11 +7816,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes xml markup from file into an ingestionAlbumTracksVideoResourcesVideo object
         /// </summary>
-        /// <param name="fileName">string xml file to load and deserialize</param>
+        /// <param name="fileName">String xml file to load and deserialize</param>
         /// <param name="obj">Output ingestionAlbumTracksVideoResourcesVideo object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool LoadFromFile(string fileName, System.Text.Encoding encoding, out ingestionAlbumTracksVideoResourcesVideo obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, System.Text.Encoding encoding, out ingestionAlbumTracksVideoResourcesVideo obj, out System.Exception exception)
         {
             exception = null;
             obj = default(ingestionAlbumTracksVideoResourcesVideo);
@@ -7836,23 +7836,23 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool LoadFromFile(string fileName, out ingestionAlbumTracksVideoResourcesVideo obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, out ingestionAlbumTracksVideoResourcesVideo obj, out System.Exception exception)
         {
             return LoadFromFile(fileName, Encoding.UTF8, out obj, out exception);
         }
 
-        public static bool LoadFromFile(string fileName, out ingestionAlbumTracksVideoResourcesVideo obj)
+        public static bool LoadFromFile(String fileName, out ingestionAlbumTracksVideoResourcesVideo obj)
         {
             System.Exception exception = null;
             return LoadFromFile(fileName, out obj, out exception);
         }
 
-        public static ingestionAlbumTracksVideoResourcesVideo LoadFromFile(string fileName)
+        public static ingestionAlbumTracksVideoResourcesVideo LoadFromFile(String fileName)
         {
             return LoadFromFile(fileName, Encoding.UTF8);
         }
 
-        public static ingestionAlbumTracksVideoResourcesVideo LoadFromFile(string fileName, System.Text.Encoding encoding)
+        public static ingestionAlbumTracksVideoResourcesVideo LoadFromFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.FileStream file = null;
             System.IO.StreamReader sr = null;
@@ -7860,10 +7860,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlstring = sr.ReadToEnd();
+                String xmlString = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlstring);
+                return Deserialize(xmlString);
             }
             finally
             {
@@ -7915,8 +7915,8 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Serializes current ingestionAlbumTracksVideoResourcesVideo_preview_image object into an XML document
         /// </summary>
-        /// <returns>string XML value</returns>
-        public virtual string Serialize(System.Text.Encoding encoding)
+        /// <returns>String XML value</returns>
+        public virtual String Serialize(System.Text.Encoding encoding)
         {
             System.IO.StreamReader streamReader = null;
             System.IO.MemoryStream memoryStream = null;
@@ -7944,7 +7944,7 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual string Serialize()
+        public virtual String Serialize()
         {
             return Serialize(Encoding.UTF8);
         }
@@ -7952,11 +7952,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes workflow markup into an ingestionAlbumTracksVideoResourcesVideo_preview_image object
         /// </summary>
-        /// <param name="xml">string workflow markup to deserialize</param>
+        /// <param name="xml">String workflow markup to deserialize</param>
         /// <param name="obj">Output ingestionAlbumTracksVideoResourcesVideo_preview_image object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool Deserialize(string xml, out ingestionAlbumTracksVideoResourcesVideo_preview_image obj, out System.Exception exception)
+        public static bool Deserialize(String xml, out ingestionAlbumTracksVideoResourcesVideo_preview_image obj, out System.Exception exception)
         {
             exception = null;
             obj = default(ingestionAlbumTracksVideoResourcesVideo_preview_image);
@@ -7972,13 +7972,13 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool Deserialize(string xml, out ingestionAlbumTracksVideoResourcesVideo_preview_image obj)
+        public static bool Deserialize(String xml, out ingestionAlbumTracksVideoResourcesVideo_preview_image obj)
         {
             System.Exception exception = null;
             return Deserialize(xml, out obj, out exception);
         }
 
-        public static ingestionAlbumTracksVideoResourcesVideo_preview_image Deserialize(string xml)
+        public static ingestionAlbumTracksVideoResourcesVideo_preview_image Deserialize(String xml)
         {
             System.IO.StringReader StringReader = null;
             try
@@ -8001,7 +8001,7 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <param name="fileName">full path of outupt xml file</param>
         /// <param name="exception">output Exception value if failed</param>
         /// <returns>true if can serialize and save into file; otherwise, false</returns>
-        public virtual bool SaveToFile(string fileName, System.Text.Encoding encoding, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, System.Text.Encoding encoding, out System.Exception exception)
         {
             exception = null;
             try
@@ -8016,24 +8016,24 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual bool SaveToFile(string fileName, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, out System.Exception exception)
         {
             return SaveToFile(fileName, Encoding.UTF8, out exception);
         }
 
-        public virtual void SaveToFile(string fileName)
+        public virtual void SaveToFile(String fileName)
         {
             SaveToFile(fileName, Encoding.UTF8);
         }
 
-        public virtual void SaveToFile(string fileName, System.Text.Encoding encoding)
+        public virtual void SaveToFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlstring = Serialize(encoding);
+                String xmlString = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlstring);
+                streamWriter.WriteLine(xmlString);
                 streamWriter.Close();
             }
             finally
@@ -8048,11 +8048,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes xml markup from file into an ingestionAlbumTracksVideoResourcesVideo_preview_image object
         /// </summary>
-        /// <param name="fileName">string xml file to load and deserialize</param>
+        /// <param name="fileName">String xml file to load and deserialize</param>
         /// <param name="obj">Output ingestionAlbumTracksVideoResourcesVideo_preview_image object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool LoadFromFile(string fileName, System.Text.Encoding encoding, out ingestionAlbumTracksVideoResourcesVideo_preview_image obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, System.Text.Encoding encoding, out ingestionAlbumTracksVideoResourcesVideo_preview_image obj, out System.Exception exception)
         {
             exception = null;
             obj = default(ingestionAlbumTracksVideoResourcesVideo_preview_image);
@@ -8068,23 +8068,23 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool LoadFromFile(string fileName, out ingestionAlbumTracksVideoResourcesVideo_preview_image obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, out ingestionAlbumTracksVideoResourcesVideo_preview_image obj, out System.Exception exception)
         {
             return LoadFromFile(fileName, Encoding.UTF8, out obj, out exception);
         }
 
-        public static bool LoadFromFile(string fileName, out ingestionAlbumTracksVideoResourcesVideo_preview_image obj)
+        public static bool LoadFromFile(String fileName, out ingestionAlbumTracksVideoResourcesVideo_preview_image obj)
         {
             System.Exception exception = null;
             return LoadFromFile(fileName, out obj, out exception);
         }
 
-        public static ingestionAlbumTracksVideoResourcesVideo_preview_image LoadFromFile(string fileName)
+        public static ingestionAlbumTracksVideoResourcesVideo_preview_image LoadFromFile(String fileName)
         {
             return LoadFromFile(fileName, Encoding.UTF8);
         }
 
-        public static ingestionAlbumTracksVideoResourcesVideo_preview_image LoadFromFile(string fileName, System.Text.Encoding encoding)
+        public static ingestionAlbumTracksVideoResourcesVideo_preview_image LoadFromFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.FileStream file = null;
             System.IO.StreamReader sr = null;
@@ -8092,10 +8092,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlstring = sr.ReadToEnd();
+                String xmlString = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlstring);
+                return Deserialize(xmlString);
             }
             finally
             {
@@ -8224,8 +8224,8 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Serializes current schedule object into an XML document
         /// </summary>
-        /// <returns>string XML value</returns>
-        public virtual string Serialize(System.Text.Encoding encoding)
+        /// <returns>String XML value</returns>
+        public virtual String Serialize(System.Text.Encoding encoding)
         {
             System.IO.StreamReader streamReader = null;
             System.IO.MemoryStream memoryStream = null;
@@ -8253,7 +8253,7 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual string Serialize()
+        public virtual String Serialize()
         {
             return Serialize(Encoding.UTF8);
         }
@@ -8261,11 +8261,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes workflow markup into an schedule object
         /// </summary>
-        /// <param name="xml">string workflow markup to deserialize</param>
+        /// <param name="xml">String workflow markup to deserialize</param>
         /// <param name="obj">Output schedule object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool Deserialize(string xml, out schedule obj, out System.Exception exception)
+        public static bool Deserialize(String xml, out schedule obj, out System.Exception exception)
         {
             exception = null;
             obj = default(schedule);
@@ -8281,13 +8281,13 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool Deserialize(string xml, out schedule obj)
+        public static bool Deserialize(String xml, out schedule obj)
         {
             System.Exception exception = null;
             return Deserialize(xml, out obj, out exception);
         }
 
-        public static schedule Deserialize(string xml)
+        public static schedule Deserialize(String xml)
         {
             System.IO.StringReader StringReader = null;
             try
@@ -8310,7 +8310,7 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <param name="fileName">full path of outupt xml file</param>
         /// <param name="exception">output Exception value if failed</param>
         /// <returns>true if can serialize and save into file; otherwise, false</returns>
-        public virtual bool SaveToFile(string fileName, System.Text.Encoding encoding, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, System.Text.Encoding encoding, out System.Exception exception)
         {
             exception = null;
             try
@@ -8325,24 +8325,24 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual bool SaveToFile(string fileName, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, out System.Exception exception)
         {
             return SaveToFile(fileName, Encoding.UTF8, out exception);
         }
 
-        public virtual void SaveToFile(string fileName)
+        public virtual void SaveToFile(String fileName)
         {
             SaveToFile(fileName, Encoding.UTF8);
         }
 
-        public virtual void SaveToFile(string fileName, System.Text.Encoding encoding)
+        public virtual void SaveToFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlstring = Serialize(encoding);
+                String xmlString = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlstring);
+                streamWriter.WriteLine(xmlString);
                 streamWriter.Close();
             }
             finally
@@ -8357,11 +8357,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes xml markup from file into an schedule object
         /// </summary>
-        /// <param name="fileName">string xml file to load and deserialize</param>
+        /// <param name="fileName">String xml file to load and deserialize</param>
         /// <param name="obj">Output schedule object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool LoadFromFile(string fileName, System.Text.Encoding encoding, out schedule obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, System.Text.Encoding encoding, out schedule obj, out System.Exception exception)
         {
             exception = null;
             obj = default(schedule);
@@ -8377,23 +8377,23 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool LoadFromFile(string fileName, out schedule obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, out schedule obj, out System.Exception exception)
         {
             return LoadFromFile(fileName, Encoding.UTF8, out obj, out exception);
         }
 
-        public static bool LoadFromFile(string fileName, out schedule obj)
+        public static bool LoadFromFile(String fileName, out schedule obj)
         {
             System.Exception exception = null;
             return LoadFromFile(fileName, out obj, out exception);
         }
 
-        public static schedule LoadFromFile(string fileName)
+        public static schedule LoadFromFile(String fileName)
         {
             return LoadFromFile(fileName, Encoding.UTF8);
         }
 
-        public static schedule LoadFromFile(string fileName, System.Text.Encoding encoding)
+        public static schedule LoadFromFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.FileStream file = null;
             System.IO.StreamReader sr = null;
@@ -8401,10 +8401,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlstring = sr.ReadToEnd();
+                String xmlString = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlstring);
+                return Deserialize(xmlString);
             }
             finally
             {
@@ -8473,8 +8473,8 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Serializes current scheduleDelivery object into an XML document
         /// </summary>
-        /// <returns>string XML value</returns>
-        public virtual string Serialize(System.Text.Encoding encoding)
+        /// <returns>String XML value</returns>
+        public virtual String Serialize(System.Text.Encoding encoding)
         {
             System.IO.StreamReader streamReader = null;
             System.IO.MemoryStream memoryStream = null;
@@ -8502,7 +8502,7 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual string Serialize()
+        public virtual String Serialize()
         {
             return Serialize(Encoding.UTF8);
         }
@@ -8510,11 +8510,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes workflow markup into an scheduleDelivery object
         /// </summary>
-        /// <param name="xml">string workflow markup to deserialize</param>
+        /// <param name="xml">String workflow markup to deserialize</param>
         /// <param name="obj">Output scheduleDelivery object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool Deserialize(string xml, out scheduleDelivery obj, out System.Exception exception)
+        public static bool Deserialize(String xml, out scheduleDelivery obj, out System.Exception exception)
         {
             exception = null;
             obj = default(scheduleDelivery);
@@ -8530,13 +8530,13 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool Deserialize(string xml, out scheduleDelivery obj)
+        public static bool Deserialize(String xml, out scheduleDelivery obj)
         {
             System.Exception exception = null;
             return Deserialize(xml, out obj, out exception);
         }
 
-        public static scheduleDelivery Deserialize(string xml)
+        public static scheduleDelivery Deserialize(String xml)
         {
             System.IO.StringReader StringReader = null;
             try
@@ -8559,7 +8559,7 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <param name="fileName">full path of outupt xml file</param>
         /// <param name="exception">output Exception value if failed</param>
         /// <returns>true if can serialize and save into file; otherwise, false</returns>
-        public virtual bool SaveToFile(string fileName, System.Text.Encoding encoding, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, System.Text.Encoding encoding, out System.Exception exception)
         {
             exception = null;
             try
@@ -8574,24 +8574,24 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual bool SaveToFile(string fileName, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, out System.Exception exception)
         {
             return SaveToFile(fileName, Encoding.UTF8, out exception);
         }
 
-        public virtual void SaveToFile(string fileName)
+        public virtual void SaveToFile(String fileName)
         {
             SaveToFile(fileName, Encoding.UTF8);
         }
 
-        public virtual void SaveToFile(string fileName, System.Text.Encoding encoding)
+        public virtual void SaveToFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlstring = Serialize(encoding);
+                String xmlString = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlstring);
+                streamWriter.WriteLine(xmlString);
                 streamWriter.Close();
             }
             finally
@@ -8606,11 +8606,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes xml markup from file into an scheduleDelivery object
         /// </summary>
-        /// <param name="fileName">string xml file to load and deserialize</param>
+        /// <param name="fileName">String xml file to load and deserialize</param>
         /// <param name="obj">Output scheduleDelivery object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool LoadFromFile(string fileName, System.Text.Encoding encoding, out scheduleDelivery obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, System.Text.Encoding encoding, out scheduleDelivery obj, out System.Exception exception)
         {
             exception = null;
             obj = default(scheduleDelivery);
@@ -8626,23 +8626,23 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool LoadFromFile(string fileName, out scheduleDelivery obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, out scheduleDelivery obj, out System.Exception exception)
         {
             return LoadFromFile(fileName, Encoding.UTF8, out obj, out exception);
         }
 
-        public static bool LoadFromFile(string fileName, out scheduleDelivery obj)
+        public static bool LoadFromFile(String fileName, out scheduleDelivery obj)
         {
             System.Exception exception = null;
             return LoadFromFile(fileName, out obj, out exception);
         }
 
-        public static scheduleDelivery LoadFromFile(string fileName)
+        public static scheduleDelivery LoadFromFile(String fileName)
         {
             return LoadFromFile(fileName, Encoding.UTF8);
         }
 
-        public static scheduleDelivery LoadFromFile(string fileName, System.Text.Encoding encoding)
+        public static scheduleDelivery LoadFromFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.FileStream file = null;
             System.IO.StreamReader sr = null;
@@ -8650,10 +8650,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlstring = sr.ReadToEnd();
+                String xmlString = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlstring);
+                return Deserialize(xmlString);
             }
             finally
             {
@@ -8739,8 +8739,8 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Serializes current scheduleExclusion object into an XML document
         /// </summary>
-        /// <returns>string XML value</returns>
-        public virtual string Serialize(System.Text.Encoding encoding)
+        /// <returns>String XML value</returns>
+        public virtual String Serialize(System.Text.Encoding encoding)
         {
             System.IO.StreamReader streamReader = null;
             System.IO.MemoryStream memoryStream = null;
@@ -8768,7 +8768,7 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual string Serialize()
+        public virtual String Serialize()
         {
             return Serialize(Encoding.UTF8);
         }
@@ -8776,11 +8776,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes workflow markup into an scheduleExclusion object
         /// </summary>
-        /// <param name="xml">string workflow markup to deserialize</param>
+        /// <param name="xml">String workflow markup to deserialize</param>
         /// <param name="obj">Output scheduleExclusion object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool Deserialize(string xml, out scheduleExclusion obj, out System.Exception exception)
+        public static bool Deserialize(String xml, out scheduleExclusion obj, out System.Exception exception)
         {
             exception = null;
             obj = default(scheduleExclusion);
@@ -8796,13 +8796,13 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool Deserialize(string xml, out scheduleExclusion obj)
+        public static bool Deserialize(String xml, out scheduleExclusion obj)
         {
             System.Exception exception = null;
             return Deserialize(xml, out obj, out exception);
         }
 
-        public static scheduleExclusion Deserialize(string xml)
+        public static scheduleExclusion Deserialize(String xml)
         {
             System.IO.StringReader StringReader = null;
             try
@@ -8825,7 +8825,7 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <param name="fileName">full path of outupt xml file</param>
         /// <param name="exception">output Exception value if failed</param>
         /// <returns>true if can serialize and save into file; otherwise, false</returns>
-        public virtual bool SaveToFile(string fileName, System.Text.Encoding encoding, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, System.Text.Encoding encoding, out System.Exception exception)
         {
             exception = null;
             try
@@ -8840,24 +8840,24 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual bool SaveToFile(string fileName, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, out System.Exception exception)
         {
             return SaveToFile(fileName, Encoding.UTF8, out exception);
         }
 
-        public virtual void SaveToFile(string fileName)
+        public virtual void SaveToFile(String fileName)
         {
             SaveToFile(fileName, Encoding.UTF8);
         }
 
-        public virtual void SaveToFile(string fileName, System.Text.Encoding encoding)
+        public virtual void SaveToFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlstring = Serialize(encoding);
+                String xmlString = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlstring);
+                streamWriter.WriteLine(xmlString);
                 streamWriter.Close();
             }
             finally
@@ -8872,11 +8872,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes xml markup from file into an scheduleExclusion object
         /// </summary>
-        /// <param name="fileName">string xml file to load and deserialize</param>
+        /// <param name="fileName">String xml file to load and deserialize</param>
         /// <param name="obj">Output scheduleExclusion object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool LoadFromFile(string fileName, System.Text.Encoding encoding, out scheduleExclusion obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, System.Text.Encoding encoding, out scheduleExclusion obj, out System.Exception exception)
         {
             exception = null;
             obj = default(scheduleExclusion);
@@ -8892,23 +8892,23 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool LoadFromFile(string fileName, out scheduleExclusion obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, out scheduleExclusion obj, out System.Exception exception)
         {
             return LoadFromFile(fileName, Encoding.UTF8, out obj, out exception);
         }
 
-        public static bool LoadFromFile(string fileName, out scheduleExclusion obj)
+        public static bool LoadFromFile(String fileName, out scheduleExclusion obj)
         {
             System.Exception exception = null;
             return LoadFromFile(fileName, out obj, out exception);
         }
 
-        public static scheduleExclusion LoadFromFile(string fileName)
+        public static scheduleExclusion LoadFromFile(String fileName)
         {
             return LoadFromFile(fileName, Encoding.UTF8);
         }
 
-        public static scheduleExclusion LoadFromFile(string fileName, System.Text.Encoding encoding)
+        public static scheduleExclusion LoadFromFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.FileStream file = null;
             System.IO.StreamReader sr = null;
@@ -8916,10 +8916,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlstring = sr.ReadToEnd();
+                String xmlString = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlstring);
+                return Deserialize(xmlString);
             }
             finally
             {
@@ -8982,8 +8982,8 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Serializes current resources object into an XML document
         /// </summary>
-        /// <returns>string XML value</returns>
-        public virtual string Serialize(System.Text.Encoding encoding)
+        /// <returns>String XML value</returns>
+        public virtual String Serialize(System.Text.Encoding encoding)
         {
             System.IO.StreamReader streamReader = null;
             System.IO.MemoryStream memoryStream = null;
@@ -9011,7 +9011,7 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual string Serialize()
+        public virtual String Serialize()
         {
             return Serialize(Encoding.UTF8);
         }
@@ -9019,11 +9019,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes workflow markup into an resources object
         /// </summary>
-        /// <param name="xml">string workflow markup to deserialize</param>
+        /// <param name="xml">String workflow markup to deserialize</param>
         /// <param name="obj">Output resources object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool Deserialize(string xml, out resources obj, out System.Exception exception)
+        public static bool Deserialize(String xml, out resources obj, out System.Exception exception)
         {
             exception = null;
             obj = default(resources);
@@ -9039,13 +9039,13 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool Deserialize(string xml, out resources obj)
+        public static bool Deserialize(String xml, out resources obj)
         {
             System.Exception exception = null;
             return Deserialize(xml, out obj, out exception);
         }
 
-        public static resources Deserialize(string xml)
+        public static resources Deserialize(String xml)
         {
             System.IO.StringReader StringReader = null;
             try
@@ -9068,7 +9068,7 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <param name="fileName">full path of outupt xml file</param>
         /// <param name="exception">output Exception value if failed</param>
         /// <returns>true if can serialize and save into file; otherwise, false</returns>
-        public virtual bool SaveToFile(string fileName, System.Text.Encoding encoding, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, System.Text.Encoding encoding, out System.Exception exception)
         {
             exception = null;
             try
@@ -9083,24 +9083,24 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public virtual bool SaveToFile(string fileName, out System.Exception exception)
+        public virtual bool SaveToFile(String fileName, out System.Exception exception)
         {
             return SaveToFile(fileName, Encoding.UTF8, out exception);
         }
 
-        public virtual void SaveToFile(string fileName)
+        public virtual void SaveToFile(String fileName)
         {
             SaveToFile(fileName, Encoding.UTF8);
         }
 
-        public virtual void SaveToFile(string fileName, System.Text.Encoding encoding)
+        public virtual void SaveToFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.StreamWriter streamWriter = null;
             try
             {
-                string xmlstring = Serialize(encoding);
+                String xmlString = Serialize(encoding);
                 streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
-                streamWriter.WriteLine(xmlstring);
+                streamWriter.WriteLine(xmlString);
                 streamWriter.Close();
             }
             finally
@@ -9115,11 +9115,11 @@ namespace BabelMeta.Modules.Export.FugaXml
         /// <summary>
         /// Deserializes xml markup from file into an resources object
         /// </summary>
-        /// <param name="fileName">string xml file to load and deserialize</param>
+        /// <param name="fileName">String xml file to load and deserialize</param>
         /// <param name="obj">Output resources object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool LoadFromFile(string fileName, System.Text.Encoding encoding, out resources obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, System.Text.Encoding encoding, out resources obj, out System.Exception exception)
         {
             exception = null;
             obj = default(resources);
@@ -9135,23 +9135,23 @@ namespace BabelMeta.Modules.Export.FugaXml
             }
         }
 
-        public static bool LoadFromFile(string fileName, out resources obj, out System.Exception exception)
+        public static bool LoadFromFile(String fileName, out resources obj, out System.Exception exception)
         {
             return LoadFromFile(fileName, Encoding.UTF8, out obj, out exception);
         }
 
-        public static bool LoadFromFile(string fileName, out resources obj)
+        public static bool LoadFromFile(String fileName, out resources obj)
         {
             System.Exception exception = null;
             return LoadFromFile(fileName, out obj, out exception);
         }
 
-        public static resources LoadFromFile(string fileName)
+        public static resources LoadFromFile(String fileName)
         {
             return LoadFromFile(fileName, Encoding.UTF8);
         }
 
-        public static resources LoadFromFile(string fileName, System.Text.Encoding encoding)
+        public static resources LoadFromFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.FileStream file = null;
             System.IO.StreamReader sr = null;
@@ -9159,10 +9159,10 @@ namespace BabelMeta.Modules.Export.FugaXml
             {
                 file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
                 sr = new System.IO.StreamReader(file, encoding);
-                string xmlstring = sr.ReadToEnd();
+                String xmlString = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
-                return Deserialize(xmlstring);
+                return Deserialize(xmlString);
             }
             finally
             {

@@ -24,6 +24,7 @@
  */
 
 using BabelMeta.Model;
+using System;
 using System.Linq;
 
 namespace BabelMeta.Modules.Control
@@ -42,15 +43,7 @@ namespace BabelMeta.Modules.Control
 
         public static ModelIntgrityChecker Instance
         {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new ModelIntgrityChecker();
-
-                }
-                return _instance;
-            }
+            get { return _instance ?? (_instance = new ModelIntgrityChecker()); }
         }
 
         public bool CheckRedundantKeys()
@@ -96,8 +89,8 @@ namespace BabelMeta.Modules.Control
                 return false;
             }
 
-            // Isrcs
-            if (CatalogContext.Instance.Isrcs != null && CatalogContext.Instance.Isrcs.Count > 0 && CatalogContext.Instance.Isrcs.GroupBy(e => e.Id).Max(g => g.Count()) > 1)
+            // Assets
+            if (CatalogContext.Instance.Assets != null && CatalogContext.Instance.Assets.Count > 0 && CatalogContext.Instance.Assets.GroupBy(e => e.Id).Max(g => g.Count()) > 1)
             {
                 return false;
             }
@@ -114,7 +107,7 @@ namespace BabelMeta.Modules.Control
                 return false;
             }
             
-            // Assets
+            // Tracks
             // Structurally not exposed to redundancy
 
             return true;
@@ -170,10 +163,10 @@ namespace BabelMeta.Modules.Control
                 return false;
             }
 
-            // Isrc -> Work
+            // Asset -> Work
             if (
-                    CatalogContext.Instance.Isrcs != null && CatalogContext.Instance.Isrcs.Count > 0 &&
-                    CatalogContext.Instance.Isrcs.Exists(i =>
+                    CatalogContext.Instance.Assets != null && CatalogContext.Instance.Assets.Count > 0 &&
+                    CatalogContext.Instance.Assets.Exists(i =>
                         !CatalogContext.Instance.Works.Exists(e =>
                             e.Id == i.Work
                         )
@@ -183,10 +176,10 @@ namespace BabelMeta.Modules.Control
                 return false;
             }
 
-            // Isrc -> Contributor
+            // Asset -> Contributor
             if (
-                    CatalogContext.Instance.Isrcs != null && CatalogContext.Instance.Isrcs.Count > 0 &&
-                    CatalogContext.Instance.Isrcs.Exists(i =>
+                    CatalogContext.Instance.Assets != null && CatalogContext.Instance.Assets.Count > 0 &&
+                    CatalogContext.Instance.Assets.Exists(i =>
                         i.Contributors.Keys.ToList().Exists(c =>
                             !CatalogContext.Instance.Artists.Exists(e =>
                                 e.Id == c
@@ -198,14 +191,14 @@ namespace BabelMeta.Modules.Control
                 return false;
             }
 
-            // Isrc -> Role
+            // Asset -> Role
             if (
-                    CatalogContext.Instance.Isrcs != null && CatalogContext.Instance.Isrcs.Count > 0 &&
-                    CatalogContext.Instance.Isrcs.Exists(i =>
+                    CatalogContext.Instance.Assets != null && CatalogContext.Instance.Assets.Count > 0 &&
+                    CatalogContext.Instance.Assets.Exists(i =>
                         i.Contributors.Values.ToList().Exists(rq =>
                                 rq.Keys.ToList().Exists(r =>
                                     !CatalogContext.Instance.Roles.Exists(e =>
-                                        e.Name.CompareTo(r.Name) == 0                                
+                                        String.Compare(e.Name, r.Name, StringComparison.Ordinal) == 0                                
                                 )
                             )
                         )
@@ -215,14 +208,14 @@ namespace BabelMeta.Modules.Control
                 return false;
             }
 
-            // Isrc -> Quality
+            // Asset -> Quality
             if (
-                    CatalogContext.Instance.Isrcs != null && CatalogContext.Instance.Isrcs.Count > 0 &&
-                    CatalogContext.Instance.Isrcs.Exists(i =>
+                    CatalogContext.Instance.Assets != null && CatalogContext.Instance.Assets.Count > 0 &&
+                    CatalogContext.Instance.Assets.Exists(i =>
                         i.Contributors.Values.ToList().Exists(rq =>
                                 rq.Values.ToList().Exists(q =>
                                     !CatalogContext.Instance.Qualities.Exists(e =>
-                                        e.Name.CompareTo(q.Name) == 0
+                                        String.Compare(e.Name, q.Name, StringComparison.Ordinal) == 0
                                 )
                             )
                         )
@@ -232,13 +225,13 @@ namespace BabelMeta.Modules.Control
                 return false;
             }
 
-            // Album -> Isrc
+            // Album -> Asset
             if (
                     CatalogContext.Instance.Albums != null && CatalogContext.Instance.Albums.Count > 0 &&
                     CatalogContext.Instance.Albums.Exists(a =>
-                        a.Assets.Values.ToList().Exists(t =>
+                        a.Tracks.Values.ToList().Exists(t =>
                             t.Values.ToList().Exists(i =>
-                                !CatalogContext.Instance.Isrcs.Exists(e =>
+                                !CatalogContext.Instance.Assets.Exists(e =>
                                     e.Id.CompareTo(i) == 0
                                 )
                             )

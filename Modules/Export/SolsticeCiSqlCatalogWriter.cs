@@ -36,18 +36,18 @@ namespace BabelMeta.Modules.Export
     {
         MainFormViewModel _viewModel = null;
 
-        private string _sqlOutput;
+        private String _sqlOutput;
 
-        public AppConfig.ReturnCodes Generate(object context, MainFormViewModel viewModel = null)
+        public ReturnCode Generate(object context, MainFormViewModel viewModel = null)
         {
             _viewModel = viewModel;
 
             if (!CatalogContext.Instance.Initialized)
             {
-                return ReturnCodes.ModulesExportCatalogContextNotInitialized;
+                return ReturnCode.ModulesExportCatalogContextNotInitialized;
             }
 
-            _sqlOutput = string.Empty;
+            _sqlOutput = String.Empty;
 
             GenerateLangs();
 

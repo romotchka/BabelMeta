@@ -91,12 +91,12 @@ namespace BabelMeta
                 return;
             }
 
-            switch (InputFormat.SelectedItem.ToString().ToFormatType())
+            switch (InputFormat.SelectedItem.ToString().ToFileFormatType())
             {
-                case FormatType.ExcelWorkbook:
+                case FileFormatType.ExcelWorkbook:
                     openFileDialog.Filter = "Excel files (*.xls, *.xlsx)|*.xls*";
                     break;
-                case FormatType.ExcelXml2003:
+                case FileFormatType.ExcelXml2003:
                     openFileDialog.Filter = "XML files (*.xml)|*.xml";
                     break;
 
@@ -125,9 +125,9 @@ namespace BabelMeta
                     OutputProgressBar.Visible = false;
 
                     // Call appropriate parser, depending on input format
-                    ReturnCodes r = await TemplatedExcelCatalogReader.Instance.Parse(openFileDialog, InputFormat.SelectedItem.ToString().ToFormatType(), _viewModel);
+                    ReturnCode r = await TemplatedCatalogReader.Instance.Parse(openFileDialog, InputFormat.SelectedItem.ToString().ToFileFormatType(), _viewModel);
 
-                    if (r == ReturnCodes.Ok)
+                    if (r == ReturnCode.Ok)
                     {
                         Notify("Catalog parsing done.");
                     }
@@ -139,9 +139,9 @@ namespace BabelMeta
             }
         }
 
-        private void DeserializeBmdFile(string filePath)
+        private void DeserializeBmdFile(String filePath)
         {
-            if (string.IsNullOrEmpty(filePath))
+            if (String.IsNullOrEmpty(filePath))
             {
                 return;
             }
@@ -183,7 +183,7 @@ namespace BabelMeta
                     break;
 
                 case "isrcs":
-                    CatalogContext.Instance.Isrcs = (List<Isrc>)binaryFormatter.Deserialize(stream);
+                    CatalogContext.Instance.Assets = (List<Asset>)binaryFormatter.Deserialize(stream);
                     break;
 
                 case "albums":
@@ -208,12 +208,12 @@ namespace BabelMeta
             fbd.Description = "Select a root folder to load session files.";
             fbd.ShowDialog();
 
-            if (string.IsNullOrEmpty(fbd.SelectedPath))
+            if (String.IsNullOrEmpty(fbd.SelectedPath))
             {
                 return;
             }
 
-            List<string> files = Directory.GetFiles(fbd.SelectedPath, "*.bmd").ToList();
+            List<String> files = Directory.GetFiles(fbd.SelectedPath, "*.bmd").ToList();
 
             CatalogContext.Instance.Init();
             CatalogContext.Instance.Initialized = false;
@@ -253,7 +253,7 @@ namespace BabelMeta
             fbd.Description = "Select a root folder to save session files.";
             fbd.ShowDialog();
 
-            if (string.IsNullOrEmpty(fbd.SelectedPath))
+            if (String.IsNullOrEmpty(fbd.SelectedPath))
             {
                 return;
             }
@@ -312,7 +312,7 @@ namespace BabelMeta
                 // Isrcs
                 stream = File.Open(fbd.SelectedPath + "Isrcs.bmd", FileMode.Create);
 
-                binaryFormatter.Serialize(stream, CatalogContext.Instance.Isrcs);
+                binaryFormatter.Serialize(stream, CatalogContext.Instance.Assets);
                 stream.Close();
 
                 // Albums
@@ -355,7 +355,7 @@ namespace BabelMeta
             }
             else
             {
-                string message = "The imported model is corrupted:";
+                String message = "The imported model is corrupted:";
                 if (!CatalogContext.Instance.RedundantKeysChecked)
                 {
                     message += " Redundant keys exist.";
@@ -411,13 +411,13 @@ namespace BabelMeta
             fbd.Description = "Select a root folder for output sub-folders and XML files";
             fbd.ShowDialog();
 
-            if (string.IsNullOrEmpty(fbd.SelectedPath))
+            if (String.IsNullOrEmpty(fbd.SelectedPath))
             {
                 return;
             }
-            ReturnCodes r = FugaXmlCatalogWriter.Instance.Generate(fbd.SelectedPath, _viewModel);
+            ReturnCode r = FugaXmlCatalogWriter.Instance.Generate(fbd.SelectedPath, _viewModel);
 
-            if (r == ReturnCodes.Ok)
+            if (r == ReturnCode.Ok)
             {
                 Notify("Catalog export completed.");
             }
@@ -431,9 +431,9 @@ namespace BabelMeta
         /// Append message on top of Notification Zone
         /// </summary>
         /// <param name="message"></param>
-        private void Notify(string message)
+        private void Notify(String message)
         {
-            if (string.IsNullOrEmpty(message))
+            if (String.IsNullOrEmpty(message))
             {
                 return;
             }

@@ -31,14 +31,14 @@ using BabelMeta.Modules;
 namespace BabelMeta.Helpers
 {
     /// <summary>
-    /// Syntax provides with string-related extension methods and functions
+    /// Syntax provides with String-related extension methods and functions
     /// </summary>
-    public static class Syntax
+    public static class StringHelper
     {
         /// <summary>
         /// Language-dependent separator between an entity and a sub-entity.
         /// </summary>
-        public static string HierarchicalSeparator(Lang lang)
+        public static String HierarchicalSeparator(Lang lang)
         {
             switch (lang.ShortName)
             {
@@ -52,11 +52,11 @@ namespace BabelMeta.Helpers
         /// Expected format is yyyy-mm-dd[...]
         /// Returns DateTime extracted, or Now if an error occurs
         /// </summary>
-        public static DateTime ToDateTime(this string datestring)
+        public static DateTime ToDateTime(this String dateString)
         {
-            string[] words = datestring.Split(new char[] { '-' });
+            var words = dateString.Split(new[] { '-' });
 
-            if (words != null && words.ToList().Count >= 3)
+            if (words.ToList().Count >= 3)
             {
                 var year = Convert.ToInt32(words[0]);
                 var month = Convert.ToInt32(words[1]);
@@ -66,7 +66,7 @@ namespace BabelMeta.Helpers
                 {
                     try
                     {
-                        DateTime dateTime = new DateTime(year, month, day);
+                        var dateTime = new DateTime(year, month, day);
                         return dateTime;
                     }
                     catch (Exception)
@@ -82,11 +82,11 @@ namespace BabelMeta.Helpers
         /// Removes path from file full name and returns filename only.
         /// </summary>
         /// <param name="path"></param>
-        public static string GetFileNameFromFullPath(this string path)
+        public static String GetFileNameFromFullPath(this String path)
         {
-            if (string.IsNullOrEmpty(path))
+            if (String.IsNullOrEmpty(path))
             {
-                return string.Empty;
+                return String.Empty;
             }
             var pathElements = path.Split('\\');
             return pathElements[pathElements.Length - 1];
@@ -95,15 +95,15 @@ namespace BabelMeta.Helpers
         /// <summary>
         /// Replaces the default header by the expected Fuga header (not properly provided by Xsd2Code-generated ingestion.designer.cs).
         /// </summary>
-        public static string WithFugaXmlHeader(this string stream)
+        public static String WithFugaXmlHeader(this String stream)
         {
-            if (string.IsNullOrEmpty(stream))
+            if (String.IsNullOrEmpty(stream))
             {
-                return string.Empty;
+                return String.Empty;
             }
 
             // Ensure no double space prevents pattern recognition
-            string modifiedStream = stream.Replace("  ", " ");
+            var modifiedStream = stream.Replace("  ", " ");
 
             modifiedStream = modifiedStream.Replace(
                 "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
@@ -125,18 +125,23 @@ namespace BabelMeta.Helpers
             return modifiedStream;
         }
 
-        public static FormatType ToFormatType(this string s)
+        /// <summary>
+        /// Converts a String into a file format supported in import/export modules.
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static FileFormatType ToFileFormatType(this String s)
         {
-            if (string.IsNullOrEmpty(s))
+            if (String.IsNullOrEmpty(s))
             {
-                return FormatType.Unknown;
+                return FileFormatType.Unknown;
             }
             s = s.ToLower();
             switch (s)
             {
-                case "excel workbook": return FormatType.ExcelWorkbook;
-                case "excel xml 2003": return FormatType.ExcelXml2003;
-                default: return FormatType.Unknown;
+                case "excel workbook": return FileFormatType.ExcelWorkbook;
+                case "excel xml 2003": return FileFormatType.ExcelXml2003;
+                default: return FileFormatType.Unknown;
             }
         }
     }

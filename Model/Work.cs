@@ -43,22 +43,22 @@ namespace BabelMeta.Model
             Title = null;
             MovementTitle = null;
             Contributors = null;
-            ClassicalCatalog = string.Empty;
+            ClassicalCatalog = String.Empty;
             Tonality = null;
             Year = null;
         }
 
         public Work(SerializationInfo info, StreamingContext ctxt)
         {
-            Id = (Int32)info.GetValue("BabelMeta.Model.Work.Id", typeof(Int32));
-            Parent = (Int32?)info.GetValue("BabelMeta.Model.Work.Parent", typeof(Int32?));
-            MovementNumber = (Int16?)info.GetValue("BabelMeta.Model.Work.MovementNumber", typeof(Int16?));
-            Title = (Dictionary<string, string>)info.GetValue("BabelMeta.Model.Work.Title", typeof(Dictionary<string, string>));
-            MovementTitle = (Dictionary<string, string>)info.GetValue("BabelMeta.Model.Work.MovementTitle", typeof(Dictionary<string, string>));
-            Contributors = (Dictionary<Int32, Role>)info.GetValue("BabelMeta.Model.Work.Contributors", typeof(Dictionary<Int32, Role>));
-            ClassicalCatalog = (string)info.GetValue("BabelMeta.Model.Work.ClassicalCatalog", typeof(string));
+            Id = (int)info.GetValue("BabelMeta.Model.Work.Id", typeof(int));
+            Parent = (int?)info.GetValue("BabelMeta.Model.Work.Parent", typeof(int?));
+            MovementNumber = (short?)info.GetValue("BabelMeta.Model.Work.MovementNumber", typeof(short?));
+            Title = (Dictionary<String, String>)info.GetValue("BabelMeta.Model.Work.Title", typeof(Dictionary<String, String>));
+            MovementTitle = (Dictionary<String, String>)info.GetValue("BabelMeta.Model.Work.MovementTitle", typeof(Dictionary<String, String>));
+            Contributors = (Dictionary<int, Role>)info.GetValue("BabelMeta.Model.Work.Contributors", typeof(Dictionary<int, Role>));
+            ClassicalCatalog = (String)info.GetValue("BabelMeta.Model.Work.ClassicalCatalog", typeof(String));
             Tonality = (Key?)info.GetValue("BabelMeta.Model.Work.Tonality", typeof(Key?));
-            Year = (Int16?)info.GetValue("BabelMeta.Model.Work.Year", typeof(Int16?));
+            Year = (short?)info.GetValue("BabelMeta.Model.Work.Year", typeof(short?));
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -77,38 +77,38 @@ namespace BabelMeta.Model
         /// <summary>
         /// Work internal id.
         /// </summary>
-        public Int32 Id { get; set; }
+        public int Id { get; set; }
 
         /// <summary>
         /// Parent work, if any. Applicable mostly for classical works.
         /// </summary>
-        public Int32? Parent { get; set; }
+        public int? Parent { get; set; }
 
         /// <summary>
         /// Movement number if the work is a sub-work of a parent work. Applicable mostly for classical works.
         /// </summary>
-        public Int16? MovementNumber { get; set; }
+        public short? MovementNumber { get; set; }
 
         /// <summary>
         /// Work main title in the different available languages.
         /// If a parent work exists, the Title would typically contain the parent work title, a separator, and the movement title.
         /// </summary>
-        public Dictionary<string, string> Title { get; set; }
+        public Dictionary<String, String> Title { get; set; }
 
         /// <summary>
         /// Movement title when available, in the different available languages.
         /// </summary>
-        public Dictionary<string, string> MovementTitle { get; set; }
+        public Dictionary<String, String> MovementTitle { get; set; }
 
         /// <summary>
         /// Any Contributor in the work e.g. Composer or Arranger.
         /// </summary>
-        public Dictionary<Int32, Role> Contributors { get; set; }
+        public Dictionary<int, Role> Contributors { get; set; }
 
         /// <summary>
         /// Opus number. Applicable mostly for classical works.
         /// </summary>
-        public string ClassicalCatalog { get; set; }
+        public String ClassicalCatalog { get; set; }
 
         /// <summary>
         /// Work tonality.
@@ -118,6 +118,6 @@ namespace BabelMeta.Model
         /// <summary>
         /// Year of work composition.
         /// </summary>
-        public Int16? Year { get; set; }
+        public short? Year { get; set; }
     }
 }

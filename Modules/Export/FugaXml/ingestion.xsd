@@ -27,7 +27,7 @@
             </xsd:documentation>
           </xsd:annotation>
           <xsd:simpleType>
-            <xsd:restriction base="xsd:string">
+            <xsd:restriction base="xsd:String">
               <xsd:enumeration value="INSERT"></xsd:enumeration>
               <xsd:enumeration value="UPDATE"></xsd:enumeration>
               </xsd:restriction>
@@ -36,7 +36,7 @@
         <xsd:element name="album">
           <xsd:complexType>
             <xsd:all>
-                <xsd:element name="album_notes" type="xsd:string" maxOccurs="1" minOccurs="0">
+                <xsd:element name="album_notes" type="xsd:String" maxOccurs="1" minOccurs="0">
                     <xsd:annotation>
                         <xsd:documentation>
                             Additional information included with the album, such as recording notes etc.
@@ -50,7 +50,7 @@
                         </xsd:documentation>
                     </xsd:annotation>
                 </xsd:element>
-            <xsd:element name="alternate_subgenre" type="xsd:string" maxOccurs="1" minOccurs="0">
+            <xsd:element name="alternate_subgenre" type="xsd:String" maxOccurs="1" minOccurs="0">
                 <xsd:annotation>
                     <xsd:documentation>
                         An additional qualifier to alternate genre.
@@ -70,7 +70,7 @@
                 </xsd:sequence>
               </xsd:complexType>              
             </xsd:element>
-            <xsd:element name="c_line_text" type="xsd:string" maxOccurs="1" minOccurs="1">
+            <xsd:element name="c_line_text" type="xsd:String" maxOccurs="1" minOccurs="1">
                     <xsd:annotation>
                         <xsd:documentation>
                             The text of the copyright notice indicating the owner of the copy rights of the album.
@@ -91,7 +91,7 @@
                         </xsd:documentation>
                     </xsd:annotation>
       			<xsd:simpleType>
-      				<xsd:restriction base="xsd:string">
+      				<xsd:restriction base="xsd:String">
       					<xsd:minLength value="0" />
       				</xsd:restriction> 
       			</xsd:simpleType>
@@ -103,7 +103,7 @@
                         </xsd:documentation>
                     </xsd:annotation>
       			<xsd:simpleType>
-      				<xsd:restriction base="xsd:string">
+      				<xsd:restriction base="xsd:String">
       					<xsd:minLength value="1" />
       				</xsd:restriction> 
       			</xsd:simpleType>
@@ -140,7 +140,7 @@
                       </xsd:documentation>
                   </xsd:annotation>
                 </xsd:element>
-                <xsd:element name="label" type="xsd:string" maxOccurs="1" minOccurs="1">
+                <xsd:element name="label" type="xsd:String" maxOccurs="1" minOccurs="1">
                     <xsd:annotation>
                         <xsd:documentation>
                             The Label that put out the release.
@@ -154,28 +154,28 @@
                         </xsd:documentation>
                     </xsd:annotation>
                 </xsd:element>
-                <xsd:element name="main_subgenre" type="xsd:string" maxOccurs="1" minOccurs="0">
+                <xsd:element name="main_subgenre" type="xsd:String" maxOccurs="1" minOccurs="0">
                     <xsd:annotation>
                         <xsd:documentation>
                             Additional qualifier to the main genre.
                         </xsd:documentation>
                     </xsd:annotation>
                 </xsd:element>
-              <xsd:element name="display_artist" type="xsd:string" maxOccurs="1" minOccurs="0">
+              <xsd:element name="display_artist" type="xsd:String" maxOccurs="1" minOccurs="0">
                 <xsd:annotation>
                   <xsd:documentation>
                     The display artist, only to be used for non-standard display artists like 'A vs. B'
                   </xsd:documentation>
                 </xsd:annotation>
               </xsd:element>
-                <xsd:element name="name" type="xsd:string" maxOccurs="1" minOccurs="1">
+                <xsd:element name="name" type="xsd:String" maxOccurs="1" minOccurs="1">
                     <xsd:annotation>
                         <xsd:documentation>
                             The title of the album.
                         </xsd:documentation>
                     </xsd:annotation>
                 </xsd:element>
-                <xsd:element name="p_line_text" type="xsd:string" maxOccurs="1" minOccurs="1">
+                <xsd:element name="p_line_text" type="xsd:String" maxOccurs="1" minOccurs="1">
                     <xsd:annotation>
                         <xsd:documentation>
                             The text indicating the owner of the publishing rights.
@@ -196,7 +196,7 @@
                         </xsd:documentation>
                     </xsd:annotation>
                   <xsd:simpleType>
-                      <xsd:restriction base="xsd:string">
+                      <xsd:restriction base="xsd:String">
                           <xsd:enumeration value="BUDGET"></xsd:enumeration>
                           <xsd:enumeration value="BACK"></xsd:enumeration>
                           <xsd:enumeration value="MID"></xsd:enumeration>
@@ -213,7 +213,7 @@
                   </xsd:documentation>
                 </xsd:annotation>
                 <xsd:simpleType>
-                  <xsd:restriction base="xsd:string">
+                  <xsd:restriction base="xsd:String">
                     <xsd:enumeration value="EN"></xsd:enumeration>
                     <xsd:enumeration value="FR"></xsd:enumeration>
                     <xsd:enumeration value="DE"></xsd:enumeration>
@@ -342,7 +342,7 @@
                         </xsd:documentation>
                     </xsd:annotation>
                     <xsd:simpleType>
-                        <xsd:restriction base="xsd:string">
+                        <xsd:restriction base="xsd:String">
                             <xsd:enumeration value="ALBUM"></xsd:enumeration>
                             <xsd:enumeration value="SINGLE"></xsd:enumeration>
                             <xsd:enumeration value="EP"></xsd:enumeration>
@@ -350,7 +350,7 @@
                         </xsd:restriction>
                     </xsd:simpleType>
                 </xsd:element>
-                <xsd:element name="release_version" type="xsd:string" minOccurs="0">
+                <xsd:element name="release_version" type="xsd:String" minOccurs="0">
                     <xsd:annotation>
                         <xsd:documentation>
                             Special information about the release, for
@@ -387,56 +387,56 @@
                         </xsd:documentation>
                     </xsd:annotation>
                 </xsd:element>
-              <xsd:element name="extra1" type="xsd:string" minOccurs="0">
+              <xsd:element name="extra1" type="xsd:String" minOccurs="0">
                 <xsd:annotation>
                   <xsd:documentation>
                     An extra field
                   </xsd:documentation>
                 </xsd:annotation>
               </xsd:element>
-              <xsd:element name="extra2" type="xsd:string" minOccurs="0">
+              <xsd:element name="extra2" type="xsd:String" minOccurs="0">
                 <xsd:annotation>
                   <xsd:documentation>
                     An extra field
                   </xsd:documentation>
                 </xsd:annotation>
               </xsd:element>
-              <xsd:element name="extra3" type="xsd:string" minOccurs="0">
+              <xsd:element name="extra3" type="xsd:String" minOccurs="0">
                 <xsd:annotation>
                   <xsd:documentation>
                     An extra field
                   </xsd:documentation>
                 </xsd:annotation>
               </xsd:element>
-              <xsd:element name="extra4" type="xsd:string" minOccurs="0">
+              <xsd:element name="extra4" type="xsd:String" minOccurs="0">
                 <xsd:annotation>
                   <xsd:documentation>
                     An extra field
                   </xsd:documentation>
                 </xsd:annotation>
               </xsd:element>
-              <xsd:element name="extra5" type="xsd:string" minOccurs="0">
+              <xsd:element name="extra5" type="xsd:String" minOccurs="0">
                 <xsd:annotation>
                   <xsd:documentation>
                     An extra field
                   </xsd:documentation>
                 </xsd:annotation>
               </xsd:element>
-              <xsd:element name="extra6" type="xsd:string" minOccurs="0">
+              <xsd:element name="extra6" type="xsd:String" minOccurs="0">
                 <xsd:annotation>
                   <xsd:documentation>
                     An extra field
                   </xsd:documentation>
                 </xsd:annotation>
               </xsd:element>
-              <xsd:element name="extra7" type="xsd:string" minOccurs="0">
+              <xsd:element name="extra7" type="xsd:String" minOccurs="0">
                 <xsd:annotation>
                   <xsd:documentation>
                     An extra field
                   </xsd:documentation>
                 </xsd:annotation>
               </xsd:element>
-              <xsd:element name="extra8" type="xsd:string" minOccurs="0">
+              <xsd:element name="extra8" type="xsd:String" minOccurs="0">
                 <xsd:annotation>
                   <xsd:documentation>
                     An extra field
@@ -486,7 +486,7 @@
                                             </xsd:documentation>
                                         </xsd:annotation>
                                     </xsd:element>
-                                    <xsd:element name="alternate_subgenre" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                    <xsd:element name="alternate_subgenre" type="xsd:String" maxOccurs="1" minOccurs="0">
                                         <xsd:annotation>
                                             <xsd:documentation>
                                                 Additional qualifier to alternate genre of the track.
@@ -520,12 +520,12 @@
                                             </xsd:documentation>
                                         </xsd:annotation>
                                         <xsd:simpleType>
-                                            <xsd:restriction base="xsd:string">
+                                            <xsd:restriction base="xsd:String">
                                                 <xsd:pattern value="[A-Z]{2}[A-Z0-9]{3}[0-9]{7}"/>
                                             </xsd:restriction>
                                         </xsd:simpleType>
                                     </xsd:element>
-                                    <xsd:element name="lyrics" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                    <xsd:element name="lyrics" type="xsd:String" maxOccurs="1" minOccurs="0">
                                         <xsd:annotation>
                                             <xsd:documentation>
                                                 Multi-line lyrics.
@@ -539,14 +539,14 @@
                                             </xsd:documentation>
                                         </xsd:annotation>
                                     </xsd:element>
-                                    <xsd:element name="main_subgenre" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                    <xsd:element name="main_subgenre" type="xsd:String" maxOccurs="1" minOccurs="0">
                                         <xsd:annotation>
                                             <xsd:documentation>
                                                 An additional qualifier to main genre of the track.
                                             </xsd:documentation>
                                         </xsd:annotation>
                                     </xsd:element>
-                                    <xsd:element name="name" type="xsd:string" maxOccurs="1" minOccurs="1">
+                                    <xsd:element name="name" type="xsd:String" maxOccurs="1" minOccurs="1">
                                         <xsd:annotation>
                                             <xsd:documentation>
                                                 The title of the track.
@@ -651,35 +651,35 @@
                                       </xsd:documentation>
                                     </xsd:annotation>
                                   </xsd:element>
-                                  <xsd:element name="rights_holder_name" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                  <xsd:element name="rights_holder_name" type="xsd:String" maxOccurs="1" minOccurs="0">
                                     <xsd:annotation>
                                       <xsd:documentation>
                                         The name of the party that exclusively control the rights to the track.
                                       </xsd:documentation>
                                     </xsd:annotation>
                                   </xsd:element>
-                                  <xsd:element name="rights_ownership_name" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                  <xsd:element name="rights_ownership_name" type="xsd:String" maxOccurs="1" minOccurs="0">
                                     <xsd:annotation>
                                       <xsd:documentation>
                                         The name of the party that own the rights to the track.
                                       </xsd:documentation>
                                     </xsd:annotation>
                                   </xsd:element>
-                                  <xsd:element name="country_of_commissioning" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                  <xsd:element name="country_of_commissioning" type="xsd:String" maxOccurs="1" minOccurs="0">
                                     <xsd:annotation>
                                       <xsd:documentation>
                                         The country in which the Original Copyright Owner (the party that made the recording of the track) is principally established.
                                       </xsd:documentation>
                                     </xsd:annotation>
                                   </xsd:element>
-                                  <xsd:element name="country_of_recording" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                  <xsd:element name="country_of_recording" type="xsd:String" maxOccurs="1" minOccurs="0">
                                     <xsd:annotation>
                                       <xsd:documentation>
                                         The name of the country the  track was recorded in.
                                       </xsd:documentation>
                                     </xsd:annotation>
                                   </xsd:element>
-                                  <xsd:element name="p_line_text" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                  <xsd:element name="p_line_text" type="xsd:String" maxOccurs="1" minOccurs="0">
                                     <xsd:annotation>
                                       <xsd:documentation>
                                         The text indicating the owner of the publishing rights.
@@ -700,7 +700,7 @@
                                       </xsd:documentation>
                                     </xsd:annotation>
                                     <xsd:simpleType>
-                                      <xsd:restriction base="xsd:string">
+                                      <xsd:restriction base="xsd:String">
                                         <xsd:enumeration value="FREE"></xsd:enumeration>
                                         <xsd:enumeration value="BACK"></xsd:enumeration>
                                         <xsd:enumeration value="MID"></xsd:enumeration>
@@ -716,56 +716,56 @@
                                             </xsd:documentation>
                                         </xsd:annotation>
                                     </xsd:element>
-                                  <xsd:element name="extra1" type="xsd:string" minOccurs="0">
+                                  <xsd:element name="extra1" type="xsd:String" minOccurs="0">
                                     <xsd:annotation>
                                       <xsd:documentation>
                                         An extra field
                                       </xsd:documentation>
                                     </xsd:annotation>
                                   </xsd:element>
-                                  <xsd:element name="extra2" type="xsd:string" minOccurs="0">
+                                  <xsd:element name="extra2" type="xsd:String" minOccurs="0">
                                     <xsd:annotation>
                                       <xsd:documentation>
                                         An extra field
                                       </xsd:documentation>
                                     </xsd:annotation>
                                   </xsd:element>
-                                  <xsd:element name="extra3" type="xsd:string" minOccurs="0">
+                                  <xsd:element name="extra3" type="xsd:String" minOccurs="0">
                                     <xsd:annotation>
                                       <xsd:documentation>
                                         An extra field
                                       </xsd:documentation>
                                     </xsd:annotation>
                                   </xsd:element>
-                                  <xsd:element name="extra4" type="xsd:string" minOccurs="0">
+                                  <xsd:element name="extra4" type="xsd:String" minOccurs="0">
                                     <xsd:annotation>
                                       <xsd:documentation>
                                         An extra field
                                       </xsd:documentation>
                                     </xsd:annotation>
                                   </xsd:element>
-                                  <xsd:element name="extra5" type="xsd:string" minOccurs="0">
+                                  <xsd:element name="extra5" type="xsd:String" minOccurs="0">
                                     <xsd:annotation>
                                       <xsd:documentation>
                                         An extra field
                                       </xsd:documentation>
                                     </xsd:annotation>
                                   </xsd:element>
-                                  <xsd:element name="extra6" type="xsd:string" minOccurs="0">
+                                  <xsd:element name="extra6" type="xsd:String" minOccurs="0">
                                     <xsd:annotation>
                                       <xsd:documentation>
                                         An extra field
                                       </xsd:documentation>
                                     </xsd:annotation>
                                   </xsd:element>
-                                  <xsd:element name="extra7" type="xsd:string" minOccurs="0">
+                                  <xsd:element name="extra7" type="xsd:String" minOccurs="0">
                                     <xsd:annotation>
                                       <xsd:documentation>
                                         An extra field
                                       </xsd:documentation>
                                     </xsd:annotation>
                                   </xsd:element>
-                                  <xsd:element name="extra8" type="xsd:string" minOccurs="0">
+                                  <xsd:element name="extra8" type="xsd:String" minOccurs="0">
                                     <xsd:annotation>
                                       <xsd:documentation>
                                         An extra field
@@ -794,14 +794,14 @@
                                             </xsd:documentation>
                                         </xsd:annotation>
                                     </xsd:element>
-                                    <xsd:element name="track_notes" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                    <xsd:element name="track_notes" type="xsd:String" maxOccurs="1" minOccurs="0">
                                         <xsd:annotation>
                                             <xsd:documentation>
                                                 Multi-line description of the track.
                                             </xsd:documentation>
                                         </xsd:annotation>
                                     </xsd:element>
-                                    <xsd:element name="track_version" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                    <xsd:element name="track_version" type="xsd:String" maxOccurs="1" minOccurs="0">
                                         <xsd:annotation>
                                             <xsd:documentation>
                                                 The version of the track when released in more
@@ -845,7 +845,7 @@
                                             </xsd:documentation>
                                         </xsd:annotation>
                                     </xsd:element>
-                                    <xsd:element name="alternate_subgenre" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                    <xsd:element name="alternate_subgenre" type="xsd:String" maxOccurs="1" minOccurs="0">
                                         <xsd:annotation>
                                             <xsd:documentation>
                                                 Additional qualifier to alternate genre of the track.
@@ -859,7 +859,7 @@
                                             </xsd:documentation>
                                         </xsd:annotation>
                                     </xsd:element>
-                                  <xsd:element name="classical_catalog" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                  <xsd:element name="classical_catalog" type="xsd:String" maxOccurs="1" minOccurs="0">
                                     <xsd:annotation>
                                       <xsd:documentation>
                                         The classical catalog designation for this track
@@ -879,7 +879,7 @@
                                             </xsd:sequence>
                                         </xsd:complexType>
                                     </xsd:element>
-                                  <xsd:element name="display_title" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                  <xsd:element name="display_title" type="xsd:String" maxOccurs="1" minOccurs="0">
                                     <xsd:annotation>
                                       <xsd:documentation>
                                         The optional display title. Use only if you want to override the standard one which is based on
@@ -894,26 +894,26 @@
                                             </xsd:documentation>
                                         </xsd:annotation>
                                         <xsd:simpleType>
-                                            <xsd:restriction base="xsd:string">
+                                            <xsd:restriction base="xsd:String">
                                                 <xsd:pattern value="[A-Z]{2}[A-Z0-9]{3}[0-9]{7}"/>
                                             </xsd:restriction>
                                         </xsd:simpleType>
                                     </xsd:element>
-                                    <xsd:element name="lyrics" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                    <xsd:element name="lyrics" type="xsd:String" maxOccurs="1" minOccurs="0">
                                         <xsd:annotation>
                                             <xsd:documentation>
                                                 Multi-line lyrics.
                                             </xsd:documentation>
                                         </xsd:annotation>
                                     </xsd:element>
-                                    <xsd:element name="main_subgenre" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                    <xsd:element name="main_subgenre" type="xsd:String" maxOccurs="1" minOccurs="0">
                                         <xsd:annotation>
                                             <xsd:documentation>
                                                 An additional qualifier to main genre of the track.
                                             </xsd:documentation>
                                         </xsd:annotation>
                                     </xsd:element>
-                                    <xsd:element name="movement" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                    <xsd:element name="movement" type="xsd:String" maxOccurs="1" minOccurs="0">
                                         <xsd:annotation>
                                             <xsd:documentation>
                                                 The movement title of the track.
@@ -933,7 +933,7 @@
                                       <xsd:documentation>The key of this classical track.</xsd:documentation>
                                     </xsd:annotation>
                                     <xsd:simpleType>
-                                      <xsd:restriction base="xsd:string">
+                                      <xsd:restriction base="xsd:String">
                                         <xsd:enumeration value="A_MAJOR"/>
                                         <xsd:enumeration value="A_MINOR"/>
                                         <xsd:enumeration value="A_FLAT_MAJOR"/>
@@ -1069,35 +1069,35 @@
                                       </xsd:documentation>
                                     </xsd:annotation>
                                   </xsd:element>
-                                  <xsd:element name="rights_holder_name" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                  <xsd:element name="rights_holder_name" type="xsd:String" maxOccurs="1" minOccurs="0">
                                     <xsd:annotation>
                                       <xsd:documentation>
                                         The name of the party that exclusively control the rights to the track.
                                       </xsd:documentation>
                                     </xsd:annotation>
                                   </xsd:element>
-                                  <xsd:element name="rights_ownership_name" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                  <xsd:element name="rights_ownership_name" type="xsd:String" maxOccurs="1" minOccurs="0">
                                     <xsd:annotation>
                                       <xsd:documentation>
                                         The name of the party that own the rights to the track.
                                       </xsd:documentation>
                                     </xsd:annotation>
                                   </xsd:element>
-                                  <xsd:element name="country_of_commissioning" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                  <xsd:element name="country_of_commissioning" type="xsd:String" maxOccurs="1" minOccurs="0">
                                     <xsd:annotation>
                                       <xsd:documentation>
                                         The country in which the Original Copyright Owner (the party that made the recording of the track) is principally established.
                                       </xsd:documentation>
                                     </xsd:annotation>
                                   </xsd:element>
-                                  <xsd:element name="country_of_recording" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                  <xsd:element name="country_of_recording" type="xsd:String" maxOccurs="1" minOccurs="0">
                                     <xsd:annotation>
                                       <xsd:documentation>
                                         The name of the country the  track was recorded in.
                                       </xsd:documentation>
                                     </xsd:annotation>
                                   </xsd:element>
-                                  <xsd:element name="p_line_text" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                  <xsd:element name="p_line_text" type="xsd:String" maxOccurs="1" minOccurs="0">
                                     <xsd:annotation>
                                       <xsd:documentation>
                                         The text indicating the owner of the publishing rights.
@@ -1118,7 +1118,7 @@
                                       </xsd:documentation>
                                     </xsd:annotation>
                                     <xsd:simpleType>
-                                      <xsd:restriction base="xsd:string">
+                                      <xsd:restriction base="xsd:String">
                                         <xsd:enumeration value="FREE"></xsd:enumeration>
                                         <xsd:enumeration value="BACK"></xsd:enumeration>
                                         <xsd:enumeration value="MID"></xsd:enumeration>
@@ -1127,56 +1127,56 @@
                                     </xsd:simpleType>
 
                                   </xsd:element>
-                                  <xsd:element name="extra1" type="xsd:string" minOccurs="0">
+                                  <xsd:element name="extra1" type="xsd:String" minOccurs="0">
                                     <xsd:annotation>
                                       <xsd:documentation>
                                         An extra field
                                       </xsd:documentation>
                                     </xsd:annotation>
                                   </xsd:element>
-                                  <xsd:element name="extra2" type="xsd:string" minOccurs="0">
+                                  <xsd:element name="extra2" type="xsd:String" minOccurs="0">
                                     <xsd:annotation>
                                       <xsd:documentation>
                                         An extra field
                                       </xsd:documentation>
                                     </xsd:annotation>
                                   </xsd:element>
-                                  <xsd:element name="extra3" type="xsd:string" minOccurs="0">
+                                  <xsd:element name="extra3" type="xsd:String" minOccurs="0">
                                     <xsd:annotation>
                                       <xsd:documentation>
                                         An extra field
                                       </xsd:documentation>
                                     </xsd:annotation>
                                   </xsd:element>
-                                  <xsd:element name="extra4" type="xsd:string" minOccurs="0">
+                                  <xsd:element name="extra4" type="xsd:String" minOccurs="0">
                                     <xsd:annotation>
                                       <xsd:documentation>
                                         An extra field
                                       </xsd:documentation>
                                     </xsd:annotation>
                                   </xsd:element>
-                                  <xsd:element name="extra5" type="xsd:string" minOccurs="0">
+                                  <xsd:element name="extra5" type="xsd:String" minOccurs="0">
                                     <xsd:annotation>
                                       <xsd:documentation>
                                         An extra field
                                       </xsd:documentation>
                                     </xsd:annotation>
                                   </xsd:element>
-                                  <xsd:element name="extra6" type="xsd:string" minOccurs="0">
+                                  <xsd:element name="extra6" type="xsd:String" minOccurs="0">
                                     <xsd:annotation>
                                       <xsd:documentation>
                                         An extra field
                                       </xsd:documentation>
                                     </xsd:annotation>
                                   </xsd:element>
-                                  <xsd:element name="extra7" type="xsd:string" minOccurs="0">
+                                  <xsd:element name="extra7" type="xsd:String" minOccurs="0">
                                     <xsd:annotation>
                                       <xsd:documentation>
                                         An extra field
                                       </xsd:documentation>
                                     </xsd:annotation>
                                   </xsd:element>
-                                  <xsd:element name="extra8" type="xsd:string" minOccurs="0">
+                                  <xsd:element name="extra8" type="xsd:String" minOccurs="0">
                                     <xsd:annotation>
                                       <xsd:documentation>
                                         An extra field
@@ -1212,14 +1212,14 @@
                                             </xsd:documentation>
                                         </xsd:annotation>
                                     </xsd:element>
-                                    <xsd:element name="track_notes" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                    <xsd:element name="track_notes" type="xsd:String" maxOccurs="1" minOccurs="0">
                                         <xsd:annotation>
                                             <xsd:documentation>
                                                 Multi-line description of the track.
                                             </xsd:documentation>
                                         </xsd:annotation>
                                     </xsd:element>
-                                    <xsd:element name="track_version" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                    <xsd:element name="track_version" type="xsd:String" maxOccurs="1" minOccurs="0">
                                         <xsd:annotation>
                                             <xsd:documentation>
                                                 The version of the track when released in more
@@ -1240,7 +1240,7 @@
                                         </xsd:sequence>
                                       </xsd:complexType>
                                     </xsd:element>
-                              <xsd:element name="work" type="xsd:string" maxOccurs="1" minOccurs="0">
+                              <xsd:element name="work" type="xsd:String" maxOccurs="1" minOccurs="0">
                                 <xsd:annotation>
                                   <xsd:documentation>
                                     The title of the work the track belongs to.
@@ -1256,7 +1256,7 @@
                                           <xsd:documentation>Element describing a video of an album.</xsd:documentation>
                                       </xsd:annotation>
                                       <xsd:all>
-                                          <xsd:element name="name" type="xsd:string" maxOccurs="1" minOccurs="1">
+                                          <xsd:element name="name" type="xsd:String" maxOccurs="1" minOccurs="1">
                                               <xsd:annotation>
                                                   <xsd:documentation>
                                                       The name of the video.
@@ -1270,7 +1270,7 @@
                                                   </xsd:documentation>
                                               </xsd:annotation>
                                               <xsd:simpleType>
-                                                  <xsd:restriction base="xsd:string">
+                                                  <xsd:restriction base="xsd:String">
                                                       <xsd:pattern value="[A-Z]{2}[A-Z0-9]{3}[0-9]{7}"/>
                                                   </xsd:restriction>
                                               </xsd:simpleType>
@@ -1301,7 +1301,7 @@
                                                   </xsd:sequence>
                                               </xsd:complexType>
                                           </xsd:element>
-                                          <xsd:element name="display_artist" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                          <xsd:element name="display_artist" type="xsd:String" maxOccurs="1" minOccurs="0">
                                               <xsd:annotation>
                                                   <xsd:documentation>
                                                       The display artist, only to be used for non-standard display artists like 'A vs. B'
@@ -1327,7 +1327,7 @@
                                                   </xsd:documentation>
                                               </xsd:annotation>
                                           </xsd:element>
-                                          <xsd:element name="video_version" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                          <xsd:element name="video_version" type="xsd:String" maxOccurs="1" minOccurs="0">
                                               <xsd:annotation>
                                                   <xsd:documentation>
                                                       The version of the video when released in more than one version.
@@ -1341,7 +1341,7 @@
                                                   </xsd:documentation>
                                               </xsd:annotation>
                                               <xsd:simpleType>
-                                                  <xsd:restriction base="xsd:string">
+                                                  <xsd:restriction base="xsd:String">
                                                       <xsd:enumeration value="FREE"></xsd:enumeration>
                                                       <xsd:enumeration value="BACK"></xsd:enumeration>
                                                       <xsd:enumeration value="MID"></xsd:enumeration>
@@ -1370,7 +1370,7 @@
                                                   </xsd:documentation>
                                               </xsd:annotation>
                                           </xsd:element>
-                                          <xsd:element name="p_line_text" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                          <xsd:element name="p_line_text" type="xsd:String" maxOccurs="1" minOccurs="0">
                                               <xsd:annotation>
                                                   <xsd:documentation>
                                                       The text indicating the owner of the publishing rights.
@@ -1431,28 +1431,28 @@
                                                   </xsd:documentation>
                                               </xsd:annotation>
                                           </xsd:element>
-                                          <xsd:element name="rights_holder_name" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                          <xsd:element name="rights_holder_name" type="xsd:String" maxOccurs="1" minOccurs="0">
                                               <xsd:annotation>
                                                   <xsd:documentation>
                                                       The name of the party that exclusively control the rights to the video.
                                                   </xsd:documentation>
                                               </xsd:annotation>
                                           </xsd:element>
-                                          <xsd:element name="rights_ownership_name" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                          <xsd:element name="rights_ownership_name" type="xsd:String" maxOccurs="1" minOccurs="0">
                                               <xsd:annotation>
                                                   <xsd:documentation>
                                                       The name of the party that own the rights to the video.
                                                   </xsd:documentation>
                                               </xsd:annotation>
                                           </xsd:element>
-                                          <xsd:element name="country_of_commissioning" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                          <xsd:element name="country_of_commissioning" type="xsd:String" maxOccurs="1" minOccurs="0">
                                               <xsd:annotation>
                                                   <xsd:documentation>
                                                       The country in which the Original Copyright Owner (the party that made the recording of the video) is principally established.
                                                   </xsd:documentation>
                                               </xsd:annotation>
                                           </xsd:element>
-                                          <xsd:element name="country_of_recording" type="xsd:string" maxOccurs="1" minOccurs="0">
+                                          <xsd:element name="country_of_recording" type="xsd:String" maxOccurs="1" minOccurs="0">
                                               <xsd:annotation>
                                                   <xsd:documentation>
                                                       The name of the country the video was recorded in.
@@ -1525,7 +1525,7 @@
                         </xsd:documentation>
                     </xsd:annotation>
       			<xsd:simpleType>
-      				<xsd:restriction base="xsd:string">
+      				<xsd:restriction base="xsd:String">
       					<xsd:minLength value="12" />
       					<xsd:maxLength value="13" />
       				</xsd:restriction>
@@ -1554,7 +1554,7 @@
           </xsd:complexType>
         </xsd:element>        
       </xsd:all>
-      <xsd:attribute name="noNamespaceSchemaLocation" type="xsd:string" />
+      <xsd:attribute name="noNamespaceSchemaLocation" type="xsd:String" />
     </xsd:complexType>
   </xsd:element>
   
@@ -1602,7 +1602,7 @@
                                       <xsd:element name="consumer_release_date" type="xsd:date" maxOccurs="1" minOccurs="0" />
                                       <xsd:element name="lead_time" minOccurs="0">
                                           <xsd:simpleType>
-                                              <xsd:restriction base="xsd:string">
+                                              <xsd:restriction base="xsd:String">
                                                   <xsd:enumeration value="NEVER_DELIVER"></xsd:enumeration>
                                                   <xsd:enumeration value="IMMEDIATELY"></xsd:enumeration>
                                                   <xsd:enumeration value="ZERO_DAYS"></xsd:enumeration>
@@ -1665,7 +1665,7 @@
                 <xsd:documentation>Details of an artist.</xsd:documentation>
             </xsd:annotation>
             <xsd:all>
-                <xsd:element name="biography" type="xsd:string" minOccurs="0">
+                <xsd:element name="biography" type="xsd:String" minOccurs="0">
                     <xsd:annotation>
                         <xsd:documentation>Multi-line text describing the artist.</xsd:documentation>
                     </xsd:annotation>
@@ -1675,12 +1675,12 @@
                         <xsd:documentation>The artist's name.</xsd:documentation>
                     </xsd:annotation>
 					<xsd:simpleType>
-						<xsd:restriction base="xsd:string">
+						<xsd:restriction base="xsd:String">
 							<xsd:minLength value="1" />
 						</xsd:restriction>
 					</xsd:simpleType>
                 </xsd:element>
-                <xsd:element name="website" type="xsd:string" minOccurs="0">
+                <xsd:element name="website" type="xsd:String" minOccurs="0">
                     <xsd:annotation>
                         <xsd:documentation>A consumer oriented website related to the artist.</xsd:documentation>
                     </xsd:annotation>
@@ -1695,7 +1695,7 @@
                 <xsd:documentation>Details of an artist.</xsd:documentation>
             </xsd:annotation>
             <xsd:all>
-                <xsd:element name="biography" type="xsd:string" minOccurs="0">
+                <xsd:element name="biography" type="xsd:String" minOccurs="0">
                     <xsd:annotation>
                         <xsd:documentation>Multi-line text describing the artist.</xsd:documentation>
                     </xsd:annotation>
@@ -1705,12 +1705,12 @@
                         <xsd:documentation>The artist's name.</xsd:documentation>
                     </xsd:annotation>
 					<xsd:simpleType>
-						<xsd:restriction base="xsd:string">
+						<xsd:restriction base="xsd:String">
 							<xsd:minLength value="1" />
 						</xsd:restriction>
 					</xsd:simpleType>
                 </xsd:element>
-                <xsd:element name="website" type="xsd:string" minOccurs="0">
+                <xsd:element name="website" type="xsd:String" minOccurs="0">
                     <xsd:annotation>
                         <xsd:documentation>A consumer oriented website related to the artist.</xsd:documentation>
                     </xsd:annotation>
@@ -1725,7 +1725,7 @@
     </xsd:element>
 
     <xsd:simpleType name="genre_type">
-        <xsd:restriction base="xsd:string">
+        <xsd:restriction base="xsd:String">
             <xsd:enumeration value="Alternative"></xsd:enumeration>
             <xsd:enumeration value="Audiobooks"></xsd:enumeration>
             <xsd:enumeration value="Blues"></xsd:enumeration>
@@ -1767,7 +1767,7 @@
             <xsd:documentation>The definition of a recording location.</xsd:documentation>
         </xsd:annotation>
 		<xsd:simpleType>
-			<xsd:restriction base="xsd:string">
+			<xsd:restriction base="xsd:String">
 				<xsd:minLength value="1" />
 			</xsd:restriction>
 	    </xsd:simpleType>
@@ -1800,13 +1800,13 @@
             </xsd:documentation>
         </xsd:annotation>
         <xsd:sequence maxOccurs="1" minOccurs="1">
-            <xsd:element name="name" type="xsd:string" maxOccurs="1" minOccurs="1">
+            <xsd:element name="name" type="xsd:String" maxOccurs="1" minOccurs="1">
                 <xsd:annotation>
                     <xsd:documentation>
                         This is the file name.
                     </xsd:documentation>
                 </xsd:annotation></xsd:element>
-            <xsd:element name="crc32_checksum" type="xsd:string" maxOccurs="1" minOccurs="0">
+            <xsd:element name="crc32_checksum" type="xsd:String" maxOccurs="1" minOccurs="0">
                 <xsd:annotation>
                     <xsd:documentation>
                         A CRC32 checksum so the receiver of the file can
@@ -1831,7 +1831,7 @@
                   </xsd:documentation>
               </xsd:annotation>
             </xsd:element>
-            <xsd:element name="name" type="xsd:string" />
+            <xsd:element name="name" type="xsd:String" />
         </xsd:choice>
     </xsd:complexType>
     <xsd:complexType name="redeliveries_type">
@@ -1878,7 +1878,7 @@
             <xsd:documentation>The territory where to apply this pricing. -- Note; the territory AN is obsolete.</xsd:documentation>
           </xsd:annotation>
         </xsd:element>
-        <xsd:element name="tier" type="xsd:string" maxOccurs="1" minOccurs="0">
+        <xsd:element name="tier" type="xsd:String" maxOccurs="1" minOccurs="0">
           <xsd:annotation>
             <xsd:documentation>The tier of this pricing.</xsd:documentation>
           </xsd:annotation>
@@ -1905,7 +1905,7 @@
             <xsd:documentation>The territory where to apply this pricing interval. -- Note; the territory AN is obsolete.</xsd:documentation>
           </xsd:annotation>
         </xsd:element>
-        <xsd:element name="tier" type="xsd:string" maxOccurs="1" minOccurs="1">
+        <xsd:element name="tier" type="xsd:String" maxOccurs="1" minOccurs="1">
           <xsd:annotation>
             <xsd:documentation>The tier of this pricing interval.</xsd:documentation>
           </xsd:annotation>
@@ -1947,7 +1947,7 @@
                   <xsd:documentation>The right that should be enabled.</xsd:documentation>
                 </xsd:annotation>
                 <xsd:simpleType>
-                  <xsd:restriction base="xsd:string">
+                  <xsd:restriction base="xsd:String">
                     <xsd:enumeration value="Subscription streaming"></xsd:enumeration>
                     <xsd:enumeration value="Ad supported streaming"></xsd:enumeration>
                     <xsd:enumeration value="Subscription download"></xsd:enumeration>
@@ -1969,7 +1969,7 @@
         <xsd:documentation>Element describing one territory based release date.</xsd:documentation>
       </xsd:annotation>
       <xsd:all>
-        <xsd:element name="territory_group" type="xsd:string" maxOccurs="1" minOccurs="1">
+        <xsd:element name="territory_group" type="xsd:String" maxOccurs="1" minOccurs="1">
           <xsd:annotation>
             <xsd:documentation>The territory group name for which to set this release date. It must already exist as a template.</xsd:documentation>
           </xsd:annotation>
@@ -1991,12 +1991,12 @@
         <xsd:documentation>Element describing one attachment of the product.</xsd:documentation>
       </xsd:annotation>
       <xsd:all>
-        <xsd:element name="name" type="xsd:string" maxOccurs="1" minOccurs="0">
+        <xsd:element name="name" type="xsd:String" maxOccurs="1" minOccurs="0">
           <xsd:annotation>
             <xsd:documentation>Name of the attachment.</xsd:documentation>
           </xsd:annotation>
         </xsd:element>
-        <xsd:element name="description" type="xsd:string" maxOccurs="1" minOccurs="0">
+        <xsd:element name="description" type="xsd:String" maxOccurs="1" minOccurs="0">
           <xsd:annotation>
             <xsd:documentation>Description of the attachment.</xsd:documentation>
           </xsd:annotation>
@@ -2008,7 +2008,7 @@
             </xsd:documentation>
           </xsd:annotation>
           <xsd:simpleType>
-            <xsd:restriction base="xsd:string">
+            <xsd:restriction base="xsd:String">
               <xsd:enumeration value="REGULAR"/>
               <xsd:enumeration value="BOOKLET"/>
             </xsd:restriction>
@@ -2022,7 +2022,7 @@
             <xsd:documentation>Designates the pre-order type of the asset. Be aware that not all stores honour this setting. Stores not honouring this will get all assets as normal, except pre-order only, which will not get delivered to stores that do not support it</xsd:documentation>
         </xsd:annotation>
         <xsd:simpleType>
-            <xsd:restriction base="xsd:string">
+            <xsd:restriction base="xsd:String">
                 <xsd:enumeration value="NONE">
                     <xsd:annotation>
                         <xsd:documentation>Designates no pre-order type. Assets will go live on the standard release date.</xsd:documentation>
@@ -2051,7 +2051,7 @@
             <xsd:documentation>Designates if the item has explicit content, clean meaning this is a cleaned version of content that was originally explicit</xsd:documentation>
         </xsd:annotation>
         <xsd:simpleType>
-            <xsd:restriction base="xsd:string">
+            <xsd:restriction base="xsd:String">
                 <xsd:enumeration value="true"/>
                 <xsd:enumeration value="false"/>
                 <xsd:enumeration value="clean"/>
@@ -2063,7 +2063,7 @@
     <xsd:element name="contributor">
         <xsd:complexType>
             <xsd:all>
-                <xsd:element name="name" type="xsd:string">
+                <xsd:element name="name" type="xsd:String">
                     <xsd:annotation>
                         <xsd:documentation>The contributor's name.</xsd:documentation>
                     </xsd:annotation>
@@ -2073,7 +2073,7 @@
                         <xsd:documentation>The contributor's role.</xsd:documentation>
                     </xsd:annotation>
                     <xsd:simpleType>
-                        <xsd:restriction base="xsd:string">
+                        <xsd:restriction base="xsd:String">
                             <xsd:enumeration value="Arranger"></xsd:enumeration>
                             <xsd:enumeration value="Choir"></xsd:enumeration>
                             <xsd:enumeration value="Composer"></xsd:enumeration>
@@ -2099,12 +2099,12 @@
     <xsd:element name="publisher">
         <xsd:complexType>
             <xsd:all>
-                <xsd:element name="publisher_name" type="xsd:string" minOccurs="1" maxOccurs="1">
+                <xsd:element name="publisher_name" type="xsd:String" minOccurs="1" maxOccurs="1">
                     <xsd:annotation>
                         <xsd:documentation>The publisher's legal name.</xsd:documentation>
                     </xsd:annotation>
                 </xsd:element>
-                <xsd:element name="writer_name" type="xsd:string" minOccurs="1" maxOccurs="1">
+                <xsd:element name="writer_name" type="xsd:String" minOccurs="1" maxOccurs="1">
                     <xsd:annotation>
                         <xsd:documentation>The writer's legal name.</xsd:documentation>
                     </xsd:annotation>

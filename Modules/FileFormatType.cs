@@ -25,7 +25,7 @@
 
 namespace BabelMeta.Modules
 {
-    public enum FormatType
+    public enum FileFormatType
     {
         ExcelWorkbook,
         ExcelXml2003,

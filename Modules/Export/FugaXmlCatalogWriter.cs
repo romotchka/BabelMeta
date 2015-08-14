@@ -148,12 +148,12 @@ namespace BabelMeta.Modules.Export
         /// <param name="rootFolder"></param>
         /// <param name="viewModel"></param>
         /// <returns></returns>
-        public ReturnCodes Generate(object context, MainFormViewModel viewModel = null)
+        public ReturnCode Generate(object context, MainFormViewModel viewModel = null)
         {
-            string rootFolder = (string)context;
-            if (string.IsNullOrEmpty(rootFolder))
+            String rootFolder = (String)context;
+            if (String.IsNullOrEmpty(rootFolder))
             {
-                return ReturnCodes.ModulesExportFugaXmlGenerateNullFolderName;
+                return ReturnCode.ModulesExportFugaXmlGenerateNullFolderName;
             }
 
             if ((rootFolder.ToCharArray())[rootFolder.Length-1] != '\\')
@@ -165,7 +165,7 @@ namespace BabelMeta.Modules.Export
 
             if (!CatalogContext.Instance.Initialized)
             {
-                return ReturnCodes.ModulesExportCatalogContextNotInitialized;
+                return ReturnCode.ModulesExportCatalogContextNotInitialized;
             }
 
             foreach (Album album in CatalogContext.Instance.Albums)
@@ -176,22 +176,22 @@ namespace BabelMeta.Modules.Export
                 i.album.tracks = new ingestionAlbumTracks();
 
                 // There MUST be a subfolder for each album
-                if (string.IsNullOrEmpty(album.Ean.ToString()))
+                if (String.IsNullOrEmpty(album.Ean.ToString()))
                 {
                     continue;
                 }
-                string subfolder = rootFolder + album.Ean;
+                String subfolder = rootFolder + album.Ean;
                 if (!Directory.Exists(subfolder))
                 {
                     Directory.CreateDirectory(subfolder);
                 }
                 subfolder += "\\";
 
-                string[] files = Directory.GetFiles(subfolder, "*.*");
+                String[] files = Directory.GetFiles(subfolder, "*.*");
 
                 GenerateAlbumWiseData(album, i, files);
 
-                foreach (KeyValuePair<Int16, Dictionary<Int16, string>> volume in album.Assets)
+                foreach (KeyValuePair<short, Dictionary<short, String>> volume in album.Tracks)
                 {
                     GenerateTrackWiseData(album, volume, i, files);
                 }
@@ -202,7 +202,7 @@ namespace BabelMeta.Modules.Export
 
             }      
 
-            return ReturnCodes.Ok;
+            return ReturnCode.Ok;
         }
 
         /// <summary>
@@ -211,21 +211,21 @@ namespace BabelMeta.Modules.Export
         /// <param name="fileType"></param>
         /// <param name="parameter"></param>
         /// <returns></returns>
-        private string SearchFilename(string[] files, FugaIngestionFileType fileType, object parameter = null)
+        private String SearchFilename(String[] files, FugaIngestionFileType fileType, object parameter = null)
         {
             if (files == null || files.Length == 0)
             {
-                return string.Empty;
+                return String.Empty;
             }
             var filesList = files.ToList();
 
             switch (fileType)
             {
                 case FugaIngestionFileType.Attachment:
-                    foreach (string file in filesList)
+                    foreach (String file in filesList)
                     {
                         var nameExtension = file.Split('.').Last().ToLower();
-                        if (!string.IsNullOrEmpty(nameExtension) && nameExtension.CompareTo("pdf") == 0)
+                        if (!String.IsNullOrEmpty(nameExtension) && nameExtension.CompareTo("pdf") == 0)
                         {
                             return file;
                         }
@@ -237,12 +237,17 @@ namespace BabelMeta.Modules.Export
                     {
                         var volumeIndex = ((KeyValuePair<int, int>)parameter).Key;
                         var trackIndex = ((KeyValuePair<int, int>)parameter).Value;
-                        foreach (string file in filesList)
+                        foreach (String file in filesList)
                         {
                             var nameExtension = file.Split('.').Last().ToLower();
                             if (
-                                    !string.IsNullOrEmpty(nameExtension) &&
-                                    (nameExtension.CompareTo("wav") == 0 || nameExtension.CompareTo("aif") == 0 || nameExtension.CompareTo("aiff") == 0)
+                                    !String.IsNullOrEmpty(nameExtension) 
+                                    &&
+                                    (
+                                        String.Compare(nameExtension, "wav", StringComparison.Ordinal) == 0 
+                                        || String.Compare(nameExtension, "aif", StringComparison.Ordinal) == 0 
+                                        || String.Compare(nameExtension, "aiff", StringComparison.Ordinal) == 0
+                                    )
                                 )
                             {
                                 var nameLeft = file.Substring(0, file.Length - nameExtension.Length - 1);
@@ -272,11 +277,11 @@ namespace BabelMeta.Modules.Export
                     break;
 
                 case FugaIngestionFileType.Cover:
-                    foreach (string file in filesList)
+                    foreach (String file in filesList)
                     {
                         var nameExtension = file.Split('.').Last().ToLower();
                         if (
-                                !string.IsNullOrEmpty(nameExtension) &&
+                                !String.IsNullOrEmpty(nameExtension) &&
                                 (nameExtension.CompareTo("jpg") == 0 || nameExtension.CompareTo("jpeg") == 0 || nameExtension.CompareTo("png") == 0)
                             )
                         {
@@ -286,10 +291,10 @@ namespace BabelMeta.Modules.Export
                     break;
             }
 
-            return string.Empty;
+            return String.Empty;
         }
 
-        private void GenerateAlbumWiseData(Album album, ingestion i, string[] files)
+        private void GenerateAlbumWiseData(Album album, ingestion i, String[] files)
         {
             if (album == null || i == null)
             {
@@ -314,8 +319,8 @@ namespace BabelMeta.Modules.Export
 
             // TODO i.album.alternate_subgenre
 
-            string attachmentFile = SearchFilename(files, FugaIngestionFileType.Attachment);
-            if (!string.IsNullOrEmpty(attachmentFile))
+            String attachmentFile = SearchFilename(files, FugaIngestionFileType.Attachment);
+            if (!String.IsNullOrEmpty(attachmentFile))
             {
                 FileInfo f = new FileInfo(attachmentFile);
                 i.album.attachments = new List<attachment_type>();
@@ -331,7 +336,7 @@ namespace BabelMeta.Modules.Export
                     });
             }
 
-            i.album.c_line_text = (!string.IsNullOrEmpty(album.CName)) ? album.CName : CatalogContext.Instance.Settings.COwnerDefault;
+            i.album.c_line_text = (!String.IsNullOrEmpty(album.CName)) ? album.CName : CatalogContext.Instance.Settings.COwnerDefault;
 
             i.album.c_line_year = album.CYear.ToString();
 
@@ -344,7 +349,7 @@ namespace BabelMeta.Modules.Export
             i.album.consumer_release_date = album.ConsumerReleaseDate;
 
             var coverFile = SearchFilename(files, FugaIngestionFileType.Cover);
-            if (!string.IsNullOrEmpty(coverFile))
+            if (!String.IsNullOrEmpty(coverFile))
             {
                 FileInfo f = new FileInfo(coverFile);
                 i.album.cover_art = new ingestionAlbumCover_art();
@@ -389,7 +394,7 @@ namespace BabelMeta.Modules.Export
             // TODO i.album.original_release_date
             // TODO i.album.original_release_dateSpecified
 
-            i.album.p_line_text = (!string.IsNullOrEmpty(album.PName)) ? album.PName : CatalogContext.Instance.Settings.POwnerDefault;
+            i.album.p_line_text = (!String.IsNullOrEmpty(album.PName)) ? album.PName : CatalogContext.Instance.Settings.POwnerDefault;
 
             i.album.p_line_year = album.PYear.ToString();
 
@@ -402,7 +407,7 @@ namespace BabelMeta.Modules.Export
 
             if (album.PrimaryArtistId > 0)
             {
-                Artist primaryArtist = CatalogContext.Instance.Artists.FirstOrDefault(e => e.Id == (Int32)album.PrimaryArtistId);
+                Artist primaryArtist = CatalogContext.Instance.Artists.FirstOrDefault(e => e.Id == (int)album.PrimaryArtistId);
                 if (primaryArtist.LastName.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName))
                 {
                     i.album.primary_artist = new primary_artist
@@ -440,23 +445,23 @@ namespace BabelMeta.Modules.Export
 
         }
 
-        private void GenerateTrackWiseData(Album album, KeyValuePair<Int16, Dictionary<Int16, string>> volume, ingestion i, string[] files)
+        private void GenerateTrackWiseData(Album album, KeyValuePair<short, Dictionary<short, String>> volume, ingestion i, String[] files)
         {
             if (album == null || i == null)
             {
                 return;
             }
-            Int16 volumeIndex = volume.Key;
-            Dictionary<Int16, string> volumeTracks = volume.Value;
+            short volumeIndex = volume.Key;
+            Dictionary<short, String> volumeTracks = volume.Value;
 
             // Artists buffer for performance improvement
             List<Artist> artistsBuffer = new List<Artist>();
 
-            foreach (KeyValuePair<Int16, string> track in volumeTracks)
+            foreach (KeyValuePair<short, String> volumeTrack in volumeTracks)
             {
-                Int16 trackIndex = track.Key;
-                string isrcId = track.Value;
-                Isrc isrc = CatalogContext.Instance.Isrcs.FirstOrDefault(e => e.Id.CompareTo(isrcId) == 0);
+                short trackIndex = volumeTrack.Key;
+                String isrcId = volumeTrack.Value;
+                Asset isrc = CatalogContext.Instance.Assets.FirstOrDefault(e => e.Id.CompareTo(isrcId) == 0);
                 if (isrc == null)
                 {
                     continue;
@@ -476,12 +481,12 @@ namespace BabelMeta.Modules.Export
                     continue;
                 }
 
-                ingestionAlbumTracksClassical_track asset = new ingestionAlbumTracksClassical_track();
+                ingestionAlbumTracksClassical_track ingestionTrack = new ingestionAlbumTracksClassical_track();
 
                 // Additional artists, if any, are from the second performer.
                 if (isrcPerformersKeys.Length > 1)
                 {
-                    asset.additional_artists = new List<artist>();
+                    ingestionTrack.additional_artists = new List<artist>();
                 }
                 for (var j = 1; j < isrcPerformersKeys.Length; j++)
                 {
@@ -489,7 +494,7 @@ namespace BabelMeta.Modules.Export
                         e.Id == isrcPerformersKeys[j]);
                     if (additionalArtist.LastName.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName))
                     {
-                        asset.additional_artists.Add(new artist
+                        ingestionTrack.additional_artists.Add(new artist
                         {
                             name = (additionalArtist.FirstName[CatalogContext.Instance.DefaultLang.ShortName] + " " + additionalArtist.LastName[CatalogContext.Instance.DefaultLang.ShortName]).Trim(),
                             primary_artist = true, // TODO manage primary character for additional artists
@@ -497,30 +502,30 @@ namespace BabelMeta.Modules.Export
                     }
                 }
 
-                asset.allow_preorder_preview = false;
+                ingestionTrack.allow_preorder_preview = false;
 
-                asset.allow_preorder_previewSpecified = true;
+                ingestionTrack.allow_preorder_previewSpecified = true;
 
                 // TODO asset.alternate_genre
 
-                asset.alternate_genreSpecified = false;
+                ingestionTrack.alternate_genreSpecified = false;
 
                 // TODO asset.alternate_subgenre
 
-                asset.always_send_display_title = true;
+                ingestionTrack.always_send_display_title = true;
 
-                asset.always_send_display_titleSpecified = true;
+                ingestionTrack.always_send_display_titleSpecified = true;
 
-                asset.available_separately = isrc.AvailableSeparately;
+                ingestionTrack.available_separately = isrc.AvailableSeparately;
 
-                asset.catalog_tier = _isrcTierConverter[(CatalogTier)isrc.Tier];
+                ingestionTrack.catalog_tier = _isrcTierConverter[(CatalogTier)isrc.Tier];
 
-                asset.catalog_tierSpecified = true;
+                ingestionTrack.catalog_tierSpecified = true;
 
-                asset.classical_catalog = (parentWork == null) ? currentWork.ClassicalCatalog : parentWork.ClassicalCatalog;
+                ingestionTrack.classical_catalog = (parentWork == null) ? currentWork.ClassicalCatalog : parentWork.ClassicalCatalog;
 
-                asset.contributors = new List<contributor>(); // These represent work-related contributors like typically Composer, Arranger, etc.
-                foreach (KeyValuePair<Int32, Role> workContributor in currentWork.Contributors)
+                ingestionTrack.contributors = new List<contributor>(); // These represent work-related contributors like typically Composer, Arranger, etc.
+                foreach (KeyValuePair<int, Role> workContributor in currentWork.Contributors)
                 {
                     Artist artist;
                     if (artistsBuffer.Exists(a => a.Id == workContributor.Key))
@@ -541,7 +546,7 @@ namespace BabelMeta.Modules.Export
 
                     if (artist.LastName.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName))
                     {
-                        asset.contributors.Add(new contributor()
+                        ingestionTrack.contributors.Add(new contributor()
                         {
                             name = (artist.FirstName[CatalogContext.Instance.DefaultLang.ShortName] + " " + artist.LastName[CatalogContext.Instance.DefaultLang.ShortName]).Trim(),
                             role = cRole,
@@ -560,9 +565,9 @@ namespace BabelMeta.Modules.Export
                             )
                     )
                 {
-                    asset.display_title = (parentWork == null)
+                    ingestionTrack.display_title = (parentWork == null)
                         ? currentWork.Title[CatalogContext.Instance.DefaultLang.ShortName]
-                        : parentWork.Title[CatalogContext.Instance.DefaultLang.ShortName] + Syntax.HierarchicalSeparator(CatalogContext.Instance.DefaultLang) + currentWork.Title[CatalogContext.Instance.DefaultLang.ShortName];
+                        : parentWork.Title[CatalogContext.Instance.DefaultLang.ShortName] + StringHelper.HierarchicalSeparator(CatalogContext.Instance.DefaultLang) + currentWork.Title[CatalogContext.Instance.DefaultLang.ShortName];
                 }
 
                 // TODO asset.extra1
@@ -578,13 +583,13 @@ namespace BabelMeta.Modules.Export
                 // TODO asset.extra10
                 // TODO asset.extra10Specified
 
-                asset.isrc_code = isrcId;
+                ingestionTrack.isrc_code = isrcId;
 
-                asset.keySpecified = (parentWork == null && currentWork.Tonality != null) || (parentWork != null && parentWork.Tonality != null);
+                ingestionTrack.keySpecified = (parentWork == null && currentWork.Tonality != null) || (parentWork != null && parentWork.Tonality != null);
 
-                if (asset.keySpecified)
+                if (ingestionTrack.keySpecified)
                 {
-                    asset.key = (parentWork == null)
+                    ingestionTrack.key = (parentWork == null)
                         ? _keyConverter[(Key)(currentWork.Tonality)]
                         : _keyConverter[(Key)(parentWork.Tonality)];
                 }
@@ -593,45 +598,45 @@ namespace BabelMeta.Modules.Export
 
                 if (album.Subgenre != null)
                 {
-                    asset.main_subgenre = album.Subgenre.Name; // TODO implement trackwise field
+                    ingestionTrack.main_subgenre = album.Subgenre.Name; // TODO implement trackwise field
                 }
 
                 if  (
                         parentWork != null
                         && currentWork.MovementTitle.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName)
-                        && !string.IsNullOrEmpty(currentWork.MovementTitle[CatalogContext.Instance.DefaultLang.ShortName])
+                        && !String.IsNullOrEmpty(currentWork.MovementTitle[CatalogContext.Instance.DefaultLang.ShortName])
                     )
                 {
-                    asset.movement = currentWork.MovementTitle[CatalogContext.Instance.DefaultLang.ShortName];
+                    ingestionTrack.movement = currentWork.MovementTitle[CatalogContext.Instance.DefaultLang.ShortName];
                 }
 
                 if (parentWork != null && currentWork.MovementNumber > 0)
                 {
-                    asset.movement_number = currentWork.MovementNumber.ToString();
+                    ingestionTrack.movement_number = currentWork.MovementNumber.ToString();
                 }
 
-                asset.on_disc = volumeIndex.ToString();
+                ingestionTrack.on_disc = volumeIndex.ToString();
 
-                asset.p_line_text = isrc.PName;
+                ingestionTrack.p_line_text = isrc.PName;
 
-                asset.p_line_year = isrc.PYear.ToString();
+                ingestionTrack.p_line_year = isrc.PYear.ToString();
 
-                asset.parental_advisory = parental_advisory.@false; // TODO add seting
+                ingestionTrack.parental_advisory = parental_advisory.@false; // TODO add seting
 
                 // TODO asset.preorder_type
 
-                asset.preorder_typeSpecified = false;
+                ingestionTrack.preorder_typeSpecified = false;
 
-                asset.preview_length = "30"; // TODO add setting
+                ingestionTrack.preview_length = "30"; // TODO add setting
                 
-                asset.preview_start = "0";
+                ingestionTrack.preview_start = "0";
 
                 // Primary artists is performer 1 (isrc contributor 1)
                 Artist primaryArtist = CatalogContext.Instance.Artists.FirstOrDefault(e =>
                     e.Id == isrcPerformersKeys[0]);
                 if (primaryArtist.LastName.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName))
                 {
-                    asset.primary_artist = new primary_artist()
+                    ingestionTrack.primary_artist = new primary_artist()
                     {
                         name = (primaryArtist.FirstName[CatalogContext.Instance.DefaultLang.ShortName] + " " + primaryArtist.LastName[CatalogContext.Instance.DefaultLang.ShortName]).Trim(),
                     };
@@ -639,17 +644,17 @@ namespace BabelMeta.Modules.Export
 
                 // TODO asset.publishers
 
-                asset.recording_location = isrc.RecordingLocation;
+                ingestionTrack.recording_location = isrc.RecordingLocation;
 
-                asset.recording_year = isrc.RecordingYear.ToString();
+                ingestionTrack.recording_year = isrc.RecordingYear.ToString();
 
                 // TODO asset.redeliveries_of_associated
                 var audioFilename = SearchFilename(files, FugaIngestionFileType.AudioTrack, new KeyValuePair<int, int>(volumeIndex, trackIndex));
-                if (!string.IsNullOrEmpty(audioFilename))
+                if (!String.IsNullOrEmpty(audioFilename))
                 {
                     FileInfo f = new FileInfo(audioFilename);
-                    asset.resources = new List<resourcesAudio>();
-                    asset.resources.Add(new resourcesAudio 
+                    ingestionTrack.resources = new List<resourcesAudio>();
+                    ingestionTrack.resources.Add(new resourcesAudio 
                     {
                         file = new file_type
                         {
@@ -664,7 +669,7 @@ namespace BabelMeta.Modules.Export
                 // TODO asset.rights_holder_name
                 // TODO asset.rights_ownership_name
 
-                asset.sequence_number = trackIndex.ToString();
+                ingestionTrack.sequence_number = trackIndex.ToString();
 
                 // TODO asset.track_notes
                 // TODO asset.track_version
@@ -672,11 +677,11 @@ namespace BabelMeta.Modules.Export
 
                 if (parentWork != null && parentWork.Title.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName))
                 {
-                    asset.work = parentWork.Title[CatalogContext.Instance.DefaultLang.ShortName];
+                    ingestionTrack.work = parentWork.Title[CatalogContext.Instance.DefaultLang.ShortName];
                 }
 
                 // Add asset
-                i.album.tracks.Items.Add(asset);
+                i.album.tracks.Items.Add(ingestionTrack);
             }
         }
     }
