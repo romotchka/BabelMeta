@@ -157,6 +157,7 @@ namespace BabelMeta.Model
         /// Nested Dictionaries correspond to Volume index, then Track index.
         /// The String value is the Isrc Id.
         /// E.g. in a 2-volume album, Tracks[2][5] would represent Track 5 of Volume 2.
+        /// The value itself is the Isrc key of the corresponding asset.
         /// </summary>
         public Dictionary<short, Dictionary<short, String>> Tracks { get; set; }
 

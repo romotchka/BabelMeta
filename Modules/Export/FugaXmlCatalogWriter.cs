@@ -30,6 +30,8 @@ using BabelMeta.Model.Config;
 using BabelMeta.Modules.Export.FugaXml;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -142,15 +144,16 @@ namespace BabelMeta.Modules.Export
             }
         }
 
+        #region Generate
         /// <summary>
         /// Main generation method.
         /// </summary>
-        /// <param name="rootFolder"></param>
+        /// <param name="context"></param>
         /// <param name="viewModel"></param>
         /// <returns></returns>
         public ReturnCode Generate(object context, MainFormViewModel viewModel = null)
         {
-            String rootFolder = (String)context;
+            var rootFolder = (String)context;
             if (String.IsNullOrEmpty(rootFolder))
             {
                 return ReturnCode.ModulesExportFugaXmlGenerateNullFolderName;
@@ -168,41 +171,488 @@ namespace BabelMeta.Modules.Export
                 return ReturnCode.ModulesExportCatalogContextNotInitialized;
             }
 
-            foreach (Album album in CatalogContext.Instance.Albums)
+            foreach (var album in CatalogContext.Instance.Albums)
             {
-                ingestion i = null;
-                i = new ingestion();
-                i.album = new ingestionAlbum();
-                i.album.tracks = new ingestionAlbumTracks();
+                var i = new ingestion
+                {
+                    album = new ingestionAlbum
+                    {
+                        tracks = new ingestionAlbumTracks(),
+                    },
+                };
 
                 // There MUST be a subfolder for each album
                 if (String.IsNullOrEmpty(album.Ean.ToString()))
                 {
+                    Notify(String.Format("Album [{0}]: Ean is empty.", album.CatalogReference));
                     continue;
                 }
-                String subfolder = rootFolder + album.Ean;
+                var subfolder = rootFolder + album.Ean;
                 if (!Directory.Exists(subfolder))
                 {
                     Directory.CreateDirectory(subfolder);
                 }
                 subfolder += "\\";
 
-                String[] files = Directory.GetFiles(subfolder, "*.*");
+                var files = Directory.GetFiles(subfolder, "*.*");
 
                 GenerateAlbumWiseData(album, i, files);
 
-                foreach (KeyValuePair<short, Dictionary<short, String>> volume in album.Tracks)
+                if (album.Tracks != null)
                 {
-                    GenerateTrackWiseData(album, volume, i, files);
+                    foreach (var volume in album.Tracks)
+                    {
+                        GenerateTrackWiseData(album, volume, i, files);
+                    }
                 }
 
-                TextWriter tw = new StreamWriter(subfolder + i.album.upc_code + ".xml", false, Encoding.UTF8);
+                var tw = new StreamWriter(subfolder + i.album.upc_code + ".xml", false, Encoding.UTF8);
                 tw.Write(i.Serialize().WithFugaXmlHeader());
                 tw.Close();
 
-            }      
+            }
 
             return ReturnCode.Ok;
+        }
+
+        private void GenerateAlbumWiseData(Album album, ingestion i, String[] files)
+        {
+            if (album == null || i == null)
+            {
+                return;
+            }
+
+            // Action
+            try
+            {
+                i.action = _actionConverter[(Album.ActionType)album.ActionTypeValue];
+            }
+            catch (Exception ex)
+            {
+                Notify(String.Format("Album [{0}]: Invalid action.", album.CatalogReference));
+                Debug.Write(this, "FugaXmlCatalogWriter.GenerateAlbumWiseData, exception=" + ex);
+            }
+
+            // TODO i.album.additional_artists
+            // TODO i.album.album_notes
+            // TODO i.album.alternate_genre
+
+            i.album.alternate_genreSpecified = false;
+
+            // TODO i.album.alternate_subgenre
+
+            var attachmentFile = SearchFilename(files, FugaIngestionFileType.Attachment);
+            if (!String.IsNullOrEmpty(attachmentFile))
+            {
+                var f = new FileInfo(attachmentFile);
+                i.album.attachments = new List<attachment_type>
+                {
+                    new attachment_type
+                    {
+                        name = "Booklet",
+                        description = "Booklet",
+                        file = new file_type
+                        {
+                            name = attachmentFile.GetFileNameFromFullPath(),
+                            size = (ulong) f.Length,
+                        },
+                    },
+                };
+            }
+
+            i.album.c_line_text = (!String.IsNullOrEmpty(album.CName)) ? album.CName : CatalogContext.Instance.Settings.COwnerDefault;
+
+            if (album.CYear != null)
+            {
+                i.album.c_line_year = album.CYear.ToString();
+            }
+
+            i.album.catalog_number = album.CatalogReference;
+
+            i.album.catalog_tier = _albumTierConverter[album.Tier];
+
+            i.album.catalog_tierSpecified = true;
+
+            i.album.consumer_release_date = album.ConsumerReleaseDate;
+
+            var coverFile = SearchFilename(files, FugaIngestionFileType.Cover);
+            if (!String.IsNullOrEmpty(coverFile))
+            {
+                var f = new FileInfo(coverFile);
+                i.album.cover_art = new ingestionAlbumCover_art
+                {
+                    image = new ingestionAlbumCover_artImage
+                    {
+                        file = new file_type
+                        {
+                            name = coverFile.GetFileNameFromFullPath(),
+                            size = (ulong)f.Length,
+                        },
+                    },
+                };
+            }
+
+            // TODO i.album.display_artist
+            // TODO i.album.extra1
+            // TODO i.album.extra2
+            // TODO i.album.extra3
+            // TODO i.album.extra4
+            // TODO i.album.extra5
+            // TODO i.album.extra6
+            // TODO i.album.extra7
+            // TODO i.album.extra8
+            // TODO i.album.extra9
+            // TODO i.album.extra9Specified
+            // TODO i.album.extra10
+            // TODO i.album.extra10Specified
+            // TODO i.album.fuga_id
+
+            i.album.label = album.Owner;
+
+            i.album.language = ingestionAlbumLanguage.EN; // TODO
+
+            i.album.languageSpecified = true;
+
+            i.album.main_genre = genre_type.Classical; // TODO add a converter
+
+            if (album.Subgenre != null && !String.IsNullOrEmpty(album.Subgenre.Name))
+            {
+                Notify(String.Format("Album [{0}]: Missing subgenre.", album.CatalogReference));
+                i.album.main_subgenre = album.Subgenre.Name;
+            }
+
+            if (album.Title != null && album.Title.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName))
+            {
+                i.album.name = album.Title[CatalogContext.Instance.DefaultLang.ShortName];
+            }
+
+            // TODO i.album.original_release_date
+            // TODO i.album.original_release_dateSpecified
+
+            i.album.p_line_text = (!String.IsNullOrEmpty(album.PName)) ? album.PName : CatalogContext.Instance.Settings.POwnerDefault;
+
+            if (album.PYear != null)
+            {
+                i.album.p_line_year = album.PYear.ToString();
+            }
+
+            i.album.parental_advisory = parental_advisory.@false; // TODO add setting
+
+            i.album.parental_advisorySpecified = true;
+
+            // TODO i.album.pricing_intervals
+            // TODO i.album.pricings
+
+            if (album.PrimaryArtistId > 0)
+            {
+                var primaryArtist = CatalogContext.Instance.Artists.FirstOrDefault(e => e.Id.Equals(album.PrimaryArtistId));
+                if (primaryArtist != null && primaryArtist.LastName.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName))
+                {
+                    i.album.primary_artist = new primary_artist
+                    {
+                        name = (primaryArtist.FirstName[CatalogContext.Instance.DefaultLang.ShortName] + " " + primaryArtist.LastName[CatalogContext.Instance.DefaultLang.ShortName]).Trim(),
+                    };
+                }
+            }
+
+            i.album.recording_location = album.RecordingLocation;
+
+            if (album.RecordingYear > 0)
+            {
+                i.album.recording_year = album.RecordingYear.ToString();
+            }
+
+            i.album.redeliveries = new redeliveries_type
+            {
+                redeliver = false,
+            };
+
+
+            i.album.release_format_type = ingestionAlbumRelease_format_type.ALBUM; // TODO translater
+
+            // TODO i.album.release_version
+            // TODO i.album.schedule
+
+            i.album.supplier = CatalogContext.Instance.Settings.SupplierDefault;
+
+            i.album.territories = new List<territory_code>
+            {
+                territory_code.WORLD,
+            };
+
+            if (album.TotalDiscs != null)
+            {
+                Notify(String.Format("Album [{0}]: Missing total discs.", album.CatalogReference));
+                i.album.total_discs = album.TotalDiscs.ToString();
+            }
+
+            if (album.Ean != null)
+            {
+                Notify(String.Format("Album [{0}]: Missing UPC/EAN.", album.CatalogReference));
+                i.album.upc_code = album.Ean.ToString();
+            }
+
+            // TODO i.album.usage_rights
+
+        }
+
+        private void GenerateTrackWiseData(Album album, KeyValuePair<short, Dictionary<short, String>> volume, ingestion i, String[] files)
+        {
+            if (album == null || i == null)
+            {
+                return;
+            }
+            var volumeIndex = volume.Key;
+            var volumeTracks = volume.Value;
+
+            // Artists buffer for performance improvement
+            var artistsBuffer = new List<Artist>();
+
+            foreach (var volumeTrack in volumeTracks)
+            {
+                var trackIndex = volumeTrack.Key;
+                var assetId = volumeTrack.Value;
+                var asset = CatalogContext.Instance.Assets.FirstOrDefault(e => String.Compare(e.Id, assetId, StringComparison.Ordinal) == 0);
+                if (asset == null)
+                {
+                    Notify(String.Format("Album [{0}] [{1},{2}]: Asset key reference not found.", album.CatalogReference, volumeIndex, trackIndex));
+                    continue;
+                }
+
+                // The asset's work is either standalone or a child work.
+                var currentWork = CatalogContext.Instance.Works.FirstOrDefault(e => e.Id == asset.Work);
+                if (currentWork == null)
+                {
+                    Notify(String.Format("Album [{0}] [{1},{2}]: Work not found for asset {3}.", album.CatalogReference, volumeIndex, trackIndex, asset.Id));
+                    continue;
+                }
+                var parentWork = (currentWork.Parent > 0)
+                    ? CatalogContext.Instance.Works.FirstOrDefault(w => w.Id == currentWork.Parent)
+                    : null;
+                var assetPerformersKeys = asset.Contributors.Keys.ToArray();
+                if (assetPerformersKeys == null || !(assetPerformersKeys.Length > 0))
+                {
+                    Notify(String.Format("Album [{0}] [{1},{2}]: No performers.", album.CatalogReference, volumeIndex, trackIndex));
+                    continue;
+                }
+
+                var ingestionTrack = new ingestionAlbumTracksClassical_track();
+
+                // Additional artists, if any, are from the second performer.
+                if (assetPerformersKeys.Length > 1)
+                {
+                    ingestionTrack.additional_artists = new List<artist>();
+                }
+                for (var j = 1; j < assetPerformersKeys.Length; j++)
+                {
+                    var additionalArtist = CatalogContext.Instance.Artists.FirstOrDefault(e =>
+                        e.Id == assetPerformersKeys[j]);
+                    if (additionalArtist.LastName.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName))
+                    {
+                        ingestionTrack.additional_artists.Add(new artist
+                        {
+                            name = (additionalArtist.FirstName[CatalogContext.Instance.DefaultLang.ShortName] + " " + additionalArtist.LastName[CatalogContext.Instance.DefaultLang.ShortName]).Trim(),
+                            primary_artist = true, // TODO manage primary character for additional artists
+                        });
+                    }
+                }
+
+                ingestionTrack.allow_preorder_preview = false;
+
+                ingestionTrack.allow_preorder_previewSpecified = true;
+
+                // TODO asset.alternate_genre
+
+                ingestionTrack.alternate_genreSpecified = false;
+
+                // TODO asset.alternate_subgenre
+
+                ingestionTrack.always_send_display_title = true;
+
+                ingestionTrack.always_send_display_titleSpecified = true;
+
+                ingestionTrack.available_separately = asset.AvailableSeparately;
+
+                ingestionTrack.catalog_tier = _isrcTierConverter[(CatalogTier)asset.Tier];
+
+                ingestionTrack.catalog_tierSpecified = true;
+
+                ingestionTrack.classical_catalog = (parentWork == null) ? currentWork.ClassicalCatalog : parentWork.ClassicalCatalog;
+
+                ingestionTrack.contributors = new List<contributor>(); // These represent work-related contributors like typically Composer, Arranger, etc.
+                foreach (var workContributor in currentWork.Contributors)
+                {
+                    Artist artist;
+                    if (artistsBuffer.Exists(a => a.Id == workContributor.Key))
+                    {
+                        // Present in buffer
+                        artist = artistsBuffer.FirstOrDefault(a => a.Id == workContributor.Key);
+                    }
+                    else
+                    {
+                        // Find then add to buffer
+                        artist = CatalogContext.Instance.Artists.FirstOrDefault(a => a.Id.Equals(workContributor.Key));
+                        artistsBuffer.Add(artist);
+                    }
+                    var role = CatalogContext.Instance.Roles.FirstOrDefault(r => String.Compare(r.Name, workContributor.Value.Name, StringComparison.Ordinal) == 0);
+                    var cRole = (_roleConverter.ContainsKey((Role.QualifiedName)role.Reference))
+                        ? _roleConverter[(Role.QualifiedName)role.Reference]
+                        : contributorRole.ContributingArtist;
+
+                    if (artist.LastName.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName))
+                    {
+                        ingestionTrack.contributors.Add(new contributor()
+                        {
+                            name = (artist.FirstName[CatalogContext.Instance.DefaultLang.ShortName] + " " + artist.LastName[CatalogContext.Instance.DefaultLang.ShortName]).Trim(),
+                            role = cRole,
+                        });
+                    }
+                }
+
+                // TODO asset.country_of_commissioning
+                // TODO asset.country_of_recording
+
+                if (
+                        currentWork.Title.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName)
+                        && (
+                                parentWork == null
+                                || parentWork.Title.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName)
+                            )
+                    )
+                {
+                    ingestionTrack.display_title = (parentWork == null)
+                        ? currentWork.Title[CatalogContext.Instance.DefaultLang.ShortName]
+                        : parentWork.Title[CatalogContext.Instance.DefaultLang.ShortName] + StringHelper.HierarchicalSeparator(CatalogContext.Instance.DefaultLang) + currentWork.Title[CatalogContext.Instance.DefaultLang.ShortName];
+                }
+
+                // TODO asset.extra1
+                // TODO asset.extra2
+                // TODO asset.extra3
+                // TODO asset.extra4
+                // TODO asset.extra5
+                // TODO asset.extra6
+                // TODO asset.extra7
+                // TODO asset.extra8
+                // TODO asset.extra9
+                // TODO asset.extra9Specified
+                // TODO asset.extra10
+                // TODO asset.extra10Specified
+
+                ingestionTrack.isrc_code = assetId;
+
+                ingestionTrack.keySpecified = (parentWork == null && currentWork.Tonality != null) || (parentWork != null && parentWork.Tonality != null);
+
+                if (ingestionTrack.keySpecified)
+                {
+                    ingestionTrack.key = (parentWork == null)
+                        ? _keyConverter[(Key)(currentWork.Tonality)]
+                        : _keyConverter[(Key)(parentWork.Tonality)];
+                }
+
+                // TODO asset.lyrics
+
+                if (album.Subgenre != null)
+                {
+                    ingestionTrack.main_subgenre = album.Subgenre.Name; // TODO implement trackwise field
+                }
+
+                if (
+                        parentWork != null
+                        && currentWork.MovementTitle.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName)
+                        && !String.IsNullOrEmpty(currentWork.MovementTitle[CatalogContext.Instance.DefaultLang.ShortName])
+                    )
+                {
+                    ingestionTrack.movement = currentWork.MovementTitle[CatalogContext.Instance.DefaultLang.ShortName];
+                }
+
+                if (parentWork != null && currentWork.MovementNumber > 0)
+                {
+                    ingestionTrack.movement_number = currentWork.MovementNumber.ToString();
+                }
+
+                ingestionTrack.on_disc = volumeIndex.ToString(CultureInfo.InvariantCulture);
+
+                ingestionTrack.p_line_text = asset.PName;
+
+                ingestionTrack.p_line_year = asset.PYear.ToString();
+
+                ingestionTrack.parental_advisory = parental_advisory.@false; // TODO add seting
+
+                // TODO asset.preorder_type
+
+                ingestionTrack.preorder_typeSpecified = false;
+
+                ingestionTrack.preview_length = "30"; // TODO add setting
+
+                ingestionTrack.preview_start = "0";
+
+                // Primary artists is performer 1 (asset contributor 1)
+                var primaryArtist = CatalogContext.Instance.Artists.FirstOrDefault(e =>
+                    e.Id == assetPerformersKeys[0]);
+                if (primaryArtist != null && primaryArtist.LastName != null && primaryArtist.LastName.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName))
+                {
+                    ingestionTrack.primary_artist = new primary_artist()
+                    {
+                        name = (primaryArtist.FirstName[CatalogContext.Instance.DefaultLang.ShortName] + " " + primaryArtist.LastName[CatalogContext.Instance.DefaultLang.ShortName]).Trim(),
+                    };
+                }
+
+                // TODO asset.publishers
+
+                ingestionTrack.recording_location = asset.RecordingLocation;
+
+                if (asset.RecordingYear != null)
+                {
+                    ingestionTrack.recording_year = asset.RecordingYear.ToString();
+                }
+
+                // TODO asset.redeliveries_of_associated
+                var audioFilename = SearchFilename(files, FugaIngestionFileType.AudioTrack, new KeyValuePair<int, int>(volumeIndex, trackIndex));
+                if (!String.IsNullOrEmpty(audioFilename))
+                {
+                    var f = new FileInfo(audioFilename);
+                    ingestionTrack.resources = new List<resourcesAudio>
+                    {
+                        new resourcesAudio
+                        {
+                            file = new file_type
+                            {
+                                name = audioFilename.GetFileNameFromFullPath(),
+                                size = (ulong) f.Length,
+                            }
+                        },
+                    };
+                }
+
+                // TODO asset.rights_contract_begin_date
+                // TODO asset.rights_contract_begin_dateSpecified
+                // TODO asset.rights_holder_name
+                // TODO asset.rights_ownership_name
+
+                ingestionTrack.sequence_number = trackIndex.ToString(CultureInfo.InvariantCulture);
+
+                // TODO asset.track_notes
+                // TODO asset.track_version
+                // TODO asset.usage_rights
+
+                if (parentWork != null && parentWork.Title != null && parentWork.Title.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName))
+                {
+                    ingestionTrack.work = parentWork.Title[CatalogContext.Instance.DefaultLang.ShortName];
+                }
+
+                // Add asset
+                i.album.tracks.Items.Add(ingestionTrack);
+            }
+        }
+        #endregion
+
+        public void Notify(String message)
+        {
+            if (_viewModel != null && !String.IsNullOrEmpty(message))
+            {
+                // TODO In case this method is not executed in the UI thread, consider to implement it with a Dispatcher.
+                _viewModel.Notification = message;
+            }
         }
 
         /// <summary>
@@ -211,7 +661,7 @@ namespace BabelMeta.Modules.Export
         /// <param name="fileType"></param>
         /// <param name="parameter"></param>
         /// <returns></returns>
-        private String SearchFilename(String[] files, FugaIngestionFileType fileType, object parameter = null)
+        private static String SearchFilename(String[] files, FugaIngestionFileType fileType, object parameter = null)
         {
             if (files == null || files.Length == 0)
             {
@@ -294,395 +744,5 @@ namespace BabelMeta.Modules.Export
             return String.Empty;
         }
 
-        private void GenerateAlbumWiseData(Album album, ingestion i, String[] files)
-        {
-            if (album == null || i == null)
-            {
-                return;
-            }
-
-            // Action
-            try
-            {
-                i.action = _actionConverter[(Album.ActionType)album.ActionTypeValue];
-            }
-            catch (Exception)
-            {
-                
-            }
-
-            // TODO i.album.additional_artists
-            // TODO i.album.album_notes
-            // TODO i.album.alternate_genre
-
-            i.album.alternate_genreSpecified = false;
-
-            // TODO i.album.alternate_subgenre
-
-            String attachmentFile = SearchFilename(files, FugaIngestionFileType.Attachment);
-            if (!String.IsNullOrEmpty(attachmentFile))
-            {
-                FileInfo f = new FileInfo(attachmentFile);
-                i.album.attachments = new List<attachment_type>();
-                i.album.attachments.Add(new attachment_type
-                    {
-                        name = "Booklet",
-                        description = "Booklet",
-                        file = new file_type 
-                        { 
-                            name = attachmentFile.GetFileNameFromFullPath(),
-                            size = (ulong)f.Length,
-                        },
-                    });
-            }
-
-            i.album.c_line_text = (!String.IsNullOrEmpty(album.CName)) ? album.CName : CatalogContext.Instance.Settings.COwnerDefault;
-
-            i.album.c_line_year = album.CYear.ToString();
-
-            i.album.catalog_number = album.CatalogReference;
-
-            i.album.catalog_tier = _albumTierConverter[album.Tier];
-
-            i.album.catalog_tierSpecified = true;
-
-            i.album.consumer_release_date = album.ConsumerReleaseDate;
-
-            var coverFile = SearchFilename(files, FugaIngestionFileType.Cover);
-            if (!String.IsNullOrEmpty(coverFile))
-            {
-                FileInfo f = new FileInfo(coverFile);
-                i.album.cover_art = new ingestionAlbumCover_art();
-                i.album.cover_art.image = new ingestionAlbumCover_artImage
-                {
-                    file = new file_type
-                    {
-                        name = coverFile.GetFileNameFromFullPath(),
-                        size = (ulong)f.Length,
-                    },
-                };
-
-            }
-
-            // TODO i.album.display_artist
-            // TODO i.album.extra1
-            // TODO i.album.extra2
-            // TODO i.album.extra3
-            // TODO i.album.extra4
-            // TODO i.album.extra5
-            // TODO i.album.extra6
-            // TODO i.album.extra7
-            // TODO i.album.extra8
-            // TODO i.album.extra9
-            // TODO i.album.extra9Specified
-            // TODO i.album.extra10
-            // TODO i.album.extra10Specified
-            // TODO i.album.fuga_id
-
-            i.album.label = album.Owner;
-
-            i.album.language = ingestionAlbumLanguage.EN; // TODO
-
-            i.album.languageSpecified = true;
-
-            i.album.main_genre = genre_type.Classical; // TODO add a converter
-
-            i.album.main_subgenre = album.Subgenre.Name;
-
-            i.album.name = album.Title[CatalogContext.Instance.DefaultLang.ShortName];
-
-            // TODO i.album.original_release_date
-            // TODO i.album.original_release_dateSpecified
-
-            i.album.p_line_text = (!String.IsNullOrEmpty(album.PName)) ? album.PName : CatalogContext.Instance.Settings.POwnerDefault;
-
-            i.album.p_line_year = album.PYear.ToString();
-
-            i.album.parental_advisory = parental_advisory.@false; // TODO add setting
-
-            i.album.parental_advisorySpecified = true;
-
-            // TODO i.album.pricing_intervals
-            // TODO i.album.pricings
-
-            if (album.PrimaryArtistId > 0)
-            {
-                Artist primaryArtist = CatalogContext.Instance.Artists.FirstOrDefault(e => e.Id == (int)album.PrimaryArtistId);
-                if (primaryArtist.LastName.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName))
-                {
-                    i.album.primary_artist = new primary_artist
-                    {
-                        name = (primaryArtist.FirstName[CatalogContext.Instance.DefaultLang.ShortName] + " " + primaryArtist.LastName[CatalogContext.Instance.DefaultLang.ShortName]).Trim(),
-                    };
-                }
-            }
-
-            i.album.recording_location = album.RecordingLocation;
-
-            i.album.recording_year = album.RecordingYear.ToString();
-
-            i.album.redeliveries = new redeliveries_type
-            {
-                redeliver = false,
-            };
-
-
-            i.album.release_format_type = ingestionAlbumRelease_format_type.ALBUM; // TODO translater
-
-            // TODO i.album.release_version
-            // TODO i.album.schedule
-
-            i.album.supplier = CatalogContext.Instance.Settings.SupplierDefault;
-
-            i.album.territories = new List<territory_code>();
-            i.album.territories.Add(territory_code.WORLD);
-
-            i.album.total_discs = album.TotalDiscs.ToString();
-            
-            i.album.upc_code = album.Ean.ToString();
-
-            // TODO i.album.usage_rights
-
-        }
-
-        private void GenerateTrackWiseData(Album album, KeyValuePair<short, Dictionary<short, String>> volume, ingestion i, String[] files)
-        {
-            if (album == null || i == null)
-            {
-                return;
-            }
-            short volumeIndex = volume.Key;
-            Dictionary<short, String> volumeTracks = volume.Value;
-
-            // Artists buffer for performance improvement
-            List<Artist> artistsBuffer = new List<Artist>();
-
-            foreach (KeyValuePair<short, String> volumeTrack in volumeTracks)
-            {
-                short trackIndex = volumeTrack.Key;
-                String isrcId = volumeTrack.Value;
-                Asset isrc = CatalogContext.Instance.Assets.FirstOrDefault(e => e.Id.CompareTo(isrcId) == 0);
-                if (isrc == null)
-                {
-                    continue;
-                }
-                // The asset's work is either standalone or a child work.
-                Work currentWork = CatalogContext.Instance.Works.FirstOrDefault(e => e.Id == isrc.Work);
-                if (currentWork == null)
-                {
-                    continue;
-                }
-                Work parentWork = (currentWork.Parent > 0)
-                    ? CatalogContext.Instance.Works.FirstOrDefault(w => w.Id == currentWork.Parent)
-                    : null;
-                var isrcPerformersKeys = isrc.Contributors.Keys.ToArray();
-                if (isrcPerformersKeys == null || !(isrcPerformersKeys.Length > 0))
-                {
-                    continue;
-                }
-
-                ingestionAlbumTracksClassical_track ingestionTrack = new ingestionAlbumTracksClassical_track();
-
-                // Additional artists, if any, are from the second performer.
-                if (isrcPerformersKeys.Length > 1)
-                {
-                    ingestionTrack.additional_artists = new List<artist>();
-                }
-                for (var j = 1; j < isrcPerformersKeys.Length; j++)
-                {
-                    Artist additionalArtist = CatalogContext.Instance.Artists.FirstOrDefault(e =>
-                        e.Id == isrcPerformersKeys[j]);
-                    if (additionalArtist.LastName.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName))
-                    {
-                        ingestionTrack.additional_artists.Add(new artist
-                        {
-                            name = (additionalArtist.FirstName[CatalogContext.Instance.DefaultLang.ShortName] + " " + additionalArtist.LastName[CatalogContext.Instance.DefaultLang.ShortName]).Trim(),
-                            primary_artist = true, // TODO manage primary character for additional artists
-                        });
-                    }
-                }
-
-                ingestionTrack.allow_preorder_preview = false;
-
-                ingestionTrack.allow_preorder_previewSpecified = true;
-
-                // TODO asset.alternate_genre
-
-                ingestionTrack.alternate_genreSpecified = false;
-
-                // TODO asset.alternate_subgenre
-
-                ingestionTrack.always_send_display_title = true;
-
-                ingestionTrack.always_send_display_titleSpecified = true;
-
-                ingestionTrack.available_separately = isrc.AvailableSeparately;
-
-                ingestionTrack.catalog_tier = _isrcTierConverter[(CatalogTier)isrc.Tier];
-
-                ingestionTrack.catalog_tierSpecified = true;
-
-                ingestionTrack.classical_catalog = (parentWork == null) ? currentWork.ClassicalCatalog : parentWork.ClassicalCatalog;
-
-                ingestionTrack.contributors = new List<contributor>(); // These represent work-related contributors like typically Composer, Arranger, etc.
-                foreach (KeyValuePair<int, Role> workContributor in currentWork.Contributors)
-                {
-                    Artist artist;
-                    if (artistsBuffer.Exists(a => a.Id == workContributor.Key))
-                    {
-                        // Present in buffer
-                        artist = artistsBuffer.FirstOrDefault(a => a.Id == workContributor.Key);
-                    }
-                    else
-                    {
-                        // Find then add to buffer
-                        artist = CatalogContext.Instance.Artists.FirstOrDefault(a => a.Id == workContributor.Key);
-                        artistsBuffer.Add(artist);
-                    }
-                    Role role = CatalogContext.Instance.Roles.FirstOrDefault(r => r.Name.CompareTo(workContributor.Value.Name) == 0);
-                    contributorRole cRole = (_roleConverter.ContainsKey((BabelMeta.Model.Role.QualifiedName)role.Reference))
-                        ? _roleConverter[(BabelMeta.Model.Role.QualifiedName)role.Reference] 
-                        : contributorRole.ContributingArtist;
-
-                    if (artist.LastName.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName))
-                    {
-                        ingestionTrack.contributors.Add(new contributor()
-                        {
-                            name = (artist.FirstName[CatalogContext.Instance.DefaultLang.ShortName] + " " + artist.LastName[CatalogContext.Instance.DefaultLang.ShortName]).Trim(),
-                            role = cRole,
-                        });
-                    }
-                }
-
-                // TODO asset.country_of_commissioning
-                // TODO asset.country_of_recording
-
-                if  (
-                        currentWork.Title.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName)
-                        &&  (
-                                parentWork == null
-                                || parentWork.Title.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName)
-                            )
-                    )
-                {
-                    ingestionTrack.display_title = (parentWork == null)
-                        ? currentWork.Title[CatalogContext.Instance.DefaultLang.ShortName]
-                        : parentWork.Title[CatalogContext.Instance.DefaultLang.ShortName] + StringHelper.HierarchicalSeparator(CatalogContext.Instance.DefaultLang) + currentWork.Title[CatalogContext.Instance.DefaultLang.ShortName];
-                }
-
-                // TODO asset.extra1
-                // TODO asset.extra2
-                // TODO asset.extra3
-                // TODO asset.extra4
-                // TODO asset.extra5
-                // TODO asset.extra6
-                // TODO asset.extra7
-                // TODO asset.extra8
-                // TODO asset.extra9
-                // TODO asset.extra9Specified
-                // TODO asset.extra10
-                // TODO asset.extra10Specified
-
-                ingestionTrack.isrc_code = isrcId;
-
-                ingestionTrack.keySpecified = (parentWork == null && currentWork.Tonality != null) || (parentWork != null && parentWork.Tonality != null);
-
-                if (ingestionTrack.keySpecified)
-                {
-                    ingestionTrack.key = (parentWork == null)
-                        ? _keyConverter[(Key)(currentWork.Tonality)]
-                        : _keyConverter[(Key)(parentWork.Tonality)];
-                }
-
-                // TODO asset.lyrics
-
-                if (album.Subgenre != null)
-                {
-                    ingestionTrack.main_subgenre = album.Subgenre.Name; // TODO implement trackwise field
-                }
-
-                if  (
-                        parentWork != null
-                        && currentWork.MovementTitle.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName)
-                        && !String.IsNullOrEmpty(currentWork.MovementTitle[CatalogContext.Instance.DefaultLang.ShortName])
-                    )
-                {
-                    ingestionTrack.movement = currentWork.MovementTitle[CatalogContext.Instance.DefaultLang.ShortName];
-                }
-
-                if (parentWork != null && currentWork.MovementNumber > 0)
-                {
-                    ingestionTrack.movement_number = currentWork.MovementNumber.ToString();
-                }
-
-                ingestionTrack.on_disc = volumeIndex.ToString();
-
-                ingestionTrack.p_line_text = isrc.PName;
-
-                ingestionTrack.p_line_year = isrc.PYear.ToString();
-
-                ingestionTrack.parental_advisory = parental_advisory.@false; // TODO add seting
-
-                // TODO asset.preorder_type
-
-                ingestionTrack.preorder_typeSpecified = false;
-
-                ingestionTrack.preview_length = "30"; // TODO add setting
-                
-                ingestionTrack.preview_start = "0";
-
-                // Primary artists is performer 1 (isrc contributor 1)
-                Artist primaryArtist = CatalogContext.Instance.Artists.FirstOrDefault(e =>
-                    e.Id == isrcPerformersKeys[0]);
-                if (primaryArtist.LastName.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName))
-                {
-                    ingestionTrack.primary_artist = new primary_artist()
-                    {
-                        name = (primaryArtist.FirstName[CatalogContext.Instance.DefaultLang.ShortName] + " " + primaryArtist.LastName[CatalogContext.Instance.DefaultLang.ShortName]).Trim(),
-                    };
-                }
-
-                // TODO asset.publishers
-
-                ingestionTrack.recording_location = isrc.RecordingLocation;
-
-                ingestionTrack.recording_year = isrc.RecordingYear.ToString();
-
-                // TODO asset.redeliveries_of_associated
-                var audioFilename = SearchFilename(files, FugaIngestionFileType.AudioTrack, new KeyValuePair<int, int>(volumeIndex, trackIndex));
-                if (!String.IsNullOrEmpty(audioFilename))
-                {
-                    FileInfo f = new FileInfo(audioFilename);
-                    ingestionTrack.resources = new List<resourcesAudio>();
-                    ingestionTrack.resources.Add(new resourcesAudio 
-                    {
-                        file = new file_type
-                        {
-                            name = audioFilename.GetFileNameFromFullPath(),
-                            size = (ulong)f.Length,
-                        }
-                    });
-                }
-
-                // TODO asset.rights_contract_begin_date
-                // TODO asset.rights_contract_begin_dateSpecified
-                // TODO asset.rights_holder_name
-                // TODO asset.rights_ownership_name
-
-                ingestionTrack.sequence_number = trackIndex.ToString();
-
-                // TODO asset.track_notes
-                // TODO asset.track_version
-                // TODO asset.usage_rights
-
-                if (parentWork != null && parentWork.Title.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName))
-                {
-                    ingestionTrack.work = parentWork.Title[CatalogContext.Instance.DefaultLang.ShortName];
-                }
-
-                // Add asset
-                i.album.tracks.Items.Add(ingestionTrack);
-            }
-        }
     }
 }

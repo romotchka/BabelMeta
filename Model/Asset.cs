@@ -87,7 +87,7 @@ namespace BabelMeta.Model
         public int Work { get; set; }
 
         /// <summary>
-        /// Isrc Contributor is e.g. the Performer or Musical Director or Sound Engineer
+        /// Asset Contributor is e.g. the Performer or Musical Director or Sound Engineer
         /// </summary>
         public Dictionary<int, Dictionary<Role, Quality>> Contributors { get; set; }
 

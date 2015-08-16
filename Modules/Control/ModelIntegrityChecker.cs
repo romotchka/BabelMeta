@@ -23,6 +23,7 @@
  *  THE SOFTWARE. 
  */
 
+using System.Diagnostics;
 using BabelMeta.Model;
 using System;
 using System.Linq;
@@ -121,125 +122,189 @@ namespace BabelMeta.Modules.Control
             }
 
             // Work -> Artist
-            if  (
-                    CatalogContext.Instance.Works != null && CatalogContext.Instance.Works.Count > 0 &&
-                    CatalogContext.Instance.Works.Exists(w => 
-                        w.Contributors.Keys.ToList().Exists(c => 
-                            !CatalogContext.Instance.Artists.Exists(e => 
-                                e.Id == c
+            try
+            {
+                if (
+                        CatalogContext.Instance.Works != null
+                        && CatalogContext.Instance.Works.Count > 0
+                        && CatalogContext.Instance.Works.Exists(w =>
+                            w.Contributors.Keys.ToList().Exists(c =>
+                                !CatalogContext.Instance.Artists.Exists(e =>
+                                    e.Id == c
+                                )
                             )
                         )
                     )
-                )
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
             {
-                return false;
+                Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Work->Artist, exception=" + ex);
             }
 
             // Work -> Role
-            if (
-                    CatalogContext.Instance.Works != null && CatalogContext.Instance.Works.Count > 0 &&
-                    CatalogContext.Instance.Works.Exists(w =>
-                        w.Contributors.Values.ToList().Exists(r =>
-                            !CatalogContext.Instance.Roles.Exists(e =>
-                                e.Name.CompareTo(r.Name) == 0
+            try
+            {
+                if (
+                        CatalogContext.Instance.Works != null
+                        && CatalogContext.Instance.Works.Count > 0
+                        && CatalogContext.Instance.Works.Exists(w =>
+                            w.Contributors.Values.ToList().Exists(r =>
+                                !CatalogContext.Instance.Roles.Exists(e =>
+                                    String.Compare(e.Name, r.Name, StringComparison.Ordinal) == 0
+                                )
                             )
                         )
                     )
-                )
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
             {
-                return false;
+                Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Work->Role, exception=" + ex);
             }
 
             // Work -> Work
-            if (
-                    CatalogContext.Instance.Works != null && CatalogContext.Instance.Works.Count > 0 &&
-                    CatalogContext.Instance.Works.Where(w => w.Parent > 0).ToList().Exists(w =>
-                        !CatalogContext.Instance.Works.Exists(e =>
-                            e.Id == w.Parent
+            try
+            {
+                if (
+                        CatalogContext.Instance.Works != null
+                        && CatalogContext.Instance.Works.Count > 0
+                        && CatalogContext.Instance.Works.Where(w => w.Parent > 0).ToList().Exists(w =>
+                            !CatalogContext.Instance.Works.Exists(e =>
+                                e.Id == w.Parent
+                            )
                         )
                     )
-                )
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
             {
-                return false;
+                Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Work->Work, exception=" + ex);
             }
 
             // Asset -> Work
-            if (
-                    CatalogContext.Instance.Assets != null && CatalogContext.Instance.Assets.Count > 0 &&
-                    CatalogContext.Instance.Assets.Exists(i =>
-                        !CatalogContext.Instance.Works.Exists(e =>
-                            e.Id == i.Work
+            try
+            {
+                if (
+                        CatalogContext.Instance.Assets != null
+                        && CatalogContext.Instance.Assets.Count > 0
+                        && CatalogContext.Instance.Assets.Exists(i =>
+                            !CatalogContext.Instance.Works.Exists(e =>
+                                e.Id == i.Work
+                            )
                         )
                     )
-                )
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
             {
-                return false;
+                Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Asset->Work, exception=" + ex);
             }
 
             // Asset -> Contributor
-            if (
-                    CatalogContext.Instance.Assets != null && CatalogContext.Instance.Assets.Count > 0 &&
-                    CatalogContext.Instance.Assets.Exists(i =>
-                        i.Contributors.Keys.ToList().Exists(c =>
-                            !CatalogContext.Instance.Artists.Exists(e =>
-                                e.Id == c
+            try
+            {
+                if (
+                        CatalogContext.Instance.Assets != null
+                        && CatalogContext.Instance.Assets.Count > 0
+                        && CatalogContext.Instance.Assets.Exists(i =>
+                            i.Contributors.Keys.ToList().Exists(c =>
+                                !CatalogContext.Instance.Artists.Exists(e =>
+                                    e.Id == c
+                                )
                             )
                         )
                     )
-                )
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
             {
-                return false;
+                Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Asset->Contributor, exception=" + ex);
             }
 
             // Asset -> Role
-            if (
-                    CatalogContext.Instance.Assets != null && CatalogContext.Instance.Assets.Count > 0 &&
-                    CatalogContext.Instance.Assets.Exists(i =>
-                        i.Contributors.Values.ToList().Exists(rq =>
-                                rq.Keys.ToList().Exists(r =>
-                                    !CatalogContext.Instance.Roles.Exists(e =>
-                                        String.Compare(e.Name, r.Name, StringComparison.Ordinal) == 0                                
+            try
+            {
+                if (
+                        CatalogContext.Instance.Assets != null
+                        && CatalogContext.Instance.Assets.Count > 0
+                        && CatalogContext.Instance.Assets.Exists(i =>
+                            i.Contributors.Values.ToList().Exists(rq =>
+                                    rq.Keys.ToList().Exists(r =>
+                                        !CatalogContext.Instance.Roles.Exists(e =>
+                                            String.Compare(e.Name, r.Name, StringComparison.Ordinal) == 0
+                                    )
                                 )
                             )
                         )
                     )
-                )
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
             {
-                return false;
+                Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Asset->Role, exception=" + ex);
             }
 
             // Asset -> Quality
-            if (
-                    CatalogContext.Instance.Assets != null && CatalogContext.Instance.Assets.Count > 0 &&
-                    CatalogContext.Instance.Assets.Exists(i =>
-                        i.Contributors.Values.ToList().Exists(rq =>
-                                rq.Values.ToList().Exists(q =>
-                                    !CatalogContext.Instance.Qualities.Exists(e =>
-                                        String.Compare(e.Name, q.Name, StringComparison.Ordinal) == 0
+            try
+            {
+                if (
+                        CatalogContext.Instance.Assets != null
+                        && CatalogContext.Instance.Assets.Count > 0
+                        && CatalogContext.Instance.Assets.Exists(i =>
+                            i.Contributors.Values.ToList().Exists(rq =>
+                                    rq.Values.ToList().Exists(q =>
+                                        !CatalogContext.Instance.Qualities.Exists(e =>
+                                            String.Compare(e.Name, q.Name, StringComparison.Ordinal) == 0
+                                    )
                                 )
                             )
                         )
                     )
-                )
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
             {
-                return false;
+                Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Asset->Quality, exception=" + ex);
             }
 
             // Album -> Asset
-            if (
-                    CatalogContext.Instance.Albums != null && CatalogContext.Instance.Albums.Count > 0 &&
-                    CatalogContext.Instance.Albums.Exists(a =>
-                        a.Tracks.Values.ToList().Exists(t =>
-                            t.Values.ToList().Exists(i =>
-                                !CatalogContext.Instance.Assets.Exists(e =>
-                                    e.Id.CompareTo(i) == 0
+            try
+            {
+                if (
+                        CatalogContext.Instance.Albums != null
+                        && CatalogContext.Instance.Albums.Count > 0
+                        && CatalogContext.Instance.Albums.Exists(a =>
+                            a.Tracks.Values.ToList().Exists(t =>
+                                t.Values.ToList().Exists(i =>
+                                    !CatalogContext.Instance.Assets.Exists(e =>
+                                        String.Compare(e.Id, i, StringComparison.Ordinal) == 0
+                                    )
                                 )
                             )
                         )
                     )
-                )
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
             {
-                return false;
+                Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Album->Asset, exception=" + ex);
             }
 
             // Default lang
@@ -250,6 +315,5 @@ namespace BabelMeta.Modules.Control
 
             return true;
         }
-
     }
 }

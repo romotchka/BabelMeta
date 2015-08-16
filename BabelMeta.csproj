@@ -114,15 +114,19 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Assets\" />
     <Folder Include="Modules\Export\Ddex\" />
     <Folder Include="Modules\Export\RightsUpJson\" />
-    <Folder Include="Modules\Export\SolsticeCiSql\" />
+    <Folder Include="Modules\Export\SolsticeCi\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Modules\Export\FugaXml\ingestion.xsd">
       <SubType>Designer</SubType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\company_logo-120x120.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

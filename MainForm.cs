@@ -23,25 +23,21 @@
  *  THE SOFTWARE. 
  */
 
+using BabelMeta.AppConfig;
+using BabelMeta.Helpers;
 using BabelMeta.Model;
+using BabelMeta.Model.Config;
 using BabelMeta.Modules;
 using BabelMeta.Modules.Control;
 using BabelMeta.Modules.Export;
 using BabelMeta.Modules.Import;
-using BabelMeta.AppConfig;
-using BabelMeta.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Runtime.Serialization.Formatters.Binary;
-using BabelMeta.Model.Config;
+using System.Windows.Forms;
 
 namespace BabelMeta
 {
@@ -63,10 +59,27 @@ namespace BabelMeta
             FilterWorkCheckBox.DataBindings.Add(new Binding("Checked", _viewModel, "FilterWorkChecked"));
 
             InputFormat.SelectedIndex = 0;
-    
+
+            _viewModel.PropertyChanged += OnViewModelPropertyChanged;
+
         }
 
-        private MainFormViewModel _viewModel;
+        /// <summary>
+        /// Main property changed switch so as to reflect view model events in the layout.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName.ToLower())
+            {
+                case "notification":
+                    Notify(_viewModel.Notification);
+                    break;
+            }
+        }
+
+        private readonly MainFormViewModel _viewModel;
 
 
         /* FILE MENU */
@@ -79,11 +92,12 @@ namespace BabelMeta
         private async void openToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
             Stream stream = null;
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-
-            openFileDialog.InitialDirectory = "c:\\";
-            openFileDialog.Title = "Open a default file";
-            openFileDialog.RestoreDirectory = true;
+            var openFileDialog = new OpenFileDialog
+            {
+                InitialDirectory = "c:\\",
+                Title = "Open a default file",
+                RestoreDirectory = true,
+            };
 
             if (InputFormat.SelectedItem == null)
             {
@@ -109,12 +123,6 @@ namespace BabelMeta
             {
                 try
                 {
-                    if ((stream = openFileDialog.OpenFile()) == null)
-                    {
-                        Notify("Error: Null file stream.");
-                        return;
-                    }
-
                     Notify("Opening file stream.");
 
                     CatalogContext.Instance.Init();
@@ -125,7 +133,7 @@ namespace BabelMeta
                     OutputProgressBar.Visible = false;
 
                     // Call appropriate parser, depending on input format
-                    ReturnCode r = await TemplatedCatalogReader.Instance.Parse(openFileDialog, InputFormat.SelectedItem.ToString().ToFileFormatType(), _viewModel);
+                    var r = await TemplatedCatalogReader.Instance.Parse(openFileDialog, InputFormat.SelectedItem.ToString().ToFileFormatType(), _viewModel);
 
                     if (r == ReturnCode.Ok)
                     {
@@ -146,11 +154,8 @@ namespace BabelMeta
                 return;
             }
 
-            Stream stream;
-            BinaryFormatter binaryFormatter = new BinaryFormatter();
-
-            stream = File.Open(filePath, FileMode.Open);
-            binaryFormatter = new BinaryFormatter();
+            Stream stream = File.Open(filePath, FileMode.Open);
+            var binaryFormatter = new BinaryFormatter();
 
             switch ((filePath.GetFileNameFromFullPath().ToLower().Split('.'))[0])
             {
@@ -182,7 +187,7 @@ namespace BabelMeta
                     CatalogContext.Instance.Works = (List<Work>)binaryFormatter.Deserialize(stream);
                     break;
 
-                case "isrcs":
+                case "assets":
                     CatalogContext.Instance.Assets = (List<Asset>)binaryFormatter.Deserialize(stream);
                     break;
 
@@ -203,9 +208,11 @@ namespace BabelMeta
         /// <param name="e"></param>
         private void loadSessionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog fbd = new FolderBrowserDialog();
+            var fbd = new FolderBrowserDialog
+            {
+                Description = "Select a root folder to load session files.",
+            };
 
-            fbd.Description = "Select a root folder to load session files.";
             fbd.ShowDialog();
 
             if (String.IsNullOrEmpty(fbd.SelectedPath))
@@ -213,7 +220,14 @@ namespace BabelMeta
                 return;
             }
 
-            List<String> files = Directory.GetFiles(fbd.SelectedPath, "*.bmd").ToList();
+
+            var getFiles = Directory.GetFiles(fbd.SelectedPath, "*.bmd");
+            if (getFiles.Count() != 9)
+            {
+                Notify("The session file structure is corrupted.");
+            }
+
+            var files = getFiles.ToList();
 
             CatalogContext.Instance.Init();
             CatalogContext.Instance.Initialized = false;
@@ -248,9 +262,11 @@ namespace BabelMeta
         /// <param name="e"></param>
         private void saveSessionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog fbd = new FolderBrowserDialog();
+            var fbd = new FolderBrowserDialog
+            {
+                Description = "Select a root folder to save session files."
+            };
 
-            fbd.Description = "Select a root folder to save session files.";
             fbd.ShowDialog();
 
             if (String.IsNullOrEmpty(fbd.SelectedPath))
@@ -262,13 +278,12 @@ namespace BabelMeta
                 fbd.SelectedPath += "\\";
             }
 
-            Stream stream;
-            BinaryFormatter binaryFormatter = new BinaryFormatter();
+            var binaryFormatter = new BinaryFormatter();
 
             try
             {
                 // Settings
-                stream = File.Open(fbd.SelectedPath + "Settings.bmd", FileMode.Create);
+                Stream stream = File.Open(fbd.SelectedPath + "Settings.bmd", FileMode.Create);
 
                 binaryFormatter.Serialize(stream, CatalogContext.Instance.Settings);
                 stream.Close();
@@ -310,7 +325,7 @@ namespace BabelMeta
                 stream.Close();
 
                 // Isrcs
-                stream = File.Open(fbd.SelectedPath + "Isrcs.bmd", FileMode.Create);
+                stream = File.Open(fbd.SelectedPath + "Assets.bmd", FileMode.Create);
 
                 binaryFormatter.Serialize(stream, CatalogContext.Instance.Assets);
                 stream.Close();
@@ -330,8 +345,9 @@ namespace BabelMeta
             }
         }
 
-        private void quitToolStripMenuItem_Click(object sender, System.EventArgs e)
+        private void quitToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            _viewModel.PropertyChanged -= OnViewModelPropertyChanged;
             Close();
         }
         
@@ -347,8 +363,8 @@ namespace BabelMeta
         private void DoCheckIntegrity()
         {
             if (
-                    (CatalogContext.Instance.RedundantKeysChecked = ModelIntgrityChecker.Instance.CheckRedundantKeys()) == true
-                    && (CatalogContext.Instance.ReferentialIntegrityChecked = ModelIntgrityChecker.Instance.CheckReferentialIntegrity()) == true
+                    (CatalogContext.Instance.RedundantKeysChecked = ModelIntgrityChecker.Instance.CheckRedundantKeys())
+                    && (CatalogContext.Instance.ReferentialIntegrityChecked = ModelIntgrityChecker.Instance.CheckReferentialIntegrity())
                 )
             {
                 Notify("The imported model is valid.");
@@ -373,7 +389,7 @@ namespace BabelMeta
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void solsticeLegacyToolStripMenuItem_Click(object sender, System.EventArgs e)
+        private void solsticeLegacyToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Notify("Not implemented yet.");
         }
@@ -383,7 +399,7 @@ namespace BabelMeta
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void solsticeIgniterToolStripMenuItem_Click(object sender, System.EventArgs e)
+        private void solsticeIgniterToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Notify("Not implemented yet.");
         }
@@ -393,7 +409,7 @@ namespace BabelMeta
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void fugaToolStripMenuItem_Click(object sender, System.EventArgs e)
+        private void fugaToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (!CatalogContext.Instance.Initialized)
             {
@@ -406,16 +422,18 @@ namespace BabelMeta
                 return;
             }
 
-            FolderBrowserDialog fbd = new FolderBrowserDialog();
+            var fbd = new FolderBrowserDialog
+            {
+                Description = "Select a root folder for output sub-folders and XML files.",
+            };
 
-            fbd.Description = "Select a root folder for output sub-folders and XML files";
             fbd.ShowDialog();
 
             if (String.IsNullOrEmpty(fbd.SelectedPath))
             {
                 return;
             }
-            ReturnCode r = FugaXmlCatalogWriter.Instance.Generate(fbd.SelectedPath, _viewModel);
+            var r = FugaXmlCatalogWriter.Instance.Generate(fbd.SelectedPath, _viewModel);
 
             if (r == ReturnCode.Ok)
             {
@@ -431,7 +449,7 @@ namespace BabelMeta
         /// Append message on top of Notification Zone
         /// </summary>
         /// <param name="message"></param>
-        private void Notify(String message)
+        internal void Notify(String message)
         {
             if (String.IsNullOrEmpty(message))
             {

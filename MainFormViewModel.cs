@@ -191,6 +191,21 @@ namespace BabelMeta
             }
         }
 
+        private String _notification = String.Empty;
+
+        /// <summary>
+        /// Notification string to be published on the main form dedicated are. The property changed event must be always fired (identic notifications can be displayed 'in a row').
+        /// </summary>
+        public String Notification
+        {
+            get { return _notification; }
+            set
+            {
+                _notification = value;
+                RaisePropertyChanged("Notification");
+            }
+        }
+
         #region PropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
 

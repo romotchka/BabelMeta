@@ -23,6 +23,7 @@
  *  THE SOFTWARE. 
  */
 
+using System;
 using BabelMeta.AppConfig;
 
 namespace BabelMeta.Modules.Export
@@ -32,6 +33,18 @@ namespace BabelMeta.Modules.Export
     /// </summary>
     public interface ICatalogWriter
     {
+        /// <summary>
+        /// The main method of catalog generation in the given format.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
         ReturnCode Generate(object context, MainFormViewModel viewModel = null);
+
+        /// <summary>
+        /// Notify a message to the UI form via its view model.
+        /// </summary>
+        /// <param name="message"></param>
+        void Notify(String message);
     }
 }
