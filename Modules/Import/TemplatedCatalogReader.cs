@@ -23,6 +23,7 @@
  *  THE SOFTWARE. 
  */
 
+using System.Diagnostics;
 using BabelMeta.AppConfig;
 using BabelMeta.Helpers;
 using BabelMeta.Model;
@@ -68,6 +69,17 @@ namespace BabelMeta.Modules.Import
         private FileFormatType _fileFormatType;
 
         private MainFormViewModel _mainFormViewModel;
+
+        private const String SettingsWorksheetName = "SETTINGS";
+        private const String LangWorksheetName = "lang";
+        private const String TagWorksheetName = "tag";
+        private const String RoleWorksheetName = "role";
+        private const String QualityWorksheetName = "quality";
+        private const String ArtistWorksheetName = "artist";
+        private const String WorkWorksheetName = "work";
+        private const String AssetWorksheetName = "asset";
+        private const String AlbumWorksheetName = "album";
+        private const String TrackWorksheetName = "track";
 
         private const int InitPayload = 7; // Conventional value reflecting the init payload - feel free to put any reasonable value
 
@@ -296,103 +308,103 @@ namespace BabelMeta.Modules.Import
             }
 
             // Check worksheets
-            if (!ExistsWorksheet("SETTINGS")) return false;
-            if (!ExistsWorksheet("lang")) return false;
-            if (!ExistsWorksheet("tag")) return false;
-            if (!ExistsWorksheet("role")) return false;
-            if (!ExistsWorksheet("quality")) return false;
-            if (!ExistsWorksheet("artist")) return false;
-            if (!ExistsWorksheet("work")) return false;
-            if (!ExistsWorksheet("asset")) return false;
-            if (!ExistsWorksheet("album")) return false;
-            if (!ExistsWorksheet("track")) return false;
+            if (!ExistsWorksheet(SettingsWorksheetName)) return false;
+            if (!ExistsWorksheet(LangWorksheetName)) return false;
+            if (!ExistsWorksheet(TagWorksheetName)) return false;
+            if (!ExistsWorksheet(RoleWorksheetName)) return false;
+            if (!ExistsWorksheet(QualityWorksheetName)) return false;
+            if (!ExistsWorksheet(ArtistWorksheetName)) return false;
+            if (!ExistsWorksheet(WorkWorksheetName)) return false;
+            if (!ExistsWorksheet(AssetWorksheetName)) return false;
+            if (!ExistsWorksheet(AlbumWorksheetName)) return false;
+            if (!ExistsWorksheet(TrackWorksheetName)) return false;
 
             // Check columns and identify their indexes
             // Don't change the order in the following section so as to enable referential integrity check.
 
             // SETTINGS
-            var map = GetHeader("SETTINGS");
-            if (!ExistsCellValueInRow("parameter", map, "SETTINGS")) return false;
-            if (!ExistsCellValueInRow("value", map, "SETTINGS")) return false;
+            var map = GetHeader(SettingsWorksheetName);
+            if (!ExistsCellValueInRow("parameter", map, SettingsWorksheetName)) return false;
+            if (!ExistsCellValueInRow("value", map, SettingsWorksheetName)) return false;
             await Task.Run(() =>
             {
-                _settings = WorksheetActiveRows("SETTINGS");
+                _settings = WorksheetActiveRows(SettingsWorksheetName);
             });
             await ParseSettings(); // *must* be parsed first!
 
             // lang
-            map = GetHeader("lang");
-            if (!ExistsCellValueInRow("local_db", map, "lang")) return false;
-            if (!ExistsCellValueInRow("partner_db", map, "lang")) return false;
-            if (!ExistsCellValueInRow("long_name", map, "lang")) return false;
-            if (!ExistsCellValueInRow("short_name", map, "lang")) return false;
-            if (!ExistsCellValueInRow("default", map, "lang")) return false;
+            map = GetHeader(LangWorksheetName);
+            if (!ExistsCellValueInRow("local_db", map, LangWorksheetName)) return false;
+            if (!ExistsCellValueInRow("partner_db", map, LangWorksheetName)) return false;
+            if (!ExistsCellValueInRow("long_name", map, LangWorksheetName)) return false;
+            if (!ExistsCellValueInRow("short_name", map, LangWorksheetName)) return false;
+            if (!ExistsCellValueInRow("default", map, LangWorksheetName)) return false;
             await Task.Run(() =>
             {
-                _langs = WorksheetActiveRows("lang");
+                _langs = WorksheetActiveRows(LangWorksheetName);
             });
             await ParseLangs(); // *must* be parsed second, because column names can be language-dependent!
 
             // tag
-            map = GetHeader("tag");
-            if (!ExistsCellValueInRow("local_db", map, "tag")) return false;
-            if (!ExistsCellValueInRow("partner_db", map, "tag")) return false;
-            if (!ExistsCellValueInRow("tag_name", map, "tag")) return false;
+            map = GetHeader(TagWorksheetName);
+            if (!ExistsCellValueInRow("local_db", map, TagWorksheetName)) return false;
+            if (!ExistsCellValueInRow("partner_db", map, TagWorksheetName)) return false;
+            if (!ExistsCellValueInRow("tag_name", map, TagWorksheetName)) return false;
             await Task.Run(() =>
             {
-                _tags = WorksheetActiveRows("tag");
+                _tags = WorksheetActiveRows(TagWorksheetName);
             });
 
             // role
-            map = GetHeader("role");
-            if (!ExistsCellValueInRow("local_db", map, "role")) return false;
-            if (!ExistsCellValueInRow("partner_db", map, "role")) return false;
-            if (!ExistsCellValueInRow("role_name", map, "role")) return false;
+            map = GetHeader(RoleWorksheetName);
+            if (!ExistsCellValueInRow("local_db", map, RoleWorksheetName)) return false;
+            if (!ExistsCellValueInRow("partner_db", map, RoleWorksheetName)) return false;
+            if (!ExistsCellValueInRow("role_name", map, RoleWorksheetName)) return false;
             await Task.Run(() =>
             {
-                _roles = WorksheetActiveRows("role");
+                _roles = WorksheetActiveRows(RoleWorksheetName);
             });
 
             // quality
-            map = GetHeader("quality");
-            if (!ExistsCellValueInRow("local_db", map, "quality")) return false;
-            if (!ExistsCellValueInRow("partner_db", map, "quality")) return false;
-            if (!ExistsCellValueInRow("quality_name", map, "quality")) return false;
+            map = GetHeader(QualityWorksheetName);
+            if (!ExistsCellValueInRow("local_db", map, QualityWorksheetName)) return false;
+            if (!ExistsCellValueInRow("partner_db", map, QualityWorksheetName)) return false;
+            if (!ExistsCellValueInRow("quality_name", map, QualityWorksheetName)) return false;
             await Task.Run(() =>
             {
-                _qualities = WorksheetActiveRows("quality");
+                _qualities = WorksheetActiveRows(QualityWorksheetName);
             });
 
             // artist
-            map = GetHeader("artist");
-            if (!ExistsCellValueInRow("local_db", map, "artist")) return false;
-            if (!ExistsCellValueInRow("partner_db", map, "artist")) return false;
-            if (!ExistsCellValueInRow("id", map, "artist")) return false;
-            if (!ExistsCellValueInRow("birth", map, "artist")) return false;
-            if (!ExistsCellValueInRow("death", map, "artist")) return false;
+            map = GetHeader(ArtistWorksheetName);
+            if (!ExistsCellValueInRow("local_db", map, ArtistWorksheetName)) return false;
+            if (!ExistsCellValueInRow("partner_db", map, ArtistWorksheetName)) return false;
+            if (!ExistsCellValueInRow("id", map, ArtistWorksheetName)) return false;
+            if (!ExistsCellValueInRow("birth", map, ArtistWorksheetName)) return false;
+            if (!ExistsCellValueInRow("death", map, ArtistWorksheetName)) return false;
             foreach (var lang in CatalogContext.Instance.Langs)
             {
-                if (!ExistsCellValueInRow("lastname_" + lang.ShortName, map, "artist")) return false;
-                if (!ExistsCellValueInRow("firstname_" + lang.ShortName, map, "artist")) return false;
+                if (!ExistsCellValueInRow("lastname_" + lang.ShortName, map, ArtistWorksheetName)) return false;
+                if (!ExistsCellValueInRow("firstname_" + lang.ShortName, map, ArtistWorksheetName)) return false;
             }
             await Task.Run(() =>
             {
-                _artists = WorksheetActiveRows("artist");
+                _artists = WorksheetActiveRows(ArtistWorksheetName);
             });
 
             // work
-            map = GetHeader("work");
-            if (!ExistsCellValueInRow("local_db", map, "work")) return false;
-            if (!ExistsCellValueInRow("partner_db", map, "work")) return false;
-            if (!ExistsCellValueInRow("id", map, "work")) return false;
-            if (!ExistsCellValueInRow("id_parent", map, "work")) return false;
-            if (!ExistsCellValueInRow("catalog_number", map, "work")) return false;
-            if (!ExistsCellValueInRow("key", map, "work")) return false;
-            if (!ExistsCellValueInRow("year", map, "work")) return false;
+            map = GetHeader(WorkWorksheetName);
+            if (!ExistsCellValueInRow("local_db", map, WorkWorksheetName)) return false;
+            if (!ExistsCellValueInRow("partner_db", map, WorkWorksheetName)) return false;
+            if (!ExistsCellValueInRow("id", map, WorkWorksheetName)) return false;
+            if (!ExistsCellValueInRow("id_parent", map, WorkWorksheetName)) return false;
+            if (!ExistsCellValueInRow("catalog_number", map, WorkWorksheetName)) return false;
+            if (!ExistsCellValueInRow("key", map, WorkWorksheetName)) return false;
+            if (!ExistsCellValueInRow("year", map, WorkWorksheetName)) return false;
             var iWork = 1;
             while   (
-                        ExistsCellValueInRow("id_contributor" + iWork, map, "work")
-                        && ExistsCellValueInRow("role_contributor" + iWork, map, "work")
+                        ExistsCellValueInRow("id_contributor" + iWork, map, WorkWorksheetName)
+                        && ExistsCellValueInRow("role_contributor" + iWork, map, WorkWorksheetName)
                     )
             {
                 iWork++;
@@ -401,28 +413,28 @@ namespace BabelMeta.Modules.Import
             {
                 return false;
             }
-            if (!ExistsCellValueInRow("movement_number", map, "work")) return false;
+            if (!ExistsCellValueInRow("movement_number", map, WorkWorksheetName)) return false;
             foreach (var lang in CatalogContext.Instance.Langs)
             {
-                if (!ExistsCellValueInRow("title_" + lang.ShortName, map, "work")) return false;
-                if (!ExistsCellValueInRow("movement_title_" + lang.ShortName, map, "work")) return false;
+                if (!ExistsCellValueInRow("title_" + lang.ShortName, map, WorkWorksheetName)) return false;
+                if (!ExistsCellValueInRow("movement_title_" + lang.ShortName, map, WorkWorksheetName)) return false;
             }
             await Task.Run(() =>
             {
-                _works = WorksheetActiveRows("work");
+                _works = WorksheetActiveRows(WorkWorksheetName);
             });
 
             // asset
-            map = GetHeader("asset");
-            if (!ExistsCellValueInRow("local_db", map, "asset")) return false;
-            if (!ExistsCellValueInRow("partner_db", map, "asset")) return false;
-            if (!ExistsCellValueInRow("isrc_id", map, "asset")) return false;
-            if (!ExistsCellValueInRow("work_id", map, "asset")) return false;
+            map = GetHeader(AssetWorksheetName);
+            if (!ExistsCellValueInRow("local_db", map, AssetWorksheetName)) return false;
+            if (!ExistsCellValueInRow("partner_db", map, AssetWorksheetName)) return false;
+            if (!ExistsCellValueInRow("isrc_id", map, AssetWorksheetName)) return false;
+            if (!ExistsCellValueInRow("work_id", map, AssetWorksheetName)) return false;
             var iAsset = 1;
             while   (
-                        ExistsCellValueInRow("id_contributor" + iAsset, map, "asset")
-                        && ExistsCellValueInRow("role_contributor" + iAsset, map, "asset")
-                        && ExistsCellValueInRow("quality_contributor" + iAsset, map, "asset")
+                        ExistsCellValueInRow("id_contributor" + iAsset, map, AssetWorksheetName)
+                        && ExistsCellValueInRow("role_contributor" + iAsset, map, AssetWorksheetName)
+                        && ExistsCellValueInRow("quality_contributor" + iAsset, map, AssetWorksheetName)
                     )
             {
                 iAsset++;
@@ -431,62 +443,62 @@ namespace BabelMeta.Modules.Import
             {
                 return false;
             }
-            if (!ExistsCellValueInRow("c_name", map, "asset")) return false;
-            if (!ExistsCellValueInRow("c_year", map, "asset")) return false;
-            if (!ExistsCellValueInRow("p_name", map, "asset")) return false;
-            if (!ExistsCellValueInRow("p_year", map, "asset")) return false;
-            if (!ExistsCellValueInRow("recording_location", map, "asset")) return false;
-            if (!ExistsCellValueInRow("recording_year", map, "asset")) return false;
-            if (!ExistsCellValueInRow("available_separately", map, "asset")) return false;
-            if (!ExistsCellValueInRow("catalog_tier", map, "asset")) return false;
+            if (!ExistsCellValueInRow("c_name", map, AssetWorksheetName)) return false;
+            if (!ExistsCellValueInRow("c_year", map, AssetWorksheetName)) return false;
+            if (!ExistsCellValueInRow("p_name", map, AssetWorksheetName)) return false;
+            if (!ExistsCellValueInRow("p_year", map, AssetWorksheetName)) return false;
+            if (!ExistsCellValueInRow("recording_location", map, AssetWorksheetName)) return false;
+            if (!ExistsCellValueInRow("recording_year", map, AssetWorksheetName)) return false;
+            if (!ExistsCellValueInRow("available_separately", map, AssetWorksheetName)) return false;
+            if (!ExistsCellValueInRow("catalog_tier", map, AssetWorksheetName)) return false;
             await Task.Run(() =>
             {
-                _assets = WorksheetActiveRows("asset");
+                _assets = WorksheetActiveRows(AssetWorksheetName);
             });
 
             // album
-            map = GetHeader("album");
-            if (!ExistsCellValueInRow("local_db", map, "album")) return false;
-            if (!ExistsCellValueInRow("partner_db", map, "album")) return false;
-            if (!ExistsCellValueInRow("album_id", map, "album")) return false;
-            if (!ExistsCellValueInRow("action", map, "album")) return false;
-            if (!ExistsCellValueInRow("c_name", map, "album")) return false;
-            if (!ExistsCellValueInRow("c_year", map, "album")) return false;
-            if (!ExistsCellValueInRow("p_name", map, "album")) return false;
-            if (!ExistsCellValueInRow("p_year", map, "album")) return false;
-            if (!ExistsCellValueInRow("recording_location", map, "album")) return false;
-            if (!ExistsCellValueInRow("recording_year", map, "album")) return false;
-            if (!ExistsCellValueInRow("catalog_tier", map, "album")) return false;
-            if (!ExistsCellValueInRow("consumer_release_date", map, "album")) return false;
-            if (!ExistsCellValueInRow("label", map, "album")) return false;
-            if (!ExistsCellValueInRow("reference", map, "album")) return false;
-            if (!ExistsCellValueInRow("ean", map, "album")) return false;
-            if (!ExistsCellValueInRow("genre", map, "album")) return false;
-            if (!ExistsCellValueInRow("subgenre", map, "album")) return false;
-            if (CatalogContext.Instance.Langs.Any(lang => !ExistsCellValueInRow("title_" + lang.ShortName, map, "album")))
+            map = GetHeader(AlbumWorksheetName);
+            if (!ExistsCellValueInRow("local_db", map, AlbumWorksheetName)) return false;
+            if (!ExistsCellValueInRow("partner_db", map, AlbumWorksheetName)) return false;
+            if (!ExistsCellValueInRow("album_id", map, AlbumWorksheetName)) return false;
+            if (!ExistsCellValueInRow("action", map, AlbumWorksheetName)) return false;
+            if (!ExistsCellValueInRow("c_name", map, AlbumWorksheetName)) return false;
+            if (!ExistsCellValueInRow("c_year", map, AlbumWorksheetName)) return false;
+            if (!ExistsCellValueInRow("p_name", map, AlbumWorksheetName)) return false;
+            if (!ExistsCellValueInRow("p_year", map, AlbumWorksheetName)) return false;
+            if (!ExistsCellValueInRow("recording_location", map, AlbumWorksheetName)) return false;
+            if (!ExistsCellValueInRow("recording_year", map, AlbumWorksheetName)) return false;
+            if (!ExistsCellValueInRow("catalog_tier", map, AlbumWorksheetName)) return false;
+            if (!ExistsCellValueInRow("consumer_release_date", map, AlbumWorksheetName)) return false;
+            if (!ExistsCellValueInRow("label", map, AlbumWorksheetName)) return false;
+            if (!ExistsCellValueInRow("reference", map, AlbumWorksheetName)) return false;
+            if (!ExistsCellValueInRow("ean", map, AlbumWorksheetName)) return false;
+            if (!ExistsCellValueInRow("genre", map, AlbumWorksheetName)) return false;
+            if (!ExistsCellValueInRow("subgenre", map, AlbumWorksheetName)) return false;
+            if (CatalogContext.Instance.Langs.Any(lang => !ExistsCellValueInRow("title_" + lang.ShortName, map, AlbumWorksheetName)))
             {
                 return false;
             }
-            if (!ExistsCellValueInRow("primary_artist", map, "album")) return false;
-            if (!ExistsCellValueInRow("recording_location", map, "album")) return false;
-            if (!ExistsCellValueInRow("recording_year", map, "album")) return false;
-            if (!ExistsCellValueInRow("redeliver", map, "album")) return false;
+            if (!ExistsCellValueInRow("primary_artist", map, AlbumWorksheetName)) return false;
+            if (!ExistsCellValueInRow("recording_location", map, AlbumWorksheetName)) return false;
+            if (!ExistsCellValueInRow("recording_year", map, AlbumWorksheetName)) return false;
+            if (!ExistsCellValueInRow("redeliver", map, AlbumWorksheetName)) return false;
             await Task.Run(() =>
             {
-                _albums = WorksheetActiveRows("album");
+                _albums = WorksheetActiveRows(AlbumWorksheetName);
             });
 
             // track
-            map = GetHeader("track");
-            if (!ExistsCellValueInRow("local_db", map, "track")) return false;
-            if (!ExistsCellValueInRow("partner_db", map, "track")) return false;
-            if (!ExistsCellValueInRow("album_id", map, "track")) return false;
-            if (!ExistsCellValueInRow("volume_index", map, "track")) return false;
-            if (!ExistsCellValueInRow("track_index", map, "track")) return false;
-            if (!ExistsCellValueInRow("isrc_id", map, "track")) return false;
+            map = GetHeader(TrackWorksheetName);
+            if (!ExistsCellValueInRow("local_db", map, TrackWorksheetName)) return false;
+            if (!ExistsCellValueInRow("partner_db", map, TrackWorksheetName)) return false;
+            if (!ExistsCellValueInRow("album_id", map, TrackWorksheetName)) return false;
+            if (!ExistsCellValueInRow("volume_index", map, TrackWorksheetName)) return false;
+            if (!ExistsCellValueInRow("track_index", map, TrackWorksheetName)) return false;
+            if (!ExistsCellValueInRow("isrc_id", map, TrackWorksheetName)) return false;
             await Task.Run(() =>
             {
-                _tracks = WorksheetActiveRows("track");
+                _tracks = WorksheetActiveRows(TrackWorksheetName);
             });
 
             return true;
@@ -532,10 +544,18 @@ namespace BabelMeta.Modules.Import
                     }
                     for (; index <= _excelLastColumn[worksheetName]; index++)
                     {
-                        Range cell = ((_Worksheet)_worksheets[worksheetName]).Cells[rowIndex, index];
-                        if (cell != null && cell.Value != null && !String.IsNullOrEmpty(cell.Value.ToString()))
+                        // try-catch within the loop is necessary due to COM exceptions but has an influence on performances for large files. 
+                        try
                         {
-                            map[index] = cell;
+                            Range cell = ((_Worksheet)_worksheets[worksheetName]).Cells[rowIndex, index];
+                            if (cell != null && cell.Value != null && !String.IsNullOrEmpty(cell.Value.ToString()))
+                            {
+                                map[index] = cell;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.Write(this, "TemplatedCatalogReader.CellMapByRow, worksheet=" + worksheetName + ", line=" + rowIndex + ", exception=" + ex);
                         }
                     }
                     break;
@@ -610,7 +630,7 @@ namespace BabelMeta.Modules.Import
             }
 
             // SETTINGS: return all lines
-            if (String.Compare(worksheetName, "SETTINGS", StringComparison.Ordinal) == 0)
+            if (String.Compare(worksheetName, SettingsWorksheetName, StringComparison.Ordinal) == 0)
             {
                 if (rows != null) rows.RemoveAt(0); // Header line
                 return rows;
@@ -838,13 +858,13 @@ namespace BabelMeta.Modules.Import
                 Dictionary<int, object> cells = null;
                 await Task.Run(() =>
                 {
-                    cells = CellMapByRow(row, "SETTINGS");
+                    cells = CellMapByRow(row, SettingsWorksheetName);
                 });
                 
                 if (cells != null && cells.Count > 0)
                 {
-                    String parameter = CellContentWizard(cells, _worksheetColumns["SETTINGS"]["parameter"]);
-                    String value = CellContentWizard(cells, _worksheetColumns["SETTINGS"]["value"]);
+                    String parameter = CellContentWizard(cells, _worksheetColumns[SettingsWorksheetName]["parameter"]);
+                    String value = CellContentWizard(cells, _worksheetColumns[SettingsWorksheetName]["value"]);
 
                     if (String.IsNullOrEmpty(parameter)) continue;
                     if (CatalogContext.Instance.Settings == null)
@@ -882,7 +902,7 @@ namespace BabelMeta.Modules.Import
                             {
                                 switch (value.ToLower())
                                 {
-                                    case "album": settings.FormatDefault = ProductFormat.Album; break;
+                                    case AlbumWorksheetName: settings.FormatDefault = ProductFormat.Album; break;
                                     case "boxset": settings.FormatDefault = ProductFormat.BoxSet; break;
                                     case "ep": settings.FormatDefault = ProductFormat.EP; break;
                                     case "single": settings.FormatDefault = ProductFormat.Single; break;
@@ -915,15 +935,15 @@ namespace BabelMeta.Modules.Import
                 Dictionary<int, object> cells = null;
                 await Task.Run(() =>
                 {
-                    cells = CellMapByRow(row, "lang");
+                    cells = CellMapByRow(row, LangWorksheetName);
                 });
 
                 if (cells == null || cells.Count <= 0) continue;
                 var lang = new Lang
                 {
-                    LongName = CellContentWizard(cells, _worksheetColumns["lang"]["long_name"]),
-                    ShortName = CellContentWizard(cells, _worksheetColumns["lang"]["short_name"]),
-                    IsDefault = String.Compare(CellContentWizard(cells, _worksheetColumns["lang"]["default"]).ToLower(), "yes", StringComparison.Ordinal) == 0,
+                    LongName = CellContentWizard(cells, _worksheetColumns[LangWorksheetName]["long_name"]),
+                    ShortName = CellContentWizard(cells, _worksheetColumns[LangWorksheetName]["short_name"]),
+                    IsDefault = String.Compare(CellContentWizard(cells, _worksheetColumns[LangWorksheetName]["default"]).ToLower(), "yes", StringComparison.Ordinal) == 0,
                 };
 
                 // Short name is mandatory
@@ -949,14 +969,14 @@ namespace BabelMeta.Modules.Import
                 Dictionary<int, object> cells = null;
                 await Task.Run(() =>
                 {
-                    cells = CellMapByRow(row, "tag");
+                    cells = CellMapByRow(row, TagWorksheetName);
                 });
 
                 if (cells != null && cells.Count > 0)
                 {
                     var tag = new Tag
                     {
-                        Name = CellContentWizard(cells, _worksheetColumns["tag"]["tag_name"]),
+                        Name = CellContentWizard(cells, _worksheetColumns[TagWorksheetName]["tag_name"]),
                     };
 
                     if (!String.IsNullOrEmpty(tag.Name))
@@ -987,14 +1007,14 @@ namespace BabelMeta.Modules.Import
                 Dictionary<int, object> cells = null;
                 await Task.Run(() =>
                 {
-                    cells = CellMapByRow(row, "role");
+                    cells = CellMapByRow(row, RoleWorksheetName);
                 });
 
                 if (cells != null && cells.Count > 0)
                 {
                     var role = new Role
                     {
-                        Name = CellContentWizard(cells, _worksheetColumns["role"]["role_name"]).ToLower(),
+                        Name = CellContentWizard(cells, _worksheetColumns[RoleWorksheetName]["role_name"]).ToLower(),
                     };
 
                     // Attempt to retrieve a qualified name (standardized)
@@ -1037,14 +1057,14 @@ namespace BabelMeta.Modules.Import
                 Dictionary<int, object> cells = null;
                 await Task.Run(() =>
                 {
-                    cells = CellMapByRow(row, "quality");
+                    cells = CellMapByRow(row, QualityWorksheetName);
                 });
 
                 if (cells != null && cells.Count > 0)
                 {
                     var quality = new Quality
                     {
-                        Name = CellContentWizard(cells, _worksheetColumns["quality"]["quality_name"]),
+                        Name = CellContentWizard(cells, _worksheetColumns[QualityWorksheetName]["quality_name"]),
                     };
 
                     if (!String.IsNullOrEmpty(quality.Name))
@@ -1076,23 +1096,23 @@ namespace BabelMeta.Modules.Import
                 Dictionary<int, object> cells = null;
                 await Task.Run(() =>
                 {
-                    cells = CellMapByRow(row, "artist");
+                    cells = CellMapByRow(row, ArtistWorksheetName);
                 });
 
                 if (cells != null && cells.Count > 0)
                 {
                     var artist = new Artist
                     {
-                        Id = Convert.ToInt32(CellContentWizard(cells, _worksheetColumns["artist"]["id"], "0")),
-                        Birth = Convert.ToInt16(CellContentWizard(cells, _worksheetColumns["artist"]["birth"], "0")),
-                        Death = Convert.ToInt16(CellContentWizard(cells, _worksheetColumns["artist"]["death"], "0")),
+                        Id = Convert.ToInt32(CellContentWizard(cells, _worksheetColumns[ArtistWorksheetName]["id"], "0")),
+                        Birth = Convert.ToInt16(CellContentWizard(cells, _worksheetColumns[ArtistWorksheetName]["birth"], "0")),
+                        Death = Convert.ToInt16(CellContentWizard(cells, _worksheetColumns[ArtistWorksheetName]["death"], "0")),
                         LastName = new Dictionary<String, String>
                         {
-                            {CatalogContext.Instance.DefaultLang.ShortName, CellContentWizard(cells, _worksheetColumns["artist"]["lastname_" + CatalogContext.Instance.DefaultLang.ShortName])},
+                            {CatalogContext.Instance.DefaultLang.ShortName, CellContentWizard(cells, _worksheetColumns[ArtistWorksheetName]["lastname_" + CatalogContext.Instance.DefaultLang.ShortName])},
                         },
                         FirstName = new Dictionary<String, String>
                         {
-                            {CatalogContext.Instance.DefaultLang.ShortName, CellContentWizard(cells, _worksheetColumns["artist"]["firstname_" + CatalogContext.Instance.DefaultLang.ShortName])},
+                            {CatalogContext.Instance.DefaultLang.ShortName, CellContentWizard(cells, _worksheetColumns[ArtistWorksheetName]["firstname_" + CatalogContext.Instance.DefaultLang.ShortName])},
                         },
                     };
 
@@ -1112,8 +1132,8 @@ namespace BabelMeta.Modules.Import
                     var otherLangs = CatalogContext.Instance.Langs.Where(l => l != CatalogContext.Instance.DefaultLang).ToList();
                     foreach (var lang in otherLangs)
                     {
-                        var last = CellContentWizard(cells, _worksheetColumns["artist"]["lastname_" + lang.ShortName]);
-                        var first = CellContentWizard(cells, _worksheetColumns["artist"]["firstname_" + lang.ShortName]);
+                        var last = CellContentWizard(cells, _worksheetColumns[ArtistWorksheetName]["lastname_" + lang.ShortName]);
+                        var first = CellContentWizard(cells, _worksheetColumns[ArtistWorksheetName]["firstname_" + lang.ShortName]);
 
                         if (String.IsNullOrEmpty(last))
                         {
@@ -1153,28 +1173,28 @@ namespace BabelMeta.Modules.Import
                 Dictionary<int, object> cells = null;
                 await Task.Run(() =>
                 {
-                    cells = CellMapByRow(row, "work");
+                    cells = CellMapByRow(row, WorkWorksheetName);
                 });
 
                 if (cells != null && cells.Count > 0)
                 {
 
-                    var shortKey = CellContentWizard(cells, _worksheetColumns["work"]["key"]);
+                    var shortKey = CellContentWizard(cells, _worksheetColumns[WorkWorksheetName]["key"]);
                     var work = new Work
                     {
-                        Id = Convert.ToInt32(CellContentWizard(cells, _worksheetColumns["work"]["id"], "0")),
-                        Parent = Convert.ToInt32(CellContentWizard(cells, _worksheetColumns["work"]["id_parent"], "0")),
-                        ClassicalCatalog = CellContentWizard(cells, _worksheetColumns["work"]["catalog_number"]),
+                        Id = Convert.ToInt32(CellContentWizard(cells, _worksheetColumns[WorkWorksheetName]["id"], "0")),
+                        Parent = Convert.ToInt32(CellContentWizard(cells, _worksheetColumns[WorkWorksheetName]["id_parent"], "0")),
+                        ClassicalCatalog = CellContentWizard(cells, _worksheetColumns[WorkWorksheetName]["catalog_number"]),
                         Tonality = (_shortenedKeys.ContainsKey(shortKey)) ? _shortenedKeys[shortKey] : (Key?)null,
-                        Year = Convert.ToInt16(CellContentWizard(cells, _worksheetColumns["work"]["year"], "0")),
-                        MovementNumber = Convert.ToInt16(CellContentWizard(cells, _worksheetColumns["work"]["movement_number"], "0")),
+                        Year = Convert.ToInt16(CellContentWizard(cells, _worksheetColumns[WorkWorksheetName]["year"], "0")),
+                        MovementNumber = Convert.ToInt16(CellContentWizard(cells, _worksheetColumns[WorkWorksheetName]["movement_number"], "0")),
                         Title = new Dictionary<String, String>
                         {
-                            {CatalogContext.Instance.DefaultLang.ShortName, CellContentWizard(cells, _worksheetColumns["work"]["title_" + CatalogContext.Instance.DefaultLang.ShortName])},  
+                            {CatalogContext.Instance.DefaultLang.ShortName, CellContentWizard(cells, _worksheetColumns[WorkWorksheetName]["title_" + CatalogContext.Instance.DefaultLang.ShortName])},  
                         },
                         MovementTitle = new Dictionary<String, String>
                         {
-                            {CatalogContext.Instance.DefaultLang.ShortName, CellContentWizard(cells, _worksheetColumns["work"]["movement_title_" + CatalogContext.Instance.DefaultLang.ShortName])},  
+                            {CatalogContext.Instance.DefaultLang.ShortName, CellContentWizard(cells, _worksheetColumns[WorkWorksheetName]["movement_title_" + CatalogContext.Instance.DefaultLang.ShortName])},  
                         },
                         Contributors = new Dictionary<int, Role>(),
                     };
@@ -1196,8 +1216,8 @@ namespace BabelMeta.Modules.Import
                     var otherLangs = CatalogContext.Instance.Langs.Where(l => l != CatalogContext.Instance.DefaultLang).ToList();
                     foreach (Lang lang in otherLangs)
                     {
-                        var title = CellContentWizard(cells, _worksheetColumns["work"]["title_" + lang.ShortName]);
-                        var movementTitle = CellContentWizard(cells, _worksheetColumns["work"]["movement_title_" + lang.ShortName]);
+                        var title = CellContentWizard(cells, _worksheetColumns[WorkWorksheetName]["title_" + lang.ShortName]);
+                        var movementTitle = CellContentWizard(cells, _worksheetColumns[WorkWorksheetName]["movement_title_" + lang.ShortName]);
 
                         work.Title[lang.ShortName] = (String.IsNullOrEmpty(title)) ? work.Title[CatalogContext.Instance.DefaultLang.ShortName] : title;
                         work.MovementTitle[lang.ShortName] = (String.IsNullOrEmpty(movementTitle)) ? work.MovementTitle[CatalogContext.Instance.DefaultLang.ShortName] : movementTitle;
@@ -1205,12 +1225,12 @@ namespace BabelMeta.Modules.Import
 
                     var i = 1;
                     while   (
-                                (_worksheetColumns["work"].ContainsKey("id_contributor" + i))
-                                && (_worksheetColumns["work"].ContainsKey("role_contributor" + i))
+                                (_worksheetColumns[WorkWorksheetName].ContainsKey("id_contributor" + i))
+                                && (_worksheetColumns[WorkWorksheetName].ContainsKey("role_contributor" + i))
                             )
                     {
-                        var idContributor = Convert.ToInt32(CellContentWizard(cells, _worksheetColumns["work"]["id_contributor" + i], "0"));
-                        var roleName = CellContentWizard(cells, _worksheetColumns["work"]["role_contributor" + i]).ToLower();
+                        var idContributor = Convert.ToInt32(CellContentWizard(cells, _worksheetColumns[WorkWorksheetName]["id_contributor" + i], "0"));
+                        var roleName = CellContentWizard(cells, _worksheetColumns[WorkWorksheetName]["role_contributor" + i]).ToLower();
                         var roleContributor = CatalogContext.Instance.Roles.FirstOrDefault(r => String.Compare(r.Name, roleName, StringComparison.Ordinal) == 0);
 
                         if (idContributor > 0 && roleContributor != null)
@@ -1249,22 +1269,22 @@ namespace BabelMeta.Modules.Import
                 Dictionary<int, object> cells = null;
                 await Task.Run(() =>
                 {
-                    cells = CellMapByRow(row, "asset");
+                    cells = CellMapByRow(row, AssetWorksheetName);
                 });
 
                 if (cells != null && cells.Count > 0)
                 {
                     var asset = new Asset
                     {
-                        Id = CellContentWizard(cells, _worksheetColumns["asset"]["isrc_id"]),
-                        Work = Convert.ToInt32(CellContentWizard(cells, _worksheetColumns["asset"]["work_id"], "0")),
-                        CName = CellContentWizard(cells, _worksheetColumns["asset"]["c_name"]),
-                        CYear = Convert.ToInt16(CellContentWizard(cells, _worksheetColumns["asset"]["c_year"], "0")),
-                        PName = CellContentWizard(cells, _worksheetColumns["asset"]["p_name"]),
-                        PYear = Convert.ToInt16(CellContentWizard(cells, _worksheetColumns["asset"]["p_year"], "0")),
-                        RecordingLocation = CellContentWizard(cells, _worksheetColumns["asset"]["recording_location"]),
-                        RecordingYear = Convert.ToInt16(CellContentWizard(cells, _worksheetColumns["asset"]["recording_year"], "0")),
-                        AvailableSeparately = (String.Compare(CellContentWizard(cells, _worksheetColumns["asset"]["available_separately"]).ToLower(), "no", StringComparison.Ordinal) != 0) && CatalogContext.Instance.Settings.AvailableSeparatelyDefault,
+                        Id = CellContentWizard(cells, _worksheetColumns[AssetWorksheetName]["isrc_id"]),
+                        Work = Convert.ToInt32(CellContentWizard(cells, _worksheetColumns[AssetWorksheetName]["work_id"], "0")),
+                        CName = CellContentWizard(cells, _worksheetColumns[AssetWorksheetName]["c_name"]),
+                        CYear = Convert.ToInt16(CellContentWizard(cells, _worksheetColumns[AssetWorksheetName]["c_year"], "0")),
+                        PName = CellContentWizard(cells, _worksheetColumns[AssetWorksheetName]["p_name"]),
+                        PYear = Convert.ToInt16(CellContentWizard(cells, _worksheetColumns[AssetWorksheetName]["p_year"], "0")),
+                        RecordingLocation = CellContentWizard(cells, _worksheetColumns[AssetWorksheetName]["recording_location"]),
+                        RecordingYear = Convert.ToInt16(CellContentWizard(cells, _worksheetColumns[AssetWorksheetName]["recording_year"], "0")),
+                        AvailableSeparately = (String.Compare(CellContentWizard(cells, _worksheetColumns[AssetWorksheetName]["available_separately"]).ToLower(), "no", StringComparison.Ordinal) != 0) && CatalogContext.Instance.Settings.AvailableSeparatelyDefault,
                         Contributors = new Dictionary<int, Dictionary<Role, Quality>>(),
                     };
 
@@ -1300,15 +1320,15 @@ namespace BabelMeta.Modules.Import
 
                     var i = 1;
                     while   (
-                                (_worksheetColumns["asset"].ContainsKey("id_contributor" + i))
-                                && (_worksheetColumns["asset"].ContainsKey("role_contributor" + i))
-                                && (_worksheetColumns["asset"].ContainsKey("quality_contributor" + i))
+                                (_worksheetColumns[AssetWorksheetName].ContainsKey("id_contributor" + i))
+                                && (_worksheetColumns[AssetWorksheetName].ContainsKey("role_contributor" + i))
+                                && (_worksheetColumns[AssetWorksheetName].ContainsKey("quality_contributor" + i))
                             )
                     {
-                        var idContributor = Convert.ToInt32(CellContentWizard(cells, _worksheetColumns["asset"]["id_contributor" + i], "0"));
-                        var roleContributorName = CellContentWizard(cells, _worksheetColumns["asset"]["role_contributor" + i]).ToLower();
+                        var idContributor = Convert.ToInt32(CellContentWizard(cells, _worksheetColumns[AssetWorksheetName]["id_contributor" + i], "0"));
+                        var roleContributorName = CellContentWizard(cells, _worksheetColumns[AssetWorksheetName]["role_contributor" + i]).ToLower();
                         var roleContributor = CatalogContext.Instance.Roles.FirstOrDefault(c => String.Compare(c.Name, roleContributorName, StringComparison.Ordinal) == 0);
-                        var qualityContributorName = CellContentWizard(cells, _worksheetColumns["asset"]["quality_contributor" + i]);
+                        var qualityContributorName = CellContentWizard(cells, _worksheetColumns[AssetWorksheetName]["quality_contributor" + i]);
                         var qualityContributor = CatalogContext.Instance.Qualities.FirstOrDefault(c => String.Compare(c.Name, qualityContributorName, StringComparison.Ordinal) == 0);
 
                         // Contributor valid
@@ -1323,7 +1343,7 @@ namespace BabelMeta.Modules.Import
                         i++;
                     }
 
-                    var tier = CellContentWizard(cells, _worksheetColumns["isrc"]["catalog_tier"]).ToLower();
+                    var tier = CellContentWizard(cells, _worksheetColumns[AssetWorksheetName]["catalog_tier"]).ToLower();
                     if (!String.IsNullOrEmpty(tier))
                     {
                         switch (tier)
@@ -1366,16 +1386,16 @@ namespace BabelMeta.Modules.Import
                 Dictionary<int, object> cells = null;
                 await Task.Run(() =>
                 {
-                    cells = CellMapByRow(row, "album");
+                    cells = CellMapByRow(row, AlbumWorksheetName);
                 });
 
                 if (cells != null && cells.Count > 0)
                 {
                     {
-                        var genreTag = CellContentWizard(cells, _worksheetColumns["album"]["genre"]);
-                        var subgenreTag = CellContentWizard(cells, _worksheetColumns["album"]["subgenre"]);
+                        var genreTag = CellContentWizard(cells, _worksheetColumns[AlbumWorksheetName]["genre"]);
+                        var subgenreTag = CellContentWizard(cells, _worksheetColumns[AlbumWorksheetName]["subgenre"]);
                         Album.ActionType? actionTypeValue = null;
-                        switch (CellContentWizard(cells, _worksheetColumns["album"]["action"]).ToLower())
+                        switch (CellContentWizard(cells, _worksheetColumns[AlbumWorksheetName]["action"]).ToLower())
                         {
                             case "insert":
                                 actionTypeValue = Album.ActionType.Insert;
@@ -1386,21 +1406,21 @@ namespace BabelMeta.Modules.Import
                         }
                         var album = new Album
                         {
-                            Id = Convert.ToInt32(CellContentWizard(cells, _worksheetColumns["album"]["album_id"], "0")),
+                            Id = Convert.ToInt32(CellContentWizard(cells, _worksheetColumns[AlbumWorksheetName]["album_id"], "0")),
                             ActionTypeValue = actionTypeValue,
-                            CName = CellContentWizard(cells, _worksheetColumns["album"]["c_name"]),
-                            CYear = Convert.ToInt16(CellContentWizard(cells, _worksheetColumns["album"]["c_year"], "0")),
-                            PName = CellContentWizard(cells, _worksheetColumns["album"]["p_name"]),
-                            PYear = Convert.ToInt16(CellContentWizard(cells, _worksheetColumns["album"]["p_year"], "0")),
-                            RecordingLocation = CellContentWizard(cells, _worksheetColumns["album"]["recording_location"]),
-                            RecordingYear = Convert.ToInt16(CellContentWizard(cells, _worksheetColumns["album"]["recording_year"], "0")),
-                            Owner = CellContentWizard(cells, _worksheetColumns["album"]["label"]),
-                            CatalogReference = CellContentWizard(cells, _worksheetColumns["album"]["reference"]),
-                            Ean = Convert.ToInt64(CellContentWizard(cells, _worksheetColumns["album"]["ean"], "0")),
-                            ConsumerReleaseDate = CellContentWizard(cells, _worksheetColumns["album"]["consumer_release_date"]).ToDateTime(),
+                            CName = CellContentWizard(cells, _worksheetColumns[AlbumWorksheetName]["c_name"]),
+                            CYear = Convert.ToInt16(CellContentWizard(cells, _worksheetColumns[AlbumWorksheetName]["c_year"], "0")),
+                            PName = CellContentWizard(cells, _worksheetColumns[AlbumWorksheetName]["p_name"]),
+                            PYear = Convert.ToInt16(CellContentWizard(cells, _worksheetColumns[AlbumWorksheetName]["p_year"], "0")),
+                            RecordingLocation = CellContentWizard(cells, _worksheetColumns[AlbumWorksheetName]["recording_location"]),
+                            RecordingYear = Convert.ToInt16(CellContentWizard(cells, _worksheetColumns[AlbumWorksheetName]["recording_year"], "0")),
+                            Owner = CellContentWizard(cells, _worksheetColumns[AlbumWorksheetName]["label"]),
+                            CatalogReference = CellContentWizard(cells, _worksheetColumns[AlbumWorksheetName]["reference"]),
+                            Ean = Convert.ToInt64(CellContentWizard(cells, _worksheetColumns[AlbumWorksheetName]["ean"], "0")),
+                            ConsumerReleaseDate = CellContentWizard(cells, _worksheetColumns[AlbumWorksheetName]["consumer_release_date"]).ToDateTime(),
                             Title = new Dictionary<String, String>
                         {
-                            {CatalogContext.Instance.DefaultLang.ShortName, CellContentWizard(cells, _worksheetColumns["album"]["title_" + CatalogContext.Instance.DefaultLang.ShortName])},
+                            {CatalogContext.Instance.DefaultLang.ShortName, CellContentWizard(cells, _worksheetColumns[AlbumWorksheetName]["title_" + CatalogContext.Instance.DefaultLang.ShortName])},
                         },
                             Genre = (CatalogContext.Instance.Tags.Exists(t => String.Compare(t.Name, genreTag, StringComparison.Ordinal) == 0))
                                 ? CatalogContext.Instance.Tags.FirstOrDefault(t => String.Compare(t.Name, genreTag, StringComparison.Ordinal) == 0)
@@ -1408,7 +1428,7 @@ namespace BabelMeta.Modules.Import
                             Subgenre = (!String.IsNullOrEmpty(subgenreTag) && CatalogContext.Instance.Tags.Exists(t => String.Compare(t.Name, subgenreTag, StringComparison.Ordinal) == 0))
                                 ? CatalogContext.Instance.Tags.FirstOrDefault(t => String.Compare(t.Name, subgenreTag, StringComparison.Ordinal) == 0)
                                 : null,
-                            PrimaryArtistId = Convert.ToInt32(CellContentWizard(cells, _worksheetColumns["album"]["primary_artist"], "0")),
+                            PrimaryArtistId = Convert.ToInt32(CellContentWizard(cells, _worksheetColumns[AlbumWorksheetName]["primary_artist"], "0")),
                             Redeliver = false,
                         };
 
@@ -1456,7 +1476,7 @@ namespace BabelMeta.Modules.Import
                             album.Owner = CatalogContext.Instance.Settings.LabelDefault;
                         }
 
-                        var tier = CellContentWizard(cells, _worksheetColumns["album"]["catalog_tier"]).ToLower();
+                        var tier = CellContentWizard(cells, _worksheetColumns[AlbumWorksheetName]["catalog_tier"]).ToLower();
                         if (!String.IsNullOrEmpty(tier))
                         {
                             switch (tier)
@@ -1480,7 +1500,7 @@ namespace BabelMeta.Modules.Import
                         var otherLangs = CatalogContext.Instance.Langs.Where(l => l != CatalogContext.Instance.DefaultLang).ToList();
                         foreach (var lang in otherLangs)
                         {
-                            var title = CellContentWizard(cells, _worksheetColumns["album"]["title_" + lang.ShortName]);
+                            var title = CellContentWizard(cells, _worksheetColumns[AlbumWorksheetName]["title_" + lang.ShortName]);
                             album.Title[lang.ShortName] = (!String.IsNullOrEmpty(title)) ? album.Title[CatalogContext.Instance.DefaultLang.ShortName] : title;
                         }
 
@@ -1510,14 +1530,14 @@ namespace BabelMeta.Modules.Import
                 Dictionary<int, object> cells = null;
                 await Task.Run(() =>
                 {
-                    cells = CellMapByRow(row, "track");
+                    cells = CellMapByRow(row, TrackWorksheetName);
                 });
 
                 if (cells != null && cells.Count > 0)
                 {
-                    var albumId = Convert.ToInt32(CellContentWizard(cells, _worksheetColumns["track"]["album_id"], "0"));
-                    var volumeIndex = Convert.ToInt16(CellContentWizard(cells, _worksheetColumns["track"]["volume_index"], "0"));
-                    var trackIndex = Convert.ToInt16(CellContentWizard(cells, _worksheetColumns["track"]["track_index"], "0"));
+                    var albumId = Convert.ToInt32(CellContentWizard(cells, _worksheetColumns[TrackWorksheetName]["album_id"], "0"));
+                    var volumeIndex = Convert.ToInt16(CellContentWizard(cells, _worksheetColumns[TrackWorksheetName]["volume_index"], "0"));
+                    var trackIndex = Convert.ToInt16(CellContentWizard(cells, _worksheetColumns[TrackWorksheetName]["track_index"], "0"));
 
                     if (!CatalogContext.Instance.Albums.Exists(a => a.Id == albumId))
                     {
@@ -1563,7 +1583,7 @@ namespace BabelMeta.Modules.Import
                     }
 
                     // Id is mandatory and has a minimal standardized length
-                    var isrcId = CellContentWizard(cells, _worksheetColumns["track"]["isrc_id"]);
+                    var isrcId = CellContentWizard(cells, _worksheetColumns[TrackWorksheetName]["isrc_id"]);
                     if (String.IsNullOrEmpty(isrcId) || isrcId.Length < 12 || isrcId.Length > 15)
                     {
                         if (_mainFormViewModel != null)
@@ -1598,45 +1618,66 @@ namespace BabelMeta.Modules.Import
                 var artistFrequencies = new Dictionary<int, int>(); // Keys are primary artists, Values are occurrences in tracks
                 if (album.PrimaryArtistId == null)
                 {
-                    foreach (var volume in album.Tracks)
+                    try
                     {
-                        foreach (var track in volume.Value)
+                        if (album.Tracks == null)
                         {
-                            var asset = CatalogContext.Instance.Assets.FirstOrDefault(e => String.Compare(e.Id, track.Value, StringComparison.Ordinal) == 0);
-                            if (asset == null || String.IsNullOrEmpty(asset.Id))
+                            continue;
+                        }
+                        foreach (var volume in album.Tracks)
+                        {
+                            foreach (var track in volume.Value)
                             {
-                                continue;
-                            }
-                            foreach (var contributor in 
-                                        from contributor in asset.Contributors 
-                                            from roleQuality in contributor.Value 
-                                                where   (
-                                                            roleQuality.Key.Reference == Role.QualifiedName.Performer 
-                                                            && String.Compare(roleQuality.Value.Name.ToLower(), "primary", StringComparison.Ordinal) == 0
-                                                        ) 
-                                        select contributor
-                                    )
-                            {
-                                // Found a Primary Performer occurrence!
-                                if (artistFrequencies.ContainsKey(contributor.Key))
+                                var asset = CatalogContext.Instance.Assets.FirstOrDefault(e => String.Compare(e.Id, track.Value, StringComparison.Ordinal) == 0);
+                                if (asset == null || String.IsNullOrEmpty(asset.Id))
                                 {
-                                    artistFrequencies[contributor.Key]++;
+                                    continue;
                                 }
-                                else
+                                foreach (var contributor in
+                                            from contributor in asset.Contributors
+                                            from roleQuality in contributor.Value
+                                            where (
+                                                        roleQuality.Key.Reference == Role.QualifiedName.Performer
+                                                        && String.Compare(roleQuality.Value.Name.ToLower(), "primary", StringComparison.Ordinal) == 0
+                                                    )
+                                            select contributor
+                                        )
                                 {
-                                    artistFrequencies[contributor.Key] = 1;
+                                    // Found a Primary Performer occurrence!
+                                    if (artistFrequencies.ContainsKey(contributor.Key))
+                                    {
+                                        artistFrequencies[contributor.Key]++;
+                                    }
+                                    else
+                                    {
+                                        artistFrequencies[contributor.Key] = 1;
+                                    }
                                 }
                             }
                         }
                     }
+                    catch (Exception ex)
+                    {
+                        Debug.Write("TemplatedCatalogReader.FinalizeAlbums, exception=" + ex);
+                    }
 
                     // Now select the most frequent primary performer
-                    var max = artistFrequencies.Values.ToList().Max();
-                    album.PrimaryArtistId = artistFrequencies.Keys.ToList().FirstOrDefault(e => artistFrequencies[e] == max);
+                    try
+                    {
+                        var max = artistFrequencies.Values.ToList().Max();
+                        album.PrimaryArtistId = artistFrequencies.Keys.ToList().FirstOrDefault(e => artistFrequencies[e] == max);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.Write("TemplatedCatalogReader.FinalizeAlbums, exception=" + ex);
+                    }
                 }
 
                 // Total discs
-                album.TotalDiscs = album.Tracks.Keys.ToList().Max();
+                if (album.Tracks != null && album.Tracks.Count > 0)
+                {
+                    album.TotalDiscs = album.Tracks.Keys.ToList().Max();
+                }
 
                 // C & P Copyrights
                 if (String.IsNullOrEmpty(album.CName))
@@ -1669,15 +1710,22 @@ namespace BabelMeta.Modules.Import
             }
 
             // This update may raise undesired affectations if the isrc is present in more than one album (compilations, etc.) 
-            foreach (var asset in CatalogContext.Instance.Assets)
+            try
             {
-                if (asset.Tier != null) continue;
-                var album = CatalogContext.Instance.Albums.FirstOrDefault(
-                    a => a.Tracks.Values.ToList().Exists(v => v.Values.ToList().Contains(asset.Id)));
-                if (album != null)
+                foreach (var asset in CatalogContext.Instance.Assets)
                 {
-                    asset.Tier = album.Tier;
-                };
+                    if (asset.Tier != null) continue;
+                    var album = CatalogContext.Instance.Albums.FirstOrDefault(
+                        a => a.Tracks.Values.ToList().Exists(v => v.Values.ToList().Contains(asset.Id)));
+                    if (album != null)
+                    {
+                        asset.Tier = album.Tier;
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.Write("TemplatedCatalogReader.FinalizeAssets, exception=" + ex);
             }
         }
     }
