@@ -317,8 +317,11 @@ namespace BabelMeta.Modules.Export
 
             if (album.Subgenre != null && !String.IsNullOrEmpty(album.Subgenre.Name))
             {
-                Notify(String.Format("Album [{0}]: Missing subgenre.", album.CatalogReference));
                 i.album.main_subgenre = album.Subgenre.Name;
+            }
+            else
+            {
+                Notify(String.Format("Album [{0}]: Missing subgenre.", album.CatalogReference));
             }
 
             if (album.Title != null && album.Title.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName))
@@ -382,14 +385,20 @@ namespace BabelMeta.Modules.Export
 
             if (album.TotalDiscs != null)
             {
-                Notify(String.Format("Album [{0}]: Missing total discs.", album.CatalogReference));
                 i.album.total_discs = album.TotalDiscs.ToString();
+            }
+            else
+            {
+                Notify(String.Format("Album [{0}]: Missing total discs.", album.CatalogReference));
             }
 
             if (album.Ean != null)
             {
-                Notify(String.Format("Album [{0}]: Missing UPC/EAN.", album.CatalogReference));
                 i.album.upc_code = album.Ean.ToString();
+            }
+            else
+            {
+                Notify(String.Format("Album [{0}]: Missing UPC/EAN.", album.CatalogReference));
             }
 
             // TODO i.album.usage_rights
