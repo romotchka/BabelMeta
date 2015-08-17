@@ -38,5 +38,10 @@ namespace BabelMeta.Modules.Import
         {
             throw new NotImplementedException();
         }
+
+        public void Notify(string message)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

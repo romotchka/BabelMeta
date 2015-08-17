@@ -24,6 +24,7 @@
  */
 
 using BabelMeta.AppConfig;
+using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -32,8 +33,14 @@ namespace BabelMeta.Modules.Import
     public interface ICatalogReader
     {
         /// <summary>
-        /// The Parse method refreshes the CatalogContext according to the Input data
+        /// The Parse method refreshes the CatalogContext according to the Input data.
         /// </summary>
-        Task<ReturnCode> Parse(OpenFileDialog ofd, FileFormatType formatType, MainFormViewModel viewModel = null); 
+        Task<ReturnCode> Parse(OpenFileDialog ofd, FileFormatType formatType, MainFormViewModel viewModel = null);
+
+        /// <summary>
+        /// Notifies a message to the UI form via its view model.
+        /// </summary>
+        /// <param name="message"></param>
+        void Notify(String message);
     }
 }

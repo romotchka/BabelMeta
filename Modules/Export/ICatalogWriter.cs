@@ -23,8 +23,8 @@
  *  THE SOFTWARE. 
  */
 
-using System;
 using BabelMeta.AppConfig;
+using System;
 
 namespace BabelMeta.Modules.Export
 {
@@ -42,7 +42,7 @@ namespace BabelMeta.Modules.Export
         ReturnCode Generate(object context, MainFormViewModel viewModel = null);
 
         /// <summary>
-        /// Notify a message to the UI form via its view model.
+        /// Notifies a message to the UI form via its view model.
         /// </summary>
         /// <param name="message"></param>
         void Notify(String message);

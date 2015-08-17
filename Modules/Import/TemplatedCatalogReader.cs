@@ -214,8 +214,10 @@ namespace BabelMeta.Modules.Import
                         _xmlDocument.Load(s);
                         break;
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
+                        Debug.Write(this, "TemplatedCatalogReader.Parse, case=FileFormatType.ExcelXml2003, exception=" + ex);
+                        Notify("The XML parsing failed.");
                         return ReturnCode.ModulesImportDefaultParseEmptyStream;
                     }
             }
@@ -573,6 +575,7 @@ namespace BabelMeta.Modules.Import
                         catch (Exception ex)
                         {
                             Debug.Write(this, "TemplatedCatalogReader.CellMapByRow, worksheet=" + worksheetName + ", line=" + rowIndex + ", exception=" + ex);
+                            Notify(String.Format("A problem occurred while trying to read worksheet {0}, line {1}, column {2}.", worksheetName, rowIndex, index));
                         }
                     }
                     break;
@@ -805,8 +808,10 @@ namespace BabelMeta.Modules.Import
                         table = xmlWorksheet.ChildNodes.Cast<XmlNode>().FirstOrDefault(n => n.Name == OfficeXml.WorksheetTable);
                         break;
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
+                        Debug.Write("TemplatedCatalogReader.ExistsWorksheet, case=FileFormatType.ExcelXml2003, exception=" + ex);
+                        Instance.Notify(String.Format("A problem occurred while trying to check worksheet {0}.", worksheetName));
                         return false;
                     }
             }
@@ -1680,6 +1685,7 @@ namespace BabelMeta.Modules.Import
                     catch (Exception ex)
                     {
                         Debug.Write("TemplatedCatalogReader.FinalizeAlbums, exception=" + ex);
+                        Instance.Notify("The primary artist detection went wrong in album " + album.CatalogReference);
                     }
 
                     // Now select the most frequent primary performer
@@ -1691,6 +1697,7 @@ namespace BabelMeta.Modules.Import
                     catch (Exception ex)
                     {
                         Debug.Write("TemplatedCatalogReader.FinalizeAlbums, exception=" + ex);
+                        Instance.Notify("The primary artist setup went wrong in album " + album.CatalogReference);
                     }
                 }
 
@@ -1747,6 +1754,16 @@ namespace BabelMeta.Modules.Import
             catch (Exception ex)
             {
                 Debug.Write("TemplatedCatalogReader.FinalizeAssets, exception=" + ex);
+                Instance.Notify("A problem occurred in assets finalization.");
+            }
+        }
+
+        public void Notify(String message)
+        {
+            if (_mainFormViewModel != null && !String.IsNullOrEmpty(message))
+            {
+                // TODO In case this method is not executed in the UI thread, consider to implement it with a Dispatcher.
+                _mainFormViewModel.Notification = message;
             }
         }
     }

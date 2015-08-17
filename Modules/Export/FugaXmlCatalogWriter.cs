@@ -122,7 +122,7 @@ namespace BabelMeta.Modules.Export
                 {CatalogTier.Premium, ingestionAlbumTracksClassical_trackCatalog_tier.FRONT},
             };
 
-        MainFormViewModel _viewModel = null;
+        MainFormViewModel _mainFormViewModel = null;
 
         private static FugaXmlCatalogWriter _instance;
 
@@ -164,7 +164,7 @@ namespace BabelMeta.Modules.Export
                 rootFolder += "\\";
             }
 
-            _viewModel = viewModel;
+            _mainFormViewModel = viewModel;
 
             if (!CatalogContext.Instance.Initialized)
             {
@@ -657,10 +657,10 @@ namespace BabelMeta.Modules.Export
 
         public void Notify(String message)
         {
-            if (_viewModel != null && !String.IsNullOrEmpty(message))
+            if (_mainFormViewModel != null && !String.IsNullOrEmpty(message))
             {
                 // TODO In case this method is not executed in the UI thread, consider to implement it with a Dispatcher.
-                _viewModel.Notification = message;
+                _mainFormViewModel.Notification = message;
             }
         }
 
