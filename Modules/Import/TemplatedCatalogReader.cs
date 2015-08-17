@@ -23,7 +23,6 @@
  *  THE SOFTWARE. 
  */
 
-using System.Diagnostics;
 using BabelMeta.AppConfig;
 using BabelMeta.Helpers;
 using BabelMeta.Model;
@@ -31,6 +30,7 @@ using BabelMeta.Model.Config;
 using Microsoft.Office.Interop.Excel;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -80,6 +80,11 @@ namespace BabelMeta.Modules.Import
         private const String AssetWorksheetName = "asset";
         private const String AlbumWorksheetName = "album";
         private const String TrackWorksheetName = "track";
+
+        private const String LocalDbFieldName = "local_db";
+        private const String PartnerDbFieldName = "partner_db";
+        private const String IsrcIdFieldName = "isrc_id";
+        private const String WorkIdFieldName = "work_id";
 
         private const int InitPayload = 7; // Conventional value reflecting the init payload - feel free to put any reasonable value
 
@@ -146,6 +151,9 @@ namespace BabelMeta.Modules.Import
             _worksheetColumns = new Dictionary<String, Dictionary<String, int>>();
         }
 
+        /// <summary>
+        /// Singleton pattern representing the reader service instance.
+        /// </summary>
         public static TemplatedCatalogReader Instance
         {
             get
@@ -159,6 +167,13 @@ namespace BabelMeta.Modules.Import
             }
         }
 
+        /// <summary>
+        /// Main parsing method implementing ICatalogReader interface.
+        /// </summary>
+        /// <param name="ofd"></param>
+        /// <param name="formatType"></param>
+        /// <param name="viewModel"></param>
+        /// <returns></returns>
         public async Task<ReturnCode> Parse(OpenFileDialog ofd, FileFormatType formatType, MainFormViewModel viewModel = null)
         {
             if (ofd == null)
@@ -252,12 +267,14 @@ namespace BabelMeta.Modules.Import
                 FinalizeAlbums();
                 FinalizeAssets();
 
-                if (_mainFormViewModel != null)
+                if (_mainFormViewModel == null)
                 {
-                    if (_mainFormViewModel.FilterArtistChecked) CatalogContext.Instance.FilterUnusedArtists();
-                    else
-                    if (_mainFormViewModel.FilterWorkChecked) CatalogContext.Instance.FilterUnusedWorks();
+                    return;
                 }
+
+                if (_mainFormViewModel.FilterArtistChecked) CatalogContext.Instance.FilterUnusedArtists();
+                else
+                if (_mainFormViewModel.FilterWorkChecked) CatalogContext.Instance.FilterUnusedWorks();
             });
 
             CatalogContext.Instance.Initialized = true;
@@ -334,8 +351,8 @@ namespace BabelMeta.Modules.Import
 
             // lang
             map = GetHeader(LangWorksheetName);
-            if (!ExistsCellValueInRow("local_db", map, LangWorksheetName)) return false;
-            if (!ExistsCellValueInRow("partner_db", map, LangWorksheetName)) return false;
+            if (!ExistsCellValueInRow(LocalDbFieldName, map, LangWorksheetName)) return false;
+            if (!ExistsCellValueInRow(PartnerDbFieldName, map, LangWorksheetName)) return false;
             if (!ExistsCellValueInRow("long_name", map, LangWorksheetName)) return false;
             if (!ExistsCellValueInRow("short_name", map, LangWorksheetName)) return false;
             if (!ExistsCellValueInRow("default", map, LangWorksheetName)) return false;
@@ -347,8 +364,8 @@ namespace BabelMeta.Modules.Import
 
             // tag
             map = GetHeader(TagWorksheetName);
-            if (!ExistsCellValueInRow("local_db", map, TagWorksheetName)) return false;
-            if (!ExistsCellValueInRow("partner_db", map, TagWorksheetName)) return false;
+            if (!ExistsCellValueInRow(LocalDbFieldName, map, TagWorksheetName)) return false;
+            if (!ExistsCellValueInRow(PartnerDbFieldName, map, TagWorksheetName)) return false;
             if (!ExistsCellValueInRow("tag_name", map, TagWorksheetName)) return false;
             await Task.Run(() =>
             {
@@ -357,8 +374,8 @@ namespace BabelMeta.Modules.Import
 
             // role
             map = GetHeader(RoleWorksheetName);
-            if (!ExistsCellValueInRow("local_db", map, RoleWorksheetName)) return false;
-            if (!ExistsCellValueInRow("partner_db", map, RoleWorksheetName)) return false;
+            if (!ExistsCellValueInRow(LocalDbFieldName, map, RoleWorksheetName)) return false;
+            if (!ExistsCellValueInRow(PartnerDbFieldName, map, RoleWorksheetName)) return false;
             if (!ExistsCellValueInRow("role_name", map, RoleWorksheetName)) return false;
             await Task.Run(() =>
             {
@@ -367,8 +384,8 @@ namespace BabelMeta.Modules.Import
 
             // quality
             map = GetHeader(QualityWorksheetName);
-            if (!ExistsCellValueInRow("local_db", map, QualityWorksheetName)) return false;
-            if (!ExistsCellValueInRow("partner_db", map, QualityWorksheetName)) return false;
+            if (!ExistsCellValueInRow(LocalDbFieldName, map, QualityWorksheetName)) return false;
+            if (!ExistsCellValueInRow(PartnerDbFieldName, map, QualityWorksheetName)) return false;
             if (!ExistsCellValueInRow("quality_name", map, QualityWorksheetName)) return false;
             await Task.Run(() =>
             {
@@ -377,8 +394,8 @@ namespace BabelMeta.Modules.Import
 
             // artist
             map = GetHeader(ArtistWorksheetName);
-            if (!ExistsCellValueInRow("local_db", map, ArtistWorksheetName)) return false;
-            if (!ExistsCellValueInRow("partner_db", map, ArtistWorksheetName)) return false;
+            if (!ExistsCellValueInRow(LocalDbFieldName, map, ArtistWorksheetName)) return false;
+            if (!ExistsCellValueInRow(PartnerDbFieldName, map, ArtistWorksheetName)) return false;
             if (!ExistsCellValueInRow("id", map, ArtistWorksheetName)) return false;
             if (!ExistsCellValueInRow("birth", map, ArtistWorksheetName)) return false;
             if (!ExistsCellValueInRow("death", map, ArtistWorksheetName)) return false;
@@ -394,8 +411,8 @@ namespace BabelMeta.Modules.Import
 
             // work
             map = GetHeader(WorkWorksheetName);
-            if (!ExistsCellValueInRow("local_db", map, WorkWorksheetName)) return false;
-            if (!ExistsCellValueInRow("partner_db", map, WorkWorksheetName)) return false;
+            if (!ExistsCellValueInRow(LocalDbFieldName, map, WorkWorksheetName)) return false;
+            if (!ExistsCellValueInRow(PartnerDbFieldName, map, WorkWorksheetName)) return false;
             if (!ExistsCellValueInRow("id", map, WorkWorksheetName)) return false;
             if (!ExistsCellValueInRow("id_parent", map, WorkWorksheetName)) return false;
             if (!ExistsCellValueInRow("catalog_number", map, WorkWorksheetName)) return false;
@@ -426,10 +443,10 @@ namespace BabelMeta.Modules.Import
 
             // asset
             map = GetHeader(AssetWorksheetName);
-            if (!ExistsCellValueInRow("local_db", map, AssetWorksheetName)) return false;
-            if (!ExistsCellValueInRow("partner_db", map, AssetWorksheetName)) return false;
-            if (!ExistsCellValueInRow("isrc_id", map, AssetWorksheetName)) return false;
-            if (!ExistsCellValueInRow("work_id", map, AssetWorksheetName)) return false;
+            if (!ExistsCellValueInRow(LocalDbFieldName, map, AssetWorksheetName)) return false;
+            if (!ExistsCellValueInRow(PartnerDbFieldName, map, AssetWorksheetName)) return false;
+            if (!ExistsCellValueInRow(IsrcIdFieldName, map, AssetWorksheetName)) return false;
+            if (!ExistsCellValueInRow(WorkIdFieldName, map, AssetWorksheetName)) return false;
             var iAsset = 1;
             while   (
                         ExistsCellValueInRow("id_contributor" + iAsset, map, AssetWorksheetName)
@@ -458,8 +475,8 @@ namespace BabelMeta.Modules.Import
 
             // album
             map = GetHeader(AlbumWorksheetName);
-            if (!ExistsCellValueInRow("local_db", map, AlbumWorksheetName)) return false;
-            if (!ExistsCellValueInRow("partner_db", map, AlbumWorksheetName)) return false;
+            if (!ExistsCellValueInRow(LocalDbFieldName, map, AlbumWorksheetName)) return false;
+            if (!ExistsCellValueInRow(PartnerDbFieldName, map, AlbumWorksheetName)) return false;
             if (!ExistsCellValueInRow("album_id", map, AlbumWorksheetName)) return false;
             if (!ExistsCellValueInRow("action", map, AlbumWorksheetName)) return false;
             if (!ExistsCellValueInRow("c_name", map, AlbumWorksheetName)) return false;
@@ -490,12 +507,12 @@ namespace BabelMeta.Modules.Import
 
             // track
             map = GetHeader(TrackWorksheetName);
-            if (!ExistsCellValueInRow("local_db", map, TrackWorksheetName)) return false;
-            if (!ExistsCellValueInRow("partner_db", map, TrackWorksheetName)) return false;
+            if (!ExistsCellValueInRow(LocalDbFieldName, map, TrackWorksheetName)) return false;
+            if (!ExistsCellValueInRow(PartnerDbFieldName, map, TrackWorksheetName)) return false;
             if (!ExistsCellValueInRow("album_id", map, TrackWorksheetName)) return false;
             if (!ExistsCellValueInRow("volume_index", map, TrackWorksheetName)) return false;
             if (!ExistsCellValueInRow("track_index", map, TrackWorksheetName)) return false;
-            if (!ExistsCellValueInRow("isrc_id", map, TrackWorksheetName)) return false;
+            if (!ExistsCellValueInRow(IsrcIdFieldName, map, TrackWorksheetName)) return false;
             await Task.Run(() =>
             {
                 _tracks = WorksheetActiveRows(TrackWorksheetName);
@@ -652,13 +669,15 @@ namespace BabelMeta.Modules.Import
                 switch (_fileFormatType)
                 {
                     case FileFormatType.ExcelWorkbook:
-                        local = map.ContainsKey(_worksheetColumns[worksheetName]["local_db"]) && ((Range)map[_worksheetColumns[worksheetName]["local_db"]]).Value.ToString().ToLower().CompareTo("active") == 0;
-                        partner = map.ContainsKey(_worksheetColumns[worksheetName]["partner_db"]) && ((Range)map[_worksheetColumns[worksheetName]["partner_db"]]).Value.ToString().ToLower().CompareTo("active") == 0;
+                        local = map.ContainsKey(_worksheetColumns[worksheetName][LocalDbFieldName]) 
+                            && String.Compare(((Range)map[_worksheetColumns[worksheetName][LocalDbFieldName]]).Value.ToString().ToLower(), "active", StringComparison.Ordinal) == 0;
+                        partner = map.ContainsKey(_worksheetColumns[worksheetName][PartnerDbFieldName]) 
+                            && String.Compare(((Range)map[_worksheetColumns[worksheetName][PartnerDbFieldName]]).Value.ToString().ToLower(), "active", StringComparison.Ordinal) == 0;
                         break;
 
                     case FileFormatType.ExcelXml2003:
-                        local = map.ContainsKey(_worksheetColumns[worksheetName]["local_db"]) && String.Compare(((XmlNode)map[_worksheetColumns[worksheetName]["local_db"]]).InnerText.ToLower(), "active", StringComparison.Ordinal) == 0;
-                        partner = map.ContainsKey(_worksheetColumns[worksheetName]["partner_db"]) && String.Compare(((XmlNode)map[_worksheetColumns[worksheetName]["partner_db"]]).InnerText.ToLower(), "active", StringComparison.Ordinal) == 0;
+                        local = map.ContainsKey(_worksheetColumns[worksheetName][LocalDbFieldName]) && String.Compare(((XmlNode)map[_worksheetColumns[worksheetName][LocalDbFieldName]]).InnerText.ToLower(), "active", StringComparison.Ordinal) == 0;
+                        partner = map.ContainsKey(_worksheetColumns[worksheetName][PartnerDbFieldName]) && String.Compare(((XmlNode)map[_worksheetColumns[worksheetName][PartnerDbFieldName]]).InnerText.ToLower(), "active", StringComparison.Ordinal) == 0;
                         break;
                 }
 
@@ -695,11 +714,13 @@ namespace BabelMeta.Modules.Import
             switch (_fileFormatType)
             {
                 case FileFormatType.ExcelWorkbook:
-                    element = map.FirstOrDefault(e => ((Range)e.Value).Value.ToString().Trim().CompareTo(cellValue) == 0);
+                    element = map.FirstOrDefault(e => 
+                        String.Compare(((Range)e.Value).Value.ToString().Trim(), cellValue, StringComparison.Ordinal) == 0);
                     break;
 
                 case FileFormatType.ExcelXml2003:
-                    element = map.FirstOrDefault(e => String.Compare(((XmlNode)e.Value).InnerText.Trim(), cellValue, StringComparison.Ordinal) == 0);
+                    element = map.FirstOrDefault(e => 
+                        String.Compare(((XmlNode)e.Value).InnerText.Trim(), cellValue, StringComparison.Ordinal) == 0);
                     break;
             }
 
@@ -1276,8 +1297,8 @@ namespace BabelMeta.Modules.Import
                 {
                     var asset = new Asset
                     {
-                        Id = CellContentWizard(cells, _worksheetColumns[AssetWorksheetName]["isrc_id"]),
-                        Work = Convert.ToInt32(CellContentWizard(cells, _worksheetColumns[AssetWorksheetName]["work_id"], "0")),
+                        Id = CellContentWizard(cells, _worksheetColumns[AssetWorksheetName][IsrcIdFieldName]),
+                        Work = Convert.ToInt32(CellContentWizard(cells, _worksheetColumns[AssetWorksheetName][WorkIdFieldName], "0")),
                         CName = CellContentWizard(cells, _worksheetColumns[AssetWorksheetName]["c_name"]),
                         CYear = Convert.ToInt16(CellContentWizard(cells, _worksheetColumns[AssetWorksheetName]["c_year"], "0")),
                         PName = CellContentWizard(cells, _worksheetColumns[AssetWorksheetName]["p_name"]),
@@ -1583,7 +1604,7 @@ namespace BabelMeta.Modules.Import
                     }
 
                     // Id is mandatory and has a minimal standardized length
-                    var isrcId = CellContentWizard(cells, _worksheetColumns[TrackWorksheetName]["isrc_id"]);
+                    var isrcId = CellContentWizard(cells, _worksheetColumns[TrackWorksheetName][IsrcIdFieldName]);
                     if (String.IsNullOrEmpty(isrcId) || isrcId.Length < 12 || isrcId.Length > 15)
                     {
                         if (_mainFormViewModel != null)

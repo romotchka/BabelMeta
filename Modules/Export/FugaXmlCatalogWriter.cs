@@ -429,14 +429,14 @@ namespace BabelMeta.Modules.Export
                 }
 
                 // The asset's work is either standalone or a child work.
-                var currentWork = CatalogContext.Instance.Works.FirstOrDefault(e => e.Id == asset.Work);
+                var currentWork = CatalogContext.Instance.Works.FirstOrDefault(e => e.Id.Equals(asset.Work));
                 if (currentWork == null)
                 {
                     Notify(String.Format("Album [{0}] [{1},{2}]: Work not found for asset {3}.", album.CatalogReference, volumeIndex, trackIndex, asset.Id));
                     continue;
                 }
                 var parentWork = (currentWork.Parent > 0)
-                    ? CatalogContext.Instance.Works.FirstOrDefault(w => w.Id == currentWork.Parent)
+                    ? CatalogContext.Instance.Works.FirstOrDefault(w => w.Id.Equals(currentWork.Parent))
                     : null;
                 var assetPerformersKeys = asset.Contributors.Keys.ToArray();
                 if (assetPerformersKeys == null || !(assetPerformersKeys.Length > 0))
@@ -455,7 +455,7 @@ namespace BabelMeta.Modules.Export
                 for (var j = 1; j < assetPerformersKeys.Length; j++)
                 {
                     var additionalArtist = CatalogContext.Instance.Artists.FirstOrDefault(e =>
-                        e.Id == assetPerformersKeys[j]);
+                        e.Id.Equals(assetPerformersKeys[j]));
                     if (additionalArtist.LastName.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName))
                     {
                         ingestionTrack.additional_artists.Add(new artist
@@ -492,10 +492,10 @@ namespace BabelMeta.Modules.Export
                 foreach (var workContributor in currentWork.Contributors)
                 {
                     Artist artist;
-                    if (artistsBuffer.Exists(a => a.Id == workContributor.Key))
+                    if (artistsBuffer.Exists(a => a.Id.Equals(workContributor.Key)))
                     {
                         // Present in buffer
-                        artist = artistsBuffer.FirstOrDefault(a => a.Id == workContributor.Key);
+                        artist = artistsBuffer.FirstOrDefault(a => a.Id.Equals(workContributor.Key));
                     }
                     else
                     {
@@ -597,7 +597,7 @@ namespace BabelMeta.Modules.Export
 
                 // Primary artists is performer 1 (asset contributor 1)
                 var primaryArtist = CatalogContext.Instance.Artists.FirstOrDefault(e =>
-                    e.Id == assetPerformersKeys[0]);
+                    e.Id.Equals(assetPerformersKeys[0]));
                 if (primaryArtist != null && primaryArtist.LastName != null && primaryArtist.LastName.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName))
                 {
                     ingestionTrack.primary_artist = new primary_artist()
@@ -684,7 +684,10 @@ namespace BabelMeta.Modules.Export
                     foreach (String file in filesList)
                     {
                         var nameExtension = file.Split('.').Last().ToLower();
-                        if (!String.IsNullOrEmpty(nameExtension) && nameExtension.CompareTo("pdf") == 0)
+                        if  (
+                                !String.IsNullOrEmpty(nameExtension) 
+                                && String.Compare(nameExtension, "pdf", StringComparison.Ordinal) == 0
+                            )
                         {
                             return file;
                         }
@@ -723,8 +726,8 @@ namespace BabelMeta.Modules.Export
                                 if (
                                         convertVolume 
                                         && convertTrack
-                                        && tryVolumeIndex == volumeIndex
-                                        && tryTrackIndex == trackIndex
+                                        && tryVolumeIndex.Equals(volumeIndex)
+                                        && tryTrackIndex.Equals(trackIndex)
                                     )
                                 {
                                     // Found !
@@ -741,7 +744,11 @@ namespace BabelMeta.Modules.Export
                         var nameExtension = file.Split('.').Last().ToLower();
                         if (
                                 !String.IsNullOrEmpty(nameExtension) &&
-                                (nameExtension.CompareTo("jpg") == 0 || nameExtension.CompareTo("jpeg") == 0 || nameExtension.CompareTo("png") == 0)
+                                (
+                                    String.Compare(nameExtension, "jpg", StringComparison.Ordinal) == 0 
+                                    || String.Compare(nameExtension, "jpeg", StringComparison.Ordinal) == 0 
+                                    || String.Compare(nameExtension, "png", StringComparison.Ordinal) == 0
+                                )
                             )
                         {
                             return file;
