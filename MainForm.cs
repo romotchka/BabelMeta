@@ -74,7 +74,10 @@ namespace BabelMeta
             switch (e.PropertyName.ToLower())
             {
                 case "notification":
-                    Notify(_viewModel.Notification);
+                    if (_viewModel != null && !String.IsNullOrEmpty(_viewModel.Notification))
+                    {
+                        Notify(_viewModel.Notification);
+                    }
                     break;
             }
         }
@@ -84,14 +87,18 @@ namespace BabelMeta
 
         /* FILE MENU */
 
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
         /// <summary>
-        /// File -> Open
+        /// File -> Open -> Templated Workbook.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void openToolStripMenuItem_Click(object sender, System.EventArgs e)
+        private async void templatedWorkbookToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Stream stream = null;
             var openFileDialog = new OpenFileDialog
             {
                 InitialDirectory = "c:\\",
@@ -101,7 +108,7 @@ namespace BabelMeta
 
             if (InputFormat.SelectedItem == null)
             {
-                Notify("No format selected.");
+                Notify("No input format selected.");
                 return;
             }
 
@@ -119,35 +126,46 @@ namespace BabelMeta
                     break;
             }
 
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            if (openFileDialog.ShowDialog() != DialogResult.OK)
             {
-                try
+                return;
+            }
+
+            try
+            {
+                Notify("Opening file stream.");
+
+                CatalogContext.Instance.Init();
+                CatalogContext.Instance.Initialized = false;
+
+                InputProgressBar.Value = 0;
+                InputProgressBar.Visible = true;
+                OutputProgressBar.Visible = false;
+
+                // Call appropriate parser, depending on input format
+                var r = await TemplatedCatalogReader.Instance.Parse(openFileDialog, InputFormat.SelectedItem.ToString().ToFileFormatType(), _viewModel);
+
+                if (r == ReturnCode.Ok)
                 {
-                    Notify("Opening file stream.");
-
-                    CatalogContext.Instance.Init();
-                    CatalogContext.Instance.Initialized = false;
-
-                    InputProgressBar.Value = 0;
-                    InputProgressBar.Visible = true;
-                    OutputProgressBar.Visible = false;
-
-                    // Call appropriate parser, depending on input format
-                    var r = await TemplatedCatalogReader.Instance.Parse(openFileDialog, InputFormat.SelectedItem.ToString().ToFileFormatType(), _viewModel);
-
-                    if (r == ReturnCode.Ok)
-                    {
-                        Notify("Catalog parsing done.");
-                    }
+                    Notify("Catalog parsing done.");
                 }
-                catch (Exception ex)
-                {
-                    Notify("Error: Could not read file from disk. Original error: " + ex.Message);
-                }
+            }
+            catch (Exception ex)
+            {
+                Notify("Error: Could not read file from disk. Original error: " + ex.Message);
             }
         }
 
-        private void DeserializeBmdFile(String filePath)
+        private void catalogWizardToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Notify("Not yet implemented.");
+        }
+
+        /// <summary>
+        /// Loads a BabelMeta session in memory.
+        /// </summary>
+        /// <param name="filePath"></param>
+        private static void DeserializeBmdFile(String filePath)
         {
             if (String.IsNullOrEmpty(filePath))
             {
@@ -200,9 +218,8 @@ namespace BabelMeta
 
         }
 
-
         /// <summary>
-        /// Deserializes a CatalogContext from file
+        /// Deserializes a CatalogContext from file.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -251,12 +268,10 @@ namespace BabelMeta
             {
                 Notify("Session not readable.");
             }
-
-
         }
 
         /// <summary>
-        /// Serializes a CatalogContext from file
+        /// Serializes a CatalogContext from file.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -324,7 +339,7 @@ namespace BabelMeta
                 binaryFormatter.Serialize(stream, CatalogContext.Instance.Works);
                 stream.Close();
 
-                // Isrcs
+                // Assets
                 stream = File.Open(fbd.SelectedPath + "Assets.bmd", FileMode.Create);
 
                 binaryFormatter.Serialize(stream, CatalogContext.Instance.Assets);
@@ -350,7 +365,6 @@ namespace BabelMeta
             _viewModel.PropertyChanged -= OnViewModelPropertyChanged;
             Close();
         }
-        
 
 
         /* ACTION MENU */
@@ -360,9 +374,12 @@ namespace BabelMeta
             DoCheckIntegrity();
         }
 
+        /// <summary>
+        /// Performs integrity checkings on the current session in memory.
+        /// </summary>
         private void DoCheckIntegrity()
         {
-            if (
+            if  (
                     (CatalogContext.Instance.RedundantKeysChecked = ModelIntgrityChecker.Instance.CheckRedundantKeys())
                     && (CatalogContext.Instance.ReferentialIntegrityChecked = ModelIntgrityChecker.Instance.CheckReferentialIntegrity())
                 )
@@ -371,7 +388,7 @@ namespace BabelMeta
             }
             else
             {
-                String message = "The imported model is corrupted:";
+                var message = "The imported model is corrupted:";
                 if (!CatalogContext.Instance.RedundantKeysChecked)
                 {
                     message += " Redundant keys exist.";
@@ -385,27 +402,17 @@ namespace BabelMeta
         }
 
         /// <summary>
-        /// Action -> Convert to SQL -> Solstice Legacy
+        /// Action -> Generate -> Ddex
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void solsticeLegacyToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ddexToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Notify("Not implemented yet.");
+            Notify("Not yet implemented.");
         }
 
         /// <summary>
-        /// Action -> Convert to SQL -> Solstice Igniter
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void solsticeIgniterToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Notify("Not implemented yet.");
-        }
-
-        /// <summary>
-        /// Action -> Convert to XML -> Fuga
+        /// Action -> Generate -> Fuga
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -435,18 +442,24 @@ namespace BabelMeta
             }
             var r = FugaXmlCatalogWriter.Instance.Generate(fbd.SelectedPath, _viewModel);
 
-            if (r == ReturnCode.Ok)
-            {
-                Notify("Catalog export completed.");
-            }
-            else
-            {
-                Notify("An error occurred during export.");
-            }
+            Notify(r == ReturnCode.Ok 
+                ? "Catalog export completed." 
+                : "An error occurred during export."
+                );
         }
 
         /// <summary>
-        /// Append message on top of Notification Zone
+        /// Action -> Generate -> RightsUp
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void rightsUpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Notify("Not yet implemented.");
+        }
+
+        /// <summary>
+        /// Append message on top of Notification Zone.
         /// </summary>
         /// <param name="message"></param>
         internal void Notify(String message)
@@ -460,6 +473,5 @@ namespace BabelMeta
             NotificationZone.AppendText(message + Environment.NewLine);
             NotificationZone.AppendText(current);
         }
-       
     }
 }

@@ -48,8 +48,6 @@ namespace BabelMeta
             base.Dispose(disposing);
         }
 
-        #region Windows Form Designer generated code
-
         /// <summary>
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
@@ -65,11 +63,10 @@ namespace BabelMeta
             this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.actionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkIntegrityToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.convertToSQLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.solsticeLegacyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.solsticeIgniterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.convertToXMLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.generateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ddexToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fugaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.rightsUpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -89,6 +86,8 @@ namespace BabelMeta
             this.CurlySimpleQuoteCheckBox = new System.Windows.Forms.CheckBox();
             this.NotificationZone = new System.Windows.Forms.TextBox();
             this.CompanyLogo = new System.Windows.Forms.PictureBox();
+            this.templatedWorkbookToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.catalogWizardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.InputGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CheckedPicto)).BeginInit();
@@ -122,29 +121,32 @@ namespace BabelMeta
             // 
             // openToolStripMenuItem
             // 
+            this.openToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.templatedWorkbookToolStripMenuItem,
+            this.catalogWizardToolStripMenuItem});
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // loadSessionToolStripMenuItem
             // 
             this.loadSessionToolStripMenuItem.Name = "loadSessionToolStripMenuItem";
-            this.loadSessionToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.loadSessionToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.loadSessionToolStripMenuItem.Text = "Load Session";
             this.loadSessionToolStripMenuItem.Click += new System.EventHandler(this.loadSessionToolStripMenuItem_Click);
             // 
             // saveSessionToolStripMenuItem
             // 
             this.saveSessionToolStripMenuItem.Name = "saveSessionToolStripMenuItem";
-            this.saveSessionToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.saveSessionToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.saveSessionToolStripMenuItem.Text = "Save Session";
             this.saveSessionToolStripMenuItem.Click += new System.EventHandler(this.saveSessionToolStripMenuItem_Click);
             // 
             // quitToolStripMenuItem
             // 
             this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
-            this.quitToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.quitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.quitToolStripMenuItem.Text = "Quit";
             this.quitToolStripMenuItem.Click += new System.EventHandler(this.quitToolStripMenuItem_Click);
             // 
@@ -152,8 +154,7 @@ namespace BabelMeta
             // 
             this.actionToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.checkIntegrityToolStripMenuItem,
-            this.convertToSQLToolStripMenuItem,
-            this.convertToXMLToolStripMenuItem});
+            this.generateToolStripMenuItem});
             this.actionToolStripMenuItem.Name = "actionToolStripMenuItem";
             this.actionToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
             this.actionToolStripMenuItem.Text = "Action";
@@ -161,47 +162,40 @@ namespace BabelMeta
             // checkIntegrityToolStripMenuItem
             // 
             this.checkIntegrityToolStripMenuItem.Name = "checkIntegrityToolStripMenuItem";
-            this.checkIntegrityToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.checkIntegrityToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
             this.checkIntegrityToolStripMenuItem.Text = "Check integrity";
             this.checkIntegrityToolStripMenuItem.Click += new System.EventHandler(this.checkIntegrityToolStripMenuItem_Click);
             // 
-            // convertToSQLToolStripMenuItem
+            // generateToolStripMenuItem
             // 
-            this.convertToSQLToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.solsticeLegacyToolStripMenuItem,
-            this.solsticeIgniterToolStripMenuItem});
-            this.convertToSQLToolStripMenuItem.Name = "convertToSQLToolStripMenuItem";
-            this.convertToSQLToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
-            this.convertToSQLToolStripMenuItem.Text = "Convert to SQL";
+            this.generateToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ddexToolStripMenuItem,
+            this.fugaToolStripMenuItem,
+            this.rightsUpToolStripMenuItem});
+            this.generateToolStripMenuItem.Name = "generateToolStripMenuItem";
+            this.generateToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.generateToolStripMenuItem.Text = "Generate";
             // 
-            // solsticeLegacyToolStripMenuItem
+            // ddexToolStripMenuItem
             // 
-            this.solsticeLegacyToolStripMenuItem.Name = "solsticeLegacyToolStripMenuItem";
-            this.solsticeLegacyToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
-            this.solsticeLegacyToolStripMenuItem.Text = "Solstice Legacy";
-            this.solsticeLegacyToolStripMenuItem.Click += new System.EventHandler(this.solsticeLegacyToolStripMenuItem_Click);
-            // 
-            // solsticeIgniterToolStripMenuItem
-            // 
-            this.solsticeIgniterToolStripMenuItem.Name = "solsticeIgniterToolStripMenuItem";
-            this.solsticeIgniterToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
-            this.solsticeIgniterToolStripMenuItem.Text = "Solstice Igniter";
-            this.solsticeIgniterToolStripMenuItem.Click += new System.EventHandler(this.solsticeIgniterToolStripMenuItem_Click);
-            // 
-            // convertToXMLToolStripMenuItem
-            // 
-            this.convertToXMLToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fugaToolStripMenuItem});
-            this.convertToXMLToolStripMenuItem.Name = "convertToXMLToolStripMenuItem";
-            this.convertToXMLToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
-            this.convertToXMLToolStripMenuItem.Text = "Convert to XML";
+            this.ddexToolStripMenuItem.Name = "ddexToolStripMenuItem";
+            this.ddexToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.ddexToolStripMenuItem.Text = "Ddex";
+            this.ddexToolStripMenuItem.Click += new System.EventHandler(this.ddexToolStripMenuItem_Click);
             // 
             // fugaToolStripMenuItem
             // 
             this.fugaToolStripMenuItem.Name = "fugaToolStripMenuItem";
-            this.fugaToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+            this.fugaToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.fugaToolStripMenuItem.Text = "Fuga";
             this.fugaToolStripMenuItem.Click += new System.EventHandler(this.fugaToolStripMenuItem_Click);
+            // 
+            // rightsUpToolStripMenuItem
+            // 
+            this.rightsUpToolStripMenuItem.Name = "rightsUpToolStripMenuItem";
+            this.rightsUpToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.rightsUpToolStripMenuItem.Text = "RightsUp";
+            this.rightsUpToolStripMenuItem.Click += new System.EventHandler(this.rightsUpToolStripMenuItem_Click);
             // 
             // toolStripMenuItem2
             // 
@@ -215,13 +209,13 @@ namespace BabelMeta
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.aboutToolStripMenuItem.Text = "About";
             // 
             // InputGroupBox
@@ -400,6 +394,20 @@ namespace BabelMeta
             this.CompanyLogo.TabIndex = 4;
             this.CompanyLogo.TabStop = false;
             // 
+            // templatedWorkbookToolStripMenuItem
+            // 
+            this.templatedWorkbookToolStripMenuItem.Name = "templatedWorkbookToolStripMenuItem";
+            this.templatedWorkbookToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.templatedWorkbookToolStripMenuItem.Text = "Templated Workbook";
+            this.templatedWorkbookToolStripMenuItem.Click += new System.EventHandler(this.templatedWorkbookToolStripMenuItem_Click);
+            // 
+            // catalogWizardToolStripMenuItem
+            // 
+            this.catalogWizardToolStripMenuItem.Name = "catalogWizardToolStripMenuItem";
+            this.catalogWizardToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.catalogWizardToolStripMenuItem.Text = "Catalog Wizard";
+            this.catalogWizardToolStripMenuItem.Click += new System.EventHandler(this.catalogWizardToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -428,22 +436,13 @@ namespace BabelMeta
 
         }
 
-        #endregion
-
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem quitToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem actionToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem checkIntegrityToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem convertToSQLToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem convertToXMLToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem solsticeLegacyToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem solsticeIgniterToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem fugaToolStripMenuItem;
         private System.Windows.Forms.GroupBox InputGroupBox;
         private System.Windows.Forms.CheckBox DuplicatesCheckBox;
         private System.Windows.Forms.CheckBox ReferentialIntegrityCheckBox;
@@ -462,6 +461,14 @@ namespace BabelMeta
         private System.Windows.Forms.PictureBox CompanyLogo;
         private System.Windows.Forms.ToolStripMenuItem loadSessionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveSessionToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem actionToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem checkIntegrityToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem generateToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ddexToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem fugaToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem rightsUpToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem templatedWorkbookToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem catalogWizardToolStripMenuItem;
     }
 }
 
