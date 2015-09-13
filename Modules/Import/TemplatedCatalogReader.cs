@@ -231,6 +231,7 @@ namespace BabelMeta.Modules.Import
 
             if (!(await IsValidWorkbook()))
             {
+                Notify("Invalid Workbook.");
                 return ReturnCode.ModulesImportDefaultParseInvalidWorkbook;
             }
 
@@ -263,24 +264,27 @@ namespace BabelMeta.Modules.Import
             await ParseAlbums();
             await ParseTracks();
 
+            // FIXME: This last thread raised an exception
             // Finalization and filtering
-            await Task.Run(() =>
-            {
+            //await Task.Run(() =>
+            //{
+                Notify("Finalization...");
                 FinalizeAlbums();
                 FinalizeAssets();
 
                 if (_mainFormViewModel == null)
                 {
-                    return;
+                //    return;
                 }
 
                 if (_mainFormViewModel.FilterArtistChecked) CatalogContext.Instance.FilterUnusedArtists();
                 else
                 if (_mainFormViewModel.FilterWorkChecked) CatalogContext.Instance.FilterUnusedWorks();
-            });
+            //});
 
             CatalogContext.Instance.Initialized = true;
             _mainFormViewModel.InputProgressBarValue = _mainFormViewModel.InputProgressBarMax;
+            Notify("Parsing completed.");
             return ReturnCode.Ok;
         }
 
@@ -886,61 +890,59 @@ namespace BabelMeta.Modules.Import
                 {
                     cells = CellMapByRow(row, SettingsWorksheetName);
                 });
-                
-                if (cells != null && cells.Count > 0)
+
+                if (cells == null || cells.Count <= 0) continue;
+                var parameter = CellContentWizard(cells, _worksheetColumns[SettingsWorksheetName]["parameter"]);
+                var value = CellContentWizard(cells, _worksheetColumns[SettingsWorksheetName]["value"]);
+
+                if (String.IsNullOrEmpty(parameter)) continue;
+                if (CatalogContext.Instance.Settings == null)
                 {
-                    String parameter = CellContentWizard(cells, _worksheetColumns[SettingsWorksheetName]["parameter"]);
-                    String value = CellContentWizard(cells, _worksheetColumns[SettingsWorksheetName]["value"]);
+                    CatalogContext.Instance.Settings = new CatalogSettings();
+                }
+                var settings = CatalogContext.Instance.Settings;
 
-                    if (String.IsNullOrEmpty(parameter)) continue;
-                    if (CatalogContext.Instance.Settings == null)
-                    {
-                        CatalogContext.Instance.Settings = new CatalogSettings();
-                    }
-                    var settings = CatalogContext.Instance.Settings;
-
-                    switch (parameter)
-                    {
-                        case "SUPPLIER": settings.SupplierDefault = value; break;
-                        case "LABEL_NAME": settings.LabelDefault = value; break;
-                        case "ALBUM_COPYRIGHT_C_OWNER": settings.COwnerDefault = (String.IsNullOrEmpty(value)) ? settings.LabelDefault : value; break;
-                        case "ALBUM_COPYRIGHT_P_OWNER": settings.POwnerDefault = (String.IsNullOrEmpty(value)) ? settings.LabelDefault : value; break;
-                        case "ALBUM_CATALOG_TIER":
-                            if (!String.IsNullOrEmpty(value))
+                switch (parameter.ToUpper())
+                {
+                    case "SUPPLIER": settings.SupplierDefault = value; break;
+                    case "LABEL_NAME": settings.LabelDefault = value; break;
+                    case "ALBUM_COPYRIGHT_C_OWNER": settings.COwnerDefault = (String.IsNullOrEmpty(value)) ? settings.LabelDefault : value; break;
+                    case "ALBUM_COPYRIGHT_P_OWNER": settings.POwnerDefault = (String.IsNullOrEmpty(value)) ? settings.LabelDefault : value; break;
+                    case "ALBUM_CATALOG_TIER":
+                        if (!String.IsNullOrEmpty(value))
+                        {
+                            switch (value.ToLower())
                             {
-                                switch (value.ToLower())
-                                {
-                                    case "back": settings.CatalogTierDefault = CatalogTier.Back; break;
-                                    case "budget": settings.CatalogTierDefault = CatalogTier.Budget; break;
-                                    case "front": settings.CatalogTierDefault = CatalogTier.Front; break;
-                                    case "mid": settings.CatalogTierDefault = CatalogTier.Mid; break;
-                                    case "premium": settings.CatalogTierDefault = CatalogTier.Premium; break;
-                                }
+                                case "back": settings.CatalogTierDefault = CatalogTier.Back; break;
+                                case "budget": settings.CatalogTierDefault = CatalogTier.Budget; break;
+                                case "front": settings.CatalogTierDefault = CatalogTier.Front; break;
+                                case "mid": settings.CatalogTierDefault = CatalogTier.Mid; break;
+                                case "premium": settings.CatalogTierDefault = CatalogTier.Premium; break;
                             }
-                            else
+                        }
+                        else
+                        {
+                            settings.CatalogTierDefault = CatalogTier.Front;
+                        }
+                        break;
+                    case "ALBUM_MAIN_GENRE": settings.MainGenreDefault = value; break;
+                    case "ALBUM_FORMAT":
+                        if (!String.IsNullOrEmpty(value))
+                        {
+                            switch (value.ToLower())
                             {
-                                settings.CatalogTierDefault = CatalogTier.Front;
+                                case AlbumWorksheetName: settings.FormatDefault = ProductFormat.Album; break;
+                                case "boxset": settings.FormatDefault = ProductFormat.BoxSet; break;
+                                case "ep": settings.FormatDefault = ProductFormat.EP; break;
+                                case "single": settings.FormatDefault = ProductFormat.Single; break;
                             }
-                            break;
-                        case "ALBUM_MAIN_GENRE": settings.MainGenreDefault = value; break;
-                        case "ALBUM_FORMAT":
-                            if (!String.IsNullOrEmpty(value))
-                            {
-                                switch (value.ToLower())
-                                {
-                                    case AlbumWorksheetName: settings.FormatDefault = ProductFormat.Album; break;
-                                    case "boxset": settings.FormatDefault = ProductFormat.BoxSet; break;
-                                    case "ep": settings.FormatDefault = ProductFormat.EP; break;
-                                    case "single": settings.FormatDefault = ProductFormat.Single; break;
-                                }
-                            }
-                            else
-                            {
-                                settings.FormatDefault = ProductFormat.Album;
-                            }
-                            break;
-                        case "ASSET_AVAILABLE_SEPARATELY": settings.AvailableSeparatelyDefault = (String.IsNullOrEmpty(value) || String.Compare(value.Trim().ToLower(), "no", StringComparison.Ordinal) != 0); break;
-                    }
+                        }
+                        else
+                        {
+                            settings.FormatDefault = ProductFormat.Album;
+                        }
+                        break;
+                    case "ASSET_AVAILABLE_SEPARATELY": settings.AvailableSeparatelyDefault = (String.IsNullOrEmpty(value) || String.Compare(value.Trim().ToLower(), "no", StringComparison.Ordinal) != 0); break;
                 }
             }
         }
@@ -985,6 +987,7 @@ namespace BabelMeta.Modules.Import
         /// </summary>
         private async Task ParseTags()
         {
+            Notify("Parsing tags.");
             if (_tags == null)
             {
                 return;
@@ -1023,6 +1026,7 @@ namespace BabelMeta.Modules.Import
         /// </summary>
         private async Task ParseRoles()
         {
+            Notify("Parsing roles.");
             if (_roles == null)
             {
                 return;
@@ -1073,6 +1077,7 @@ namespace BabelMeta.Modules.Import
         /// <returns></returns>
         private async Task ParseQualities()
         {
+            Notify("Parsing qualities.");
             if (_qualities == null)
             {
                 return;
@@ -1112,6 +1117,7 @@ namespace BabelMeta.Modules.Import
         /// <returns></returns>
         private async Task ParseArtists()
         {
+            Notify("Parsing artists.");
             if (_artists == null)
             {
                 return;
@@ -1189,6 +1195,7 @@ namespace BabelMeta.Modules.Import
         /// </summary>
         private async Task ParseWorks()
         {
+            Notify("Parsing works.");
             if (_works == null)
             {
                 return;
@@ -1285,6 +1292,7 @@ namespace BabelMeta.Modules.Import
         /// </summary>
         private async Task ParseAssets()
         {
+            Notify("Parsing assets.");
             if (_assets == null)
             {
                 return;
@@ -1402,6 +1410,7 @@ namespace BabelMeta.Modules.Import
         /// </summary>
         private async Task ParseAlbums()
         {
+            Notify("Parsing albums.");
             if (_albums == null)
             {
                 return;
@@ -1546,6 +1555,7 @@ namespace BabelMeta.Modules.Import
         /// </summary>
         private async Task ParseTracks()
         {
+            Notify("Parsing tracks.");
             if (_tracks == null)
             {
                 return;

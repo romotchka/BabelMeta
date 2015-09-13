@@ -51,48 +51,56 @@ namespace BabelMeta.Modules.Control
         {
             if (CatalogContext.Instance == null || CatalogContext.Instance.Initialized == false)
             {
+                Debug.Write(this, "ModelIntegrityChecker.CheckRedundantKeys, Instance null or not initialized");
                 return false;
             }
 
             // Langs
             if (CatalogContext.Instance.Langs != null && CatalogContext.Instance.Langs.Count > 0 && CatalogContext.Instance.Langs.GroupBy(e => e.ShortName).Max(g => g.Count()) > 1)
             {
+                Debug.Write(this, "ModelIntegrityChecker.CheckRedundantKeys, Lang");
                 return false;
             }
 
             // Tags
             if (CatalogContext.Instance.Tags != null && CatalogContext.Instance.Tags.Count > 0 && CatalogContext.Instance.Tags.GroupBy(e => e.Name).Max(g => g.Count()) > 1)
             {
+                Debug.Write(this, "ModelIntegrityChecker.CheckRedundantKeys, Tags");
                 return false;
             }
 
             // Roles
             if (CatalogContext.Instance.Roles != null && CatalogContext.Instance.Roles.Count > 0 && CatalogContext.Instance.Roles.GroupBy(e => e.Name).Max(g => g.Count()) > 1)
             {
+                Debug.Write(this, "ModelIntegrityChecker.CheckRedundantKeys, Roles");
                 return false;
             }
 
             // Qualities
             if (CatalogContext.Instance.Qualities != null && CatalogContext.Instance.Qualities.Count > 0 && CatalogContext.Instance.Qualities.GroupBy(e => e.Name).Max(g => g.Count()) > 1)
             {
+                Debug.Write(this, "ModelIntegrityChecker.CheckRedundantKeys, Qualities");
                 return false;
             }
 
             // Artists
             if (CatalogContext.Instance.Artists != null && CatalogContext.Instance.Artists.Count > 0 && CatalogContext.Instance.Artists.GroupBy(e => e.Id).Max(g => g.Count()) > 1)
             {
+                Debug.Write(this, "ModelIntegrityChecker.CheckRedundantKeys, Artists");
                 return false;
             }
 
             // Works
             if (CatalogContext.Instance.Works != null && CatalogContext.Instance.Works.Count > 0 && CatalogContext.Instance.Works.GroupBy(e => e.Id).Max(g => g.Count()) > 1)
             {
+                Debug.Write(this, "ModelIntegrityChecker.CheckRedundantKeys, Works");
                 return false;
             }
 
             // Assets
             if (CatalogContext.Instance.Assets != null && CatalogContext.Instance.Assets.Count > 0 && CatalogContext.Instance.Assets.GroupBy(e => e.Id).Max(g => g.Count()) > 1)
             {
+                Debug.Write(this, "ModelIntegrityChecker.CheckRedundantKeys, Assets");
                 return false;
             }
 
@@ -105,6 +113,7 @@ namespace BabelMeta.Modules.Control
                     )
                 )
             {
+                Debug.Write(this, "ModelIntegrityChecker.CheckRedundantKeys, Albums");
                 return false;
             }
             
@@ -124,18 +133,23 @@ namespace BabelMeta.Modules.Control
             // Work -> Artist
             try
             {
+                Work work;
                 if (
                         CatalogContext.Instance.Works != null
                         && CatalogContext.Instance.Works.Count > 0
-                        && CatalogContext.Instance.Works.Exists(w =>
-                            w.Contributors.Keys.ToList().Exists(c =>
-                                !CatalogContext.Instance.Artists.Exists(e =>
-                                    e.Id == c
+                        &&
+                        (
+                            work = CatalogContext.Instance.Works.FirstOrDefault(w =>
+                                w.Contributors.Keys.ToList().Exists(c =>
+                                    !CatalogContext.Instance.Artists.Exists(e =>
+                                        e.Id == c
+                                    )
                                 )
                             )
-                        )
+                        ) != null
                     )
                 {
+                    Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Work->Artist, corrupted work = " + work.Id);
                     return false;
                 }
             }
@@ -148,18 +162,23 @@ namespace BabelMeta.Modules.Control
             // Work -> Role
             try
             {
+                Work work;
                 if (
                         CatalogContext.Instance.Works != null
                         && CatalogContext.Instance.Works.Count > 0
-                        && CatalogContext.Instance.Works.Exists(w =>
-                            w.Contributors.Values.ToList().Exists(r =>
-                                !CatalogContext.Instance.Roles.Exists(e =>
-                                    String.Compare(e.Name, r.Name, StringComparison.Ordinal) == 0
+                        && 
+                        (
+                            work = CatalogContext.Instance.Works.FirstOrDefault(w =>
+                                w.Contributors.Values.ToList().Exists(r =>
+                                    !CatalogContext.Instance.Roles.Exists(e =>
+                                        String.Compare(e.Name, r.Name, StringComparison.Ordinal) == 0
+                                    )
                                 )
                             )
-                        )
+                        ) != null
                     )
                 {
+                    Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Work->Role, corrupted work = " + work.Id);
                     return false;
                 }
             }
@@ -169,19 +188,47 @@ namespace BabelMeta.Modules.Control
                 return false;
             }
 
-            // Work -> Work
+            // Work -> Work, orphan
             try
             {
+                Work work;
                 if (
                         CatalogContext.Instance.Works != null
                         && CatalogContext.Instance.Works.Count > 0
-                        && CatalogContext.Instance.Works.Where(w => w.Parent > 0).ToList().Exists(w =>
-                            !CatalogContext.Instance.Works.Exists(e =>
-                                e.Id == w.Parent
+                        &&
+                        (
+                            work = CatalogContext.Instance.Works.Where(w => w.Parent > 0).FirstOrDefault(w =>
+                                !CatalogContext.Instance.Works.Exists(e =>
+                                    e.Id == w.Parent
+                                )
                             )
-                        )
+                        ) != null
                     )
                 {
+                    Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Work->Work, orphan, corrupted work = " + work.Id);
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Work->Work, exception=" + ex);
+                return false;
+            }
+
+            // Work -> Work, loop
+            try
+            {
+                Work work;
+                if (
+                        CatalogContext.Instance.Works != null
+                        && CatalogContext.Instance.Works.Count > 0
+                        &&
+                        (
+                            work = CatalogContext.Instance.Works.Where(w => w.Parent > 0).FirstOrDefault(w => w.Id == w.Parent)
+                        ) != null
+                    )
+                {
+                    Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Work->Work, loop, corrupted work = " + work.Id);
                     return false;
                 }
             }
@@ -194,16 +241,21 @@ namespace BabelMeta.Modules.Control
             // Asset -> Work
             try
             {
+                Asset asset;
                 if (
                         CatalogContext.Instance.Assets != null
                         && CatalogContext.Instance.Assets.Count > 0
-                        && CatalogContext.Instance.Assets.Exists(i =>
-                            !CatalogContext.Instance.Works.Exists(e =>
-                                e.Id == i.Work
+                        &&
+                        (
+                            asset = CatalogContext.Instance.Assets.FirstOrDefault(i =>
+                                !CatalogContext.Instance.Works.Exists(e =>
+                                    e.Id == i.Work
+                                )
                             )
-                        )
+                        ) != null
                     )
                 {
+                    Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Asset->Work, corrupted asset = " + asset.Id);
                     return false;
                 }
             }
@@ -216,18 +268,23 @@ namespace BabelMeta.Modules.Control
             // Asset -> Contributor
             try
             {
+                Asset asset;
                 if (
                         CatalogContext.Instance.Assets != null
                         && CatalogContext.Instance.Assets.Count > 0
-                        && CatalogContext.Instance.Assets.Exists(i =>
-                            i.Contributors.Keys.ToList().Exists(c =>
-                                !CatalogContext.Instance.Artists.Exists(e =>
-                                    e.Id == c
+                        && 
+                        (
+                            asset = CatalogContext.Instance.Assets.FirstOrDefault(i =>
+                                i.Contributors.Keys.ToList().Exists(c =>
+                                    !CatalogContext.Instance.Artists.Exists(e =>
+                                        e.Id == c
+                                    )
                                 )
                             )
-                        )
+                        ) != null
                     )
                 {
+                    Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Asset->Contributor, corrupted asset = " + asset.Id);
                     return false;
                 }
             }
@@ -240,20 +297,25 @@ namespace BabelMeta.Modules.Control
             // Asset -> Role
             try
             {
+                Asset asset;
                 if (
                         CatalogContext.Instance.Assets != null
                         && CatalogContext.Instance.Assets.Count > 0
-                        && CatalogContext.Instance.Assets.Exists(i =>
-                            i.Contributors.Values.ToList().Exists(rq =>
-                                    rq.Keys.ToList().Exists(r =>
-                                        !CatalogContext.Instance.Roles.Exists(e =>
-                                            String.Compare(e.Name, r.Name, StringComparison.Ordinal) == 0
+                        && 
+                        (
+                            asset = CatalogContext.Instance.Assets.FirstOrDefault(i =>
+                                i.Contributors.Values.ToList().Exists(rq =>
+                                        rq.Keys.ToList().Exists(r =>
+                                            !CatalogContext.Instance.Roles.Exists(e =>
+                                                String.Compare(e.Name, r.Name, StringComparison.Ordinal) == 0
+                                        )
                                     )
                                 )
                             )
-                        )
+                        ) != null
                     )
                 {
+                    Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Asset->Role, corrupted asset = " + asset.Id);
                     return false;
                 }
             }
@@ -266,20 +328,25 @@ namespace BabelMeta.Modules.Control
             // Asset -> Quality
             try
             {
+                Asset asset;
                 if (
                         CatalogContext.Instance.Assets != null
                         && CatalogContext.Instance.Assets.Count > 0
-                        && CatalogContext.Instance.Assets.Exists(i =>
-                            i.Contributors.Values.ToList().Exists(rq =>
-                                    rq.Values.ToList().Exists(q =>
-                                        !CatalogContext.Instance.Qualities.Exists(e =>
-                                            String.Compare(e.Name, q.Name, StringComparison.Ordinal) == 0
+                        &&
+                        (
+                            asset = CatalogContext.Instance.Assets.FirstOrDefault(i =>
+                                i.Contributors.Values.ToList().Exists(rq =>
+                                        rq.Values.ToList().Exists(q =>
+                                            !CatalogContext.Instance.Qualities.Exists(e =>
+                                                String.Compare(e.Name, q.Name, StringComparison.Ordinal) == 0
+                                        )
                                     )
                                 )
                             )
-                        )
+                        ) != null
                     )
                 {
+                    Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Asset->Quality, corrupted asset = " + asset.Id);
                     return false;
                 }
             }
@@ -292,20 +359,25 @@ namespace BabelMeta.Modules.Control
             // Album -> Asset
             try
             {
+                Album album;
                 if (
                         CatalogContext.Instance.Albums != null
                         && CatalogContext.Instance.Albums.Count > 0
-                        && CatalogContext.Instance.Albums.Exists(a =>
-                            a.Tracks.Values.ToList().Exists(t =>
-                                t.Values.ToList().Exists(i =>
-                                    !CatalogContext.Instance.Assets.Exists(e =>
-                                        String.Compare(e.Id, i, StringComparison.Ordinal) == 0
+                        && 
+                        (
+                            album = CatalogContext.Instance.Albums.FirstOrDefault(a =>
+                                a.Tracks.Values.ToList().Exists(t =>
+                                    t.Values.ToList().Exists(i =>
+                                        !CatalogContext.Instance.Assets.Exists(e =>
+                                            String.Compare(e.Id, i, StringComparison.Ordinal) == 0
+                                        )
                                     )
                                 )
                             )
-                        )
+                        ) != null
                     )
                 {
+                    Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Album->Asset, corrupted album = " + album.CatalogReference);
                     return false;
                 }
             }
