@@ -155,7 +155,7 @@ namespace BabelMeta.Modules.Control
             }
             catch (Exception ex)
             {
-                Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Work->Artist, exception=" + ex);
+                Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Work->Artist, exception=" + ex.Message);
                 return false;
             }
 
@@ -184,7 +184,7 @@ namespace BabelMeta.Modules.Control
             }
             catch (Exception ex)
             {
-                Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Work->Role, exception=" + ex);
+                Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Work->Role, exception=" + ex.Message);
                 return false;
             }
 
@@ -211,7 +211,7 @@ namespace BabelMeta.Modules.Control
             }
             catch (Exception ex)
             {
-                Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Work->Work, exception=" + ex);
+                Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Work->Work, exception=" + ex.Message);
                 return false;
             }
 
@@ -234,7 +234,7 @@ namespace BabelMeta.Modules.Control
             }
             catch (Exception ex)
             {
-                Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Work->Work, exception=" + ex);
+                Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Work->Work, exception=" + ex.Message);
                 return false;
             }
 
@@ -261,7 +261,7 @@ namespace BabelMeta.Modules.Control
             }
             catch (Exception ex)
             {
-                Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Asset->Work, exception=" + ex);
+                Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Asset->Work, exception=" + ex.Message);
                 return false;
             }
 
@@ -290,7 +290,7 @@ namespace BabelMeta.Modules.Control
             }
             catch (Exception ex)
             {
-                Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Asset->Contributor, exception=" + ex);
+                Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Asset->Contributor, exception=" + ex.Message);
                 return false;
             }
 
@@ -321,7 +321,7 @@ namespace BabelMeta.Modules.Control
             }
             catch (Exception ex)
             {
-                Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Asset->Role, exception=" + ex);
+                Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Asset->Role, exception=" + ex.Message);
                 return false;
             }
 
@@ -352,7 +352,7 @@ namespace BabelMeta.Modules.Control
             }
             catch (Exception ex)
             {
-                Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Asset->Quality, exception=" + ex);
+                Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Asset->Quality, exception=" + ex.Message);
                 return false;
             }
 
@@ -383,7 +383,7 @@ namespace BabelMeta.Modules.Control
             }
             catch (Exception ex)
             {
-                Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Album->Asset, exception=" + ex);
+                Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Album->Asset, exception=" + ex.Message);
                 return false;
             }
 

@@ -23,6 +23,8 @@
  *  THE SOFTWARE. 
  */
 
+using System.Diagnostics;
+using System.Windows.Threading;
 using BabelMeta.AppConfig;
 using BabelMeta.Helpers;
 using BabelMeta.Model;
@@ -99,6 +101,13 @@ namespace BabelMeta
         /// <param name="e"></param>
         private async void templatedWorkbookToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (_viewModel == null)
+            {
+                Debug.Write("MainForm.templatedWorkbookToolStripMenuItem_Click, null view model");
+                return;
+            }
+            _viewModel.MainFormDispatcher = Dispatcher.CurrentDispatcher;
+            
             var openFileDialog = new OpenFileDialog
             {
                 InitialDirectory = "c:\\",
@@ -109,6 +118,7 @@ namespace BabelMeta
             if (InputFormat.SelectedItem == null)
             {
                 Notify("No input format selected.");
+                Debug.Write("MainForm.templatedWorkbookToolStripMenuItem_Click, no input format selected");
                 return;
             }
 
@@ -128,6 +138,7 @@ namespace BabelMeta
 
             if (openFileDialog.ShowDialog() != DialogResult.OK)
             {
+                Debug.Write("MainForm.templatedWorkbookToolStripMenuItem_Click, wrong file dialog output");
                 return;
             }
 
@@ -145,14 +156,18 @@ namespace BabelMeta
                 // Call appropriate parser, depending on input format
                 var r = await TemplatedCatalogReader.Instance.Parse(openFileDialog, InputFormat.SelectedItem.ToString().ToFileFormatType(), _viewModel);
 
-                if (r == ReturnCode.Ok)
+                if (r != ReturnCode.Ok)
                 {
-                    Notify("Catalog parsing done.");
+                    Debug.Write("MainForm.templatedWorkbookToolStripMenuItem_Click, wrong return code:" + r);
+                    return;
                 }
+                Notify("Catalog parsing done.");
+                Debug.Write("MainForm.templatedWorkbookToolStripMenuItem_Click, catalog parsing done");
             }
             catch (Exception ex)
             {
                 Notify("Error: Could not read file from disk. Original error: " + ex.Message);
+                Debug.Write("MainForm.templatedWorkbookToolStripMenuItem_Click, exception: " + ex.Message);
             }
         }
 
@@ -169,6 +184,7 @@ namespace BabelMeta
         {
             if (String.IsNullOrEmpty(filePath))
             {
+                Debug.Write("MainForm.DeserializeBmdFile, no file path");
                 return;
             }
 
@@ -234,6 +250,7 @@ namespace BabelMeta
 
             if (String.IsNullOrEmpty(fbd.SelectedPath))
             {
+                Debug.Write("MainForm.loadSessionToolStripMenuItem_Click, wrong file pointer");
                 return;
             }
 
@@ -242,6 +259,7 @@ namespace BabelMeta
             if (getFiles.Count() != 9)
             {
                 Notify("The session file structure is corrupted.");
+                Debug.Write("MainForm.loadSessionToolStripMenuItem_Click, the session file structure is corrupted");
             }
 
             var files = getFiles.ToList();
@@ -264,9 +282,10 @@ namespace BabelMeta
 
                 Notify("Session loaded.");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 Notify("Session not readable.");
+                Debug.Write("MainForm.loadSessionToolStripMenuItem_Click, exception: " + ex.Message);
             }
         }
 
@@ -286,6 +305,7 @@ namespace BabelMeta
 
             if (String.IsNullOrEmpty(fbd.SelectedPath))
             {
+                Debug.Write("MainForm.saveSessionToolStripMenuItem_Click, wrong file pointer");
                 return;
             }
             if ((fbd.SelectedPath.ToCharArray())[fbd.SelectedPath.Length - 1] != '\\')
@@ -354,9 +374,10 @@ namespace BabelMeta
                 Notify("Session saved.");
             }
 
-            catch
+            catch (Exception ex)
             {
                 Notify("Session not saved: I/O error on disk.");
+                Debug.Write("MainForm.saveSessionToolStripMenuItem_Click, exception: " + ex.Message);
             }
         }
 
@@ -385,6 +406,7 @@ namespace BabelMeta
                 )
             {
                 Notify("The imported model is valid.");
+                Debug.Write("MainForm.DoCheckIntegrity, the imported model is valid");
             }
             else
             {
@@ -392,10 +414,12 @@ namespace BabelMeta
                 if (!CatalogContext.Instance.RedundantKeysChecked)
                 {
                     message += " Redundant keys exist.";
+                    Debug.Write("MainForm.DoCheckIntegrity, redundant keys exist");
                 }
                 if (!CatalogContext.Instance.ReferentialIntegrityChecked)
                 {
                     message += " Some foreign keys are invalid.";
+                    Debug.Write("MainForm.DoCheckIntegrity, some foreign keys are invalid");
                 }
                 Notify(message);
             }
@@ -421,6 +445,7 @@ namespace BabelMeta
             if (!CatalogContext.Instance.Initialized)
             {
                 Notify("Catalog not present.");
+                Debug.Write("MainForm.fugaToolStripMenuItem_Click, catalog not present");
                 return;
             }
             DoCheckIntegrity();

@@ -25,6 +25,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Windows.Threading;
 
 namespace BabelMeta
 {
@@ -53,7 +54,6 @@ namespace BabelMeta
         }
 
         private int _inputProgressBarValue = 0;
-
 
         /// <summary>
         /// Input progress bar value
@@ -205,6 +205,8 @@ namespace BabelMeta
                 RaisePropertyChanged("Notification");
             }
         }
+
+        public Dispatcher MainFormDispatcher { get; set; }
 
         #region PropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;

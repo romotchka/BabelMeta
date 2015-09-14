@@ -35,7 +35,9 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Threading;
 using System.Xml;
+using Action = System.Action;
 using Excel = Microsoft.Office.Interop.Excel;
 
 namespace BabelMeta.Modules.Import
@@ -216,7 +218,7 @@ namespace BabelMeta.Modules.Import
                     }
                     catch (Exception ex)
                     {
-                        Debug.Write(this, "TemplatedCatalogReader.Parse, case=FileFormatType.ExcelXml2003, exception=" + ex);
+                        Debug.Write(this, "TemplatedCatalogReader.Parse, case=FileFormatType.ExcelXml2003, exception=" + ex.Message);
                         Notify("The XML parsing failed.");
                         return ReturnCode.ModulesImportDefaultParseEmptyStream;
                     }
@@ -578,7 +580,7 @@ namespace BabelMeta.Modules.Import
                         }
                         catch (Exception ex)
                         {
-                            Debug.Write(this, "TemplatedCatalogReader.CellMapByRow, worksheet=" + worksheetName + ", line=" + rowIndex + ", exception=" + ex);
+                            Debug.Write(this, "TemplatedCatalogReader.CellMapByRow, worksheet=" + worksheetName + ", line=" + rowIndex + ", exception=" + ex.Message);
                             Notify(String.Format("A problem occurred while trying to read worksheet {0}, line {1}, column {2}.", worksheetName, rowIndex, index));
                         }
                     }
@@ -814,7 +816,7 @@ namespace BabelMeta.Modules.Import
                     }
                     catch (Exception ex)
                     {
-                        Debug.Write("TemplatedCatalogReader.ExistsWorksheet, case=FileFormatType.ExcelXml2003, exception=" + ex);
+                        Debug.Write("TemplatedCatalogReader.ExistsWorksheet, case=FileFormatType.ExcelXml2003, exception=" + ex.Message);
                         Instance.Notify(String.Format("A problem occurred while trying to check worksheet {0}.", worksheetName));
                         return false;
                     }
@@ -1694,7 +1696,7 @@ namespace BabelMeta.Modules.Import
                     }
                     catch (Exception ex)
                     {
-                        Debug.Write("TemplatedCatalogReader.FinalizeAlbums, exception=" + ex);
+                        Debug.Write("TemplatedCatalogReader.FinalizeAlbums, exception=" + ex.Message);
                         Instance.Notify("The primary artist detection went wrong in album " + album.CatalogReference);
                     }
 
@@ -1706,7 +1708,7 @@ namespace BabelMeta.Modules.Import
                     }
                     catch (Exception ex)
                     {
-                        Debug.Write("TemplatedCatalogReader.FinalizeAlbums, exception=" + ex);
+                        Debug.Write("TemplatedCatalogReader.FinalizeAlbums, exception=" + ex.Message);
                         Instance.Notify("The primary artist setup went wrong in album " + album.CatalogReference);
                     }
                 }
@@ -1763,18 +1765,24 @@ namespace BabelMeta.Modules.Import
             }
             catch (Exception ex)
             {
-                Debug.Write("TemplatedCatalogReader.FinalizeAssets, exception=" + ex);
+                Debug.Write("TemplatedCatalogReader.FinalizeAssets, exception=" + ex.Message);
                 Instance.Notify("A problem occurred in assets finalization.");
             }
         }
 
         public void Notify(String message)
         {
-            if (_mainFormViewModel != null && !String.IsNullOrEmpty(message))
+            if (_mainFormViewModel == null || _mainFormViewModel.MainFormDispatcher == null || String.IsNullOrEmpty(message))
             {
-                // TODO In case this method is not executed in the UI thread, consider to implement it with a Dispatcher.
-                _mainFormViewModel.Notification = message;
+                Debug.Write("TemplatedCatalogReader.Notify, wrong view model or empty message");
+                return;
             }
+            var methodInvoker = new MethodInvoker(() =>
+            {
+                _mainFormViewModel.Notification = message;
+            });
+
+            _mainFormViewModel.MainFormDispatcher.Invoke(methodInvoker);
         }
     }
 }

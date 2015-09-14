@@ -133,15 +133,7 @@ namespace BabelMeta.Modules.Export
 
         public static FugaXmlCatalogWriter Instance
         {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new FugaXmlCatalogWriter();
-
-                }
-                return _instance;
-            }
+            get { return _instance ?? (_instance = new FugaXmlCatalogWriter()); }
         }
 
         #region Generate
@@ -230,7 +222,7 @@ namespace BabelMeta.Modules.Export
             catch (Exception ex)
             {
                 Notify(String.Format("Album [{0}]: Invalid action.", album.CatalogReference));
-                Debug.Write(this, "FugaXmlCatalogWriter.GenerateAlbumWiseData, exception=" + ex);
+                Debug.Write(this, "FugaXmlCatalogWriter.GenerateAlbumWiseData, exception=" + ex.Message);
             }
 
             // TODO i.album.additional_artists
@@ -521,7 +513,7 @@ namespace BabelMeta.Modules.Export
                 // TODO asset.country_of_commissioning
                 // TODO asset.country_of_recording
 
-                if (
+                if  (
                         currentWork.Title.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName)
                         && (
                                 parentWork == null
@@ -565,7 +557,7 @@ namespace BabelMeta.Modules.Export
                     ingestionTrack.main_subgenre = album.Subgenre.Name; // TODO implement trackwise field
                 }
 
-                if (
+                if  (
                         parentWork != null
                         && currentWork.MovementTitle.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName)
                         && !String.IsNullOrEmpty(currentWork.MovementTitle[CatalogContext.Instance.DefaultLang.ShortName])
@@ -598,9 +590,13 @@ namespace BabelMeta.Modules.Export
                 // Primary artists is performer 1 (asset contributor 1)
                 var primaryArtist = CatalogContext.Instance.Artists.FirstOrDefault(e =>
                     e.Id.Equals(assetPerformersKeys[0]));
-                if (primaryArtist != null && primaryArtist.LastName != null && primaryArtist.LastName.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName))
+                if  (
+                        primaryArtist != null 
+                        && primaryArtist.LastName != null 
+                        && primaryArtist.LastName.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName)
+                    )
                 {
-                    ingestionTrack.primary_artist = new primary_artist()
+                    ingestionTrack.primary_artist = new primary_artist
                     {
                         name = (primaryArtist.FirstName[CatalogContext.Instance.DefaultLang.ShortName] + " " + primaryArtist.LastName[CatalogContext.Instance.DefaultLang.ShortName]).Trim(),
                     };
@@ -644,7 +640,11 @@ namespace BabelMeta.Modules.Export
                 // TODO asset.track_version
                 // TODO asset.usage_rights
 
-                if (parentWork != null && parentWork.Title != null && parentWork.Title.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName))
+                if  (
+                        parentWork != null 
+                        && parentWork.Title != null 
+                        && parentWork.Title.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName)
+                    )
                 {
                     ingestionTrack.work = parentWork.Title[CatalogContext.Instance.DefaultLang.ShortName];
                 }
@@ -681,7 +681,7 @@ namespace BabelMeta.Modules.Export
             switch (fileType)
             {
                 case FugaIngestionFileType.Attachment:
-                    foreach (String file in filesList)
+                    foreach (var file in filesList)
                     {
                         var nameExtension = file.Split('.').Last().ToLower();
                         if  (
@@ -699,51 +699,53 @@ namespace BabelMeta.Modules.Export
                     {
                         var volumeIndex = ((KeyValuePair<int, int>)parameter).Key;
                         var trackIndex = ((KeyValuePair<int, int>)parameter).Value;
-                        foreach (String file in filesList)
+                        foreach (var file in filesList)
                         {
                             var nameExtension = file.Split('.').Last().ToLower();
-                            if (
-                                    !String.IsNullOrEmpty(nameExtension) 
-                                    &&
+                            if  (
+                                    String.IsNullOrEmpty(nameExtension) 
+                                    || 
                                     (
-                                        String.Compare(nameExtension, "wav", StringComparison.Ordinal) == 0 
-                                        || String.Compare(nameExtension, "aif", StringComparison.Ordinal) == 0 
-                                        || String.Compare(nameExtension, "aiff", StringComparison.Ordinal) == 0
+                                        String.Compare(nameExtension, "wav", StringComparison.Ordinal) != 0 
+                                        && String.Compare(nameExtension, "aif", StringComparison.Ordinal) != 0 
+                                        && String.Compare(nameExtension, "aiff", StringComparison.Ordinal) != 0
                                     )
                                 )
                             {
-                                var nameLeft = file.Substring(0, file.Length - nameExtension.Length - 1);
-                                var nameElements = nameLeft.Split('-');
-                                var nameElementsCount = nameElements.ToList().Count();
-                                if (nameElementsCount < 3)
-                                {
-                                    continue;
-                                }
-                                int tryVolumeIndex = 0;
-                                int tryTrackIndex = 0;
-                                var convertVolume = int.TryParse(nameElements[nameElementsCount - 2], out tryVolumeIndex);
-                                var convertTrack = int.TryParse(nameElements[nameElementsCount - 1], out tryTrackIndex);
-                                if (
-                                        convertVolume 
-                                        && convertTrack
-                                        && tryVolumeIndex.Equals(volumeIndex)
-                                        && tryTrackIndex.Equals(trackIndex)
-                                    )
-                                {
-                                    // Found !
-                                    return file;
-                                }
-                            }                            
+                                continue;
+                            }
+                            var nameLeft = file.Substring(0, file.Length - nameExtension.Length - 1);
+                            var nameElements = nameLeft.Split('-');
+                            var nameElementsCount = nameElements.ToList().Count();
+                            if (nameElementsCount < 3)
+                            {
+                                continue;
+                            }
+                            var tryVolumeIndex = 0;
+                            var tryTrackIndex = 0;
+                            var convertVolume = int.TryParse(nameElements[nameElementsCount - 2], out tryVolumeIndex);
+                            var convertTrack = int.TryParse(nameElements[nameElementsCount - 1], out tryTrackIndex);
+                            if  (
+                                    convertVolume 
+                                    && convertTrack
+                                    && tryVolumeIndex.Equals(volumeIndex)
+                                    && tryTrackIndex.Equals(trackIndex)
+                                )
+                            {
+                                // Found !
+                                return file;
+                            }
                         }
                     }
                     break;
 
                 case FugaIngestionFileType.Cover:
-                    foreach (String file in filesList)
+                    foreach (var file in filesList)
                     {
                         var nameExtension = file.Split('.').Last().ToLower();
-                        if (
-                                !String.IsNullOrEmpty(nameExtension) &&
+                        if  (
+                                !String.IsNullOrEmpty(nameExtension) 
+                                &&
                                 (
                                     String.Compare(nameExtension, "jpg", StringComparison.Ordinal) == 0 
                                     || String.Compare(nameExtension, "jpeg", StringComparison.Ordinal) == 0 
@@ -756,9 +758,7 @@ namespace BabelMeta.Modules.Export
                     }
                     break;
             }
-
             return String.Empty;
         }
-
     }
 }
