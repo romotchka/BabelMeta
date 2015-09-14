@@ -266,26 +266,24 @@ namespace BabelMeta.Modules.Import
             await ParseAlbums();
             await ParseTracks();
 
-            // FIXME: This last thread raised an exception
-            // Finalization and filtering
-            //await Task.Run(() =>
-            //{
-                Notify("Finalization...");
-                FinalizeAlbums();
-                FinalizeAssets();
+            Notify("Finalization...");
+            FinalizeAlbums();
+            FinalizeAssets();
 
-                if (_mainFormViewModel == null)
+            if (_mainFormViewModel != null)
+            {
+                if (_mainFormViewModel.FilterArtistChecked)
                 {
-                //    return;
+                    CatalogContext.Instance.FilterUnusedArtists();
                 }
-
-                if (_mainFormViewModel.FilterArtistChecked) CatalogContext.Instance.FilterUnusedArtists();
-                else
-                if (_mainFormViewModel.FilterWorkChecked) CatalogContext.Instance.FilterUnusedWorks();
-            //});
+                else if (_mainFormViewModel.FilterWorkChecked)
+                {
+                    CatalogContext.Instance.FilterUnusedWorks();
+                }
+                _mainFormViewModel.InputProgressBarValue = _mainFormViewModel.InputProgressBarMax;
+            }
 
             CatalogContext.Instance.Initialized = true;
-            _mainFormViewModel.InputProgressBarValue = _mainFormViewModel.InputProgressBarMax;
             Notify("Parsing completed.");
             return ReturnCode.Ok;
         }
@@ -299,7 +297,7 @@ namespace BabelMeta.Modules.Import
                     map = CellMapByRow(1, worksheetName);
                     break;
                 case FileFormatType.ExcelXml2003:
-                    if ((XmlNode)(_worksheets[worksheetName]) == null)
+                    if (_worksheets[worksheetName] == null)
                     { 
                         return null; 
                     }
@@ -315,11 +313,6 @@ namespace BabelMeta.Modules.Import
         /// <returns></returns>
         private async Task<bool> IsValidWorkbook()
         {
-            //if (String.IsNullOrEmpty(_formatType))
-            //{
-            //    return false;
-            //}
-
             if  (
                     (
                         _fileFormatType == FileFormatType.ExcelXml2003 
@@ -542,11 +535,6 @@ namespace BabelMeta.Modules.Import
         /// <returns></returns>
         private Dictionary<int, object> CellMapByRow(object row, String worksheetName = "")
         {
-            //if (String.IsNullOrEmpty(_formatType))
-            //{
-            //    return null;
-            //}
-
             if (row == null)
             {
                 return null;
@@ -558,10 +546,6 @@ namespace BabelMeta.Modules.Import
             switch (_fileFormatType)
             {
                 case FileFormatType.ExcelWorkbook:
-                    //if (String.IsNullOrEmpty(worksheetName) || !_worksheets.ContainsKey(worksheetName))
-                    //{
-                    //    return null;
-                    //}
                     var rowIndex = (int)row;
                     if (rowIndex < 1)
                     {
@@ -620,21 +604,16 @@ namespace BabelMeta.Modules.Import
         /// <returns></returns>
         private List<object> WorksheetActiveRows(String worksheetName, bool localActive = false, bool partnerActive = false)
         {
-            //if (String.IsNullOrEmpty(worksheetName))
-            //{
-            //    return null;
-            //}
-
-            if (!(_worksheets.ContainsKey(worksheetName)) ||  _worksheets[worksheetName] == null)
+            if (!_worksheets.ContainsKey(worksheetName) || _worksheets[worksheetName] == null)
             {
                 return null;
             }
 
             if  (
                     _excelLastRow == null 
-                    || !(_excelLastRow.ContainsKey(worksheetName)) 
+                    || !_excelLastRow.ContainsKey(worksheetName) 
                     || _excelLastColumn == null 
-                    || !(_excelLastColumn.ContainsKey(worksheetName))
+                    || !_excelLastColumn.ContainsKey(worksheetName)
                 )
             {
                 return null;
@@ -690,7 +669,7 @@ namespace BabelMeta.Modules.Import
                         break;
                 }
 
-                if (
+                if  (
                         (localActive && partnerActive && local && partner)
                         || (localActive && !partnerActive && local)
                         || (!localActive && partnerActive && partner)
@@ -750,11 +729,6 @@ namespace BabelMeta.Modules.Import
         /// <returns></returns>
         private bool ExistsWorksheet(String worksheetName)
         {
-            //if (String.IsNullOrEmpty(worksheetName))
-            //{
-            //    return false;
-            //}
-
             const int maxSheets = 64; // Security
 
             if (_worksheets.ContainsKey(worksheetName))
@@ -824,14 +798,16 @@ namespace BabelMeta.Modules.Import
 
             var exists = table != null;
 
-            if (exists)
+            if (!exists)
             {
-                // Add table element of the worksheet
-                _worksheets[worksheetName] = table;
-                _worksheetColumns[worksheetName] = new Dictionary<String, int>();
+                return false;
             }
 
-            return exists;
+            // Add table element of the worksheet
+            _worksheets[worksheetName] = table;
+            _worksheetColumns[worksheetName] = new Dictionary<String, int>();
+
+            return true;
         }
 
         /// <summary>
@@ -893,15 +869,24 @@ namespace BabelMeta.Modules.Import
                     cells = CellMapByRow(row, SettingsWorksheetName);
                 });
 
-                if (cells == null || cells.Count <= 0) continue;
+                if (cells == null || cells.Count <= 0)
+                {
+                    continue;
+                }
+
                 var parameter = CellContentWizard(cells, _worksheetColumns[SettingsWorksheetName]["parameter"]);
                 var value = CellContentWizard(cells, _worksheetColumns[SettingsWorksheetName]["value"]);
 
-                if (String.IsNullOrEmpty(parameter)) continue;
+                if (String.IsNullOrEmpty(parameter))
+                {
+                    continue;
+                }
+
                 if (CatalogContext.Instance.Settings == null)
                 {
                     CatalogContext.Instance.Settings = new CatalogSettings();
                 }
+
                 var settings = CatalogContext.Instance.Settings;
 
                 switch (parameter.ToUpper())
@@ -968,7 +953,11 @@ namespace BabelMeta.Modules.Import
                     cells = CellMapByRow(row, LangWorksheetName);
                 });
 
-                if (cells == null || cells.Count <= 0) continue;
+                if (cells == null || cells.Count <= 0)
+                {
+                    continue;
+                }
+
                 var lang = new Lang
                 {
                     LongName = CellContentWizard(cells, _worksheetColumns[LangWorksheetName]["long_name"]),
@@ -1085,7 +1074,7 @@ namespace BabelMeta.Modules.Import
                 return;
             }
 
-            foreach (object row in _qualities)
+            foreach (var row in _qualities)
             {
                 Dictionary<int, object> cells = null;
                 await Task.Run(() =>
@@ -1249,7 +1238,7 @@ namespace BabelMeta.Modules.Import
 
                     // Object may have several lang-dependent field sets
                     var otherLangs = CatalogContext.Instance.Langs.Where(l => l != CatalogContext.Instance.DefaultLang).ToList();
-                    foreach (Lang lang in otherLangs)
+                    foreach (var lang in otherLangs)
                     {
                         var title = CellContentWizard(cells, _worksheetColumns[WorkWorksheetName]["title_" + lang.ShortName]);
                         var movementTitle = CellContentWizard(cells, _worksheetColumns[WorkWorksheetName]["movement_title_" + lang.ShortName]);
@@ -1260,8 +1249,8 @@ namespace BabelMeta.Modules.Import
 
                     var i = 1;
                     while   (
-                                (_worksheetColumns[WorkWorksheetName].ContainsKey("id_contributor" + i))
-                                && (_worksheetColumns[WorkWorksheetName].ContainsKey("role_contributor" + i))
+                                _worksheetColumns[WorkWorksheetName].ContainsKey("id_contributor" + i)
+                                && _worksheetColumns[WorkWorksheetName].ContainsKey("role_contributor" + i)
                             )
                     {
                         var idContributor = Convert.ToInt32(CellContentWizard(cells, _worksheetColumns[WorkWorksheetName]["id_contributor" + i], "0"));
@@ -1300,7 +1289,7 @@ namespace BabelMeta.Modules.Import
                 return;
             }
 
-            foreach (object row in _assets)
+            foreach (var row in _assets)
             {
                 Dictionary<int, object> cells = null;
                 await Task.Run(() =>
@@ -1337,7 +1326,7 @@ namespace BabelMeta.Modules.Import
                     {
                         asset.CName = CatalogContext.Instance.Settings.LabelDefault;
                     }
-                    if (asset.CYear < 1900 || asset.CYear > 2100)
+                    if (asset.CYear < BabelMetaConfig.RecordingYearLowerBound || asset.CYear > BabelMetaConfig.RecordingYearUpperBound)
                     {
                         asset.CYear = null;
                     }
@@ -1345,20 +1334,20 @@ namespace BabelMeta.Modules.Import
                     {
                         asset.PName = CatalogContext.Instance.Settings.LabelDefault;
                     }
-                    if (asset.PYear < 1900 || asset.PYear > 2100)
+                    if (asset.PYear < BabelMetaConfig.RecordingYearLowerBound || asset.PYear > BabelMetaConfig.RecordingYearUpperBound)
                     {
                         asset.PYear = null;
                     }
-                    if (asset.RecordingYear < 1900 || asset.RecordingYear > 2100)
+                    if (asset.RecordingYear < BabelMetaConfig.RecordingYearLowerBound || asset.RecordingYear > BabelMetaConfig.RecordingYearUpperBound)
                     {
                         asset.RecordingYear = null;
                     }
 
                     var i = 1;
                     while   (
-                                (_worksheetColumns[AssetWorksheetName].ContainsKey("id_contributor" + i))
-                                && (_worksheetColumns[AssetWorksheetName].ContainsKey("role_contributor" + i))
-                                && (_worksheetColumns[AssetWorksheetName].ContainsKey("quality_contributor" + i))
+                                _worksheetColumns[AssetWorksheetName].ContainsKey("id_contributor" + i)
+                                && _worksheetColumns[AssetWorksheetName].ContainsKey("role_contributor" + i)
+                                && _worksheetColumns[AssetWorksheetName].ContainsKey("quality_contributor" + i)
                             )
                     {
                         var idContributor = Convert.ToInt32(CellContentWizard(cells, _worksheetColumns[AssetWorksheetName]["id_contributor" + i], "0"));
@@ -1488,7 +1477,7 @@ namespace BabelMeta.Modules.Import
                             album.CName = CatalogContext.Instance.Settings.LabelDefault;
                         }
 
-                        if (album.CYear < 1900 || album.CYear > 2100)
+                        if (album.CYear < BabelMetaConfig.RecordingYearLowerBound || album.CYear > BabelMetaConfig.RecordingYearUpperBound)
                         {
                             album.CYear = null;
                         }
@@ -1498,12 +1487,12 @@ namespace BabelMeta.Modules.Import
                             album.PName = CatalogContext.Instance.Settings.LabelDefault;
                         }
 
-                        if (album.PYear < 1900 || album.PYear > 2100)
+                        if (album.PYear < BabelMetaConfig.RecordingYearLowerBound || album.PYear > BabelMetaConfig.RecordingYearUpperBound)
                         {
                             album.PYear = null;
                         }
 
-                        if (album.RecordingYear < 1900 || album.RecordingYear > 2100)
+                        if (album.RecordingYear < BabelMetaConfig.RecordingYearLowerBound || album.RecordingYear > BabelMetaConfig.RecordingYearUpperBound)
                         {
                             album.RecordingYear = null;
                         }

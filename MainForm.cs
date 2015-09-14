@@ -23,8 +23,6 @@
  *  THE SOFTWARE. 
  */
 
-using System.Diagnostics;
-using System.Windows.Threading;
 using BabelMeta.AppConfig;
 using BabelMeta.Helpers;
 using BabelMeta.Model;
@@ -36,10 +34,12 @@ using BabelMeta.Modules.Import;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
+using System.Windows.Threading;
 
 namespace BabelMeta
 {
@@ -50,6 +50,7 @@ namespace BabelMeta
             InitializeComponent();
 
             _viewModel = new MainFormViewModel();
+            StringHelper.ViewModel = _viewModel;
 
             InputProgressBar.DataBindings.Add(new Binding("Maximum", _viewModel, "InputProgressBarMax"));
             InputProgressBar.DataBindings.Add(new Binding("Value", _viewModel, "InputProgressBarValue"));
@@ -497,6 +498,30 @@ namespace BabelMeta
             NotificationZone.Clear();
             NotificationZone.AppendText(message + Environment.NewLine);
             NotificationZone.AppendText(current);
+        }
+
+        private void CurlySimpleQuotesCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (_viewModel != null)
+            {
+                _viewModel.CurlySimpleQuotesActive = CurlySimpleQuotesCheckBox.Checked;
+            }
+        }
+
+        private void CurlyDoubleQuotesCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (_viewModel != null)
+            {
+                _viewModel.CurlyDoubleQuotesActive = CurlyDoubleQuotesCheckBox.Checked;
+            }
+        }
+
+        private void DoubleSpacesCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (_viewModel != null)
+            {
+                _viewModel.DoubleSpacesRemovalActive = DoubleSpacesCheckBox.Checked;
+            }
         }
     }
 }

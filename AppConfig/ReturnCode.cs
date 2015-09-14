@@ -42,4 +42,10 @@ namespace BabelMeta.AppConfig
         ModulesExportFugaXmlGenerateNullFolderName,
 
     }
+
+    public static class BabelMetaConfig
+    {
+        public const int RecordingYearLowerBound = 1900;
+        public const int RecordingYearUpperBound = 2100;
+    }
 }

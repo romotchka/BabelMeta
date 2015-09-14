@@ -35,6 +35,9 @@ namespace BabelMeta.Helpers
     /// </summary>
     public static class StringHelper
     {
+        public static MainFormViewModel ViewModel { get; set; }
+
+        #region Typography
         /// <summary>
         /// Language-dependent separator between an entity and a sub-entity.
         /// </summary>
@@ -47,6 +50,75 @@ namespace BabelMeta.Helpers
                 default: return ": ";
             }
         }
+
+        public static String ToCurlySimpleQuotes(this String s)
+        {
+            return String.IsNullOrEmpty(s) 
+                ? String.Empty 
+                : s.Replace('\'', '’');
+        }
+
+        /// <summary>
+        /// This replacement implies an even number of double quotes so as to perform consistent action.
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static String ToCurlyDoubleQuotes(this String s)
+        {
+            if (String.IsNullOrEmpty(s))
+            {
+                return String.Empty;
+            }
+            var chars = s.ToCharArray().ToList();
+            var testEven = chars.Count(c => c == '"') % 2 == 0;
+            if (!testEven)
+            {
+                return s;
+            }
+            var evenness = true;
+            foreach (var i in Enumerable.Range(0,chars.Count).Where(k => chars[k] == '"'))
+            {
+                chars[i] = evenness
+                    ? '“'
+                    : '”';
+                evenness = !evenness;
+            }
+            return s;
+        }
+
+        public static String DoubleSpacesRecursiveRemoval(this String s)
+        {
+            if (String.IsNullOrEmpty(s))
+            {
+                return String.Empty;
+            }
+            return s.Contains("  ")
+                ? s.Replace("  ", " ").DoubleSpacesRecursiveRemoval()
+                : s;
+        }
+
+        /// <summary>
+        /// Apply the different typographic rules active according to main view model.
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static String Typo(this String s)
+        {
+            if (String.IsNullOrEmpty(s))
+            {
+                return String.Empty;
+            }
+            if (ViewModel == null)
+            {
+                return s;
+            }
+            var o = s;
+            if (ViewModel.CurlySimpleQuotesActive) o = o.ToCurlySimpleQuotes();
+            if (ViewModel.CurlyDoubleQuotesActive) o = o.ToCurlyDoubleQuotes();
+            if (ViewModel.DoubleSpacesRemovalActive) o = o.DoubleSpacesRecursiveRemoval();
+            return o;
+        }
+        #endregion
 
         /// <summary>
         /// Expected format is yyyy-mm-dd[...]

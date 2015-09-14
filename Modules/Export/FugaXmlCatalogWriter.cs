@@ -23,6 +23,7 @@
  *  THE SOFTWARE. 
  */
 
+using System.Windows.Forms;
 using BabelMeta.AppConfig;
 using BabelMeta.Helpers;
 using BabelMeta.Model;
@@ -252,14 +253,14 @@ namespace BabelMeta.Modules.Export
                 };
             }
 
-            i.album.c_line_text = (!String.IsNullOrEmpty(album.CName)) ? album.CName : CatalogContext.Instance.Settings.COwnerDefault;
+            i.album.c_line_text = (!String.IsNullOrEmpty(album.CName)) ? album.CName.Typo() : CatalogContext.Instance.Settings.COwnerDefault.Typo();
 
             if (album.CYear != null)
             {
                 i.album.c_line_year = album.CYear.ToString();
             }
 
-            i.album.catalog_number = album.CatalogReference;
+            i.album.catalog_number = album.CatalogReference.Typo();
 
             i.album.catalog_tier = _albumTierConverter[album.Tier];
 
@@ -299,7 +300,7 @@ namespace BabelMeta.Modules.Export
             // TODO i.album.extra10Specified
             // TODO i.album.fuga_id
 
-            i.album.label = album.Owner;
+            i.album.label = album.Owner.Typo();
 
             i.album.language = ingestionAlbumLanguage.EN; // TODO
 
@@ -309,7 +310,7 @@ namespace BabelMeta.Modules.Export
 
             if (album.Subgenre != null && !String.IsNullOrEmpty(album.Subgenre.Name))
             {
-                i.album.main_subgenre = album.Subgenre.Name;
+                i.album.main_subgenre = album.Subgenre.Name.Typo();
             }
             else
             {
@@ -318,13 +319,13 @@ namespace BabelMeta.Modules.Export
 
             if (album.Title != null && album.Title.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName))
             {
-                i.album.name = album.Title[CatalogContext.Instance.DefaultLang.ShortName];
+                i.album.name = album.Title[CatalogContext.Instance.DefaultLang.ShortName].Typo();
             }
 
             // TODO i.album.original_release_date
             // TODO i.album.original_release_dateSpecified
 
-            i.album.p_line_text = (!String.IsNullOrEmpty(album.PName)) ? album.PName : CatalogContext.Instance.Settings.POwnerDefault;
+            i.album.p_line_text = (!String.IsNullOrEmpty(album.PName)) ? album.PName.Typo() : CatalogContext.Instance.Settings.POwnerDefault.Typo();
 
             if (album.PYear != null)
             {
@@ -345,12 +346,12 @@ namespace BabelMeta.Modules.Export
                 {
                     i.album.primary_artist = new primary_artist
                     {
-                        name = (primaryArtist.FirstName[CatalogContext.Instance.DefaultLang.ShortName] + " " + primaryArtist.LastName[CatalogContext.Instance.DefaultLang.ShortName]).Trim(),
+                        name = (primaryArtist.FirstName[CatalogContext.Instance.DefaultLang.ShortName].Typo() + " " + primaryArtist.LastName[CatalogContext.Instance.DefaultLang.ShortName].Typo()).Trim(),
                     };
                 }
             }
 
-            i.album.recording_location = album.RecordingLocation;
+            i.album.recording_location = album.RecordingLocation.Typo();
 
             if (album.RecordingYear > 0)
             {
@@ -368,7 +369,7 @@ namespace BabelMeta.Modules.Export
             // TODO i.album.release_version
             // TODO i.album.schedule
 
-            i.album.supplier = CatalogContext.Instance.Settings.SupplierDefault;
+            i.album.supplier = CatalogContext.Instance.Settings.SupplierDefault.Typo();
 
             i.album.territories = new List<territory_code>
             {
@@ -452,7 +453,7 @@ namespace BabelMeta.Modules.Export
                     {
                         ingestionTrack.additional_artists.Add(new artist
                         {
-                            name = (additionalArtist.FirstName[CatalogContext.Instance.DefaultLang.ShortName] + " " + additionalArtist.LastName[CatalogContext.Instance.DefaultLang.ShortName]).Trim(),
+                            name = (additionalArtist.FirstName[CatalogContext.Instance.DefaultLang.ShortName].Typo() + " " + additionalArtist.LastName[CatalogContext.Instance.DefaultLang.ShortName].Typo()).Trim(),
                             primary_artist = true, // TODO manage primary character for additional artists
                         });
                     }
@@ -502,9 +503,9 @@ namespace BabelMeta.Modules.Export
 
                     if (artist.LastName.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName))
                     {
-                        ingestionTrack.contributors.Add(new contributor()
+                        ingestionTrack.contributors.Add(new contributor
                         {
-                            name = (artist.FirstName[CatalogContext.Instance.DefaultLang.ShortName] + " " + artist.LastName[CatalogContext.Instance.DefaultLang.ShortName]).Trim(),
+                            name = (artist.FirstName[CatalogContext.Instance.DefaultLang.ShortName].Typo() + " " + artist.LastName[CatalogContext.Instance.DefaultLang.ShortName].Typo()).Trim(),
                             role = cRole,
                         });
                     }
@@ -522,8 +523,8 @@ namespace BabelMeta.Modules.Export
                     )
                 {
                     ingestionTrack.display_title = (parentWork == null)
-                        ? currentWork.Title[CatalogContext.Instance.DefaultLang.ShortName]
-                        : parentWork.Title[CatalogContext.Instance.DefaultLang.ShortName] + StringHelper.HierarchicalSeparator(CatalogContext.Instance.DefaultLang) + currentWork.Title[CatalogContext.Instance.DefaultLang.ShortName];
+                        ? currentWork.Title[CatalogContext.Instance.DefaultLang.ShortName].Typo()
+                        : parentWork.Title[CatalogContext.Instance.DefaultLang.ShortName].Typo() + StringHelper.HierarchicalSeparator(CatalogContext.Instance.DefaultLang) + currentWork.Title[CatalogContext.Instance.DefaultLang.ShortName].Typo();
                 }
 
                 // TODO asset.extra1
@@ -554,7 +555,7 @@ namespace BabelMeta.Modules.Export
 
                 if (album.Subgenre != null)
                 {
-                    ingestionTrack.main_subgenre = album.Subgenre.Name; // TODO implement trackwise field
+                    ingestionTrack.main_subgenre = album.Subgenre.Name.Typo(); // TODO implement trackwise field
                 }
 
                 if  (
@@ -563,7 +564,7 @@ namespace BabelMeta.Modules.Export
                         && !String.IsNullOrEmpty(currentWork.MovementTitle[CatalogContext.Instance.DefaultLang.ShortName])
                     )
                 {
-                    ingestionTrack.movement = currentWork.MovementTitle[CatalogContext.Instance.DefaultLang.ShortName];
+                    ingestionTrack.movement = currentWork.MovementTitle[CatalogContext.Instance.DefaultLang.ShortName].Typo();
                 }
 
                 if (parentWork != null && currentWork.MovementNumber > 0)
@@ -573,7 +574,7 @@ namespace BabelMeta.Modules.Export
 
                 ingestionTrack.on_disc = volumeIndex.ToString(CultureInfo.InvariantCulture);
 
-                ingestionTrack.p_line_text = asset.PName;
+                ingestionTrack.p_line_text = asset.PName.Typo();
 
                 ingestionTrack.p_line_year = asset.PYear.ToString();
 
@@ -598,13 +599,13 @@ namespace BabelMeta.Modules.Export
                 {
                     ingestionTrack.primary_artist = new primary_artist
                     {
-                        name = (primaryArtist.FirstName[CatalogContext.Instance.DefaultLang.ShortName] + " " + primaryArtist.LastName[CatalogContext.Instance.DefaultLang.ShortName]).Trim(),
+                        name = (primaryArtist.FirstName[CatalogContext.Instance.DefaultLang.ShortName].Typo() + " " + primaryArtist.LastName[CatalogContext.Instance.DefaultLang.ShortName].Typo()).Trim(),
                     };
                 }
 
                 // TODO asset.publishers
 
-                ingestionTrack.recording_location = asset.RecordingLocation;
+                ingestionTrack.recording_location = asset.RecordingLocation.Typo();
 
                 if (asset.RecordingYear != null)
                 {
@@ -646,7 +647,7 @@ namespace BabelMeta.Modules.Export
                         && parentWork.Title.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName)
                     )
                 {
-                    ingestionTrack.work = parentWork.Title[CatalogContext.Instance.DefaultLang.ShortName];
+                    ingestionTrack.work = parentWork.Title[CatalogContext.Instance.DefaultLang.ShortName].Typo();
                 }
 
                 // Add asset
@@ -657,11 +658,17 @@ namespace BabelMeta.Modules.Export
 
         public void Notify(String message)
         {
-            if (_mainFormViewModel != null && !String.IsNullOrEmpty(message))
+            if (_mainFormViewModel == null || _mainFormViewModel.MainFormDispatcher == null || String.IsNullOrEmpty(message))
             {
-                // TODO In case this method is not executed in the UI thread, consider to implement it with a Dispatcher.
-                _mainFormViewModel.Notification = message;
+                Debug.Write("FugaXmlCatalogWriter.Notify, wrong view model or empty message");
+                return;
             }
+            var methodInvoker = new MethodInvoker(() =>
+            {
+                _mainFormViewModel.Notification = message;
+            });
+
+            _mainFormViewModel.MainFormDispatcher.Invoke(methodInvoker);
         }
 
         /// <summary>

@@ -34,6 +34,7 @@ namespace BabelMeta
     /// </summary>
     public class MainFormViewModel : INotifyPropertyChanged
     {
+        #region ProgressBars
         private int _inputProgressBarMax = 100;
 
         /// <summary>
@@ -120,9 +121,11 @@ namespace BabelMeta
                 RaisePropertyChanged("OutputProgressBarValue");
             }
         }
+        #endregion
 
         private bool _checkedPictoVisibility = false;
 
+        # region Pictos
         public bool CheckedPictoVisibility 
         {
             get { return _checkedPictoVisibility; } 
@@ -152,7 +155,9 @@ namespace BabelMeta
                 RaisePropertyChanged("WarningPictoVisibility");
             }
         }
+        #endregion
 
+        #region Filters
         private bool _filterArtistChecked = false;
 
         /// <summary>
@@ -190,6 +195,15 @@ namespace BabelMeta
                 RaisePropertyChanged("FilterWorkChecked");
             }
         }
+        #endregion
+
+        #region Typography
+        public bool CurlySimpleQuotesActive { get; set; }
+
+        public bool CurlyDoubleQuotesActive { get; set; }
+
+        public bool DoubleSpacesRemovalActive { get; set; }
+        #endregion
 
         private String _notification = String.Empty;
 

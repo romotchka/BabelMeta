@@ -58,6 +58,8 @@ namespace BabelMeta
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.templatedWorkbookToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.catalogWizardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadSessionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveSessionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -80,14 +82,13 @@ namespace BabelMeta
             this.ReferentialIntegrityCheckBox = new System.Windows.Forms.CheckBox();
             this.InputFormat = new System.Windows.Forms.ListBox();
             this.OutputGroupBox = new System.Windows.Forms.GroupBox();
+            this.DoubleSpacesCheckBox = new System.Windows.Forms.CheckBox();
             this.OutputProgressBar = new System.Windows.Forms.ProgressBar();
             this.InsertFormat = new System.Windows.Forms.ListBox();
-            this.CurlyDoubleQuoteCheckBox = new System.Windows.Forms.CheckBox();
-            this.CurlySimpleQuoteCheckBox = new System.Windows.Forms.CheckBox();
+            this.CurlyDoubleQuotesCheckBox = new System.Windows.Forms.CheckBox();
+            this.CurlySimpleQuotesCheckBox = new System.Windows.Forms.CheckBox();
             this.NotificationZone = new System.Windows.Forms.TextBox();
             this.CompanyLogo = new System.Windows.Forms.PictureBox();
-            this.templatedWorkbookToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.catalogWizardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.InputGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CheckedPicto)).BeginInit();
@@ -125,28 +126,42 @@ namespace BabelMeta
             this.templatedWorkbookToolStripMenuItem,
             this.catalogWizardToolStripMenuItem});
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+            // 
+            // templatedWorkbookToolStripMenuItem
+            // 
+            this.templatedWorkbookToolStripMenuItem.Name = "templatedWorkbookToolStripMenuItem";
+            this.templatedWorkbookToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.templatedWorkbookToolStripMenuItem.Text = "Templated Workbook";
+            this.templatedWorkbookToolStripMenuItem.Click += new System.EventHandler(this.templatedWorkbookToolStripMenuItem_Click);
+            // 
+            // catalogWizardToolStripMenuItem
+            // 
+            this.catalogWizardToolStripMenuItem.Name = "catalogWizardToolStripMenuItem";
+            this.catalogWizardToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.catalogWizardToolStripMenuItem.Text = "Catalog Wizard";
+            this.catalogWizardToolStripMenuItem.Click += new System.EventHandler(this.catalogWizardToolStripMenuItem_Click);
             // 
             // loadSessionToolStripMenuItem
             // 
             this.loadSessionToolStripMenuItem.Name = "loadSessionToolStripMenuItem";
-            this.loadSessionToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.loadSessionToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
             this.loadSessionToolStripMenuItem.Text = "Load Session";
             this.loadSessionToolStripMenuItem.Click += new System.EventHandler(this.loadSessionToolStripMenuItem_Click);
             // 
             // saveSessionToolStripMenuItem
             // 
             this.saveSessionToolStripMenuItem.Name = "saveSessionToolStripMenuItem";
-            this.saveSessionToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveSessionToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
             this.saveSessionToolStripMenuItem.Text = "Save Session";
             this.saveSessionToolStripMenuItem.Click += new System.EventHandler(this.saveSessionToolStripMenuItem_Click);
             // 
             // quitToolStripMenuItem
             // 
             this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
-            this.quitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.quitToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
             this.quitToolStripMenuItem.Text = "Quit";
             this.quitToolStripMenuItem.Click += new System.EventHandler(this.quitToolStripMenuItem_Click);
             // 
@@ -179,21 +194,21 @@ namespace BabelMeta
             // ddexToolStripMenuItem
             // 
             this.ddexToolStripMenuItem.Name = "ddexToolStripMenuItem";
-            this.ddexToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.ddexToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
             this.ddexToolStripMenuItem.Text = "Ddex";
             this.ddexToolStripMenuItem.Click += new System.EventHandler(this.ddexToolStripMenuItem_Click);
             // 
             // fugaToolStripMenuItem
             // 
             this.fugaToolStripMenuItem.Name = "fugaToolStripMenuItem";
-            this.fugaToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.fugaToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
             this.fugaToolStripMenuItem.Text = "Fuga";
             this.fugaToolStripMenuItem.Click += new System.EventHandler(this.fugaToolStripMenuItem_Click);
             // 
             // rightsUpToolStripMenuItem
             // 
             this.rightsUpToolStripMenuItem.Name = "rightsUpToolStripMenuItem";
-            this.rightsUpToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.rightsUpToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
             this.rightsUpToolStripMenuItem.Text = "RightsUp";
             this.rightsUpToolStripMenuItem.Click += new System.EventHandler(this.rightsUpToolStripMenuItem_Click);
             // 
@@ -209,13 +224,13 @@ namespace BabelMeta
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
             this.aboutToolStripMenuItem.Text = "About";
             // 
             // InputGroupBox
@@ -325,20 +340,34 @@ namespace BabelMeta
             // OutputGroupBox
             // 
             this.OutputGroupBox.AutoSize = true;
+            this.OutputGroupBox.Controls.Add(this.DoubleSpacesCheckBox);
             this.OutputGroupBox.Controls.Add(this.OutputProgressBar);
             this.OutputGroupBox.Controls.Add(this.InsertFormat);
-            this.OutputGroupBox.Controls.Add(this.CurlyDoubleQuoteCheckBox);
-            this.OutputGroupBox.Controls.Add(this.CurlySimpleQuoteCheckBox);
+            this.OutputGroupBox.Controls.Add(this.CurlyDoubleQuotesCheckBox);
+            this.OutputGroupBox.Controls.Add(this.CurlySimpleQuotesCheckBox);
             this.OutputGroupBox.Location = new System.Drawing.Point(12, 174);
             this.OutputGroupBox.Name = "OutputGroupBox";
-            this.OutputGroupBox.Size = new System.Drawing.Size(430, 95);
+            this.OutputGroupBox.Size = new System.Drawing.Size(430, 128);
             this.OutputGroupBox.TabIndex = 2;
             this.OutputGroupBox.TabStop = false;
             this.OutputGroupBox.Text = "Output Options";
             // 
+            // DoubleSpacesCheckBox
+            // 
+            this.DoubleSpacesCheckBox.AutoSize = true;
+            this.DoubleSpacesCheckBox.Checked = true;
+            this.DoubleSpacesCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.DoubleSpacesCheckBox.Location = new System.Drawing.Point(248, 67);
+            this.DoubleSpacesCheckBox.Name = "DoubleSpacesCheckBox";
+            this.DoubleSpacesCheckBox.Size = new System.Drawing.Size(175, 17);
+            this.DoubleSpacesCheckBox.TabIndex = 4;
+            this.DoubleSpacesCheckBox.Text = "Enforce double spaces removal";
+            this.DoubleSpacesCheckBox.UseVisualStyleBackColor = true;
+            this.DoubleSpacesCheckBox.CheckedChanged += new System.EventHandler(this.DoubleSpacesCheckBox_CheckedChanged);
+            // 
             // OutputProgressBar
             // 
-            this.OutputProgressBar.Location = new System.Drawing.Point(6, 66);
+            this.OutputProgressBar.Location = new System.Drawing.Point(6, 99);
             this.OutputProgressBar.Name = "OutputProgressBar";
             this.OutputProgressBar.Size = new System.Drawing.Size(360, 10);
             this.OutputProgressBar.Step = 1;
@@ -356,29 +385,35 @@ namespace BabelMeta
             this.InsertFormat.Size = new System.Drawing.Size(209, 17);
             this.InsertFormat.TabIndex = 2;
             // 
-            // CurlyDoubleQuoteCheckBox
+            // CurlyDoubleQuotesCheckBox
             // 
-            this.CurlyDoubleQuoteCheckBox.AutoSize = true;
-            this.CurlyDoubleQuoteCheckBox.Location = new System.Drawing.Point(248, 43);
-            this.CurlyDoubleQuoteCheckBox.Name = "CurlyDoubleQuoteCheckBox";
-            this.CurlyDoubleQuoteCheckBox.Size = new System.Drawing.Size(158, 17);
-            this.CurlyDoubleQuoteCheckBox.TabIndex = 1;
-            this.CurlyDoubleQuoteCheckBox.Text = "Enforce curly double quotes";
-            this.CurlyDoubleQuoteCheckBox.UseVisualStyleBackColor = true;
+            this.CurlyDoubleQuotesCheckBox.AutoSize = true;
+            this.CurlyDoubleQuotesCheckBox.Checked = true;
+            this.CurlyDoubleQuotesCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.CurlyDoubleQuotesCheckBox.Location = new System.Drawing.Point(248, 43);
+            this.CurlyDoubleQuotesCheckBox.Name = "CurlyDoubleQuotesCheckBox";
+            this.CurlyDoubleQuotesCheckBox.Size = new System.Drawing.Size(158, 17);
+            this.CurlyDoubleQuotesCheckBox.TabIndex = 1;
+            this.CurlyDoubleQuotesCheckBox.Text = "Enforce curly double quotes";
+            this.CurlyDoubleQuotesCheckBox.UseVisualStyleBackColor = true;
+            this.CurlyDoubleQuotesCheckBox.CheckedChanged += new System.EventHandler(this.CurlyDoubleQuotesCheckBox_CheckedChanged);
             // 
-            // CurlySimpleQuoteCheckBox
+            // CurlySimpleQuotesCheckBox
             // 
-            this.CurlySimpleQuoteCheckBox.AutoSize = true;
-            this.CurlySimpleQuoteCheckBox.Location = new System.Drawing.Point(248, 20);
-            this.CurlySimpleQuoteCheckBox.Name = "CurlySimpleQuoteCheckBox";
-            this.CurlySimpleQuoteCheckBox.Size = new System.Drawing.Size(155, 17);
-            this.CurlySimpleQuoteCheckBox.TabIndex = 0;
-            this.CurlySimpleQuoteCheckBox.Text = "Enforce curly simple quotes";
-            this.CurlySimpleQuoteCheckBox.UseVisualStyleBackColor = true;
+            this.CurlySimpleQuotesCheckBox.AutoSize = true;
+            this.CurlySimpleQuotesCheckBox.Checked = true;
+            this.CurlySimpleQuotesCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.CurlySimpleQuotesCheckBox.Location = new System.Drawing.Point(248, 20);
+            this.CurlySimpleQuotesCheckBox.Name = "CurlySimpleQuotesCheckBox";
+            this.CurlySimpleQuotesCheckBox.Size = new System.Drawing.Size(155, 17);
+            this.CurlySimpleQuotesCheckBox.TabIndex = 0;
+            this.CurlySimpleQuotesCheckBox.Text = "Enforce curly simple quotes";
+            this.CurlySimpleQuotesCheckBox.UseVisualStyleBackColor = true;
+            this.CurlySimpleQuotesCheckBox.CheckedChanged += new System.EventHandler(this.CurlySimpleQuotesCheckBox_CheckedChanged);
             // 
             // NotificationZone
             // 
-            this.NotificationZone.Location = new System.Drawing.Point(12, 280);
+            this.NotificationZone.Location = new System.Drawing.Point(12, 298);
             this.NotificationZone.Multiline = true;
             this.NotificationZone.Name = "NotificationZone";
             this.NotificationZone.Size = new System.Drawing.Size(360, 64);
@@ -387,26 +422,12 @@ namespace BabelMeta
             // CompanyLogo
             // 
             this.CompanyLogo.Image = ((System.Drawing.Image)(resources.GetObject("CompanyLogo.Image")));
-            this.CompanyLogo.Location = new System.Drawing.Point(378, 280);
+            this.CompanyLogo.Location = new System.Drawing.Point(378, 298);
             this.CompanyLogo.Name = "CompanyLogo";
             this.CompanyLogo.Size = new System.Drawing.Size(64, 64);
             this.CompanyLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.CompanyLogo.TabIndex = 4;
             this.CompanyLogo.TabStop = false;
-            // 
-            // templatedWorkbookToolStripMenuItem
-            // 
-            this.templatedWorkbookToolStripMenuItem.Name = "templatedWorkbookToolStripMenuItem";
-            this.templatedWorkbookToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
-            this.templatedWorkbookToolStripMenuItem.Text = "Templated Workbook";
-            this.templatedWorkbookToolStripMenuItem.Click += new System.EventHandler(this.templatedWorkbookToolStripMenuItem_Click);
-            // 
-            // catalogWizardToolStripMenuItem
-            // 
-            this.catalogWizardToolStripMenuItem.Name = "catalogWizardToolStripMenuItem";
-            this.catalogWizardToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
-            this.catalogWizardToolStripMenuItem.Text = "Catalog Wizard";
-            this.catalogWizardToolStripMenuItem.Click += new System.EventHandler(this.catalogWizardToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -450,13 +471,11 @@ namespace BabelMeta
         private System.Windows.Forms.GroupBox OutputGroupBox;
         private System.Windows.Forms.CheckBox FilterArtistCheckBox;
         private System.Windows.Forms.CheckBox FilterWorkCheckBox;
-        private System.Windows.Forms.CheckBox CurlySimpleQuoteCheckBox;
         private System.Windows.Forms.PictureBox CheckedPicto;
         private System.Windows.Forms.PictureBox WarningPicto;
         private System.Windows.Forms.ProgressBar InputProgressBar;
         private System.Windows.Forms.ProgressBar OutputProgressBar;
         private System.Windows.Forms.ListBox InsertFormat;
-        private System.Windows.Forms.CheckBox CurlyDoubleQuoteCheckBox;
         private System.Windows.Forms.TextBox NotificationZone;
         private System.Windows.Forms.PictureBox CompanyLogo;
         private System.Windows.Forms.ToolStripMenuItem loadSessionToolStripMenuItem;
@@ -469,6 +488,9 @@ namespace BabelMeta
         private System.Windows.Forms.ToolStripMenuItem rightsUpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem templatedWorkbookToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem catalogWizardToolStripMenuItem;
+        private System.Windows.Forms.CheckBox CurlyDoubleQuotesCheckBox;
+        private System.Windows.Forms.CheckBox CurlySimpleQuotesCheckBox;
+        private System.Windows.Forms.CheckBox DoubleSpacesCheckBox;
     }
 }
 
