@@ -180,6 +180,7 @@ namespace BabelMeta.Modules.Export
                     Notify(String.Format("Album [{0}]: Ean is empty.", album.CatalogReference));
                     continue;
                 }
+
                 var subfolder = rootFolder + album.Ean;
                 if (!Directory.Exists(subfolder))
                 {
@@ -203,6 +204,9 @@ namespace BabelMeta.Modules.Export
                 tw.Write(i.Serialize().WithFugaXmlHeader());
                 tw.Close();
 
+                // Generate the empty '.complete' file as requested
+                var complete = new StreamWriter(subfolder + album.Ean + ".complete", false, Encoding.ASCII); // ASCII encoding is to ensure strict 0Kb on disk
+                complete.Close();
             }
 
             return ReturnCode.Ok;
