@@ -23,23 +23,15 @@
  *  THE SOFTWARE. 
  */
 
+using System;
+
 namespace BabelMeta.AppConfig
 {
-    /// <summary>
-    /// ReturnCodes qualifies the output codes returned by functions wherever required in the solution.
-    /// Please aim at keeping the running naming convention.
-    /// </summary>
-    public enum ReturnCode
+    public static class BabelMetaConfig
     {
-        Ok,
+        public const int RecordingYearLowerBound = 1900;
+        public const int RecordingYearUpperBound = 2100;
 
-        ModulesImportDefaultParseEmptyStream,
-        ModulesImportDefaultParseUnknownFormat,
-        ModulesImportDefaultParseInvalidWorkbook,
-
-        ModulesExportCatalogContextNotInitialized,
-
-        ModulesExportFugaXmlGenerateNullFolderName,
-
+        public const String AppVer = "0.1.0";
     }
 }
