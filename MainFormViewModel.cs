@@ -123,9 +123,9 @@ namespace BabelMeta
         }
         #endregion
 
+        # region Pictos
         private bool _checkedPictoVisibility = false;
 
-        # region Pictos
         public bool CheckedPictoVisibility 
         {
             get { return _checkedPictoVisibility; } 
@@ -197,6 +197,21 @@ namespace BabelMeta
         }
         #endregion
 
+        #region Database
+        /// <summary>
+        /// Supported database engine (MySql, Oracle, etc.) currently selected. 
+        /// </summary>
+        public String DbEngineType { get; set; }
+
+        public String DbServerName { get; set; }
+
+        public String DbDatabaseName { get; set; }
+
+        public String DbDatabaseUser { get; set; }
+
+        public String DbDatabasePassword { get; set; }
+        #endregion
+
         #region Typography
         public bool CurlySimpleQuotesActive { get; set; }
 
@@ -205,6 +220,7 @@ namespace BabelMeta
         public bool DoubleSpacesRemovalActive { get; set; }
         #endregion
 
+        #region Notification
         private String _notification = String.Empty;
 
         /// <summary>
@@ -221,6 +237,7 @@ namespace BabelMeta
         }
 
         public Dispatcher MainFormDispatcher { get; set; }
+        #endregion
 
         #region PropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;

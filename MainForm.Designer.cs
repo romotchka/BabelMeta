@@ -89,12 +89,24 @@ namespace BabelMeta
             this.CurlySimpleQuotesCheckBox = new System.Windows.Forms.CheckBox();
             this.NotificationZone = new System.Windows.Forms.TextBox();
             this.CompanyLogo = new System.Windows.Forms.PictureBox();
+            this.DbGroupBox = new System.Windows.Forms.GroupBox();
+            this.DbDatabasePassword = new System.Windows.Forms.MaskedTextBox();
+            this.DbDatabasePasswordLabel = new System.Windows.Forms.Label();
+            this.DbDatabaseUser = new System.Windows.Forms.TextBox();
+            this.DbDatabaseUserLabel = new System.Windows.Forms.Label();
+            this.DbDatabaseName = new System.Windows.Forms.TextBox();
+            this.DbDatabaseNameLabel = new System.Windows.Forms.Label();
+            this.DbServerNameLabel = new System.Windows.Forms.Label();
+            this.DbEngineTypeLabel = new System.Windows.Forms.Label();
+            this.DbServerName = new System.Windows.Forms.TextBox();
+            this.DbEngineType = new System.Windows.Forms.ListBox();
             this.menuStrip1.SuspendLayout();
             this.InputGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CheckedPicto)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.WarningPicto)).BeginInit();
             this.OutputGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CompanyLogo)).BeginInit();
+            this.DbGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -105,7 +117,7 @@ namespace BabelMeta
             this.toolStripMenuItem2});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(479, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(798, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -429,12 +441,117 @@ namespace BabelMeta
             this.CompanyLogo.TabIndex = 4;
             this.CompanyLogo.TabStop = false;
             // 
+            // DbGroupBox
+            // 
+            this.DbGroupBox.Controls.Add(this.DbDatabasePassword);
+            this.DbGroupBox.Controls.Add(this.DbDatabasePasswordLabel);
+            this.DbGroupBox.Controls.Add(this.DbDatabaseUser);
+            this.DbGroupBox.Controls.Add(this.DbDatabaseUserLabel);
+            this.DbGroupBox.Controls.Add(this.DbDatabaseName);
+            this.DbGroupBox.Controls.Add(this.DbDatabaseNameLabel);
+            this.DbGroupBox.Controls.Add(this.DbServerNameLabel);
+            this.DbGroupBox.Controls.Add(this.DbEngineTypeLabel);
+            this.DbGroupBox.Controls.Add(this.DbServerName);
+            this.DbGroupBox.Controls.Add(this.DbEngineType);
+            this.DbGroupBox.Location = new System.Drawing.Point(448, 42);
+            this.DbGroupBox.Name = "DbGroupBox";
+            this.DbGroupBox.Size = new System.Drawing.Size(200, 241);
+            this.DbGroupBox.TabIndex = 5;
+            this.DbGroupBox.TabStop = false;
+            this.DbGroupBox.Text = "Database Options";
+            this.DbGroupBox.Enter += new System.EventHandler(this.groupBox1_Enter);
+            // 
+            // DbDatabasePassword
+            // 
+            this.DbDatabasePassword.Location = new System.Drawing.Point(6, 208);
+            this.DbDatabasePassword.Name = "DbDatabasePassword";
+            this.DbDatabasePassword.Size = new System.Drawing.Size(176, 20);
+            this.DbDatabasePassword.TabIndex = 9;
+            // 
+            // DbDatabasePasswordLabel
+            // 
+            this.DbDatabasePasswordLabel.AutoSize = true;
+            this.DbDatabasePasswordLabel.Location = new System.Drawing.Point(5, 193);
+            this.DbDatabasePasswordLabel.Name = "DbDatabasePasswordLabel";
+            this.DbDatabasePasswordLabel.Size = new System.Drawing.Size(53, 13);
+            this.DbDatabasePasswordLabel.TabIndex = 8;
+            this.DbDatabasePasswordLabel.Text = "Password";
+            // 
+            // DbDatabaseUser
+            // 
+            this.DbDatabaseUser.Location = new System.Drawing.Point(6, 167);
+            this.DbDatabaseUser.Name = "DbDatabaseUser";
+            this.DbDatabaseUser.Size = new System.Drawing.Size(176, 20);
+            this.DbDatabaseUser.TabIndex = 7;
+            // 
+            // DbDatabaseUserLabel
+            // 
+            this.DbDatabaseUserLabel.AutoSize = true;
+            this.DbDatabaseUserLabel.Location = new System.Drawing.Point(3, 152);
+            this.DbDatabaseUserLabel.Name = "DbDatabaseUserLabel";
+            this.DbDatabaseUserLabel.Size = new System.Drawing.Size(58, 13);
+            this.DbDatabaseUserLabel.TabIndex = 6;
+            this.DbDatabaseUserLabel.Text = "User name";
+            // 
+            // DbDatabaseName
+            // 
+            this.DbDatabaseName.Location = new System.Drawing.Point(6, 117);
+            this.DbDatabaseName.Name = "DbDatabaseName";
+            this.DbDatabaseName.Size = new System.Drawing.Size(176, 20);
+            this.DbDatabaseName.TabIndex = 5;
+            // 
+            // DbDatabaseNameLabel
+            // 
+            this.DbDatabaseNameLabel.AutoSize = true;
+            this.DbDatabaseNameLabel.Location = new System.Drawing.Point(5, 102);
+            this.DbDatabaseNameLabel.Name = "DbDatabaseNameLabel";
+            this.DbDatabaseNameLabel.Size = new System.Drawing.Size(82, 13);
+            this.DbDatabaseNameLabel.TabIndex = 4;
+            this.DbDatabaseNameLabel.Text = "Database name";
+            // 
+            // DbServerNameLabel
+            // 
+            this.DbServerNameLabel.AutoSize = true;
+            this.DbServerNameLabel.Location = new System.Drawing.Point(6, 59);
+            this.DbServerNameLabel.Name = "DbServerNameLabel";
+            this.DbServerNameLabel.Size = new System.Drawing.Size(67, 13);
+            this.DbServerNameLabel.TabIndex = 3;
+            this.DbServerNameLabel.Text = "Server name";
+            // 
+            // DbEngineTypeLabel
+            // 
+            this.DbEngineTypeLabel.AutoSize = true;
+            this.DbEngineTypeLabel.Location = new System.Drawing.Point(6, 19);
+            this.DbEngineTypeLabel.Name = "DbEngineTypeLabel";
+            this.DbEngineTypeLabel.Size = new System.Drawing.Size(63, 13);
+            this.DbEngineTypeLabel.TabIndex = 2;
+            this.DbEngineTypeLabel.Text = "Engine type";
+            // 
+            // DbServerName
+            // 
+            this.DbServerName.Location = new System.Drawing.Point(6, 74);
+            this.DbServerName.Name = "DbServerName";
+            this.DbServerName.Size = new System.Drawing.Size(176, 20);
+            this.DbServerName.TabIndex = 1;
+            // 
+            // DbEngineType
+            // 
+            this.DbEngineType.FormattingEnabled = true;
+            this.DbEngineType.Items.AddRange(new object[] {
+            "MySql"});
+            this.DbEngineType.Location = new System.Drawing.Point(6, 35);
+            this.DbEngineType.Name = "DbEngineType";
+            this.DbEngineType.Size = new System.Drawing.Size(176, 17);
+            this.DbEngineType.TabIndex = 0;
+            this.DbEngineType.SelectedIndexChanged += new System.EventHandler(this.DbEngineType_SelectedIndexChanged);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(479, 369);
+            this.ClientSize = new System.Drawing.Size(798, 369);
+            this.Controls.Add(this.DbGroupBox);
             this.Controls.Add(this.CompanyLogo);
             this.Controls.Add(this.NotificationZone);
             this.Controls.Add(this.OutputGroupBox);
@@ -452,22 +569,28 @@ namespace BabelMeta
             this.OutputGroupBox.ResumeLayout(false);
             this.OutputGroupBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CompanyLogo)).EndInit();
+            this.DbGroupBox.ResumeLayout(false);
+            this.DbGroupBox.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         private System.Windows.Forms.MenuStrip menuStrip1;
+
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem quitToolStripMenuItem;
+        
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        
         private System.Windows.Forms.GroupBox InputGroupBox;
         private System.Windows.Forms.CheckBox DuplicatesCheckBox;
         private System.Windows.Forms.CheckBox ReferentialIntegrityCheckBox;
         private System.Windows.Forms.ListBox InputFormat;
+        
         private System.Windows.Forms.GroupBox OutputGroupBox;
         private System.Windows.Forms.CheckBox FilterArtistCheckBox;
         private System.Windows.Forms.CheckBox FilterWorkCheckBox;
@@ -478,6 +601,7 @@ namespace BabelMeta
         private System.Windows.Forms.ListBox InsertFormat;
         private System.Windows.Forms.TextBox NotificationZone;
         private System.Windows.Forms.PictureBox CompanyLogo;
+
         private System.Windows.Forms.ToolStripMenuItem loadSessionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveSessionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem actionToolStripMenuItem;
@@ -488,9 +612,22 @@ namespace BabelMeta
         private System.Windows.Forms.ToolStripMenuItem rightsUpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem templatedWorkbookToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem catalogWizardToolStripMenuItem;
+
         private System.Windows.Forms.CheckBox CurlyDoubleQuotesCheckBox;
         private System.Windows.Forms.CheckBox CurlySimpleQuotesCheckBox;
         private System.Windows.Forms.CheckBox DoubleSpacesCheckBox;
+
+        private System.Windows.Forms.GroupBox DbGroupBox;
+        private System.Windows.Forms.Label DbEngineTypeLabel;
+        private System.Windows.Forms.ListBox DbEngineType;
+        private System.Windows.Forms.Label DbServerNameLabel;
+        private System.Windows.Forms.TextBox DbServerName;
+        private System.Windows.Forms.Label DbDatabaseNameLabel;
+        private System.Windows.Forms.TextBox DbDatabaseName;
+        private System.Windows.Forms.Label DbDatabaseUserLabel;
+        private System.Windows.Forms.TextBox DbDatabaseUser;
+        private System.Windows.Forms.Label DbDatabasePasswordLabel;
+        private System.Windows.Forms.MaskedTextBox DbDatabasePassword;
     }
 }
 

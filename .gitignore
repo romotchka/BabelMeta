@@ -4,6 +4,7 @@ bin/
 *.user
 *.db
 *.exe
+*.dll
 Backup/
 UpgradeLog.htm
 BuildOutput/

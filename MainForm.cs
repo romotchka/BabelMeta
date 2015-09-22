@@ -523,5 +523,15 @@ namespace BabelMeta
                 _viewModel.DoubleSpacesRemovalActive = DoubleSpacesCheckBox.Checked;
             }
         }
+
+        private void groupBox1_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void DbEngineType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
