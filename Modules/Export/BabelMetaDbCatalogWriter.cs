@@ -28,7 +28,7 @@ using System;
 
 namespace BabelMeta.Modules.Export
 {
-    public class BabelMetaMySqlCatalogWriter : ICatalogWriter
+    public class BabelMetaDbCatalogWriter : ICatalogWriter
     {
         public ReturnCode Generate(object context, MainFormViewModel viewModel = null)
         {

@@ -39,7 +39,7 @@ namespace BabelMeta.Model
             Name = String.Empty;
         }
 
-        public Quality(SerializationInfo info, StreamingContext ctxt)
+        public Quality(SerializationInfo info, StreamingContext context)
         {
             Name = (String)info.GetValue("BabelMeta.Model.Quality.Name", typeof(String));
         }

@@ -45,20 +45,24 @@ namespace BabelMeta.Model
         {
             get 
             {
-                if (_instance == null)
+                if (_instance != null)
                 {
-                    _instance = new CatalogContext();
-
-                    _instance.Settings = new CatalogSettings();
-                    _instance.Langs = new List<Lang>();
-                    _instance.Roles = new List<Role>();
-                    _instance.Qualities = new List<Quality>();
-                    _instance.Tags = new List<Tag>();
-                    _instance.Artists = new List<Artist>();
-                    _instance.Works = new List<Work>();
-                    _instance.Assets = new List<Asset>();
-                    _instance.Albums = new List<Album>();
+                    return _instance;
                 }
+
+                _instance = new CatalogContext
+                {
+                    Settings = new CatalogSettings(),
+                    Langs = new List<Lang>(),
+                    Roles = new List<Role>(),
+                    Qualities = new List<Quality>(),
+                    Tags = new List<Tag>(),
+                    Artists = new List<Artist>(),
+                    Works = new List<Work>(),
+                    Assets = new List<Asset>(),
+                    Albums = new List<Album>(),
+                };
+
                 return _instance;
             }
         }

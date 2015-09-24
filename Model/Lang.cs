@@ -41,7 +41,7 @@ namespace BabelMeta.Model
             IsDefault = false;
         }
 
-        public Lang(SerializationInfo info, StreamingContext ctxt)
+        public Lang(SerializationInfo info, StreamingContext context)
         {
             LongName = (String)info.GetValue("BabelMeta.Model.Lang.LongName", typeof(String));
             ShortName = (String)info.GetValue("BabelMeta.Model.Lang.ShortName", typeof(String));

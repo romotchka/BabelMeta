@@ -44,7 +44,7 @@ namespace BabelMeta.Model
             LastName = null;
         }
 
-        public Artist(SerializationInfo info, StreamingContext ctxt)
+        public Artist(SerializationInfo info, StreamingContext context)
         {
             Id = (int)info.GetValue("BabelMeta.Model.Artist.Id", typeof(int));
             Birth = (short?)info.GetValue("BabelMeta.Model.Artist.Birth", typeof(short?));

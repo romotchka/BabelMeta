@@ -171,7 +171,7 @@ namespace BabelMeta.Modules.Control
                             work = CatalogContext.Instance.Works.FirstOrDefault(w =>
                                 w.Contributors.Values.ToList().Exists(r =>
                                     !CatalogContext.Instance.Roles.Exists(e =>
-                                        String.Compare(e.Name, r.Name, StringComparison.Ordinal) == 0
+                                        String.Compare(e.Name, r, StringComparison.Ordinal) == 0
                                     )
                                 )
                             )
@@ -307,7 +307,7 @@ namespace BabelMeta.Modules.Control
                                 i.Contributors.Values.ToList().Exists(rq =>
                                         rq.Keys.ToList().Exists(r =>
                                             !CatalogContext.Instance.Roles.Exists(e =>
-                                                String.Compare(e.Name, r.Name, StringComparison.Ordinal) == 0
+                                                String.Compare(e.Name, r, StringComparison.Ordinal) == 0
                                         )
                                     )
                                 )
@@ -338,7 +338,7 @@ namespace BabelMeta.Modules.Control
                                 i.Contributors.Values.ToList().Exists(rq =>
                                         rq.Values.ToList().Exists(q =>
                                             !CatalogContext.Instance.Qualities.Exists(e =>
-                                                String.Compare(e.Name, q.Name, StringComparison.Ordinal) == 0
+                                                String.Compare(e.Name, q, StringComparison.Ordinal) == 0
                                         )
                                     )
                                 )

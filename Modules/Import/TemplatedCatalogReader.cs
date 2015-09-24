@@ -1038,27 +1038,15 @@ namespace BabelMeta.Modules.Import
                         Name = CellContentWizard(cells, _worksheetColumns[RoleWorksheetName]["role_name"]).ToLower(),
                     };
 
-                    // Attempt to retrieve a qualified name (standardized)
-                    switch (role.Name)
-                    {
-                        case "arranger": role.Reference = Role.QualifiedName.Arranger; break;
-                        case "composer": role.Reference = Role.QualifiedName.Composer; break;
-                        case "conductor": role.Reference = Role.QualifiedName.Conductor; break;
-                        case "engineer": role.Reference = Role.QualifiedName.Engineer; break;
-                        case "ensemble": role.Reference = Role.QualifiedName.Ensemble; break;
-                        case "performer": role.Reference = Role.QualifiedName.Performer; break;
-                    }
-
-                    if (role.Reference != null)
-                    {
-                        CatalogContext.Instance.Roles.Add(role);
-                    }
+                    CatalogContext.Instance.Roles.Add(role);
                 }
 
-                if (_mainFormViewModel != null)
+                if (_mainFormViewModel == null)
                 {
-                    _mainFormViewModel.InputProgressBarValue++;
+                    continue;
                 }
+
+                _mainFormViewModel.InputProgressBarValue++;
             }
         }
 
@@ -1220,7 +1208,7 @@ namespace BabelMeta.Modules.Import
                         {
                             {CatalogContext.Instance.DefaultLang.ShortName, CellContentWizard(cells, _worksheetColumns[WorkWorksheetName]["movement_title_" + CatalogContext.Instance.DefaultLang.ShortName])},  
                         },
-                        Contributors = new Dictionary<int, Role>(),
+                        Contributors = new Dictionary<int, String>(),
                     };
 
                     if (work.Id <= 0)
@@ -1259,7 +1247,7 @@ namespace BabelMeta.Modules.Import
 
                         if (idContributor > 0 && roleContributor != null)
                         {
-                            work.Contributors[idContributor] = roleContributor;
+                            work.Contributors[idContributor] = roleContributor.Name;
                         }
                         i++;
                     }
@@ -1310,7 +1298,7 @@ namespace BabelMeta.Modules.Import
                         RecordingLocation = CellContentWizard(cells, _worksheetColumns[AssetWorksheetName]["recording_location"]),
                         RecordingYear = Convert.ToInt16(CellContentWizard(cells, _worksheetColumns[AssetWorksheetName]["recording_year"], "0")),
                         AvailableSeparately = (String.Compare(CellContentWizard(cells, _worksheetColumns[AssetWorksheetName]["available_separately"]).ToLower(), "no", StringComparison.Ordinal) != 0) && CatalogContext.Instance.Settings.AvailableSeparatelyDefault,
-                        Contributors = new Dictionary<int, Dictionary<Role, Quality>>(),
+                        Contributors = new Dictionary<int, Dictionary<String, String>>(),
                     };
 
                     if (String.IsNullOrEmpty(asset.Id) || asset.Id.Length < 12 || asset.Id.Length > 15 || asset.Work <= 0)
@@ -1357,13 +1345,19 @@ namespace BabelMeta.Modules.Import
                         var qualityContributor = CatalogContext.Instance.Qualities.FirstOrDefault(c => String.Compare(c.Name, qualityContributorName, StringComparison.Ordinal) == 0);
 
                         // Contributor valid
-                        if (idContributor > 0 && roleContributor != null && qualityContributor != null)
+                        if  (
+                                idContributor > 0
+                                && roleContributor != null
+                                && !String.IsNullOrEmpty(roleContributor.Name)
+                                && qualityContributor != null
+                                && !String.IsNullOrEmpty(qualityContributor.Name)
+                            )
                         {
                             if (!asset.Contributors.ContainsKey(idContributor))
                             {
-                                asset.Contributors[idContributor] = new Dictionary<Role, Quality>();
+                                asset.Contributors[idContributor] = new Dictionary<String, String>();
                             }
-                            asset.Contributors[idContributor][roleContributor] = qualityContributor;
+                            asset.Contributors[idContributor][roleContributor.Name] = qualityContributor.Name;
                         }
                         i++;
                     }
@@ -1660,26 +1654,41 @@ namespace BabelMeta.Modules.Import
                                 {
                                     continue;
                                 }
-                                foreach (var contributor in
-                                            from contributor in asset.Contributors
-                                            from roleQuality in contributor.Value
-                                            where (
-                                                        roleQuality.Key.Reference == Role.QualifiedName.Performer
-                                                        && String.Compare(roleQuality.Value.Name.ToLower(), "primary", StringComparison.Ordinal) == 0
-                                                    )
-                                            select contributor
-                                        )
-                                {
-                                    // Found a Primary Performer occurrence!
-                                    if (artistFrequencies.ContainsKey(contributor.Key))
+                                foreach (KeyValuePair<int, Dictionary<String, String>> contributor in asset.Contributors)
+                                    foreach (KeyValuePair<String, String> roleQuality in contributor.Value)
                                     {
-                                        artistFrequencies[contributor.Key]++;
+                                        // Retrieve the parent object for that key.
+                                        var roleObject =
+                                            CatalogContext.Instance.Roles.FirstOrDefault(r => String.Compare(
+                                                r.Name, roleQuality.Key, StringComparison.Ordinal) == 0);
+                                        if (roleObject == null)
+                                        {
+                                            continue;
+                                        }
+                                        // Retrieve the parent object for that key.
+                                        var qualityObject =
+                                            CatalogContext.Instance.Qualities.FirstOrDefault(q => String.Compare(
+                                                q.Name, roleQuality.Value, StringComparison.Ordinal) == 0);
+                                        if (qualityObject == null)
+                                        {
+                                            continue;
+                                        }
+                                        if  (
+                                                roleObject.Reference != Role.QualifiedName.Performer
+                                                || String.Compare(qualityObject.Name.ToLower(), "primary", StringComparison.Ordinal) != 0
+                                            )
+                                        {
+                                            continue;
+                                        }
+                                        if (artistFrequencies.ContainsKey(contributor.Key))
+                                        {
+                                            artistFrequencies[contributor.Key]++;
+                                        }
+                                        else
+                                        {
+                                            artistFrequencies[contributor.Key] = 1;
+                                        }
                                     }
-                                    else
-                                    {
-                                        artistFrequencies[contributor.Key] = 1;
-                                    }
-                                }
                             }
                         }
                     }

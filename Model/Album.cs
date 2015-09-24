@@ -58,7 +58,7 @@ namespace BabelMeta.Model
             Redeliver = false;
         }
 
-        public Album(SerializationInfo info, StreamingContext ctxt)
+        public Album(SerializationInfo info, StreamingContext context)
         {
             Id = (int)info.GetValue("BabelMeta.Model.Album.Id", typeof(int));
             ActionTypeValue = (ActionType?)info.GetValue("BabelMeta.Model.Album.ActionTypeValue", typeof(ActionType?));

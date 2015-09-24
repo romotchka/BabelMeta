@@ -57,6 +57,10 @@
       <HintPath>packages\MySql.Data.6.9.7\lib\net45\MySql.Data.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -71,6 +75,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppConfig\BabelMetaConfig.cs" />
+    <Compile Include="Helpers\DbSerializationHelper.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -94,7 +99,7 @@
     <Compile Include="Model\Work.cs" />
     <Compile Include="Modules\Control\IIntegrityChecker.cs" />
     <Compile Include="Modules\Control\ModelIntegrityChecker.cs" />
-    <Compile Include="Modules\Export\BabelMetaMySqlCatalogWriter.cs" />
+    <Compile Include="Modules\Export\BabelMetaDbCatalogWriter.cs" />
     <Compile Include="Modules\Export\DdexCatalogWriter.cs" />
     <Compile Include="Modules\Export\FugaIngestionFileType.cs" />
     <Compile Include="Modules\Export\FugaXmlCatalogWriter.cs" />
@@ -110,6 +115,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AppConfig\ReturnCode.cs" />
+    <Compile Include="Services\DbDriver\DbDriverConfig.cs" />
+    <Compile Include="Services\DbDriver\IDbDriverService.cs" />
+    <Compile Include="Services\DbDriver\MySqlDriverService.cs" />
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -140,7 +148,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Modules\Export\BabelMetaMySql\" />
+    <Folder Include="Modules\Export\BabelMetaDb\" />
     <Folder Include="Modules\Export\Ddex\" />
     <Folder Include="Modules\Export\RightsUpJson\" />
     <Folder Include="Modules\Export\SolsticeCi\" />

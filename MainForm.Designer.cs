@@ -100,6 +100,7 @@ namespace BabelMeta
             this.DbEngineTypeLabel = new System.Windows.Forms.Label();
             this.DbServerName = new System.Windows.Forms.TextBox();
             this.DbEngineType = new System.Windows.Forms.ListBox();
+            this.DbSaveChanges = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.InputGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CheckedPicto)).BeginInit();
@@ -443,6 +444,7 @@ namespace BabelMeta
             // 
             // DbGroupBox
             // 
+            this.DbGroupBox.Controls.Add(this.DbSaveChanges);
             this.DbGroupBox.Controls.Add(this.DbDatabasePassword);
             this.DbGroupBox.Controls.Add(this.DbDatabasePasswordLabel);
             this.DbGroupBox.Controls.Add(this.DbDatabaseUser);
@@ -455,16 +457,16 @@ namespace BabelMeta
             this.DbGroupBox.Controls.Add(this.DbEngineType);
             this.DbGroupBox.Location = new System.Drawing.Point(448, 42);
             this.DbGroupBox.Name = "DbGroupBox";
-            this.DbGroupBox.Size = new System.Drawing.Size(200, 241);
+            this.DbGroupBox.Size = new System.Drawing.Size(200, 320);
             this.DbGroupBox.TabIndex = 5;
             this.DbGroupBox.TabStop = false;
             this.DbGroupBox.Text = "Database Options";
-            this.DbGroupBox.Enter += new System.EventHandler(this.groupBox1_Enter);
             // 
             // DbDatabasePassword
             // 
             this.DbDatabasePassword.Location = new System.Drawing.Point(6, 208);
             this.DbDatabasePassword.Name = "DbDatabasePassword";
+            this.DbDatabasePassword.PasswordChar = '*';
             this.DbDatabasePassword.Size = new System.Drawing.Size(176, 20);
             this.DbDatabasePassword.TabIndex = 9;
             // 
@@ -483,6 +485,7 @@ namespace BabelMeta
             this.DbDatabaseUser.Name = "DbDatabaseUser";
             this.DbDatabaseUser.Size = new System.Drawing.Size(176, 20);
             this.DbDatabaseUser.TabIndex = 7;
+            this.DbDatabaseUser.TextChanged += new System.EventHandler(this.DbDatabaseUser_TextChanged);
             // 
             // DbDatabaseUserLabel
             // 
@@ -499,6 +502,7 @@ namespace BabelMeta
             this.DbDatabaseName.Name = "DbDatabaseName";
             this.DbDatabaseName.Size = new System.Drawing.Size(176, 20);
             this.DbDatabaseName.TabIndex = 5;
+            this.DbDatabaseName.TextChanged += new System.EventHandler(this.DbDatabaseName_TextChanged);
             // 
             // DbDatabaseNameLabel
             // 
@@ -533,6 +537,7 @@ namespace BabelMeta
             this.DbServerName.Name = "DbServerName";
             this.DbServerName.Size = new System.Drawing.Size(176, 20);
             this.DbServerName.TabIndex = 1;
+            this.DbServerName.TextChanged += new System.EventHandler(this.DbServerName_TextChanged);
             // 
             // DbEngineType
             // 
@@ -544,6 +549,16 @@ namespace BabelMeta
             this.DbEngineType.Size = new System.Drawing.Size(176, 17);
             this.DbEngineType.TabIndex = 0;
             this.DbEngineType.SelectedIndexChanged += new System.EventHandler(this.DbEngineType_SelectedIndexChanged);
+            // 
+            // DbSaveChanges
+            // 
+            this.DbSaveChanges.Location = new System.Drawing.Point(7, 236);
+            this.DbSaveChanges.Name = "DbSaveChanges";
+            this.DbSaveChanges.Size = new System.Drawing.Size(175, 24);
+            this.DbSaveChanges.TabIndex = 10;
+            this.DbSaveChanges.Text = "Save changes";
+            this.DbSaveChanges.UseVisualStyleBackColor = true;
+            this.DbSaveChanges.Click += new System.EventHandler(this.DbSaveChanges_Click);
             // 
             // MainForm
             // 
@@ -628,6 +643,7 @@ namespace BabelMeta
         private System.Windows.Forms.TextBox DbDatabaseUser;
         private System.Windows.Forms.Label DbDatabasePasswordLabel;
         private System.Windows.Forms.MaskedTextBox DbDatabasePassword;
+        private System.Windows.Forms.Button DbSaveChanges;
     }
 }
 

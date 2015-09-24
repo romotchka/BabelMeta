@@ -23,35 +23,17 @@
  *  THE SOFTWARE. 
  */
 
-using System;
-using System.Runtime.Serialization;
+using System.Collections.Generic;
 
-namespace BabelMeta.Model
+namespace BabelMeta.Services.DbDriver
 {
     /// <summary>
-    /// Any re-usable String present in the metadata.
+    /// Interface defining the basic CRUD operations for a database.
     /// </summary>
-    [Serializable()]
-    public class Tag : ISerializable
+    public interface IDbDriverService
     {
-        public Tag()
-        {
-            Name = String.Empty;
-        }
+        void InsertMany<T>(IEnumerable<T> entries);
 
-        public Tag(SerializationInfo info, StreamingContext context)
-        {
-            Name = (String)info.GetValue("BabelMeta.Model.Tag.Name", typeof(String));
-        }
-
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue("BabelMeta.Model.Tag.Name", Name);
-        }
-
-        /// <summary>
-        /// Name should be unique.
-        /// </summary>
-        public String Name { get; set; }
+        IEnumerable<T> SelectAll<T>();
     }
 }

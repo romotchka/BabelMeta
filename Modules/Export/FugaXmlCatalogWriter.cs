@@ -500,9 +500,9 @@ namespace BabelMeta.Modules.Export
                         artist = CatalogContext.Instance.Artists.FirstOrDefault(a => a.Id.Equals(workContributor.Key));
                         artistsBuffer.Add(artist);
                     }
-                    var role = CatalogContext.Instance.Roles.FirstOrDefault(r => String.Compare(r.Name, workContributor.Value.Name, StringComparison.Ordinal) == 0);
-                    var cRole = (_roleConverter.ContainsKey((Role.QualifiedName)role.Reference))
-                        ? _roleConverter[(Role.QualifiedName)role.Reference]
+                    var role = CatalogContext.Instance.Roles.FirstOrDefault(r => String.Compare(r.Name, workContributor.Value, StringComparison.Ordinal) == 0);
+                    var cRole = (_roleConverter.ContainsKey(role.Reference))
+                        ? _roleConverter[role.Reference]
                         : contributorRole.ContributingArtist;
 
                     if (artist.LastName.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName))

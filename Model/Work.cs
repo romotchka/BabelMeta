@@ -48,14 +48,14 @@ namespace BabelMeta.Model
             Year = null;
         }
 
-        public Work(SerializationInfo info, StreamingContext ctxt)
+        public Work(SerializationInfo info, StreamingContext context)
         {
             Id = (int)info.GetValue("BabelMeta.Model.Work.Id", typeof(int));
             Parent = (int?)info.GetValue("BabelMeta.Model.Work.Parent", typeof(int?));
             MovementNumber = (short?)info.GetValue("BabelMeta.Model.Work.MovementNumber", typeof(short?));
             Title = (Dictionary<String, String>)info.GetValue("BabelMeta.Model.Work.Title", typeof(Dictionary<String, String>));
             MovementTitle = (Dictionary<String, String>)info.GetValue("BabelMeta.Model.Work.MovementTitle", typeof(Dictionary<String, String>));
-            Contributors = (Dictionary<int, Role>)info.GetValue("BabelMeta.Model.Work.Contributors", typeof(Dictionary<int, Role>));
+            Contributors = (Dictionary<int, String>)info.GetValue("BabelMeta.Model.Work.Contributors", typeof(Dictionary<int, String>));
             ClassicalCatalog = (String)info.GetValue("BabelMeta.Model.Work.ClassicalCatalog", typeof(String));
             Tonality = (Key?)info.GetValue("BabelMeta.Model.Work.Tonality", typeof(Key?));
             Year = (short?)info.GetValue("BabelMeta.Model.Work.Year", typeof(short?));
@@ -102,8 +102,9 @@ namespace BabelMeta.Model
 
         /// <summary>
         /// Any Contributor in the work e.g. Composer or Arranger.
+        /// The String is the Role.Name.
         /// </summary>
-        public Dictionary<int, Role> Contributors { get; set; }
+        public Dictionary<int, String> Contributors { get; set; }
 
         /// <summary>
         /// Opus number. Applicable mostly for classical works.
