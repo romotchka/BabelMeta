@@ -23,6 +23,9 @@
  *  THE SOFTWARE. 
  */
 
+using System.Linq;
+using System.Reflection;
+using BabelMeta.Helpers;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
@@ -32,6 +35,7 @@ namespace BabelMeta.Services.DbDriver
 {
     public class MySqlDriverService : IDbDriverService
     {
+        private const String _tableCreationParametersText = "ENGINE=INNODB DEFAULT CHARSET=utf8";
         private static MySqlDriverService _instance;
 
         private MySqlDriverService()
@@ -67,7 +71,6 @@ namespace BabelMeta.Services.DbDriver
                     || config.DbEngineTypeEnumValue != DbDriverConfig.DbEngineTypeEnum.MySql
                     || String.IsNullOrEmpty(config.DbServerName)
                     || String.IsNullOrEmpty(config.DbDatabaseUser)
-                    || String.IsNullOrEmpty(config.DbDatabasePassword)
                     || String.IsNullOrEmpty(config.DbDatabaseName)
                 )
             {
@@ -85,16 +88,13 @@ namespace BabelMeta.Services.DbDriver
             {
                 _connection = new MySqlConnection(connectionString);
                 _connection.Open();
-                Debug.WriteLine("MySql version: {0}", _connection.ServerVersion);
-
-                // Initialize tables
-                // TODO
-
+                Debug.WriteLine(String.Format("MySql version: {0}", _connection.ServerVersion));
+                _connection.Close();
                 IsInitialized = true;
             }
             catch (MySqlException ex)
             {
-                Debug.WriteLine("Error: {0}", ex.ToString());
+                Debug.WriteLine("Error: {0}", ex);
             }
             finally
             {
@@ -105,16 +105,163 @@ namespace BabelMeta.Services.DbDriver
             }
         }
 
-        public void InsertMany<T>(IEnumerable<T> entries)
+        private static List<PropertyInfo> TableProperties<T>()
+        {
+            var t = typeof(T);
+            return t.GetProperties()
+                .Where(p => p.GetCustomAttribute<DbField>() == null || !p.GetCustomAttribute<DbField>().Ignore)
+                .ToList();
+        }
+
+        private static String DefaultTableName<T>()
+        {
+            var t = typeof(T);
+            return t.Name.Replace(".", "").ToLowerInvariant();
+        }
+
+        public void InitializeTable<T>(String optionalExplicitTitle = "")
         {
             if (_connection == null)
             {
                 return;
             }
-            throw new NotImplementedException();
+
+            var properties = TableProperties<T>();
+            if (!(properties.Count > 0))
+            {
+                return;
+            }
+
+            try 
+            {
+                _connection.Open();
+
+                MySqlCommand cmd;
+
+                // Drop table.
+                var tableName = String.IsNullOrEmpty(optionalExplicitTitle)
+                    ? DefaultTableName<T>()
+                    : optionalExplicitTitle;
+                var dropTableCommandText = "DROP TABLE IF EXISTS " + tableName;
+                cmd = new MySqlCommand
+                {
+                    Connection = _connection, 
+                    CommandText = dropTableCommandText,
+                };
+                cmd.Prepare();
+                cmd.ExecuteNonQuery();
+
+                // Create table.
+                var createTableCommandText = "CREATE TABLE IF NOT EXISTS `" + tableName + "` (";
+                var fieldDeclarationsList = properties
+                    .Select(p => "`" + p.Name.ToLower() + "` " + p.ToMySqlType())
+                    .ToList();
+                createTableCommandText += String.Join(",", fieldDeclarationsList);
+                createTableCommandText += ") " + _tableCreationParametersText;
+                cmd = new MySqlCommand
+                {
+                    Connection = _connection,
+                    CommandText = createTableCommandText,
+                };
+                cmd.Prepare();
+                cmd.ExecuteNonQuery();
+            } 
+            catch (MySqlException ex) 
+            {
+                Debug.Write("MySqlDriverService.InitializeTable, exception " + ex);
+            } 
+            finally 
+            {
+                if (_connection != null) 
+                {
+                    _connection.Close();
+                }
+            }
         }
 
-        public IEnumerable<T> SelectAll<T>()
+        public void InsertMany<T>(List<T> entries, String optionalExplicitTitle = "")
+        {
+            if  (
+                    _connection == null 
+                    || entries == null 
+                    || !(entries.ToList().Count > 0)
+                )
+            {
+                return;
+            }
+
+            var tableName = String.IsNullOrEmpty(optionalExplicitTitle)
+                ? DefaultTableName<T>()
+                : optionalExplicitTitle;
+
+            var properties = TableProperties<T>();
+            if (!(properties.Count > 0))
+            {
+                return;
+            }
+            var joinPropertyNames = String.Join(",", properties.Select(p => "`" + p.Name.ToLower() + "`"));
+            var joinPlaceholders = String.Join(",", properties.Select(p => p.Placeholder()));
+
+            try
+            {
+                _connection.Open();
+                MySqlCommand cmd;
+
+                foreach (var entry in entries)
+                {
+                    var insertEntryText = "INSERT INTO `" + tableName + "` (";
+                    insertEntryText += joinPropertyNames;
+                    insertEntryText += ") VALUES (";
+                    insertEntryText += joinPlaceholders;
+                    insertEntryText += ")";
+
+                    cmd = new MySqlCommand();
+                    cmd.Connection = _connection;
+                    cmd.CommandText = insertEntryText;
+                    cmd.Prepare();
+
+                    // Substitute field placeholders one by one. 
+                    var cancellationToken = false;
+                    foreach (var property in properties)
+                    {
+                        var entryPropertyValue = property.GetValue(entry, null);
+                        if  (
+                                entryPropertyValue == null 
+                                && property.ToMySqlType().ToLower().Contains("not null")
+                            )
+                        {
+                            Debug.WriteLine("MySqlDriverService.InsertMany, unexpected null property value: " + property.Name);
+                            cancellationToken = true;
+                            break;
+                        }
+                        cmd.Parameters.AddWithValue(
+                            property.Placeholder(), 
+                            entryPropertyValue != null 
+                                ? entryPropertyValue.DbSerialize() 
+                                : null
+                            );
+                    }
+                    if (cancellationToken)
+                    {
+                        continue;
+                    }
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (MySqlException ex)
+            {
+                Console.WriteLine("Error: {0}", ex);
+            }
+            finally
+            {
+                if (_connection != null)
+                {
+                    _connection.Close();
+                }
+            }
+        }
+
+        public List<T> SelectAll<T>()
         {
             if (_connection == null)
             {

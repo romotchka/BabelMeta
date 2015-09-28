@@ -25,6 +25,7 @@
 
 using System;
 using System.Runtime.Serialization;
+using BabelMeta.Services.DbDriver;
 
 namespace BabelMeta.Model
 {
@@ -49,6 +50,7 @@ namespace BabelMeta.Model
             info.AddValue("BabelMeta.Model.Quality.Name", Name);
         }
 
+        [DbField(MaxSize = 128)]
         public String Name { get; set; }
     }
 }

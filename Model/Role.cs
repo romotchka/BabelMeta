@@ -26,6 +26,7 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.Serialization;
+using BabelMeta.Services.DbDriver;
 
 namespace BabelMeta.Model
 {
@@ -55,6 +56,7 @@ namespace BabelMeta.Model
 
         private String _name = String.Empty;
 
+        [DbField(MaxSize = 128)]
         public String Name 
         {
             get { return _name; }
@@ -98,6 +100,7 @@ namespace BabelMeta.Model
             }
         }
 
+        [DbField(MaxSize = 32)]
         public QualifiedName Reference { get; set; }
 
         /// <summary>

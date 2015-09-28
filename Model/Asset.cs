@@ -27,6 +27,7 @@ using BabelMeta.Model.Config;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using BabelMeta.Services.DbDriver;
 
 namespace BabelMeta.Model
 {
@@ -82,6 +83,7 @@ namespace BabelMeta.Model
             info.AddValue("BabelMeta.Model.Asset.Tier", Tier);
         }
 
+        [DbField(MaxSize = 128)]
         public String Id { get; set; }
 
         public int Work { get; set; }
@@ -93,20 +95,24 @@ namespace BabelMeta.Model
         /// </summary>
         public Dictionary<int, Dictionary<String, String>> Contributors { get; set; }
 
+        [DbField(MaxSize = 128)]
         public String CName { get; set; }
 
         public short? CYear { get; set; }
 
+        [DbField(MaxSize = 128)]
         public String PName { get; set; }
 
         public short? PYear { get; set; }
 
+        [DbField(MaxSize = 128)]
         public String RecordingLocation { get; set; }
 
         public short? RecordingYear { get; set; }
 
         public bool AvailableSeparately { get; set; }
 
+        [DbField(MaxSize = 16)]
         public CatalogTier? Tier { get; set; }
     }
 }

@@ -24,36 +24,33 @@
  */
 
 using System;
-using System.Runtime.Serialization;
-using BabelMeta.Services.DbDriver;
 
-namespace BabelMeta.Model
+namespace BabelMeta.Services.DbDriver
 {
-    /// <summary>
-    /// Any re-usable String present in the metadata.
-    /// </summary>
-    [Serializable()]
-    public class Tag : ISerializable
+    [AttributeUsage(AttributeTargets.Property)]
+    public class DbField : Attribute
     {
-        public Tag()
-        {
-            Name = String.Empty;
-        }
-
-        public Tag(SerializationInfo info, StreamingContext context)
-        {
-            Name = (String)info.GetValue("BabelMeta.Model.Tag.Name", typeof(String));
-        }
-
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue("BabelMeta.Model.Tag.Name", Name);
-        }
+        private int _maxSize = 0;
 
         /// <summary>
-        /// Name should be unique.
+        /// If MaxSize is > 0, text fields will be defined as VARCHAR(MaxSize).
+        /// If 0, text fields will be defined as TEXT.
         /// </summary>
-        [DbField(MaxSize = 128)]
-        public String Name { get; set; }
+        public int MaxSize
+        {
+            get { return _maxSize; }
+            set { _maxSize = value; }
+        }
+
+        private bool _ignore = false;
+
+        /// <summary>
+        /// If true, the field is not present in the target database.
+        /// </summary>
+        public bool Ignore
+        {
+            get { return _ignore; }
+            set { _ignore = value; }
+        }
     }
 }

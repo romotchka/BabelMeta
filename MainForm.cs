@@ -23,7 +23,6 @@
  *  THE SOFTWARE. 
  */
 
-using System.Runtime.Serialization.Formatters;
 using BabelMeta.AppConfig;
 using BabelMeta.Helpers;
 using BabelMeta.Model;
@@ -32,16 +31,18 @@ using BabelMeta.Modules;
 using BabelMeta.Modules.Control;
 using BabelMeta.Modules.Export;
 using BabelMeta.Modules.Import;
+using BabelMeta.Services.DbDriver;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
 using System.Windows.Threading;
-using Newtonsoft.Json;
 
 namespace BabelMeta
 {
@@ -557,54 +558,45 @@ namespace BabelMeta
             _viewModel.DbDatabaseName = DbDatabaseName.Text;
             _viewModel.DbDatabaseUser = DbDatabaseUser.Text;
             _viewModel.DbDatabasePassword = DbDatabasePassword.Text;
+        }
 
-            // Tests
-
-            /*
-            var serialize = JsonConvert.SerializeObject(CatalogContext.Instance.Albums[0].Tracks);
-            Notify(serialize);
-            try
+        /// <summary>
+        /// General purpose test button.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void testButton_Click(object sender, EventArgs e)
+        {
+            if (_viewModel == null)
             {
-                var deserialize = JsonConvert.DeserializeObject<Dictionary<short, Dictionary<short, String>>>(serialize);
-                if (deserialize != null) Notify("OK");
-            }
-            catch (Exception)
-            {
-                Debug.WriteLine("Exception");
-            }
-            */
-
-            
-            var serialize = JsonConvert.SerializeObject(
-                CatalogContext.Instance.Assets[30].Contributors,
-                Formatting.Indented, 
-                new JsonSerializerSettings
-                {
-                    TypeNameHandling = TypeNameHandling.Objects,
-                    PreserveReferencesHandling = PreserveReferencesHandling.All,
-
-                });
-            Notify(serialize);
-            try
-            {
-                var deserialize = JsonConvert.DeserializeObject<Dictionary<int, Dictionary<String, String>>>(
-                    serialize,
-                    new JsonSerializerSettings
-                  {
-                    TypeNameHandling = TypeNameHandling.Objects,
-            PreserveReferencesHandling = PreserveReferencesHandling.All,
-
-                  }
-                  );
-
-                if (deserialize != null) Notify("OK");
-            }
-            catch (Exception ex)
-            {
-                
-                Debug.WriteLine("Exception: " + ex);
+                return;
             }
 
+            MySqlDriverService.Instance.Initialize(new DbDriverConfig
+            {
+                DbEngineType = "mysql",
+                DbServerName = "localhost",
+                DbDatabaseName = "babelmetadev",
+                DbDatabaseUser = "root",
+                DbDatabasePassword = "",
+            });
+
+            MySqlDriverService.Instance.InitializeTable<Album>();
+            MySqlDriverService.Instance.InsertMany(CatalogContext.Instance.Albums);
+            MySqlDriverService.Instance.InitializeTable<Artist>();
+            MySqlDriverService.Instance.InsertMany(CatalogContext.Instance.Artists);
+            MySqlDriverService.Instance.InitializeTable<Asset>();
+            MySqlDriverService.Instance.InsertMany(CatalogContext.Instance.Assets);
+            MySqlDriverService.Instance.InitializeTable<Lang>();
+            MySqlDriverService.Instance.InsertMany(CatalogContext.Instance.Langs);
+            MySqlDriverService.Instance.InitializeTable<Quality>();
+            MySqlDriverService.Instance.InsertMany(CatalogContext.Instance.Qualities);
+            MySqlDriverService.Instance.InitializeTable<Role>();
+            MySqlDriverService.Instance.InsertMany(CatalogContext.Instance.Roles);
+            MySqlDriverService.Instance.InitializeTable<Tag>();
+            MySqlDriverService.Instance.InsertMany(CatalogContext.Instance.Tags);
+            MySqlDriverService.Instance.InitializeTable<Work>();
+            MySqlDriverService.Instance.InsertMany(CatalogContext.Instance.Works);
         }
     }
 }

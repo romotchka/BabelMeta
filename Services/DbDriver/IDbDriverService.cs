@@ -23,6 +23,7 @@
  *  THE SOFTWARE. 
  */
 
+using System;
 using System.Collections.Generic;
 
 namespace BabelMeta.Services.DbDriver
@@ -32,8 +33,10 @@ namespace BabelMeta.Services.DbDriver
     /// </summary>
     public interface IDbDriverService
     {
-        void InsertMany<T>(IEnumerable<T> entries);
+        void InitializeTable<T>(String optionalExplicitTitle = "");
 
-        IEnumerable<T> SelectAll<T>();
+        void InsertMany<T>(List<T> entries, String optionalExplicitTitle = "");
+
+        List<T> SelectAll<T>();
     }
 }

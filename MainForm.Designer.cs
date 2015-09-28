@@ -90,6 +90,7 @@ namespace BabelMeta
             this.NotificationZone = new System.Windows.Forms.TextBox();
             this.CompanyLogo = new System.Windows.Forms.PictureBox();
             this.DbGroupBox = new System.Windows.Forms.GroupBox();
+            this.DbSaveChanges = new System.Windows.Forms.Button();
             this.DbDatabasePassword = new System.Windows.Forms.MaskedTextBox();
             this.DbDatabasePasswordLabel = new System.Windows.Forms.Label();
             this.DbDatabaseUser = new System.Windows.Forms.TextBox();
@@ -100,7 +101,7 @@ namespace BabelMeta
             this.DbEngineTypeLabel = new System.Windows.Forms.Label();
             this.DbServerName = new System.Windows.Forms.TextBox();
             this.DbEngineType = new System.Windows.Forms.ListBox();
-            this.DbSaveChanges = new System.Windows.Forms.Button();
+            this.testButton = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.InputGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CheckedPicto)).BeginInit();
@@ -444,6 +445,7 @@ namespace BabelMeta
             // 
             // DbGroupBox
             // 
+            this.DbGroupBox.Controls.Add(this.testButton);
             this.DbGroupBox.Controls.Add(this.DbSaveChanges);
             this.DbGroupBox.Controls.Add(this.DbDatabasePassword);
             this.DbGroupBox.Controls.Add(this.DbDatabasePasswordLabel);
@@ -461,6 +463,16 @@ namespace BabelMeta
             this.DbGroupBox.TabIndex = 5;
             this.DbGroupBox.TabStop = false;
             this.DbGroupBox.Text = "Database Options";
+            // 
+            // DbSaveChanges
+            // 
+            this.DbSaveChanges.Location = new System.Drawing.Point(7, 236);
+            this.DbSaveChanges.Name = "DbSaveChanges";
+            this.DbSaveChanges.Size = new System.Drawing.Size(175, 24);
+            this.DbSaveChanges.TabIndex = 10;
+            this.DbSaveChanges.Text = "Save changes";
+            this.DbSaveChanges.UseVisualStyleBackColor = true;
+            this.DbSaveChanges.Click += new System.EventHandler(this.DbSaveChanges_Click);
             // 
             // DbDatabasePassword
             // 
@@ -550,15 +562,15 @@ namespace BabelMeta
             this.DbEngineType.TabIndex = 0;
             this.DbEngineType.SelectedIndexChanged += new System.EventHandler(this.DbEngineType_SelectedIndexChanged);
             // 
-            // DbSaveChanges
+            // testButton
             // 
-            this.DbSaveChanges.Location = new System.Drawing.Point(7, 236);
-            this.DbSaveChanges.Name = "DbSaveChanges";
-            this.DbSaveChanges.Size = new System.Drawing.Size(175, 24);
-            this.DbSaveChanges.TabIndex = 10;
-            this.DbSaveChanges.Text = "Save changes";
-            this.DbSaveChanges.UseVisualStyleBackColor = true;
-            this.DbSaveChanges.Click += new System.EventHandler(this.DbSaveChanges_Click);
+            this.testButton.Location = new System.Drawing.Point(9, 292);
+            this.testButton.Name = "testButton";
+            this.testButton.Size = new System.Drawing.Size(173, 23);
+            this.testButton.TabIndex = 11;
+            this.testButton.Text = "Test";
+            this.testButton.UseVisualStyleBackColor = true;
+            this.testButton.Click += new System.EventHandler(this.testButton_Click);
             // 
             // MainForm
             // 
@@ -644,6 +656,7 @@ namespace BabelMeta
         private System.Windows.Forms.Label DbDatabasePasswordLabel;
         private System.Windows.Forms.MaskedTextBox DbDatabasePassword;
         private System.Windows.Forms.Button DbSaveChanges;
+        private System.Windows.Forms.Button testButton;
     }
 }
 

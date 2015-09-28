@@ -26,6 +26,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using BabelMeta.Services.DbDriver;
 
 namespace BabelMeta.Model
 {
@@ -109,11 +110,13 @@ namespace BabelMeta.Model
         /// <summary>
         /// Opus number. Applicable mostly for classical works.
         /// </summary>
+        [DbField(MaxSize = 32)]
         public String ClassicalCatalog { get; set; }
 
         /// <summary>
         /// Work tonality.
         /// </summary>
+        [DbField(MaxSize = 16)]
         public Key? Tonality { get; set; }
 
         /// <summary>

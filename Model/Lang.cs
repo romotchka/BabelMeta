@@ -25,6 +25,7 @@
 
 using System;
 using System.Runtime.Serialization;
+using BabelMeta.Services.DbDriver;
 
 namespace BabelMeta.Model
 {
@@ -58,11 +59,13 @@ namespace BabelMeta.Model
         /// <summary>
         /// Full language name, informative.
         /// </summary>
+        [DbField(MaxSize = 128)]
         public String LongName { get; set; }
 
         /// <summary>
         /// ISO 639-1 2-character language abbreviation, used as unique Id.
         /// </summary>
+        [DbField(MaxSize = 4)]
         public String ShortName { get; set; }
 
         /// <summary>

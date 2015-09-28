@@ -23,10 +23,10 @@
  *  THE SOFTWARE. 
  */
 
-using System.Diagnostics;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 
@@ -35,9 +35,9 @@ namespace BabelMeta.Helpers
     public static class DbSerializationHelper
     {
         /// <summary>
-        /// Basic types which do not need dedicated (de)serialization
+        /// Basic types which do not need dedicated (de)serialization.
         /// </summary>
-        public static readonly Dictionary<Type, String> BasicTypes = new Dictionary<Type, String>
+        private static readonly Dictionary<Type, String> _basicTypes = new Dictionary<Type, String>
         {
             {typeof(bool), "bool"},           
             {typeof(bool?), "bool"},            
@@ -52,11 +52,27 @@ namespace BabelMeta.Helpers
             {typeof(String), "string"},   
         };
 
+        private static readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings
+        {
+            TypeNameHandling = TypeNameHandling.Objects,
+            PreserveReferencesHandling = PreserveReferencesHandling.All,
+        };
+
+        /// <summary>
+        /// Serialization method, performing a serialization for complex types only and letting other objects 'as is'.
+        /// </summary>
+        /// <param name="o"></param>
+        /// <returns></returns>
         public static object DbSerialize(this object o)
         {
+            if (o == null)
+            {
+                return null;
+            }
+
             var typeO = o.GetType();
 
-            var isBasicO = BasicTypes != null && BasicTypes.Keys.Contains(typeO);
+            var isBasicO = _basicTypes != null && _basicTypes.Keys.Contains(typeO);
 
             // For basic types, the input object is immediately returned.
             if (isBasicO)
@@ -64,9 +80,15 @@ namespace BabelMeta.Helpers
                 return o;
             }
 
+            // Enum case
+            if (typeO.IsEnum)
+            {
+                return o.ToString();
+            }
+
             try
             {
-                var s = JsonConvert.SerializeObject(o);
+                var s = JsonConvert.SerializeObject(o, Formatting.None, _jsonSerializerSettings);
                 return s;
             }
             catch (Exception ex)
@@ -76,13 +98,24 @@ namespace BabelMeta.Helpers
             }
         }
 
-        public static object DbDeserialize<T>(this object o) where T : class
+        /// <summary>
+        /// Deerialization method, performing a deserialization for complex types only and letting other objects 'as is'.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="o"></param>
+        /// <returns></returns>
+        public static object DbDeserialize<T>(this object o) 
         {
+            if (o == null)
+            {
+                return null;
+            }
+
             var typeT = typeof(T);
             var typeO = o.GetType();
 
-            var isBasicT = BasicTypes != null && BasicTypes.Keys.Contains(typeT);
-            var isBasicO = BasicTypes != null && BasicTypes.Keys.Contains(typeO);
+            var isBasicT = _basicTypes != null && _basicTypes.Keys.Contains(typeT);
+            var isBasicO = _basicTypes != null && _basicTypes.Keys.Contains(typeO);
 
             // For basic types, the input object is immediately returned if both types match ('nullable-insensitive' comparison).
             if  (
@@ -91,24 +124,40 @@ namespace BabelMeta.Helpers
                     (
                         typeO == typeT
                         || typeO.IsSubclassOf(typeT)
-                        || String.Compare(BasicTypes[typeT], BasicTypes[typeO], StringComparison.Ordinal) == 0
+                        || String.Compare(_basicTypes[typeT], _basicTypes[typeO], StringComparison.Ordinal) == 0
                     )
                 )
             {
-                return o as T;
+                return o is T ? (T)o : default(T);
             }
 
-            // Any complex type is supposed to have been serialized into a String.
+            // Any enum or complex type is supposed to have been serialized into a String.
             var s = o as String;
             if (s == null)
             {
                 throw new DbSerializationException();
             }
 
+            // Enum case
+            if (typeT.IsEnum)
+            {
+                try
+                {
+                    var dS = Enum.Parse(typeT, s);
+                    return dS;
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);
+                    throw new DbSerializationException();
+                }
+            }
+
+            // Complex object case
             try
             {
-                var t = JsonConvert.DeserializeObject<T>(s);
-                return t;
+                var dS = JsonConvert.DeserializeObject<T>(s, _jsonSerializerSettings);
+                return dS;
             }
             catch (Exception ex)
             {
