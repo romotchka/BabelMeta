@@ -93,7 +93,7 @@ namespace BabelMeta.Helpers
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex);
+                Debug.Write("DbSerializationHelper.DbSerialize, " + ex);
                 throw new DbSerializationException();
             }
         }
@@ -148,7 +148,7 @@ namespace BabelMeta.Helpers
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine(ex);
+                    Debug.Write("DbSerializationHelper.DbDeserialize, " + ex);
                     throw new DbSerializationException();
                 }
             }
@@ -161,7 +161,7 @@ namespace BabelMeta.Helpers
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex);
+                Debug.Write("DbSerializationHelper.DbDeserialize, " + ex);
                 throw new DbSerializationException();
             }
         }

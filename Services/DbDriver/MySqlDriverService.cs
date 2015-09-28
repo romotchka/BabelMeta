@@ -23,6 +23,7 @@
  *  THE SOFTWARE. 
  */
 
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using BabelMeta.Helpers;
@@ -88,13 +89,13 @@ namespace BabelMeta.Services.DbDriver
             {
                 _connection = new MySqlConnection(connectionString);
                 _connection.Open();
-                Debug.WriteLine(String.Format("MySql version: {0}", _connection.ServerVersion));
+                Debug.Write("MySqlDriverService.Initialize, MySql version: " + _connection.ServerVersion);
                 _connection.Close();
                 IsInitialized = true;
             }
             catch (MySqlException ex)
             {
-                Debug.WriteLine("Error: {0}", ex);
+                Debug.Write("MySqlDriverService.Initialize, " + ex);
             }
             finally
             {
@@ -105,6 +106,11 @@ namespace BabelMeta.Services.DbDriver
             }
         }
 
+        /// <summary>
+        /// Retrieves the relevant properties from a T type, eligible for serialization.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         private static List<PropertyInfo> TableProperties<T>()
         {
             var t = typeof(T);
@@ -113,12 +119,34 @@ namespace BabelMeta.Services.DbDriver
                 .ToList();
         }
 
+        /// <summary>
+        /// Builds a unique field name for the index, different from those of all properties. 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        private static String PrimaryKeyFieldName<T>(int suffix = 0)
+        {
+            var t = typeof(T);
+            var tableProperties = TableProperties<T>();
+            var candidateFieldName =
+                t.Name + "_id"
+                + ((suffix == 0) ? String.Empty : suffix.ToString(CultureInfo.InvariantCulture));
+            return tableProperties.Select(p => p.ToMySqlFieldName()).Contains(candidateFieldName) 
+                ? PrimaryKeyFieldName<T>(suffix + 1) 
+                : candidateFieldName;
+        }
+
         private static String DefaultTableName<T>()
         {
             var t = typeof(T);
             return t.Name.Replace(".", "").ToLowerInvariant();
         }
 
+        /// <summary>
+        /// Creates a table for type T and adds an internal primary key.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="optionalExplicitTitle"></param>
         public void InitializeTable<T>(String optionalExplicitTitle = "")
         {
             if (_connection == null)
@@ -154,8 +182,12 @@ namespace BabelMeta.Services.DbDriver
                 // Create table.
                 var createTableCommandText = "CREATE TABLE IF NOT EXISTS `" + tableName + "` (";
                 var fieldDeclarationsList = properties
-                    .Select(p => "`" + p.Name.ToLower() + "` " + p.ToMySqlType())
+                    .Select(p => "`" + p.ToMySqlFieldName() + "` " + p.ToMySqlType())
                     .ToList();
+                // Add to the list an internal id, so as to authorize external edition.
+                var primaryKeyFieldName = PrimaryKeyFieldName<T>();
+                fieldDeclarationsList.Add("`" + primaryKeyFieldName + "` " +  "int(11) unsigned NOT NULL AUTO_INCREMENT");
+                fieldDeclarationsList.Add("PRIMARY KEY (`" + primaryKeyFieldName + "`)");
                 createTableCommandText += String.Join(",", fieldDeclarationsList);
                 createTableCommandText += ") " + _tableCreationParametersText;
                 cmd = new MySqlCommand
@@ -230,7 +262,7 @@ namespace BabelMeta.Services.DbDriver
                                 && property.ToMySqlType().ToLower().Contains("not null")
                             )
                         {
-                            Debug.WriteLine("MySqlDriverService.InsertMany, unexpected null property value: " + property.Name);
+                            Debug.Write("MySqlDriverService.InsertMany, unexpected null property value " + property.Name);
                             cancellationToken = true;
                             break;
                         }

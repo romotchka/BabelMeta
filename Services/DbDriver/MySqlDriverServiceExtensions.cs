@@ -88,6 +88,11 @@ namespace BabelMeta.Services.DbDriver
                 : "text DEFAULT NULL";
         }
 
+        public static String ToMySqlFieldName(this PropertyInfo p)
+        {
+            return p == null ? String.Empty : p.Name.ToLower();
+        }
+
         public static String Placeholder(this PropertyInfo p)
         {
             return p == null ? String.Empty : "@" + p.Name;
