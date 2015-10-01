@@ -35,6 +35,9 @@ namespace BabelMeta.Services.DbDriver
 
         public String DbDatabaseName { get; set; }
 
+        /// <summary>
+        /// WARNING! the user privileges may require to be granted reading access in the information schema.
+        /// </summary>
         public String DbDatabaseUser { get; set; }
 
         public String DbDatabasePassword { get; set; }

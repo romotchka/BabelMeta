@@ -25,8 +25,10 @@
 
 using System.Globalization;
 using System.Linq;
+using System.Net.Configuration;
 using System.Reflection;
 using BabelMeta.Helpers;
+using Microsoft.Office.Interop.Excel;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
@@ -37,7 +39,20 @@ namespace BabelMeta.Services.DbDriver
     public class MySqlDriverService : IDbDriverService
     {
         private const String _tableCreationParametersText = "ENGINE=INNODB DEFAULT CHARSET=utf8";
+
         private static MySqlDriverService _instance;
+
+        private static DbDriverConfig _config;
+
+        /// <summary>
+        /// The connection to the database.
+        /// </summary>
+        private MySqlConnection _connection;
+
+        /// <summary>
+        /// The connection to the information schema (used for deserialization tests).
+        /// </summary>
+        private MySqlConnection _informationSchemaConnection;
 
         private MySqlDriverService()
         {
@@ -58,8 +73,6 @@ namespace BabelMeta.Services.DbDriver
                 return _instance;
             }
         }
-
-        private MySqlConnection _connection;
 
         public bool IsInitialized { get; private set; }
 
@@ -89,13 +102,12 @@ namespace BabelMeta.Services.DbDriver
             {
                 _connection = new MySqlConnection(connectionString);
                 _connection.Open();
-                Debug.Write("MySqlDriverService.Initialize, MySql version: " + _connection.ServerVersion);
+                Debug.WriteLine("MySqlDriverService.Initialize, MySql version: " + _connection.ServerVersion);
                 _connection.Close();
-                IsInitialized = true;
             }
             catch (MySqlException ex)
             {
-                Debug.Write("MySqlDriverService.Initialize, " + ex);
+                Debug.WriteLine("MySqlDriverService.Initialize, " + ex);
             }
             finally
             {
@@ -104,6 +116,34 @@ namespace BabelMeta.Services.DbDriver
                     _connection.Close();
                 }
             }
+
+            var infoConnectionString = String.Format(
+                "server={0};userid={1};password={2};database={3}"
+                , config.DbServerName
+                , config.DbDatabaseUser
+                , config.DbDatabasePassword
+                , "information_schema");
+
+            try
+            {
+                _informationSchemaConnection = new MySqlConnection(infoConnectionString);
+                _informationSchemaConnection.Open();
+                _informationSchemaConnection.Close();
+            }
+            catch (MySqlException ex)
+            {
+                Debug.WriteLine("MySqlDriverService.Initialize, " + ex);
+            }
+            finally
+            {
+                if (_informationSchemaConnection != null)
+                {
+                    _informationSchemaConnection.Close();
+                }
+            }
+
+            _config = config;
+            IsInitialized = true;
         }
 
         /// <summary>
@@ -200,7 +240,7 @@ namespace BabelMeta.Services.DbDriver
             } 
             catch (MySqlException ex) 
             {
-                Debug.Write("MySqlDriverService.InitializeTable, exception " + ex);
+                Debug.WriteLine("MySqlDriverService.InitializeTable, exception " + ex);
             } 
             finally 
             {
@@ -209,6 +249,145 @@ namespace BabelMeta.Services.DbDriver
                     _connection.Close();
                 }
             }
+        }
+
+        public bool IsValidTable<T>(String optionalExplicitTitle = "")
+        {
+            if (_connection == null)
+            {
+                return false;
+            }
+
+            var properties = TableProperties<T>();
+            if (!(properties.Count > 0))
+            {
+                return true;
+            }
+
+            try
+            {
+                _informationSchemaConnection.Open();
+
+                MySqlCommand cmd;
+
+                // Drop table.
+                var tableName = String.IsNullOrEmpty(optionalExplicitTitle)
+                    ? DefaultTableName<T>()
+                    : optionalExplicitTitle;
+
+                var retrieveColumnInfoCommandText = 
+                    " SELECT column_name, column_type, is_nullable" +
+                    " FROM columns" +
+                    " WHERE table_schema = '" + _config.DbDatabaseName + "'" +
+                    " AND table_name = '" + tableName + "'";
+                cmd = new MySqlCommand
+                {
+                    Connection = _informationSchemaConnection,
+                    CommandText = retrieveColumnInfoCommandText,
+                };
+                var reader = cmd.ExecuteReader();
+                if (reader == null)
+                {
+                    return false;
+                }
+
+                // The column order is not predictable.
+                var columnNames = new List<String>
+                {
+                    reader.GetName(0),
+                    reader.GetName(1),
+                    reader.GetName(2),
+                };
+
+                var columnNameIndex =
+                    Enumerable.Range(0, 3)
+                        .FirstOrDefault(
+                            i => String.Compare(
+                                columnNames[i].Trim().ToLower()
+                                , "column_name"
+                                , StringComparison.Ordinal) == 0);
+                if (!(columnNameIndex >= 0 && columnNameIndex < 3))
+                {
+                    return false;
+                }
+
+                var columnTypeIndex =
+                    Enumerable.Range(0, 3)
+                        .FirstOrDefault(
+                            i => String.Compare(
+                                columnNames[i].Trim().ToLower()
+                                , "column_type"
+                                , StringComparison.Ordinal) == 0);
+                if (!(columnTypeIndex >= 0 && columnTypeIndex < 3))
+                {
+                    return false;
+                }
+
+                var isNullableIndex =
+                    Enumerable.Range(0, 3)
+                        .FirstOrDefault(
+                            i => String.Compare(
+                                columnNames[i].Trim().ToLower()
+                                , "is_nullable"
+                                , StringComparison.Ordinal) == 0);
+                if (!(isNullableIndex >= 0 && isNullableIndex < 3))
+                {
+                    return false;
+                }
+
+                var columnInfos = new List<ColumnInfo>();
+                while (reader.Read())
+                {
+                    columnInfos.Add(new ColumnInfo
+                    {
+                        ColumnName = reader.GetString(columnNameIndex),
+                        ColumnType = reader.GetString(columnTypeIndex),
+                        IsNullable = reader.GetString(isNullableIndex),
+                    });
+                }
+
+                // Check that any T property is present in the table in the expected type.
+                foreach (var property in properties)
+                {
+                    if  (!columnInfos.Exists(c => 
+                            String.Compare(c.ColumnName, property.ToMySqlFieldName(), StringComparison.Ordinal) == 0
+                            && property.ToMySqlType().ToLower().Contains(c.ColumnType.Trim().ToLower())
+                            &&  (
+                                    (
+                                        String.Compare(c.IsNullable.Trim().ToLower(), "yes", StringComparison.Ordinal) == 0
+                                        && !property.ToMySqlType().ToLower().Contains("not null")
+                                    )
+                                    ||
+                                    (
+                                        String.Compare(c.IsNullable.Trim().ToLower(), "no", StringComparison.Ordinal) == 0
+                                        && property.ToMySqlType().ToLower().Contains("not null")
+                                    )
+                                )
+                            )
+                        )
+                    {
+                        Debug.WriteLine("MySqlDriverService.IsValidTable, wrong property definition, " 
+                                    + tableName 
+                                    + "." + property.Name);
+                        return false;
+                    }
+                }
+                Debug.WriteLine("MySqlDriverService.IsValidTable, ok, " + tableName);
+                return true;
+            }
+            catch (MySqlException ex)
+            {
+                Debug.WriteLine("MySqlDriverService.IsValidTable, exception " + ex);
+            }
+            finally
+            {
+                if (_informationSchemaConnection != null)
+                {
+                    _informationSchemaConnection.Close();
+                }
+            }
+
+            return false;
         }
 
         public void InsertMany<T>(List<T> entries, String optionalExplicitTitle = "")
@@ -262,7 +441,7 @@ namespace BabelMeta.Services.DbDriver
                                 && property.ToMySqlType().ToLower().Contains("not null")
                             )
                         {
-                            Debug.Write("MySqlDriverService.InsertMany, unexpected null property value " + property.Name);
+                            Debug.WriteLine("MySqlDriverService.InsertMany, unexpected null property value " + property.Name);
                             cancellationToken = true;
                             break;
                         }
@@ -301,5 +480,14 @@ namespace BabelMeta.Services.DbDriver
             }
             throw new NotImplementedException();
         }
+    }
+
+    public class ColumnInfo
+    {
+        public String ColumnName { get; set; }
+
+        public String ColumnType { get; set; }
+
+        public String IsNullable { get; set; }
     }
 }

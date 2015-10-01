@@ -227,7 +227,7 @@ namespace BabelMeta.Modules.Export
             catch (Exception ex)
             {
                 Notify(String.Format("Album [{0}]: Invalid action.", album.CatalogReference));
-                Debug.Write(this, "FugaXmlCatalogWriter.GenerateAlbumWiseData, exception=" + ex.Message);
+                Debug.WriteLine(this, "FugaXmlCatalogWriter.GenerateAlbumWiseData, exception=" + ex.Message);
             }
 
             // TODO i.album.additional_artists
@@ -664,7 +664,7 @@ namespace BabelMeta.Modules.Export
         {
             if (_mainFormViewModel == null || _mainFormViewModel.MainFormDispatcher == null || String.IsNullOrEmpty(message))
             {
-                Debug.Write("FugaXmlCatalogWriter.Notify, wrong view model or empty message");
+                Debug.WriteLine("FugaXmlCatalogWriter.Notify, wrong view model or empty message");
                 return;
             }
             var methodInvoker = new MethodInvoker(() =>

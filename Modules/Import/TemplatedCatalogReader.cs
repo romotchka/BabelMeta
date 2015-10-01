@@ -218,7 +218,7 @@ namespace BabelMeta.Modules.Import
                     }
                     catch (Exception ex)
                     {
-                        Debug.Write(this, "TemplatedCatalogReader.Parse, case=FileFormatType.ExcelXml2003, exception=" + ex.Message);
+                        Debug.WriteLine(this, "TemplatedCatalogReader.Parse, case=FileFormatType.ExcelXml2003, exception=" + ex.Message);
                         Notify("The XML parsing failed.");
                         return ReturnCode.ModulesImportDefaultParseEmptyStream;
                     }
@@ -564,7 +564,7 @@ namespace BabelMeta.Modules.Import
                         }
                         catch (Exception ex)
                         {
-                            Debug.Write(this, "TemplatedCatalogReader.CellMapByRow, worksheet=" + worksheetName + ", line=" + rowIndex + ", exception=" + ex.Message);
+                            Debug.WriteLine(this, "TemplatedCatalogReader.CellMapByRow, worksheet=" + worksheetName + ", line=" + rowIndex + ", exception=" + ex.Message);
                             Notify(String.Format("A problem occurred while trying to read worksheet {0}, line {1}, column {2}.", worksheetName, rowIndex, index));
                         }
                     }
@@ -790,7 +790,7 @@ namespace BabelMeta.Modules.Import
                     }
                     catch (Exception ex)
                     {
-                        Debug.Write("TemplatedCatalogReader.ExistsWorksheet, case=FileFormatType.ExcelXml2003, exception=" + ex.Message);
+                        Debug.WriteLine("TemplatedCatalogReader.ExistsWorksheet, case=FileFormatType.ExcelXml2003, exception=" + ex.Message);
                         Instance.Notify(String.Format("A problem occurred while trying to check worksheet {0}.", worksheetName));
                         return false;
                     }
@@ -1694,7 +1694,7 @@ namespace BabelMeta.Modules.Import
                     }
                     catch (Exception ex)
                     {
-                        Debug.Write("TemplatedCatalogReader.FinalizeAlbums, exception=" + ex.Message);
+                        Debug.WriteLine("TemplatedCatalogReader.FinalizeAlbums, exception=" + ex.Message);
                         Instance.Notify("The primary artist detection went wrong in album " + album.CatalogReference);
                     }
 
@@ -1706,7 +1706,7 @@ namespace BabelMeta.Modules.Import
                     }
                     catch (Exception ex)
                     {
-                        Debug.Write("TemplatedCatalogReader.FinalizeAlbums, exception=" + ex.Message);
+                        Debug.WriteLine("TemplatedCatalogReader.FinalizeAlbums, exception=" + ex.Message);
                         Instance.Notify("The primary artist setup went wrong in album " + album.CatalogReference);
                     }
                 }
@@ -1763,7 +1763,7 @@ namespace BabelMeta.Modules.Import
             }
             catch (Exception ex)
             {
-                Debug.Write("TemplatedCatalogReader.FinalizeAssets, exception=" + ex.Message);
+                Debug.WriteLine("TemplatedCatalogReader.FinalizeAssets, exception=" + ex.Message);
                 Instance.Notify("A problem occurred in assets finalization.");
             }
         }
@@ -1772,7 +1772,7 @@ namespace BabelMeta.Modules.Import
         {
             if (_mainFormViewModel == null || _mainFormViewModel.MainFormDispatcher == null || String.IsNullOrEmpty(message))
             {
-                Debug.Write("TemplatedCatalogReader.Notify, wrong view model or empty message");
+                Debug.WriteLine("TemplatedCatalogReader.Notify, wrong view model or empty message");
                 return;
             }
             var methodInvoker = new MethodInvoker(() =>

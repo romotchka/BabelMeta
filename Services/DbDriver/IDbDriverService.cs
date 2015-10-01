@@ -33,10 +33,34 @@ namespace BabelMeta.Services.DbDriver
     /// </summary>
     public interface IDbDriverService
     {
+        /// <summary>
+        /// Drops and creates the table with appropriate fields, before serialization (InsertMany).
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="optionalExplicitTitle"></param>
         void InitializeTable<T>(String optionalExplicitTitle = "");
 
+        /// <summary>
+        /// Checks whether a table expected to host T-type records is valid.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="optionalExplicitTitle"></param>
+        /// <returns></returns>
+        bool IsValidTable<T>(String optionalExplicitTitle = "");
+
+        /// <summary>
+        /// Inserts the T-type records in an initialized table.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entries"></param>
+        /// <param name="optionalExplicitTitle"></param>
         void InsertMany<T>(List<T> entries, String optionalExplicitTitle = "");
 
+        /// <summary>
+        /// Dumps all T-type records from a valid table.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         List<T> SelectAll<T>();
     }
 }
