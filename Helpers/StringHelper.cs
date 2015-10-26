@@ -134,17 +134,18 @@ namespace BabelMeta.Helpers
                 var month = Convert.ToInt32(words[1]);
                 var day = Convert.ToInt32(words[2]);
 
-                if (year > 0 && month > 0 && month <= 12 && day > 0 && day <= 31)
+                if (year <= 0 || month <= 0 || month > 12 || day <= 0 || day > 31)
                 {
-                    try
-                    {
-                        var dateTime = new DateTime(year, month, day);
-                        return dateTime;
-                    }
-                    catch (Exception)
-                    {
-                        return DateTime.Now;
-                    }
+                    return DateTime.Now;
+                }
+                try
+                {
+                    var dateTime = new DateTime(year, month, day);
+                    return dateTime;
+                }
+                catch (Exception)
+                {
+                    return DateTime.Now;
                 }
             }
             return DateTime.Now;

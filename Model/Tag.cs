@@ -32,7 +32,7 @@ namespace BabelMeta.Model
     /// <summary>
     /// Any re-usable String present in the metadata.
     /// </summary>
-    [Serializable()]
+    [Serializable]
     public class Tag : ISerializable
     {
         public Tag()

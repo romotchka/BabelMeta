@@ -29,7 +29,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-
 namespace BabelMeta.Helpers
 {
     public static class DbSerializationHelper

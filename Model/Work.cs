@@ -33,7 +33,7 @@ namespace BabelMeta.Model
     /// <summary>
     /// Work represents a composition or a part of it (movement, etc.).
     /// </summary>
-    [Serializable()]
+    [Serializable]
     public class Work : ISerializable
     {
         public Work()

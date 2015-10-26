@@ -32,7 +32,7 @@ namespace BabelMeta.Model
     /// <summary>
     /// Lang represents a spoken language present in metadata.
     /// </summary>
-    [Serializable()]
+    [Serializable]
     public class Lang : ISerializable
     {
         public Lang()

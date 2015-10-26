@@ -123,7 +123,7 @@ namespace BabelMeta.Modules.Export
                 {CatalogTier.Premium, ingestionAlbumTracksClassical_trackCatalog_tier.FRONT},
             };
 
-        MainFormViewModel _mainFormViewModel = null;
+        MainFormViewModel _mainFormViewModel;
 
         private static FugaXmlCatalogWriter _instance;
 
@@ -222,7 +222,10 @@ namespace BabelMeta.Modules.Export
             // Action
             try
             {
-                i.action = _actionConverter[(Album.ActionType)album.ActionTypeValue];
+                if (album.ActionTypeValue != null)
+                {
+                    i.action = _actionConverter[(Album.ActionType)album.ActionTypeValue];
+                }
             }
             catch (Exception ex)
             {
@@ -678,6 +681,7 @@ namespace BabelMeta.Modules.Export
         /// <summary>
         /// Returns the file name, if found, of the file corresponding to criteria
         /// </summary>
+        /// <param name="files"></param>
         /// <param name="fileType"></param>
         /// <param name="parameter"></param>
         /// <returns></returns>

@@ -35,9 +35,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Threading;
 using System.Xml;
-using Action = System.Action;
 using Excel = Microsoft.Office.Interop.Excel;
 
 namespace BabelMeta.Modules.Import
@@ -94,7 +92,7 @@ namespace BabelMeta.Modules.Import
         /// Legacy convention for tonalities
         /// </summary>
         private readonly Dictionary<String, Key> _shortenedKeys =
-            new Dictionary<String, Key>()
+            new Dictionary<String, Key>
             {
                 {"Ab", Key.AFlatMajor},
                 {"A", Key.AMajor},
@@ -864,9 +862,10 @@ namespace BabelMeta.Modules.Import
             foreach (var row in _settings)
             {
                 Dictionary<int, object> cells = null;
+                var rowCopy = row;
                 await Task.Run(() =>
                 {
-                    cells = CellMapByRow(row, SettingsWorksheetName);
+                    cells = CellMapByRow(rowCopy, SettingsWorksheetName);
                 });
 
                 if (cells == null || cells.Count <= 0)
@@ -948,9 +947,10 @@ namespace BabelMeta.Modules.Import
             foreach (var row in _langs)
             {
                 Dictionary<int, object> cells = null;
+                var rowCopy = row;
                 await Task.Run(() =>
                 {
-                    cells = CellMapByRow(row, LangWorksheetName);
+                    cells = CellMapByRow(rowCopy, LangWorksheetName);
                 });
 
                 if (cells == null || cells.Count <= 0)
@@ -987,9 +987,10 @@ namespace BabelMeta.Modules.Import
             foreach (var row in _tags)
             {
                 Dictionary<int, object> cells = null;
+                var rowCopy = row;
                 await Task.Run(() =>
                 {
-                    cells = CellMapByRow(row, TagWorksheetName);
+                    cells = CellMapByRow(rowCopy, TagWorksheetName);
                 });
 
                 if (cells != null && cells.Count > 0)
@@ -1026,9 +1027,10 @@ namespace BabelMeta.Modules.Import
             foreach (var row in _roles)
             {
                 Dictionary<int, object> cells = null;
+                var rowcopy = row;
                 await Task.Run(() =>
                 {
-                    cells = CellMapByRow(row, RoleWorksheetName);
+                    cells = CellMapByRow(rowcopy, RoleWorksheetName);
                 });
 
                 if (cells != null && cells.Count > 0)
@@ -1065,9 +1067,10 @@ namespace BabelMeta.Modules.Import
             foreach (var row in _qualities)
             {
                 Dictionary<int, object> cells = null;
+                var rowCopy = row;
                 await Task.Run(() =>
                 {
-                    cells = CellMapByRow(row, QualityWorksheetName);
+                    cells = CellMapByRow(rowCopy, QualityWorksheetName);
                 });
 
                 if (cells != null && cells.Count > 0)
@@ -1105,9 +1108,10 @@ namespace BabelMeta.Modules.Import
             foreach (var row in _artists)
             {
                 Dictionary<int, object> cells = null;
+                var rowCopy = row;
                 await Task.Run(() =>
                 {
-                    cells = CellMapByRow(row, ArtistWorksheetName);
+                    cells = CellMapByRow(rowCopy, ArtistWorksheetName);
                 });
 
                 if (cells != null && cells.Count > 0)
@@ -1183,9 +1187,10 @@ namespace BabelMeta.Modules.Import
             foreach (var row in _works)
             {
                 Dictionary<int, object> cells = null;
+                var rowCopy = row;
                 await Task.Run(() =>
                 {
-                    cells = CellMapByRow(row, WorkWorksheetName);
+                    cells = CellMapByRow(rowCopy, WorkWorksheetName);
                 });
 
                 if (cells != null && cells.Count > 0)
@@ -1280,9 +1285,10 @@ namespace BabelMeta.Modules.Import
             foreach (var row in _assets)
             {
                 Dictionary<int, object> cells = null;
+                var rowCopy = row;
                 await Task.Run(() =>
                 {
-                    cells = CellMapByRow(row, AssetWorksheetName);
+                    cells = CellMapByRow(rowCopy, AssetWorksheetName);
                 });
 
                 if (cells != null && cells.Count > 0)
@@ -1404,9 +1410,10 @@ namespace BabelMeta.Modules.Import
             foreach (var row in _albums)
             {
                 Dictionary<int, object> cells = null;
+                var rowCopy = row;
                 await Task.Run(() =>
                 {
-                    cells = CellMapByRow(row, AlbumWorksheetName);
+                    cells = CellMapByRow(rowCopy, AlbumWorksheetName);
                 });
 
                 if (cells != null && cells.Count > 0)
@@ -1549,9 +1556,10 @@ namespace BabelMeta.Modules.Import
             foreach (var row in _tracks)
             {
                 Dictionary<int, object> cells = null;
+                var rowCopy = row;
                 await Task.Run(() =>
                 {
-                    cells = CellMapByRow(row, TrackWorksheetName);
+                    cells = CellMapByRow(rowCopy, TrackWorksheetName);
                 });
 
                 if (cells != null && cells.Count > 0)
@@ -1752,13 +1760,16 @@ namespace BabelMeta.Modules.Import
             {
                 foreach (var asset in CatalogContext.Instance.Assets)
                 {
-                    if (asset.Tier != null) continue;
+                    if (asset.Tier != null)
+                    {
+                        continue;
+                    }
                     var album = CatalogContext.Instance.Albums.FirstOrDefault(
                         a => a.Tracks.Values.ToList().Exists(v => v.Values.ToList().Contains(asset.Id)));
                     if (album != null)
                     {
                         asset.Tier = album.Tier;
-                    };
+                    }
                 }
             }
             catch (Exception ex)
@@ -1770,7 +1781,11 @@ namespace BabelMeta.Modules.Import
 
         public void Notify(String message)
         {
-            if (_mainFormViewModel == null || _mainFormViewModel.MainFormDispatcher == null || String.IsNullOrEmpty(message))
+            if  (
+                    _mainFormViewModel == null 
+                    || _mainFormViewModel.MainFormDispatcher == null 
+                    || String.IsNullOrEmpty(message)
+                )
             {
                 Debug.WriteLine("TemplatedCatalogReader.Notify, wrong view model or empty message");
                 return;

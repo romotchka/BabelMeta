@@ -34,7 +34,7 @@ namespace BabelMeta.Model
     /// <summary>
     /// Core model Album.
     /// </summary>
-    [Serializable()]
+    [Serializable]
     public class Album : ISerializable
     {
         public Album()

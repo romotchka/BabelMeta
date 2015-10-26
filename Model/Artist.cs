@@ -32,7 +32,7 @@ namespace BabelMeta.Model
     /// <summary>
     /// Artist class represents both Creators (Composer, Arrangr, etc.) and Performers.
     /// </summary>
-    [Serializable()]
+    [Serializable]
     public class Artist : ISerializable 
     {
         public Artist()

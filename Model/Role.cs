@@ -23,17 +23,16 @@
  *  THE SOFTWARE. 
  */
 
-using System;
-using System.ComponentModel;
-using System.Runtime.Serialization;
 using BabelMeta.Services.DbDriver;
+using System;
+using System.Runtime.Serialization;
 
 namespace BabelMeta.Model
 {
     /// <summary>
     /// Role determines how a contributor participates in an asset.
     /// </summary>
-    [Serializable()]
+    [Serializable]
     public class Role : ISerializable
     {
         public Role()

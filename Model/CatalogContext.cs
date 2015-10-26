@@ -128,23 +128,23 @@ namespace BabelMeta.Model
             }
         }
 
-        internal CatalogSettings Settings;
+        public CatalogSettings Settings;
 
-        internal List<Lang> Langs;
+        public List<Lang> Langs;
 
-        internal List<Role> Roles;
+        public List<Role> Roles;
 
-        internal List<Quality> Qualities;
+        public List<Quality> Qualities;
 
-        internal List<Tag> Tags;
+        public List<Tag> Tags;
 
-        internal List<Artist> Artists;
+        public List<Artist> Artists;
 
-        internal List<Work> Works;
+        public List<Work> Works;
 
-        internal List<Asset> Assets;
+        public List<Asset> Assets;
 
-        internal List<Album> Albums;
+        public List<Album> Albums;
 
         public void Init()
         {

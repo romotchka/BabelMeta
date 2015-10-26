@@ -23,16 +23,14 @@
  *  THE SOFTWARE. 
  */
 
-using System.Globalization;
-using System.Linq;
-using System.Net.Configuration;
-using System.Reflection;
 using BabelMeta.Helpers;
-using Microsoft.Office.Interop.Excel;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
+using System.Linq;
+using System.Reflection;
 
 namespace BabelMeta.Services.DbDriver
 {
@@ -268,9 +266,6 @@ namespace BabelMeta.Services.DbDriver
             {
                 _informationSchemaConnection.Open();
 
-                MySqlCommand cmd;
-
-                // Drop table.
                 var tableName = String.IsNullOrEmpty(optionalExplicitTitle)
                     ? DefaultTableName<T>()
                     : optionalExplicitTitle;
@@ -280,11 +275,13 @@ namespace BabelMeta.Services.DbDriver
                     " FROM columns" +
                     " WHERE table_schema = '" + _config.DbDatabaseName + "'" +
                     " AND table_name = '" + tableName + "'";
-                cmd = new MySqlCommand
+
+                var cmd = new MySqlCommand
                 {
                     Connection = _informationSchemaConnection,
                     CommandText = retrieveColumnInfoCommandText,
                 };
+
                 var reader = cmd.ExecuteReader();
                 if (reader == null)
                 {
@@ -349,7 +346,8 @@ namespace BabelMeta.Services.DbDriver
                 // Check that any T property is present in the table in the expected type.
                 foreach (var property in properties)
                 {
-                    if  (!columnInfos.Exists(c => 
+                    if  (
+                            columnInfos.Exists(c =>
                             String.Compare(c.ColumnName, property.ToMySqlFieldName(), StringComparison.Ordinal) == 0
                             && property.ToMySqlType().ToLower().Contains(c.ColumnType.Trim().ToLower())
                             &&  (
@@ -366,11 +364,12 @@ namespace BabelMeta.Services.DbDriver
                             )
                         )
                     {
-                        Debug.WriteLine("MySqlDriverService.IsValidTable, wrong property definition, " 
+                        continue;
+                    }
+                    Debug.WriteLine("MySqlDriverService.IsValidTable, wrong property definition, " 
                                     + tableName 
                                     + "." + property.Name);
-                        return false;
-                    }
+                    return false;
                 }
                 Debug.WriteLine("MySqlDriverService.IsValidTable, ok, " + tableName);
                 return true;
@@ -426,9 +425,11 @@ namespace BabelMeta.Services.DbDriver
                     insertEntryText += joinPlaceholders;
                     insertEntryText += ")";
 
-                    cmd = new MySqlCommand();
-                    cmd.Connection = _connection;
-                    cmd.CommandText = insertEntryText;
+                    cmd = new MySqlCommand
+                    {
+                        Connection = _connection, 
+                        CommandText = insertEntryText,
+                    };
                     cmd.Prepare();
 
                     // Substitute field placeholders one by one. 

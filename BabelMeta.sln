@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BabelMeta", "BabelMeta.csproj", "{A1CE9FF4-CE1F-4539-A04A-C46F97F5A903}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BabelMetaTest", "BabelMetaTest\BabelMetaTest.csproj", "{E573D7B9-C3AA-4C54-870F-7B1B2AFD380B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{A1CE9FF4-CE1F-4539-A04A-C46F97F5A903}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1CE9FF4-CE1F-4539-A04A-C46F97F5A903}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1CE9FF4-CE1F-4539-A04A-C46F97F5A903}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E573D7B9-C3AA-4C54-870F-7B1B2AFD380B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E573D7B9-C3AA-4C54-870F-7B1B2AFD380B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E573D7B9-C3AA-4C54-870F-7B1B2AFD380B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E573D7B9-C3AA-4C54-870F-7B1B2AFD380B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

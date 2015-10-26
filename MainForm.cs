@@ -31,7 +31,6 @@ using BabelMeta.Modules;
 using BabelMeta.Modules.Control;
 using BabelMeta.Modules.Export;
 using BabelMeta.Modules.Import;
-using BabelMeta.Services.DbDriver;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -46,6 +45,9 @@ namespace BabelMeta
 {
     public partial class MainForm : Form
     {
+        private const char _pathSeparatorChar = '\\';
+        private const string _pathSeparatorString = "\\";
+
         public MainForm()
         {
             InitializeComponent();
@@ -113,13 +115,13 @@ namespace BabelMeta
             var openFileDialog = new OpenFileDialog
             {
                 InitialDirectory = "c:\\",
-                Title = "Open a default file",
+                Title = LocalizedStrings.MainFormTemplatedWorkbookToolStripMenuItem_Click_OpenDefaultFile,
                 RestoreDirectory = true,
             };
 
             if (InputFormat.SelectedItem == null)
             {
-                Notify("No input format selected.");
+                Notify(LocalizedStrings.MainFormTemplatedWorkbookToolStripMenuItem_Click_NoInputFormatSelected);
                 Debug.WriteLine("MainForm.templatedWorkbookToolStripMenuItem_Click, no input format selected");
                 return;
             }
@@ -127,14 +129,14 @@ namespace BabelMeta
             switch (InputFormat.SelectedItem.ToString().ToFileFormatType())
             {
                 case FileFormatType.ExcelWorkbook:
-                    openFileDialog.Filter = "Excel files (*.xls, *.xlsx)|*.xls*";
+                    openFileDialog.Filter = LocalizedStrings.MainFormTemplatedWorkbookToolStripMenuItem_Click_ExcelFiles;
                     break;
                 case FileFormatType.ExcelXml2003:
-                    openFileDialog.Filter = "XML files (*.xml)|*.xml";
+                    openFileDialog.Filter = LocalizedStrings.MainFormTemplatedWorkbookToolStripMenuItem_Click_XmlFiles;
                     break;
 
                 default:
-                    openFileDialog.Filter = "All files (*.*)|*.*";
+                    openFileDialog.Filter = LocalizedStrings.MainFormTemplatedWorkbookToolStripMenuItem_Click_AllFiles;
                     break;
             }
 
@@ -245,7 +247,7 @@ namespace BabelMeta
         {
             var fbd = new FolderBrowserDialog
             {
-                Description = "Select a root folder to load session files.",
+                Description = LocalizedStrings.MainFormloadSessionToolStripMenuItem_Click_SelectRootFolder,
             };
 
             fbd.ShowDialog();
@@ -255,7 +257,6 @@ namespace BabelMeta
                 Debug.WriteLine("MainForm.loadSessionToolStripMenuItem_Click, wrong file pointer");
                 return;
             }
-
 
             var getFiles = Directory.GetFiles(fbd.SelectedPath, "*.bmd");
             if (getFiles.Count() != 9)
@@ -276,9 +277,14 @@ namespace BabelMeta
                     DeserializeBmdFile(file);
                 }
 
-                if (_viewModel.FilterArtistChecked) CatalogContext.Instance.FilterUnusedArtists();
-                else
-                if (_viewModel.FilterWorkChecked) CatalogContext.Instance.FilterUnusedWorks();
+                if (_viewModel.FilterArtistChecked)
+                {
+                    CatalogContext.Instance.FilterUnusedArtists();
+                }
+                else if (_viewModel.FilterWorkChecked)
+                {
+                    CatalogContext.Instance.FilterUnusedWorks();
+                }
 
                 CatalogContext.Instance.Initialized = true;
 
@@ -300,7 +306,7 @@ namespace BabelMeta
         {
             var fbd = new FolderBrowserDialog
             {
-                Description = "Select a root folder to save session files."
+                Description = LocalizedStrings.MainFormSaveSessionToolStripMenuItem_Click_SelectRootFolder,
             };
 
             fbd.ShowDialog();
@@ -310,9 +316,9 @@ namespace BabelMeta
                 Debug.WriteLine("MainForm.saveSessionToolStripMenuItem_Click, wrong file pointer");
                 return;
             }
-            if ((fbd.SelectedPath.ToCharArray())[fbd.SelectedPath.Length - 1] != '\\')
+            if ((fbd.SelectedPath.ToCharArray())[fbd.SelectedPath.Length - 1] != _pathSeparatorChar)
             {
-                fbd.SelectedPath += "\\";
+                fbd.SelectedPath += _pathSeparatorString;
             }
 
             var binaryFormatter = new BinaryFormatter();
@@ -320,7 +326,7 @@ namespace BabelMeta
             try
             {
                 // Settings
-                Stream stream = File.Open(fbd.SelectedPath + "Settings.bmd", FileMode.Create);
+                var stream = File.Open(fbd.SelectedPath + "Settings.bmd", FileMode.Create);
 
                 binaryFormatter.Serialize(stream, CatalogContext.Instance.Settings);
                 stream.Close();
@@ -378,7 +384,7 @@ namespace BabelMeta
 
             catch (Exception ex)
             {
-                Notify("Session not saved: I/O error on disk.");
+                Notify(LocalizedStrings.MainFormSaveSessionToolStripMenuItem_Click_SessionNotSaved);
                 Debug.WriteLine("MainForm.saveSessionToolStripMenuItem_Click, exception: " + ex.Message);
             }
         }
@@ -446,7 +452,7 @@ namespace BabelMeta
         {
             if (!CatalogContext.Instance.Initialized)
             {
-                Notify("Catalog not present.");
+                Notify(LocalizedStrings.MainFormFugaToolStripMenuItem_Click_CatalogNotPresent);
                 Debug.WriteLine("MainForm.fugaToolStripMenuItem_Click, catalog not present");
                 return;
             }
@@ -458,7 +464,7 @@ namespace BabelMeta
 
             var fbd = new FolderBrowserDialog
             {
-                Description = "Select a root folder for output sub-folders and XML files.",
+                Description = LocalizedStrings.MainFormFugaToolStripMenuItem_Click_FolderBrowserDialog,
             };
 
             fbd.ShowDialog();
@@ -556,50 +562,6 @@ namespace BabelMeta
             _viewModel.DbDatabaseName = DbDatabaseName.Text;
             _viewModel.DbDatabaseUser = DbDatabaseUser.Text;
             _viewModel.DbDatabasePassword = DbDatabasePassword.Text;
-        }
-
-        /// <summary>
-        /// General purpose test button.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void testButton_Click(object sender, EventArgs e)
-        {
-            if (_viewModel == null)
-            {
-                return;
-            }
-
-            MySqlDriverService.Instance.Initialize(new DbDriverConfig
-            {
-                DbEngineType = "mysql",
-                DbServerName = "localhost",
-                DbDatabaseName = "babelmetadev",
-                DbDatabaseUser = "root",
-                DbDatabasePassword = "",
-            });
-
-            if (MySqlDriverService.Instance.IsValidTable<Album>())
-            {
-                Debug.WriteLine("Album ok");
-            }
-
-            MySqlDriverService.Instance.InitializeTable<Album>();
-            MySqlDriverService.Instance.InsertMany(CatalogContext.Instance.Albums);
-            MySqlDriverService.Instance.InitializeTable<Artist>();
-            MySqlDriverService.Instance.InsertMany(CatalogContext.Instance.Artists);
-            MySqlDriverService.Instance.InitializeTable<Asset>();
-            MySqlDriverService.Instance.InsertMany(CatalogContext.Instance.Assets);
-            MySqlDriverService.Instance.InitializeTable<Lang>();
-            MySqlDriverService.Instance.InsertMany(CatalogContext.Instance.Langs);
-            MySqlDriverService.Instance.InitializeTable<Quality>();
-            MySqlDriverService.Instance.InsertMany(CatalogContext.Instance.Qualities);
-            MySqlDriverService.Instance.InitializeTable<Role>();
-            MySqlDriverService.Instance.InsertMany(CatalogContext.Instance.Roles);
-            MySqlDriverService.Instance.InitializeTable<Tag>();
-            MySqlDriverService.Instance.InsertMany(CatalogContext.Instance.Tags);
-            MySqlDriverService.Instance.InitializeTable<Work>();
-            MySqlDriverService.Instance.InsertMany(CatalogContext.Instance.Works);
         }
     }
 }

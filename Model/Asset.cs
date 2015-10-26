@@ -35,7 +35,7 @@ namespace BabelMeta.Model
     /// Asset class represents the Isrc unique Id, per se, and the related information (Work and work Performers).
     /// Having a dedicated Isrc object permits to re-use it in different Albums (compilations, bundles, licensing...)
     /// </summary>
-    [Serializable()]
+    [Serializable]
     public class Asset : ISerializable
     {
         public Asset()

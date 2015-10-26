@@ -32,7 +32,7 @@ namespace BabelMeta.Model
     /// <summary>
     /// Quality determines the particular status of an asset contributor.
     /// </summary>
-    [Serializable()]
+    [Serializable]
     public class Quality : ISerializable
     {
         public Quality()
