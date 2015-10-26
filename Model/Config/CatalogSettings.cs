@@ -31,7 +31,7 @@ namespace BabelMeta.Model.Config
     /// <summary>
     /// CatalogSettings provides with a series of default values.
     /// </summary>
-    [Serializable()]
+    [Serializable]
     public class CatalogSettings : ISerializable
     {
         public CatalogSettings()
@@ -46,7 +46,7 @@ namespace BabelMeta.Model.Config
             AvailableSeparatelyDefault = true;
         }
 
-        public CatalogSettings(SerializationInfo info, StreamingContext ctxt)
+        public CatalogSettings(SerializationInfo info, StreamingContext context)
         {
             SupplierDefault = (String)info.GetValue("BabelMeta.Model.CatalogSettings.SupplierDefault", typeof(String));
             LabelDefault = (String)info.GetValue("BabelMeta.Model.CatalogSettings.LabelDefault", typeof(String));

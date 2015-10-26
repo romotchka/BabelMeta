@@ -23,6 +23,7 @@
  *  THE SOFTWARE. 
  */
 
+using BabelMeta.Services.DbDriver;
 using System;
 using System.Runtime.Serialization;
 
@@ -31,19 +32,19 @@ namespace BabelMeta.Model
     /// <summary>
     /// Role determines how a contributor participates in an asset.
     /// </summary>
-    [Serializable()]
+    [Serializable]
     public class Role : ISerializable
     {
         public Role()
         {
             Name = String.Empty;
-            Reference = null;
+            Reference = QualifiedName.Unknown;
         }
 
-        public Role(SerializationInfo info, StreamingContext ctxt)
+        public Role(SerializationInfo info, StreamingContext context)
         {
             Name = (String)info.GetValue("BabelMeta.Model.Role.Name", typeof(String));
-            Reference = (QualifiedName?)info.GetValue("BabelMeta.Model.Role.Reference", typeof(QualifiedName?));
+            Reference = (QualifiedName)info.GetValue("BabelMeta.Model.Role.Reference", typeof(QualifiedName));
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -52,9 +53,54 @@ namespace BabelMeta.Model
             info.AddValue("BabelMeta.Model.Role.Reference", Reference);
         }
 
-        public String Name { get; set; }
+        private String _name = String.Empty;
 
-        public QualifiedName? Reference { get; set; }
+        [DbField(MaxSize = 128)]
+        public String Name 
+        {
+            get { return _name; }
+            set
+            {
+                if (value == null)
+                {
+                    return;
+                }
+                if (String.Compare(_name, value, StringComparison.Ordinal) == 0)
+                {
+                    return;
+                }
+
+                _name = value;
+
+                // Attempt to retrieve a qualified name (standardized)
+                switch (value)
+                {
+                    case "arranger": Reference = QualifiedName.Arranger; break;
+                    case "choir": Reference = QualifiedName.Choir; break;
+                    case "composer": Reference = QualifiedName.Composer; break;
+                    case "conductor": Reference = QualifiedName.Conductor; break;
+                    case "contributingartist": Reference = QualifiedName.ContributingArtist; break;
+                    case "engineer": Reference = QualifiedName.Engineer; break;
+                    case "ensemble": Reference = QualifiedName.Ensemble; break;
+                    case "featuring": Reference = QualifiedName.Featuring; break;
+                    case "lyricist": Reference = QualifiedName.Lyricist; break;
+                    case "masteringengineer": Reference = QualifiedName.MasteringEngineer; break;
+                    case "mixer": Reference = QualifiedName.Mixer; break;
+                    case "musicaldirector": Reference = QualifiedName.MusicalDirector; break;
+                    case "orchestra": Reference = QualifiedName.Orchestra; break;
+                    case "performer": Reference = QualifiedName.Performer; break;
+                    case "producer": Reference = QualifiedName.Producer; break;
+                    case "remixer": Reference = QualifiedName.Remixer; break;
+                    case "soloist": Reference = QualifiedName.Soloist; break;
+                    case "transcriptor": Reference = QualifiedName.Transcriptor; break;
+                    case "writer": Reference = QualifiedName.Writer; break;
+                    default: Reference = QualifiedName.Unknown; break;
+                }
+            }
+        }
+
+        [DbField(MaxSize = 32)]
+        public QualifiedName Reference { get; set; }
 
         /// <summary>
         /// Origin of the qualified name mentioned in comments, for informational traceability.
@@ -81,6 +127,8 @@ namespace BabelMeta.Model
             Soloist,                // FUGA native
             Transcriptor,           // Solstice
             Writer,                 // FUGA native
+
+            Unknown,
         }
     }
 }

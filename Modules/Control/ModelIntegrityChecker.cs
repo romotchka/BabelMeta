@@ -51,56 +51,56 @@ namespace BabelMeta.Modules.Control
         {
             if (CatalogContext.Instance == null || CatalogContext.Instance.Initialized == false)
             {
-                Debug.Write(this, "ModelIntegrityChecker.CheckRedundantKeys, Instance null or not initialized");
+                Debug.WriteLine(this, "ModelIntegrityChecker.CheckRedundantKeys, Instance null or not initialized");
                 return false;
             }
 
             // Langs
             if (CatalogContext.Instance.Langs != null && CatalogContext.Instance.Langs.Count > 0 && CatalogContext.Instance.Langs.GroupBy(e => e.ShortName).Max(g => g.Count()) > 1)
             {
-                Debug.Write(this, "ModelIntegrityChecker.CheckRedundantKeys, Lang");
+                Debug.WriteLine(this, "ModelIntegrityChecker.CheckRedundantKeys, Lang");
                 return false;
             }
 
             // Tags
             if (CatalogContext.Instance.Tags != null && CatalogContext.Instance.Tags.Count > 0 && CatalogContext.Instance.Tags.GroupBy(e => e.Name).Max(g => g.Count()) > 1)
             {
-                Debug.Write(this, "ModelIntegrityChecker.CheckRedundantKeys, Tags");
+                Debug.WriteLine(this, "ModelIntegrityChecker.CheckRedundantKeys, Tags");
                 return false;
             }
 
             // Roles
             if (CatalogContext.Instance.Roles != null && CatalogContext.Instance.Roles.Count > 0 && CatalogContext.Instance.Roles.GroupBy(e => e.Name).Max(g => g.Count()) > 1)
             {
-                Debug.Write(this, "ModelIntegrityChecker.CheckRedundantKeys, Roles");
+                Debug.WriteLine(this, "ModelIntegrityChecker.CheckRedundantKeys, Roles");
                 return false;
             }
 
             // Qualities
             if (CatalogContext.Instance.Qualities != null && CatalogContext.Instance.Qualities.Count > 0 && CatalogContext.Instance.Qualities.GroupBy(e => e.Name).Max(g => g.Count()) > 1)
             {
-                Debug.Write(this, "ModelIntegrityChecker.CheckRedundantKeys, Qualities");
+                Debug.WriteLine(this, "ModelIntegrityChecker.CheckRedundantKeys, Qualities");
                 return false;
             }
 
             // Artists
             if (CatalogContext.Instance.Artists != null && CatalogContext.Instance.Artists.Count > 0 && CatalogContext.Instance.Artists.GroupBy(e => e.Id).Max(g => g.Count()) > 1)
             {
-                Debug.Write(this, "ModelIntegrityChecker.CheckRedundantKeys, Artists");
+                Debug.WriteLine(this, "ModelIntegrityChecker.CheckRedundantKeys, Artists");
                 return false;
             }
 
             // Works
             if (CatalogContext.Instance.Works != null && CatalogContext.Instance.Works.Count > 0 && CatalogContext.Instance.Works.GroupBy(e => e.Id).Max(g => g.Count()) > 1)
             {
-                Debug.Write(this, "ModelIntegrityChecker.CheckRedundantKeys, Works");
+                Debug.WriteLine(this, "ModelIntegrityChecker.CheckRedundantKeys, Works");
                 return false;
             }
 
             // Assets
             if (CatalogContext.Instance.Assets != null && CatalogContext.Instance.Assets.Count > 0 && CatalogContext.Instance.Assets.GroupBy(e => e.Id).Max(g => g.Count()) > 1)
             {
-                Debug.Write(this, "ModelIntegrityChecker.CheckRedundantKeys, Assets");
+                Debug.WriteLine(this, "ModelIntegrityChecker.CheckRedundantKeys, Assets");
                 return false;
             }
 
@@ -113,7 +113,7 @@ namespace BabelMeta.Modules.Control
                     )
                 )
             {
-                Debug.Write(this, "ModelIntegrityChecker.CheckRedundantKeys, Albums");
+                Debug.WriteLine(this, "ModelIntegrityChecker.CheckRedundantKeys, Albums");
                 return false;
             }
             
@@ -149,13 +149,13 @@ namespace BabelMeta.Modules.Control
                         ) != null
                     )
                 {
-                    Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Work->Artist, corrupted work = " + work.Id);
+                    Debug.WriteLine(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Work->Artist, corrupted work = " + work.Id);
                     return false;
                 }
             }
             catch (Exception ex)
             {
-                Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Work->Artist, exception=" + ex.Message);
+                Debug.WriteLine(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Work->Artist, exception=" + ex.Message);
                 return false;
             }
 
@@ -171,20 +171,20 @@ namespace BabelMeta.Modules.Control
                             work = CatalogContext.Instance.Works.FirstOrDefault(w =>
                                 w.Contributors.Values.ToList().Exists(r =>
                                     !CatalogContext.Instance.Roles.Exists(e =>
-                                        String.Compare(e.Name, r.Name, StringComparison.Ordinal) == 0
+                                        String.Compare(e.Name, r, StringComparison.Ordinal) == 0
                                     )
                                 )
                             )
                         ) != null
                     )
                 {
-                    Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Work->Role, corrupted work = " + work.Id);
+                    Debug.WriteLine(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Work->Role, corrupted work = " + work.Id);
                     return false;
                 }
             }
             catch (Exception ex)
             {
-                Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Work->Role, exception=" + ex.Message);
+                Debug.WriteLine(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Work->Role, exception=" + ex.Message);
                 return false;
             }
 
@@ -205,13 +205,13 @@ namespace BabelMeta.Modules.Control
                         ) != null
                     )
                 {
-                    Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Work->Work, orphan, corrupted work = " + work.Id);
+                    Debug.WriteLine(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Work->Work, orphan, corrupted work = " + work.Id);
                     return false;
                 }
             }
             catch (Exception ex)
             {
-                Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Work->Work, exception=" + ex.Message);
+                Debug.WriteLine(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Work->Work, exception=" + ex.Message);
                 return false;
             }
 
@@ -228,13 +228,13 @@ namespace BabelMeta.Modules.Control
                         ) != null
                     )
                 {
-                    Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Work->Work, loop, corrupted work = " + work.Id);
+                    Debug.WriteLine(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Work->Work, loop, corrupted work = " + work.Id);
                     return false;
                 }
             }
             catch (Exception ex)
             {
-                Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Work->Work, exception=" + ex.Message);
+                Debug.WriteLine(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Work->Work, exception=" + ex.Message);
                 return false;
             }
 
@@ -255,13 +255,13 @@ namespace BabelMeta.Modules.Control
                         ) != null
                     )
                 {
-                    Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Asset->Work, corrupted asset = " + asset.Id);
+                    Debug.WriteLine(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Asset->Work, corrupted asset = " + asset.Id);
                     return false;
                 }
             }
             catch (Exception ex)
             {
-                Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Asset->Work, exception=" + ex.Message);
+                Debug.WriteLine(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Asset->Work, exception=" + ex.Message);
                 return false;
             }
 
@@ -284,13 +284,13 @@ namespace BabelMeta.Modules.Control
                         ) != null
                     )
                 {
-                    Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Asset->Contributor, corrupted asset = " + asset.Id);
+                    Debug.WriteLine(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Asset->Contributor, corrupted asset = " + asset.Id);
                     return false;
                 }
             }
             catch (Exception ex)
             {
-                Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Asset->Contributor, exception=" + ex.Message);
+                Debug.WriteLine(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Asset->Contributor, exception=" + ex.Message);
                 return false;
             }
 
@@ -307,7 +307,7 @@ namespace BabelMeta.Modules.Control
                                 i.Contributors.Values.ToList().Exists(rq =>
                                         rq.Keys.ToList().Exists(r =>
                                             !CatalogContext.Instance.Roles.Exists(e =>
-                                                String.Compare(e.Name, r.Name, StringComparison.Ordinal) == 0
+                                                String.Compare(e.Name, r, StringComparison.Ordinal) == 0
                                         )
                                     )
                                 )
@@ -315,13 +315,13 @@ namespace BabelMeta.Modules.Control
                         ) != null
                     )
                 {
-                    Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Asset->Role, corrupted asset = " + asset.Id);
+                    Debug.WriteLine(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Asset->Role, corrupted asset = " + asset.Id);
                     return false;
                 }
             }
             catch (Exception ex)
             {
-                Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Asset->Role, exception=" + ex.Message);
+                Debug.WriteLine(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Asset->Role, exception=" + ex.Message);
                 return false;
             }
 
@@ -338,7 +338,7 @@ namespace BabelMeta.Modules.Control
                                 i.Contributors.Values.ToList().Exists(rq =>
                                         rq.Values.ToList().Exists(q =>
                                             !CatalogContext.Instance.Qualities.Exists(e =>
-                                                String.Compare(e.Name, q.Name, StringComparison.Ordinal) == 0
+                                                String.Compare(e.Name, q, StringComparison.Ordinal) == 0
                                         )
                                     )
                                 )
@@ -346,13 +346,13 @@ namespace BabelMeta.Modules.Control
                         ) != null
                     )
                 {
-                    Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Asset->Quality, corrupted asset = " + asset.Id);
+                    Debug.WriteLine(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Asset->Quality, corrupted asset = " + asset.Id);
                     return false;
                 }
             }
             catch (Exception ex)
             {
-                Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Asset->Quality, exception=" + ex.Message);
+                Debug.WriteLine(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Asset->Quality, exception=" + ex.Message);
                 return false;
             }
 
@@ -377,13 +377,13 @@ namespace BabelMeta.Modules.Control
                         ) != null
                     )
                 {
-                    Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Album->Asset, corrupted album = " + album.CatalogReference);
+                    Debug.WriteLine(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Album->Asset, corrupted album = " + album.CatalogReference);
                     return false;
                 }
             }
             catch (Exception ex)
             {
-                Debug.Write(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Album->Asset, exception=" + ex.Message);
+                Debug.WriteLine(this, "ModelIntegrityChecker.CheckReferentialIntegrity, Album->Asset, exception=" + ex.Message);
                 return false;
             }
 

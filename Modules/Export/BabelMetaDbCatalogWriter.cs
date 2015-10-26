@@ -23,25 +23,28 @@
  *  THE SOFTWARE. 
  */
 
-namespace BabelMeta.AppConfig
+using BabelMeta.AppConfig;
+using System;
+
+namespace BabelMeta.Modules.Export
 {
-    /// <summary>
-    /// ReturnCodes qualifies the output codes returned by functions wherever required in the solution.
-    /// Please aim at keeping the running naming convention.
-    /// </summary>
-    public enum ReturnCode
+    public class BabelMetaDbCatalogWriter : ICatalogWriter
     {
-        Ok,
+        public ReturnCode Generate(object context, MainFormViewModel viewModel = null)
+        {
+            if  (
+                    viewModel == null
+                )
+            {
+                return ReturnCode.ModulesExportBabelMetaMySqlGenerateWrongServerParameters;
+            }
 
-        ModulesImportDefaultParseEmptyStream,
-        ModulesImportDefaultParseUnknownFormat,
-        ModulesImportDefaultParseInvalidWorkbook,
+            throw new NotImplementedException();
+        }
 
-        ModulesExportCatalogContextNotInitialized,
-
-        ModulesExportFugaXmlGenerateNullFolderName,
-
-        ModulesExportBabelMetaMySqlGenerateWrongServerParameters,
-        ModulesExportBabelMetaMySqlGenerateBadCredentials,
+        public void Notify(string message)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

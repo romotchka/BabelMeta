@@ -123,7 +123,7 @@ namespace BabelMeta.Modules.Export
                 {CatalogTier.Premium, ingestionAlbumTracksClassical_trackCatalog_tier.FRONT},
             };
 
-        MainFormViewModel _mainFormViewModel = null;
+        MainFormViewModel _mainFormViewModel;
 
         private static FugaXmlCatalogWriter _instance;
 
@@ -222,12 +222,15 @@ namespace BabelMeta.Modules.Export
             // Action
             try
             {
-                i.action = _actionConverter[(Album.ActionType)album.ActionTypeValue];
+                if (album.ActionTypeValue != null)
+                {
+                    i.action = _actionConverter[(Album.ActionType)album.ActionTypeValue];
+                }
             }
             catch (Exception ex)
             {
                 Notify(String.Format("Album [{0}]: Invalid action.", album.CatalogReference));
-                Debug.Write(this, "FugaXmlCatalogWriter.GenerateAlbumWiseData, exception=" + ex.Message);
+                Debug.WriteLine(this, "FugaXmlCatalogWriter.GenerateAlbumWiseData, exception=" + ex.Message);
             }
 
             // TODO i.album.additional_artists
@@ -500,9 +503,9 @@ namespace BabelMeta.Modules.Export
                         artist = CatalogContext.Instance.Artists.FirstOrDefault(a => a.Id.Equals(workContributor.Key));
                         artistsBuffer.Add(artist);
                     }
-                    var role = CatalogContext.Instance.Roles.FirstOrDefault(r => String.Compare(r.Name, workContributor.Value.Name, StringComparison.Ordinal) == 0);
-                    var cRole = (_roleConverter.ContainsKey((Role.QualifiedName)role.Reference))
-                        ? _roleConverter[(Role.QualifiedName)role.Reference]
+                    var role = CatalogContext.Instance.Roles.FirstOrDefault(r => String.Compare(r.Name, workContributor.Value, StringComparison.Ordinal) == 0);
+                    var cRole = (_roleConverter.ContainsKey(role.Reference))
+                        ? _roleConverter[role.Reference]
                         : contributorRole.ContributingArtist;
 
                     if (artist.LastName.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName))
@@ -664,7 +667,7 @@ namespace BabelMeta.Modules.Export
         {
             if (_mainFormViewModel == null || _mainFormViewModel.MainFormDispatcher == null || String.IsNullOrEmpty(message))
             {
-                Debug.Write("FugaXmlCatalogWriter.Notify, wrong view model or empty message");
+                Debug.WriteLine("FugaXmlCatalogWriter.Notify, wrong view model or empty message");
                 return;
             }
             var methodInvoker = new MethodInvoker(() =>
@@ -678,6 +681,7 @@ namespace BabelMeta.Modules.Export
         /// <summary>
         /// Returns the file name, if found, of the file corresponding to criteria
         /// </summary>
+        /// <param name="files"></param>
         /// <param name="fileType"></param>
         /// <param name="parameter"></param>
         /// <returns></returns>

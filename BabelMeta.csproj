@@ -53,6 +53,14 @@
     <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
+    <Reference Include="MySql.Data, Version=6.9.7.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>packages\MySql.Data.6.9.7\lib\net45\MySql.Data.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -67,7 +75,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppConfig\BabelMetaConfig.cs" />
+    <Compile Include="Helpers\DbSerializationHelper.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
+    <Compile Include="LocalizedStrings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>LocalizedStrings.resx</DependentUpon>
+    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -90,6 +104,7 @@
     <Compile Include="Model\Work.cs" />
     <Compile Include="Modules\Control\IIntegrityChecker.cs" />
     <Compile Include="Modules\Control\ModelIntegrityChecker.cs" />
+    <Compile Include="Modules\Export\BabelMetaDbCatalogWriter.cs" />
     <Compile Include="Modules\Export\DdexCatalogWriter.cs" />
     <Compile Include="Modules\Export\FugaIngestionFileType.cs" />
     <Compile Include="Modules\Export\FugaXmlCatalogWriter.cs" />
@@ -105,6 +120,15 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AppConfig\ReturnCode.cs" />
+    <Compile Include="Services\DbDriver\DbDriverConfig.cs" />
+    <Compile Include="Services\DbDriver\DbFieldSize.cs" />
+    <Compile Include="Services\DbDriver\IDbDriverService.cs" />
+    <Compile Include="Services\DbDriver\MySqlDriverService.cs" />
+    <Compile Include="Services\DbDriver\MySqlDriverServiceExtensions.cs" />
+    <EmbeddedResource Include="LocalizedStrings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>LocalizedStrings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -119,6 +143,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="packages.config" />
     <None Include="Properties\DataSources\MainFormViewModel.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -134,6 +159,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Modules\Export\BabelMetaDb\" />
     <Folder Include="Modules\Export\Ddex\" />
     <Folder Include="Modules\Export\RightsUpJson\" />
     <Folder Include="Modules\Export\SolsticeCi\" />

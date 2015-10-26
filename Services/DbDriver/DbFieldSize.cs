@@ -23,25 +23,34 @@
  *  THE SOFTWARE. 
  */
 
-namespace BabelMeta.AppConfig
+using System;
+
+namespace BabelMeta.Services.DbDriver
 {
-    /// <summary>
-    /// ReturnCodes qualifies the output codes returned by functions wherever required in the solution.
-    /// Please aim at keeping the running naming convention.
-    /// </summary>
-    public enum ReturnCode
+    [AttributeUsage(AttributeTargets.Property)]
+    public class DbField : Attribute
     {
-        Ok,
+        private int _maxSize = 0;
 
-        ModulesImportDefaultParseEmptyStream,
-        ModulesImportDefaultParseUnknownFormat,
-        ModulesImportDefaultParseInvalidWorkbook,
+        /// <summary>
+        /// If MaxSize is > 0, text fields will be defined as VARCHAR(MaxSize).
+        /// If 0, text fields will be defined as TEXT.
+        /// </summary>
+        public int MaxSize
+        {
+            get { return _maxSize; }
+            set { _maxSize = value; }
+        }
 
-        ModulesExportCatalogContextNotInitialized,
+        private bool _ignore = false;
 
-        ModulesExportFugaXmlGenerateNullFolderName,
-
-        ModulesExportBabelMetaMySqlGenerateWrongServerParameters,
-        ModulesExportBabelMetaMySqlGenerateBadCredentials,
+        /// <summary>
+        /// If true, the field is not present in the target database.
+        /// </summary>
+        public bool Ignore
+        {
+            get { return _ignore; }
+            set { _ignore = value; }
+        }
     }
 }

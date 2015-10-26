@@ -27,6 +27,7 @@ using BabelMeta.Model.Config;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using BabelMeta.Services.DbDriver;
 
 namespace BabelMeta.Model
 {
@@ -34,7 +35,7 @@ namespace BabelMeta.Model
     /// Asset class represents the Isrc unique Id, per se, and the related information (Work and work Performers).
     /// Having a dedicated Isrc object permits to re-use it in different Albums (compilations, bundles, licensing...)
     /// </summary>
-    [Serializable()]
+    [Serializable]
     public class Asset : ISerializable
     {
         public Asset()
@@ -52,11 +53,11 @@ namespace BabelMeta.Model
             Tier = null;
         }
 
-        public Asset(SerializationInfo info, StreamingContext ctxt)
+        public Asset(SerializationInfo info, StreamingContext context)
         {
             Id = (String)info.GetValue("BabelMeta.Model.Asset.Id", typeof(String));
             Work = (int)info.GetValue("BabelMeta.Model.Asset.Work", typeof(int));
-            Contributors = (Dictionary<int, Dictionary<Role, Quality>>)info.GetValue("BabelMeta.Model.Asset.Contributors", typeof(Dictionary<int, Dictionary<Role, Quality>>));
+            Contributors = (Dictionary<int, Dictionary<String, String>>)info.GetValue("BabelMeta.Model.Asset.Contributors", typeof(Dictionary<int, Dictionary<String, String>>));
             CName = (String)info.GetValue("BabelMeta.Model.Asset.CName", typeof(String));
             CYear = (short?)info.GetValue("BabelMeta.Model.Asset.CYear", typeof(short?));
             PName = (String)info.GetValue("BabelMeta.Model.Asset.PName", typeof(String));
@@ -82,29 +83,36 @@ namespace BabelMeta.Model
             info.AddValue("BabelMeta.Model.Asset.Tier", Tier);
         }
 
+        [DbField(MaxSize = 128)]
         public String Id { get; set; }
 
         public int Work { get; set; }
 
         /// <summary>
         /// Asset Contributor is e.g. the Performer or Musical Director or Sound Engineer
+        /// The String key in the nested dictionary is a Role.Name
+        /// The String field in the nested dictionary represents a Quality.Name
         /// </summary>
-        public Dictionary<int, Dictionary<Role, Quality>> Contributors { get; set; }
+        public Dictionary<int, Dictionary<String, String>> Contributors { get; set; }
 
+        [DbField(MaxSize = 128)]
         public String CName { get; set; }
 
         public short? CYear { get; set; }
 
+        [DbField(MaxSize = 128)]
         public String PName { get; set; }
 
         public short? PYear { get; set; }
 
+        [DbField(MaxSize = 128)]
         public String RecordingLocation { get; set; }
 
         public short? RecordingYear { get; set; }
 
         public bool AvailableSeparately { get; set; }
 
+        [DbField(MaxSize = 16)]
         public CatalogTier? Tier { get; set; }
     }
 }

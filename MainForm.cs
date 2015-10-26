@@ -45,6 +45,9 @@ namespace BabelMeta
 {
     public partial class MainForm : Form
     {
+        private const char _pathSeparatorChar = '\\';
+        private const string _pathSeparatorString = "\\";
+
         public MainForm()
         {
             InitializeComponent();
@@ -104,7 +107,7 @@ namespace BabelMeta
         {
             if (_viewModel == null)
             {
-                Debug.Write("MainForm.templatedWorkbookToolStripMenuItem_Click, null view model");
+                Debug.WriteLine("MainForm.templatedWorkbookToolStripMenuItem_Click, null view model");
                 return;
             }
             _viewModel.MainFormDispatcher = Dispatcher.CurrentDispatcher;
@@ -112,34 +115,34 @@ namespace BabelMeta
             var openFileDialog = new OpenFileDialog
             {
                 InitialDirectory = "c:\\",
-                Title = "Open a default file",
+                Title = LocalizedStrings.MainFormTemplatedWorkbookToolStripMenuItem_Click_OpenDefaultFile,
                 RestoreDirectory = true,
             };
 
             if (InputFormat.SelectedItem == null)
             {
-                Notify("No input format selected.");
-                Debug.Write("MainForm.templatedWorkbookToolStripMenuItem_Click, no input format selected");
+                Notify(LocalizedStrings.MainFormTemplatedWorkbookToolStripMenuItem_Click_NoInputFormatSelected);
+                Debug.WriteLine("MainForm.templatedWorkbookToolStripMenuItem_Click, no input format selected");
                 return;
             }
 
             switch (InputFormat.SelectedItem.ToString().ToFileFormatType())
             {
                 case FileFormatType.ExcelWorkbook:
-                    openFileDialog.Filter = "Excel files (*.xls, *.xlsx)|*.xls*";
+                    openFileDialog.Filter = LocalizedStrings.MainFormTemplatedWorkbookToolStripMenuItem_Click_ExcelFiles;
                     break;
                 case FileFormatType.ExcelXml2003:
-                    openFileDialog.Filter = "XML files (*.xml)|*.xml";
+                    openFileDialog.Filter = LocalizedStrings.MainFormTemplatedWorkbookToolStripMenuItem_Click_XmlFiles;
                     break;
 
                 default:
-                    openFileDialog.Filter = "All files (*.*)|*.*";
+                    openFileDialog.Filter = LocalizedStrings.MainFormTemplatedWorkbookToolStripMenuItem_Click_AllFiles;
                     break;
             }
 
             if (openFileDialog.ShowDialog() != DialogResult.OK)
             {
-                Debug.Write("MainForm.templatedWorkbookToolStripMenuItem_Click, wrong file dialog output");
+                Debug.WriteLine("MainForm.templatedWorkbookToolStripMenuItem_Click, wrong file dialog output");
                 return;
             }
 
@@ -159,16 +162,16 @@ namespace BabelMeta
 
                 if (r != ReturnCode.Ok)
                 {
-                    Debug.Write("MainForm.templatedWorkbookToolStripMenuItem_Click, wrong return code:" + r);
+                    Debug.WriteLine("MainForm.templatedWorkbookToolStripMenuItem_Click, wrong return code:" + r);
                     return;
                 }
                 Notify("Catalog parsing done.");
-                Debug.Write("MainForm.templatedWorkbookToolStripMenuItem_Click, catalog parsing done");
+                Debug.WriteLine("MainForm.templatedWorkbookToolStripMenuItem_Click, catalog parsing done");
             }
             catch (Exception ex)
             {
                 Notify("Error: Could not read file from disk. Original error: " + ex.Message);
-                Debug.Write("MainForm.templatedWorkbookToolStripMenuItem_Click, exception: " + ex.Message);
+                Debug.WriteLine("MainForm.templatedWorkbookToolStripMenuItem_Click, exception: " + ex.Message);
             }
         }
 
@@ -185,7 +188,7 @@ namespace BabelMeta
         {
             if (String.IsNullOrEmpty(filePath))
             {
-                Debug.Write("MainForm.DeserializeBmdFile, no file path");
+                Debug.WriteLine("MainForm.DeserializeBmdFile, no file path");
                 return;
             }
 
@@ -244,23 +247,22 @@ namespace BabelMeta
         {
             var fbd = new FolderBrowserDialog
             {
-                Description = "Select a root folder to load session files.",
+                Description = LocalizedStrings.MainFormloadSessionToolStripMenuItem_Click_SelectRootFolder,
             };
 
             fbd.ShowDialog();
 
             if (String.IsNullOrEmpty(fbd.SelectedPath))
             {
-                Debug.Write("MainForm.loadSessionToolStripMenuItem_Click, wrong file pointer");
+                Debug.WriteLine("MainForm.loadSessionToolStripMenuItem_Click, wrong file pointer");
                 return;
             }
-
 
             var getFiles = Directory.GetFiles(fbd.SelectedPath, "*.bmd");
             if (getFiles.Count() != 9)
             {
                 Notify("The session file structure is corrupted.");
-                Debug.Write("MainForm.loadSessionToolStripMenuItem_Click, the session file structure is corrupted");
+                Debug.WriteLine("MainForm.loadSessionToolStripMenuItem_Click, the session file structure is corrupted");
             }
 
             var files = getFiles.ToList();
@@ -275,9 +277,14 @@ namespace BabelMeta
                     DeserializeBmdFile(file);
                 }
 
-                if (_viewModel.FilterArtistChecked) CatalogContext.Instance.FilterUnusedArtists();
-                else
-                if (_viewModel.FilterWorkChecked) CatalogContext.Instance.FilterUnusedWorks();
+                if (_viewModel.FilterArtistChecked)
+                {
+                    CatalogContext.Instance.FilterUnusedArtists();
+                }
+                else if (_viewModel.FilterWorkChecked)
+                {
+                    CatalogContext.Instance.FilterUnusedWorks();
+                }
 
                 CatalogContext.Instance.Initialized = true;
 
@@ -286,7 +293,7 @@ namespace BabelMeta
             catch (Exception ex)
             {
                 Notify("Session not readable.");
-                Debug.Write("MainForm.loadSessionToolStripMenuItem_Click, exception: " + ex.Message);
+                Debug.WriteLine("MainForm.loadSessionToolStripMenuItem_Click, exception: " + ex.Message);
             }
         }
 
@@ -299,19 +306,19 @@ namespace BabelMeta
         {
             var fbd = new FolderBrowserDialog
             {
-                Description = "Select a root folder to save session files."
+                Description = LocalizedStrings.MainFormSaveSessionToolStripMenuItem_Click_SelectRootFolder,
             };
 
             fbd.ShowDialog();
 
             if (String.IsNullOrEmpty(fbd.SelectedPath))
             {
-                Debug.Write("MainForm.saveSessionToolStripMenuItem_Click, wrong file pointer");
+                Debug.WriteLine("MainForm.saveSessionToolStripMenuItem_Click, wrong file pointer");
                 return;
             }
-            if ((fbd.SelectedPath.ToCharArray())[fbd.SelectedPath.Length - 1] != '\\')
+            if ((fbd.SelectedPath.ToCharArray())[fbd.SelectedPath.Length - 1] != _pathSeparatorChar)
             {
-                fbd.SelectedPath += "\\";
+                fbd.SelectedPath += _pathSeparatorString;
             }
 
             var binaryFormatter = new BinaryFormatter();
@@ -319,7 +326,7 @@ namespace BabelMeta
             try
             {
                 // Settings
-                Stream stream = File.Open(fbd.SelectedPath + "Settings.bmd", FileMode.Create);
+                var stream = File.Open(fbd.SelectedPath + "Settings.bmd", FileMode.Create);
 
                 binaryFormatter.Serialize(stream, CatalogContext.Instance.Settings);
                 stream.Close();
@@ -377,8 +384,8 @@ namespace BabelMeta
 
             catch (Exception ex)
             {
-                Notify("Session not saved: I/O error on disk.");
-                Debug.Write("MainForm.saveSessionToolStripMenuItem_Click, exception: " + ex.Message);
+                Notify(LocalizedStrings.MainFormSaveSessionToolStripMenuItem_Click_SessionNotSaved);
+                Debug.WriteLine("MainForm.saveSessionToolStripMenuItem_Click, exception: " + ex.Message);
             }
         }
 
@@ -407,7 +414,7 @@ namespace BabelMeta
                 )
             {
                 Notify("The imported model is valid.");
-                Debug.Write("MainForm.DoCheckIntegrity, the imported model is valid");
+                Debug.WriteLine("MainForm.DoCheckIntegrity, the imported model is valid");
             }
             else
             {
@@ -415,12 +422,12 @@ namespace BabelMeta
                 if (!CatalogContext.Instance.RedundantKeysChecked)
                 {
                     message += " Redundant keys exist.";
-                    Debug.Write("MainForm.DoCheckIntegrity, redundant keys exist");
+                    Debug.WriteLine("MainForm.DoCheckIntegrity, redundant keys exist");
                 }
                 if (!CatalogContext.Instance.ReferentialIntegrityChecked)
                 {
                     message += " Some foreign keys are invalid.";
-                    Debug.Write("MainForm.DoCheckIntegrity, some foreign keys are invalid");
+                    Debug.WriteLine("MainForm.DoCheckIntegrity, some foreign keys are invalid");
                 }
                 Notify(message);
             }
@@ -445,8 +452,8 @@ namespace BabelMeta
         {
             if (!CatalogContext.Instance.Initialized)
             {
-                Notify("Catalog not present.");
-                Debug.Write("MainForm.fugaToolStripMenuItem_Click, catalog not present");
+                Notify(LocalizedStrings.MainFormFugaToolStripMenuItem_Click_CatalogNotPresent);
+                Debug.WriteLine("MainForm.fugaToolStripMenuItem_Click, catalog not present");
                 return;
             }
             DoCheckIntegrity();
@@ -457,7 +464,7 @@ namespace BabelMeta
 
             var fbd = new FolderBrowserDialog
             {
-                Description = "Select a root folder for output sub-folders and XML files.",
+                Description = LocalizedStrings.MainFormFugaToolStripMenuItem_Click_FolderBrowserDialog,
             };
 
             fbd.ShowDialog();
@@ -522,6 +529,39 @@ namespace BabelMeta
             {
                 _viewModel.DoubleSpacesRemovalActive = DoubleSpacesCheckBox.Checked;
             }
+        }
+
+        private void DbEngineType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void DbServerName_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void DbDatabaseName_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void DbDatabaseUser_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void DbSaveChanges_Click(object sender, EventArgs e)
+        {
+            if (_viewModel == null)
+            {
+                return;
+            }
+            _viewModel.DbEngineType = DbEngineType.Text;
+            _viewModel.DbServerName = DbServerName.Text;
+            _viewModel.DbDatabaseName = DbDatabaseName.Text;
+            _viewModel.DbDatabaseUser = DbDatabaseUser.Text;
+            _viewModel.DbDatabasePassword = DbDatabasePassword.Text;
         }
     }
 }

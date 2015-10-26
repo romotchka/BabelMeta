@@ -25,13 +25,14 @@
 
 using System;
 using System.Runtime.Serialization;
+using BabelMeta.Services.DbDriver;
 
 namespace BabelMeta.Model
 {
     /// <summary>
     /// Quality determines the particular status of an asset contributor.
     /// </summary>
-    [Serializable()]
+    [Serializable]
     public class Quality : ISerializable
     {
         public Quality()
@@ -39,7 +40,7 @@ namespace BabelMeta.Model
             Name = String.Empty;
         }
 
-        public Quality(SerializationInfo info, StreamingContext ctxt)
+        public Quality(SerializationInfo info, StreamingContext context)
         {
             Name = (String)info.GetValue("BabelMeta.Model.Quality.Name", typeof(String));
         }
@@ -49,6 +50,7 @@ namespace BabelMeta.Model
             info.AddValue("BabelMeta.Model.Quality.Name", Name);
         }
 
+        [DbField(MaxSize = 128)]
         public String Name { get; set; }
     }
 }

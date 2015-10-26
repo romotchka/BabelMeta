@@ -35,9 +35,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Threading;
 using System.Xml;
-using Action = System.Action;
 using Excel = Microsoft.Office.Interop.Excel;
 
 namespace BabelMeta.Modules.Import
@@ -94,7 +92,7 @@ namespace BabelMeta.Modules.Import
         /// Legacy convention for tonalities
         /// </summary>
         private readonly Dictionary<String, Key> _shortenedKeys =
-            new Dictionary<String, Key>()
+            new Dictionary<String, Key>
             {
                 {"Ab", Key.AFlatMajor},
                 {"A", Key.AMajor},
@@ -218,7 +216,7 @@ namespace BabelMeta.Modules.Import
                     }
                     catch (Exception ex)
                     {
-                        Debug.Write(this, "TemplatedCatalogReader.Parse, case=FileFormatType.ExcelXml2003, exception=" + ex.Message);
+                        Debug.WriteLine(this, "TemplatedCatalogReader.Parse, case=FileFormatType.ExcelXml2003, exception=" + ex.Message);
                         Notify("The XML parsing failed.");
                         return ReturnCode.ModulesImportDefaultParseEmptyStream;
                     }
@@ -564,7 +562,7 @@ namespace BabelMeta.Modules.Import
                         }
                         catch (Exception ex)
                         {
-                            Debug.Write(this, "TemplatedCatalogReader.CellMapByRow, worksheet=" + worksheetName + ", line=" + rowIndex + ", exception=" + ex.Message);
+                            Debug.WriteLine(this, "TemplatedCatalogReader.CellMapByRow, worksheet=" + worksheetName + ", line=" + rowIndex + ", exception=" + ex.Message);
                             Notify(String.Format("A problem occurred while trying to read worksheet {0}, line {1}, column {2}.", worksheetName, rowIndex, index));
                         }
                     }
@@ -790,7 +788,7 @@ namespace BabelMeta.Modules.Import
                     }
                     catch (Exception ex)
                     {
-                        Debug.Write("TemplatedCatalogReader.ExistsWorksheet, case=FileFormatType.ExcelXml2003, exception=" + ex.Message);
+                        Debug.WriteLine("TemplatedCatalogReader.ExistsWorksheet, case=FileFormatType.ExcelXml2003, exception=" + ex.Message);
                         Instance.Notify(String.Format("A problem occurred while trying to check worksheet {0}.", worksheetName));
                         return false;
                     }
@@ -864,9 +862,10 @@ namespace BabelMeta.Modules.Import
             foreach (var row in _settings)
             {
                 Dictionary<int, object> cells = null;
+                var rowCopy = row;
                 await Task.Run(() =>
                 {
-                    cells = CellMapByRow(row, SettingsWorksheetName);
+                    cells = CellMapByRow(rowCopy, SettingsWorksheetName);
                 });
 
                 if (cells == null || cells.Count <= 0)
@@ -948,9 +947,10 @@ namespace BabelMeta.Modules.Import
             foreach (var row in _langs)
             {
                 Dictionary<int, object> cells = null;
+                var rowCopy = row;
                 await Task.Run(() =>
                 {
-                    cells = CellMapByRow(row, LangWorksheetName);
+                    cells = CellMapByRow(rowCopy, LangWorksheetName);
                 });
 
                 if (cells == null || cells.Count <= 0)
@@ -987,9 +987,10 @@ namespace BabelMeta.Modules.Import
             foreach (var row in _tags)
             {
                 Dictionary<int, object> cells = null;
+                var rowCopy = row;
                 await Task.Run(() =>
                 {
-                    cells = CellMapByRow(row, TagWorksheetName);
+                    cells = CellMapByRow(rowCopy, TagWorksheetName);
                 });
 
                 if (cells != null && cells.Count > 0)
@@ -1026,9 +1027,10 @@ namespace BabelMeta.Modules.Import
             foreach (var row in _roles)
             {
                 Dictionary<int, object> cells = null;
+                var rowcopy = row;
                 await Task.Run(() =>
                 {
-                    cells = CellMapByRow(row, RoleWorksheetName);
+                    cells = CellMapByRow(rowcopy, RoleWorksheetName);
                 });
 
                 if (cells != null && cells.Count > 0)
@@ -1038,27 +1040,15 @@ namespace BabelMeta.Modules.Import
                         Name = CellContentWizard(cells, _worksheetColumns[RoleWorksheetName]["role_name"]).ToLower(),
                     };
 
-                    // Attempt to retrieve a qualified name (standardized)
-                    switch (role.Name)
-                    {
-                        case "arranger": role.Reference = Role.QualifiedName.Arranger; break;
-                        case "composer": role.Reference = Role.QualifiedName.Composer; break;
-                        case "conductor": role.Reference = Role.QualifiedName.Conductor; break;
-                        case "engineer": role.Reference = Role.QualifiedName.Engineer; break;
-                        case "ensemble": role.Reference = Role.QualifiedName.Ensemble; break;
-                        case "performer": role.Reference = Role.QualifiedName.Performer; break;
-                    }
-
-                    if (role.Reference != null)
-                    {
-                        CatalogContext.Instance.Roles.Add(role);
-                    }
+                    CatalogContext.Instance.Roles.Add(role);
                 }
 
-                if (_mainFormViewModel != null)
+                if (_mainFormViewModel == null)
                 {
-                    _mainFormViewModel.InputProgressBarValue++;
+                    continue;
                 }
+
+                _mainFormViewModel.InputProgressBarValue++;
             }
         }
 
@@ -1077,9 +1067,10 @@ namespace BabelMeta.Modules.Import
             foreach (var row in _qualities)
             {
                 Dictionary<int, object> cells = null;
+                var rowCopy = row;
                 await Task.Run(() =>
                 {
-                    cells = CellMapByRow(row, QualityWorksheetName);
+                    cells = CellMapByRow(rowCopy, QualityWorksheetName);
                 });
 
                 if (cells != null && cells.Count > 0)
@@ -1117,9 +1108,10 @@ namespace BabelMeta.Modules.Import
             foreach (var row in _artists)
             {
                 Dictionary<int, object> cells = null;
+                var rowCopy = row;
                 await Task.Run(() =>
                 {
-                    cells = CellMapByRow(row, ArtistWorksheetName);
+                    cells = CellMapByRow(rowCopy, ArtistWorksheetName);
                 });
 
                 if (cells != null && cells.Count > 0)
@@ -1195,9 +1187,10 @@ namespace BabelMeta.Modules.Import
             foreach (var row in _works)
             {
                 Dictionary<int, object> cells = null;
+                var rowCopy = row;
                 await Task.Run(() =>
                 {
-                    cells = CellMapByRow(row, WorkWorksheetName);
+                    cells = CellMapByRow(rowCopy, WorkWorksheetName);
                 });
 
                 if (cells != null && cells.Count > 0)
@@ -1220,7 +1213,7 @@ namespace BabelMeta.Modules.Import
                         {
                             {CatalogContext.Instance.DefaultLang.ShortName, CellContentWizard(cells, _worksheetColumns[WorkWorksheetName]["movement_title_" + CatalogContext.Instance.DefaultLang.ShortName])},  
                         },
-                        Contributors = new Dictionary<int, Role>(),
+                        Contributors = new Dictionary<int, String>(),
                     };
 
                     if (work.Id <= 0)
@@ -1259,7 +1252,7 @@ namespace BabelMeta.Modules.Import
 
                         if (idContributor > 0 && roleContributor != null)
                         {
-                            work.Contributors[idContributor] = roleContributor;
+                            work.Contributors[idContributor] = roleContributor.Name;
                         }
                         i++;
                     }
@@ -1292,9 +1285,10 @@ namespace BabelMeta.Modules.Import
             foreach (var row in _assets)
             {
                 Dictionary<int, object> cells = null;
+                var rowCopy = row;
                 await Task.Run(() =>
                 {
-                    cells = CellMapByRow(row, AssetWorksheetName);
+                    cells = CellMapByRow(rowCopy, AssetWorksheetName);
                 });
 
                 if (cells != null && cells.Count > 0)
@@ -1310,7 +1304,7 @@ namespace BabelMeta.Modules.Import
                         RecordingLocation = CellContentWizard(cells, _worksheetColumns[AssetWorksheetName]["recording_location"]),
                         RecordingYear = Convert.ToInt16(CellContentWizard(cells, _worksheetColumns[AssetWorksheetName]["recording_year"], "0")),
                         AvailableSeparately = (String.Compare(CellContentWizard(cells, _worksheetColumns[AssetWorksheetName]["available_separately"]).ToLower(), "no", StringComparison.Ordinal) != 0) && CatalogContext.Instance.Settings.AvailableSeparatelyDefault,
-                        Contributors = new Dictionary<int, Dictionary<Role, Quality>>(),
+                        Contributors = new Dictionary<int, Dictionary<String, String>>(),
                     };
 
                     if (String.IsNullOrEmpty(asset.Id) || asset.Id.Length < 12 || asset.Id.Length > 15 || asset.Work <= 0)
@@ -1357,13 +1351,19 @@ namespace BabelMeta.Modules.Import
                         var qualityContributor = CatalogContext.Instance.Qualities.FirstOrDefault(c => String.Compare(c.Name, qualityContributorName, StringComparison.Ordinal) == 0);
 
                         // Contributor valid
-                        if (idContributor > 0 && roleContributor != null && qualityContributor != null)
+                        if  (
+                                idContributor > 0
+                                && roleContributor != null
+                                && !String.IsNullOrEmpty(roleContributor.Name)
+                                && qualityContributor != null
+                                && !String.IsNullOrEmpty(qualityContributor.Name)
+                            )
                         {
                             if (!asset.Contributors.ContainsKey(idContributor))
                             {
-                                asset.Contributors[idContributor] = new Dictionary<Role, Quality>();
+                                asset.Contributors[idContributor] = new Dictionary<String, String>();
                             }
-                            asset.Contributors[idContributor][roleContributor] = qualityContributor;
+                            asset.Contributors[idContributor][roleContributor.Name] = qualityContributor.Name;
                         }
                         i++;
                     }
@@ -1410,9 +1410,10 @@ namespace BabelMeta.Modules.Import
             foreach (var row in _albums)
             {
                 Dictionary<int, object> cells = null;
+                var rowCopy = row;
                 await Task.Run(() =>
                 {
-                    cells = CellMapByRow(row, AlbumWorksheetName);
+                    cells = CellMapByRow(rowCopy, AlbumWorksheetName);
                 });
 
                 if (cells != null && cells.Count > 0)
@@ -1555,9 +1556,10 @@ namespace BabelMeta.Modules.Import
             foreach (var row in _tracks)
             {
                 Dictionary<int, object> cells = null;
+                var rowCopy = row;
                 await Task.Run(() =>
                 {
-                    cells = CellMapByRow(row, TrackWorksheetName);
+                    cells = CellMapByRow(rowCopy, TrackWorksheetName);
                 });
 
                 if (cells != null && cells.Count > 0)
@@ -1660,32 +1662,47 @@ namespace BabelMeta.Modules.Import
                                 {
                                     continue;
                                 }
-                                foreach (var contributor in
-                                            from contributor in asset.Contributors
-                                            from roleQuality in contributor.Value
-                                            where (
-                                                        roleQuality.Key.Reference == Role.QualifiedName.Performer
-                                                        && String.Compare(roleQuality.Value.Name.ToLower(), "primary", StringComparison.Ordinal) == 0
-                                                    )
-                                            select contributor
-                                        )
-                                {
-                                    // Found a Primary Performer occurrence!
-                                    if (artistFrequencies.ContainsKey(contributor.Key))
+                                foreach (KeyValuePair<int, Dictionary<String, String>> contributor in asset.Contributors)
+                                    foreach (KeyValuePair<String, String> roleQuality in contributor.Value)
                                     {
-                                        artistFrequencies[contributor.Key]++;
+                                        // Retrieve the parent object for that key.
+                                        var roleObject =
+                                            CatalogContext.Instance.Roles.FirstOrDefault(r => String.Compare(
+                                                r.Name, roleQuality.Key, StringComparison.Ordinal) == 0);
+                                        if (roleObject == null)
+                                        {
+                                            continue;
+                                        }
+                                        // Retrieve the parent object for that key.
+                                        var qualityObject =
+                                            CatalogContext.Instance.Qualities.FirstOrDefault(q => String.Compare(
+                                                q.Name, roleQuality.Value, StringComparison.Ordinal) == 0);
+                                        if (qualityObject == null)
+                                        {
+                                            continue;
+                                        }
+                                        if  (
+                                                roleObject.Reference != Role.QualifiedName.Performer
+                                                || String.Compare(qualityObject.Name.ToLower(), "primary", StringComparison.Ordinal) != 0
+                                            )
+                                        {
+                                            continue;
+                                        }
+                                        if (artistFrequencies.ContainsKey(contributor.Key))
+                                        {
+                                            artistFrequencies[contributor.Key]++;
+                                        }
+                                        else
+                                        {
+                                            artistFrequencies[contributor.Key] = 1;
+                                        }
                                     }
-                                    else
-                                    {
-                                        artistFrequencies[contributor.Key] = 1;
-                                    }
-                                }
                             }
                         }
                     }
                     catch (Exception ex)
                     {
-                        Debug.Write("TemplatedCatalogReader.FinalizeAlbums, exception=" + ex.Message);
+                        Debug.WriteLine("TemplatedCatalogReader.FinalizeAlbums, exception=" + ex.Message);
                         Instance.Notify("The primary artist detection went wrong in album " + album.CatalogReference);
                     }
 
@@ -1697,7 +1714,7 @@ namespace BabelMeta.Modules.Import
                     }
                     catch (Exception ex)
                     {
-                        Debug.Write("TemplatedCatalogReader.FinalizeAlbums, exception=" + ex.Message);
+                        Debug.WriteLine("TemplatedCatalogReader.FinalizeAlbums, exception=" + ex.Message);
                         Instance.Notify("The primary artist setup went wrong in album " + album.CatalogReference);
                     }
                 }
@@ -1743,27 +1760,34 @@ namespace BabelMeta.Modules.Import
             {
                 foreach (var asset in CatalogContext.Instance.Assets)
                 {
-                    if (asset.Tier != null) continue;
+                    if (asset.Tier != null)
+                    {
+                        continue;
+                    }
                     var album = CatalogContext.Instance.Albums.FirstOrDefault(
                         a => a.Tracks.Values.ToList().Exists(v => v.Values.ToList().Contains(asset.Id)));
                     if (album != null)
                     {
                         asset.Tier = album.Tier;
-                    };
+                    }
                 }
             }
             catch (Exception ex)
             {
-                Debug.Write("TemplatedCatalogReader.FinalizeAssets, exception=" + ex.Message);
+                Debug.WriteLine("TemplatedCatalogReader.FinalizeAssets, exception=" + ex.Message);
                 Instance.Notify("A problem occurred in assets finalization.");
             }
         }
 
         public void Notify(String message)
         {
-            if (_mainFormViewModel == null || _mainFormViewModel.MainFormDispatcher == null || String.IsNullOrEmpty(message))
+            if  (
+                    _mainFormViewModel == null 
+                    || _mainFormViewModel.MainFormDispatcher == null 
+                    || String.IsNullOrEmpty(message)
+                )
             {
-                Debug.Write("TemplatedCatalogReader.Notify, wrong view model or empty message");
+                Debug.WriteLine("TemplatedCatalogReader.Notify, wrong view model or empty message");
                 return;
             }
             var methodInvoker = new MethodInvoker(() =>

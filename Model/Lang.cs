@@ -25,13 +25,14 @@
 
 using System;
 using System.Runtime.Serialization;
+using BabelMeta.Services.DbDriver;
 
 namespace BabelMeta.Model
 {
     /// <summary>
     /// Lang represents a spoken language present in metadata.
     /// </summary>
-    [Serializable()]
+    [Serializable]
     public class Lang : ISerializable
     {
         public Lang()
@@ -41,7 +42,7 @@ namespace BabelMeta.Model
             IsDefault = false;
         }
 
-        public Lang(SerializationInfo info, StreamingContext ctxt)
+        public Lang(SerializationInfo info, StreamingContext context)
         {
             LongName = (String)info.GetValue("BabelMeta.Model.Lang.LongName", typeof(String));
             ShortName = (String)info.GetValue("BabelMeta.Model.Lang.ShortName", typeof(String));
@@ -58,11 +59,13 @@ namespace BabelMeta.Model
         /// <summary>
         /// Full language name, informative.
         /// </summary>
+        [DbField(MaxSize = 128)]
         public String LongName { get; set; }
 
         /// <summary>
         /// ISO 639-1 2-character language abbreviation, used as unique Id.
         /// </summary>
+        [DbField(MaxSize = 4)]
         public String ShortName { get; set; }
 
         /// <summary>

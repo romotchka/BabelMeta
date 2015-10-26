@@ -27,13 +27,14 @@ using BabelMeta.Model.Config;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using BabelMeta.Services.DbDriver;
 
 namespace BabelMeta.Model
 {
     /// <summary>
     /// Core model Album.
     /// </summary>
-    [Serializable()]
+    [Serializable]
     public class Album : ISerializable
     {
         public Album()
@@ -58,7 +59,7 @@ namespace BabelMeta.Model
             Redeliver = false;
         }
 
-        public Album(SerializationInfo info, StreamingContext ctxt)
+        public Album(SerializationInfo info, StreamingContext context)
         {
             Id = (int)info.GetValue("BabelMeta.Model.Album.Id", typeof(int));
             ActionTypeValue = (ActionType?)info.GetValue("BabelMeta.Model.Album.ActionTypeValue", typeof(ActionType?));
@@ -113,16 +114,20 @@ namespace BabelMeta.Model
         /// </summary>
         public int Id { get; set; }
 
+        [DbField(MaxSize = 16)]
         public ActionType? ActionTypeValue { get; set; }
 
+        [DbField(MaxSize = 128)]
         public String CName { get; set; }
 
         public short? CYear { get; set; }
 
+        [DbField(MaxSize = 128)]
         public String PName { get; set; }
 
         public short? PYear { get; set; }
 
+        [DbField(MaxSize = 16)]
         public CatalogTier Tier { get; set; }
 
         public DateTime ConsumerReleaseDate { get; set; }
@@ -139,14 +144,19 @@ namespace BabelMeta.Model
         /// </summary>
         public Dictionary<String, String> Title { get; set; }
 
+        [DbField(MaxSize = 128)]
         public Tag Genre { get; set; }
 
+        [DbField(MaxSize = 128)]
         public Tag Subgenre { get; set; }
 
+        [DbField(MaxSize = 128)]
         public String Owner { get; set; }
 
+        [DbField(MaxSize = 32)]
         public String CatalogReference { get; set; }
 
+        [DbField(MaxSize = 128)]
         public String RecordingLocation { get; set; }
 
         public short? RecordingYear { get; set; }
