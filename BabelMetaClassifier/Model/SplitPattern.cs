@@ -23,9 +23,104 @@
  *  THE SOFTWARE. 
  */
 
+using System;
+
 namespace BabelMetaClassifier.Model
 {
     public class SplitPattern
     {
+        private bool _initialized = false;
+
+        /// <summary>
+        /// Determines when an external process established, heuristically or deterministically, the right property values. 
+        /// </summary>
+        public bool Initialized
+        {
+            get { return _initialized; }
+            set { _initialized = value; }
+        }
+
+        private String _separator = " ";
+
+        /// <summary>
+        /// The separator string pattern for the split.
+        /// </summary>
+        public String Separator
+        {
+            get { return _separator; }
+            set
+            {
+                if (String.IsNullOrEmpty(value))
+                {
+                    return;
+                }
+                _separator = value;
+            }
+        }
+
+        private int _splitOccurrences = 1;
+
+        /// <summary>
+        /// n>0: Will perform a maximum of n splits, resulting in n+1 elements.
+        /// n=0: Will perform as many splits as possible.
+        /// </summary>
+        public int SplitOccurrences
+        {
+            get { return _splitOccurrences; }
+            set
+            {
+                if (value < 0)
+                {
+                    return;
+                }
+                _splitOccurrences = value;
+
+                // Strategies are pointless for the 'open' split.
+                if (value != 0)
+                {
+                    return;
+                }
+                SplitDisambiguationStrategyWhenTooManyValue = SplitDisambiguationStrategyWhenTooMany.Idle;
+                SplitDisambiguationStrategyWhenTooFewValue = SplitDisambiguationStrategyWhenTooFew.Idle;
+            }
+        }
+
+        private SplitDisambiguationStrategyWhenTooMany _splitDisambiguationStrategyWhenTooManyValue = SplitDisambiguationStrategyWhenTooMany.Idle;
+
+        /// <summary>
+        /// What should occur when a particular string contains more elements than expected, according to the pattern seeked.
+        /// </summary>
+        public SplitDisambiguationStrategyWhenTooMany SplitDisambiguationStrategyWhenTooManyValue
+        {
+            get { return _splitDisambiguationStrategyWhenTooManyValue; }
+            set { _splitDisambiguationStrategyWhenTooManyValue = value; }
+        }
+
+        private SplitDisambiguationStrategyWhenTooFew _splitDisambiguationStrategyWhenTooFewValue = SplitDisambiguationStrategyWhenTooFew.Idle;
+
+        /// <summary>
+        /// What should occur when a particular string contains less elements than expected, according to the pattern seeked.
+        /// </summary>
+        public SplitDisambiguationStrategyWhenTooFew SplitDisambiguationStrategyWhenTooFewValue
+        {
+            get { return _splitDisambiguationStrategyWhenTooFewValue; }
+            set { _splitDisambiguationStrategyWhenTooFewValue = value; }
+        }
+    }
+    
+    public enum SplitDisambiguationStrategyWhenTooMany
+    {
+        Idle,
+        ConcatenateRightElements,
+        ConcatenateLeftElements,
+        GenerateAll,
+    }
+
+    public enum SplitDisambiguationStrategyWhenTooFew
+    {
+        Idle,
+        EmptyStringOnRightElements,
+        EmptyStringOnLeftElements,
+        Discard,
     }
 }

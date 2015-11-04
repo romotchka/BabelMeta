@@ -42,10 +42,13 @@
     <Compile Include="Model\Cell.cs" />
     <Compile Include="Model\ColumnIndex.cs" />
     <Compile Include="Model\DataSet.cs" />
+    <Compile Include="Model\DataTypes\Year.cs" />
+    <Compile Include="Model\GenericDataType.cs" />
     <Compile Include="Model\ICell.cs" />
     <Compile Include="Model\IColumnIndex.cs" />
-    <Compile Include="Model\ILineIndex.cs" />
-    <Compile Include="Model\LineIndex.cs" />
+    <Compile Include="Model\IDataSet.cs" />
+    <Compile Include="Model\IRowIndex.cs" />
+    <Compile Include="Model\RowIndex.cs" />
     <Compile Include="Model\SplitPattern.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

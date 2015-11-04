@@ -28,8 +28,20 @@ namespace BabelMetaClassifier.Model
     public interface IColumnIndex
     {
         /// <summary>
-        /// 0 if the line index has no container line.
-        /// Otherwise, the number of ancestor container lines.
+        /// Column index or sub-index.
+        /// </summary>
+        /// <returns></returns>
+        int GetIndex();
+
+        /// <summary>
+        /// Column parent if any.
+        /// </summary>
+        /// <returns></returns>
+        IColumnIndex GetParent();
+
+        /// <summary>
+        /// 0 if the column index has no container.
+        /// Otherwise, 1 + container's depth.
         /// </summary>
         /// <returns></returns>
         int GetDepth();

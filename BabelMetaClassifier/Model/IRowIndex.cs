@@ -23,28 +23,27 @@
  *  THE SOFTWARE. 
  */
 
-using System;
-
 namespace BabelMetaClassifier.Model
 {
-    public class Cell : ICell
+    public interface IRowIndex
     {
-        private String _value = String.Empty;
+        /// <summary>
+        /// Row index or sub-index.
+        /// </summary>
+        /// <returns></returns>
+        int GetIndex();
 
-        public IRowIndex CellRowIndex { get; private set; }
+        /// <summary>
+        /// Row parent if any.
+        /// </summary>
+        /// <returns></returns>
+        IRowIndex GetParent();
 
-        public IColumnIndex CellColumnIndex { get; private set; }
-
-        public Cell(String value, IRowIndex rowIndex, IColumnIndex columnIndex)
-        {
-            _value = value;
-            CellRowIndex = rowIndex;
-            CellColumnIndex = columnIndex;
-        }
-
-        public String GetCellValue()
-        {
-            return _value;
-        }
+        /// <summary>
+        /// 0 if the row index has no container.
+        /// Otherwise, 1 + container's depth.
+        /// </summary>
+        /// <returns></returns>
+        int GetDepth();
     }
 }

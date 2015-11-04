@@ -23,17 +23,82 @@
  *  THE SOFTWARE. 
  */
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BabelMetaClassifier.Model
 {
-    public class DataSet
+    public class DataSet : IDataSet
     {
-        private List<ILineIndex> _lineIndexes;
+        private List<IRowIndex> _rowIndexes;
         private List<IColumnIndex> _columnIndexes;
 
-        private List<SplitPattern> _splitPatterns;
+        public DataSet()
+        {
+            _dataInsert = new object();
+
+            _rowIndexes = new List<IRowIndex>();
+            _columnIndexes = new List<IColumnIndex>();
+            _cells = new List<ICell>();
+        }
+
+        private readonly object _dataInsert;
+
+        /// <summary>
+        /// Ordered list of splits that will be successively applied on data content.
+        /// In case 
+        /// </summary>
+        public List<SplitPattern> SplitPatterns { get; set; }
 
         private List<ICell> _cells;
+
+        public void AddRow(List<String> row)
+        {
+            if (row == null || row.Count == 0)
+            {
+                return;
+            }
+            lock (_dataInsert)
+            {
+                var newRowIndexValue = _rowIndexes.Count == 0
+                    ? 0
+                    : _rowIndexes
+                    .Where(i => i.GetParent() == null)
+                    .Max(i => i.GetIndex()) + 1;
+                var newRowIndex = new RowIndex(newRowIndexValue);
+                _rowIndexes.Add(newRowIndex);
+
+                var currentMaxColumnIndexValue = _columnIndexes.Count == 0
+                    ? -1
+                    : _columnIndexes
+                    .Where(i => i.GetParent() == null)
+                    .Max(i => i.GetIndex());
+
+                // Generate new column indexes if needed.
+                for (var n = currentMaxColumnIndexValue + 1; n < row.Count; n++)
+                {
+                    var columnIndex = new ColumnIndex(n);
+                    _columnIndexes.Add(columnIndex);
+                }
+
+                // Finally, populate cells.
+                for (var n = 0; n < row.Count; n++)
+                {
+                    var columnIndex = _columnIndexes
+                        .Where(i => i.GetParent() == null)
+                        .FirstOrDefault(i => i.GetIndex() == n);
+                    
+                    // By construction, should never happen.
+                    if (columnIndex == null)
+                    {
+                        continue;
+                    }
+
+                    var cell = new Cell(row[n], newRowIndex, columnIndex);
+                    _cells.Add(cell);
+                }
+            }
+        }
     }
 }

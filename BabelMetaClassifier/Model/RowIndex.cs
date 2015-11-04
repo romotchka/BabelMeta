@@ -25,13 +25,46 @@
 
 namespace BabelMetaClassifier.Model
 {
-    public interface ILineIndex
+    public class RowIndex : IRowIndex
     {
+        private double _weight = 1.0;
+
         /// <summary>
-        /// 0 if the line index has no container line.
-        /// Otherwise, the number of ancestor container lines.
+        /// Relative weight of the row compared to other rows.
+        /// E.g. in the case where the row creation resulted from ambiguous split occurrences. 
         /// </summary>
-        /// <returns></returns>
-        int GetDepth();
+        public double Weight
+        {
+            get { return _weight; }
+            set { _weight = value; }
+        }
+
+        private int _index;
+
+        private IRowIndex _parent;
+
+        public RowIndex(int index, IRowIndex parent = null)
+        {
+            _index = index;
+            _parent = parent;
+
+        }
+
+        public int GetIndex()
+        {
+            return _index;
+        }
+
+        public IRowIndex GetParent()
+        {
+            return _parent;
+        }
+
+        public int GetDepth()
+        {
+            return _parent == null
+                ? 0
+                : 1 + _parent.GetDepth();
+        }
     }
 }

@@ -24,27 +24,12 @@
  */
 
 using System;
+using System.Collections.Generic;
 
 namespace BabelMetaClassifier.Model
 {
-    public class Cell : ICell
+    public interface IDataSet
     {
-        private String _value = String.Empty;
-
-        public IRowIndex CellRowIndex { get; private set; }
-
-        public IColumnIndex CellColumnIndex { get; private set; }
-
-        public Cell(String value, IRowIndex rowIndex, IColumnIndex columnIndex)
-        {
-            _value = value;
-            CellRowIndex = rowIndex;
-            CellColumnIndex = columnIndex;
-        }
-
-        public String GetCellValue()
-        {
-            return _value;
-        }
+        void AddRow(List<String> row);
     }
 }

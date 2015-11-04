@@ -23,31 +23,28 @@
  *  THE SOFTWARE. 
  */
 
+using System;
+
 namespace BabelMetaClassifier.Model
 {
-    public class LineIndex : ILineIndex
+    /// <summary>
+    /// The type of a data column, no matter the semantics it bears.
+    /// </summary>
+    public abstract class GenericDataType
     {
-        public int Value { get; set; }
-
-        public ILineIndex Parent { get; set; }
-
-        private double _weight = 1.0;
+        /// <summary>
+        /// Indicates the type in which the string data is expected to be convertible;
+        /// </summary>
+        public Type NativeType { get; protected set; }
 
         /// <summary>
-        /// Relative weight of the line compared to other lines.
-        /// E.g. in the case where the line creation resulted from ambiguous split occurrences. 
+        /// Indicates the probability that content of string s be possibly of that type.
         /// </summary>
-        public double Weight
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public virtual double TypeLikelihoodFor(String s)
         {
-            get { return _weight; }
-            set { _weight = value; }
-        }
-
-        public int GetDepth()
-        {
-            return Parent == null
-                ? 0
-                : 1 + Parent.GetDepth();
+            return 0.0;
         }
     }
 }
