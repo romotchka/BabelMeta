@@ -39,10 +39,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\DataStringHelper.cs" />
     <Compile Include="Model\Cell.cs" />
     <Compile Include="Model\ColumnIndex.cs" />
     <Compile Include="Model\DataSet.cs" />
     <Compile Include="Model\DataTypes\Year.cs" />
+    <Compile Include="Model\GenericDataClass.cs" />
     <Compile Include="Model\GenericDataType.cs" />
     <Compile Include="Model\ICell.cs" />
     <Compile Include="Model\IColumnIndex.cs" />
@@ -51,6 +53,9 @@
     <Compile Include="Model\RowIndex.cs" />
     <Compile Include="Model\SplitPattern.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Model\DataClasses\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

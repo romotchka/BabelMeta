@@ -29,6 +29,10 @@ namespace BabelMetaClassifier.Model
 {
     public interface ICell
     {
-        String GetCellValue();
+        String Value { get; set; }
+
+        IRowIndex CellRowIndex { get; set; }
+
+        IColumnIndex CellColumnIndex { get; set; }
     }
 }

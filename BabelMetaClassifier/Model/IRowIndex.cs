@@ -31,19 +31,26 @@ namespace BabelMetaClassifier.Model
         /// Row index or sub-index.
         /// </summary>
         /// <returns></returns>
-        int GetIndex();
+        int Index { get; set; }
 
         /// <summary>
         /// Row parent if any.
         /// </summary>
         /// <returns></returns>
-        IRowIndex GetParent();
+        IRowIndex Parent { get; set; }
 
         /// <summary>
         /// 0 if the row index has no container.
         /// Otherwise, 1 + container's depth.
         /// </summary>
         /// <returns></returns>
-        int GetDepth();
+        int Depth { get; }
+
+        /// <summary>
+        /// Relative weight of the row compared to other rows.
+        /// E.g. in the case where the row creation resulted from ambiguous split occurrences. 
+        /// If a Parent row exists, the implementation *must* guarantee that the parent weight be zero.
+        /// </summary>
+        double Weight { get; set; }
     }
 }

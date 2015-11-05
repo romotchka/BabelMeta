@@ -24,22 +24,17 @@
  */
 
 using System;
+using BabelMetaClassifier.Model;
 
-namespace BabelMetaClassifier.Model
+namespace BabelMetaClassifier.Helpers
 {
-    public class Cell : ICell
+    public static class DataStringHelper
     {
-        public String Value { get; set; }
-
-        public IRowIndex CellRowIndex { get; set; }
-
-        public IColumnIndex CellColumnIndex { get; set; }
-
-        public Cell(IRowIndex rowIndex, IColumnIndex columnIndex, String value = "")
+        public static double LikelihoodToBeType(this String s, GenericDataType type)
         {
-            Value = value;
-            CellRowIndex = rowIndex;
-            CellColumnIndex = columnIndex;
+            return type == null 
+                ? 0.0 
+                : type.TypeLikelihoodFor(s);
         }
     }
 }

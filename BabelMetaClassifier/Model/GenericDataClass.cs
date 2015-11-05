@@ -27,19 +27,21 @@ using System;
 
 namespace BabelMetaClassifier.Model
 {
-    public class Cell : ICell
+    public abstract class GenericDataClass
     {
-        public String Value { get; set; }
+        /// <summary>
+        /// Parent type for the given class.
+        /// </summary>
+        public readonly GenericDataType DataType;
 
-        public IRowIndex CellRowIndex { get; set; }
-
-        public IColumnIndex CellColumnIndex { get; set; }
-
-        public Cell(IRowIndex rowIndex, IColumnIndex columnIndex, String value = "")
+        protected GenericDataClass(GenericDataType dataType)
         {
-            Value = value;
-            CellRowIndex = rowIndex;
-            CellColumnIndex = columnIndex;
+            DataType = dataType;
+        }
+
+        public virtual double ClassLikelihoodFor(String s)
+        {
+            return 0.0;
         }
     }
 }

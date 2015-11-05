@@ -27,32 +27,33 @@ namespace BabelMetaClassifier.Model
 {
     public class ColumnIndex : IColumnIndex
     {
-        private int _index;
-
-        private IColumnIndex _parent;
-
         public ColumnIndex(int index, IColumnIndex parent = null)
         {
-            _index = index;
-            _parent = parent;
-
+            Index = index;
+            Parent = parent;
         }
 
-        public int GetIndex()
+        public int Index { get; set; }
+
+        public IColumnIndex Parent { get; set; }
+
+        public int Depth
         {
-            return _index;
+            get
+            {
+                return Parent == null
+                    ? 0
+                    : 1 + Parent.Depth;
+            }
         }
 
-        public IColumnIndex GetParent()
+        public bool OwnsAsAncestor(IColumnIndex ancestor)
         {
-            return _parent;
-        }
-
-        public int GetDepth()
-        {
-            return _parent == null
-                ? 0
-                : 1 + _parent.GetDepth();
+            if (Parent == ancestor)
+            {
+                return true;
+            }
+            return Parent != null && Parent.OwnsAsAncestor(ancestor);
         }
     }
 }

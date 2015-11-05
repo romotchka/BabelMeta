@@ -31,19 +31,26 @@ namespace BabelMetaClassifier.Model
         /// Column index or sub-index.
         /// </summary>
         /// <returns></returns>
-        int GetIndex();
+        int Index { get; set; }
 
         /// <summary>
         /// Column parent if any.
         /// </summary>
         /// <returns></returns>
-        IColumnIndex GetParent();
+        IColumnIndex Parent { get; set; }
 
         /// <summary>
         /// 0 if the column index has no container.
         /// Otherwise, 1 + container's depth.
         /// </summary>
         /// <returns></returns>
-        int GetDepth();
+        int Depth { get; }
+
+        /// <summary>
+        /// Determines whether the current index has the given value in its chain of ancestors.
+        /// </summary>
+        /// <param name="ancestor"></param>
+        /// <returns></returns>
+        bool OwnsAsAncestor(IColumnIndex ancestor);
     }
 }

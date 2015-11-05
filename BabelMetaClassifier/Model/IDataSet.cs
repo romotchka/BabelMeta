@@ -30,6 +30,41 @@ namespace BabelMetaClassifier.Model
 {
     public interface IDataSet
     {
+        List<IRowIndex> RowIndexes { get; set; }
+        List<IColumnIndex> ColumnIndexes { get; set; }
+
+        /// <summary>
+        /// Ordered list of splits that will be successively applied on data content.
+        /// In case 
+        /// </summary>
+        List<SplitPattern> SplitPatterns { get; set; }
+
+        List<ICell> Cells { get; set; }
+
+        List<GenericDataType> DataTypes { get; set; }
+
+        List<GenericDataClass> DataClasses { get; set; }
+
+        /// <summary>
+        /// Likelihood for colum index to be of a certain data type.
+        /// </summary>
+        Dictionary<IColumnIndex, Dictionary<GenericDataType, double?>> ColumnTypeLikelihood { get; set; }
+
+        /// <summary>
+        /// Likelihood for colum index to be of a certain data class.
+        /// </summary>
+        Dictionary<IColumnIndex, Dictionary<GenericDataClass, double?>> ColumnClassLikelihood { get; set; }
+
         void AddRow(List<String> row);
+
+        /// <summary>
+        /// Initialize the likelihood that a column index be of given type.
+        /// </summary>
+        void InitializeColumnTypeLikelihood(IColumnIndex columnIndex = null, GenericDataType dataType = null);
+
+        /// <summary>
+        /// Initialize the likelihood that a column index be of given type.
+        /// </summary>
+        void InitializeColumnClassLikelihood(IColumnIndex columnIndex = null, GenericDataClass dataClass = null);
     }
 }
