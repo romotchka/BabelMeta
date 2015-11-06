@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BabelMetaTest", "BabelMetaT
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BabelMetaClassifier", "BabelMetaClassifier\BabelMetaClassifier.csproj", "{700321AC-FD5E-4CE6-A14C-B2F3FB17247B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BabelMetaClassifierTest", "BabelMetaClassifierTest\BabelMetaClassifierTest.csproj", "{FF1210CE-179A-4F8A-943B-4E1CAA20775E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{700321AC-FD5E-4CE6-A14C-B2F3FB17247B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{700321AC-FD5E-4CE6-A14C-B2F3FB17247B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{700321AC-FD5E-4CE6-A14C-B2F3FB17247B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF1210CE-179A-4F8A-943B-4E1CAA20775E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF1210CE-179A-4F8A-943B-4E1CAA20775E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF1210CE-179A-4F8A-943B-4E1CAA20775E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF1210CE-179A-4F8A-943B-4E1CAA20775E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
