@@ -33,21 +33,6 @@ namespace BabelMetaClassifier.Model
 {
     public class DataSet : IDataSet
     {
-        public List<IRowIndex> RowIndexes { get; set; }
-        public List<IColumnIndex> ColumnIndexes { get; set; }
-
-        public List<SplitPattern> SplitPatterns { get; set; }
-
-        public List<ICell> Cells { get; set; }
-
-        public List<GenericDataType> DataTypes { get; set; }
-
-        public List<GenericDataClass> DataClasses { get; set; }
-
-        public Dictionary<IColumnIndex, Dictionary<GenericDataType, double?>> ColumnTypeLikelihood { get; set; }
-
-        public Dictionary<IColumnIndex, Dictionary<GenericDataClass, double?>> ColumnClassLikelihood { get; set; }
-
         private readonly object _dataSetLock;
 
         public DataSet()
@@ -64,6 +49,24 @@ namespace BabelMetaClassifier.Model
             ColumnClassLikelihood = new Dictionary<IColumnIndex, Dictionary<GenericDataClass, double?>>();
         }
 
+        #region Properties
+        public List<IRowIndex> RowIndexes { get; set; }
+        public List<IColumnIndex> ColumnIndexes { get; set; }
+
+        public List<SplitPattern> SplitPatterns { get; set; }
+
+        public List<ICell> Cells { get; set; }
+
+        public List<GenericDataType> DataTypes { get; set; }
+
+        public List<GenericDataClass> DataClasses { get; set; }
+
+        public Dictionary<IColumnIndex, Dictionary<GenericDataType, double?>> ColumnTypeLikelihood { get; set; }
+
+        public Dictionary<IColumnIndex, Dictionary<GenericDataClass, double?>> ColumnClassLikelihood { get; set; }
+        #endregion
+
+        #region Methods
         public void AddRow(List<String> row)
         {
             if (row == null || row.Count == 0)
@@ -115,6 +118,26 @@ namespace BabelMetaClassifier.Model
             }
         }
 
+        public void InitializeSplitPatterns()
+        {
+            // The split already occurred, since it produced child column indexes.
+            if (ColumnIndexes.Exists(i => i.Parent != null))
+            {
+                return;
+            }
+
+            // The split already occurred, since it produced child row indexes (typically due to split disambiguation strategy).
+            if (RowIndexes.Exists(i => i.Parent != null))
+            {
+                return;
+            }
+
+            ColumnIndexes.ForEach(i => i.CopySplitPatterns(SplitPatterns));
+
+            // TODO: Compute dynamic split occurrences
+
+        }
+
         public void InitializeColumnTypeLikelihood(IColumnIndex columnIndex = null, GenericDataType dataType = null)
         {
             // Proceed with all columns, if null index.
@@ -124,6 +147,7 @@ namespace BabelMetaClassifier.Model
                 Debug.WriteLine("DataSet.InitializeColumnTypeLikelihood, proceed all columns.");
                 return;
             }
+
             // If unknown column or if no matching cell, return now, rather than later.
             if  (
                     !ColumnIndexes.Contains(columnIndex)
@@ -132,6 +156,7 @@ namespace BabelMetaClassifier.Model
             {
                 return;
             }
+
             // Proceed with all types for the given column, if null type.
             if (dataType == null)
             {
@@ -139,11 +164,13 @@ namespace BabelMetaClassifier.Model
                 Debug.WriteLine("DataSet.InitializeColumnTypeLikelihood, proceed all types.");
                 return;
             }
+
             // If unknown type, return.
             if (!DataTypes.Contains(dataType))
             {
                 return;
             }
+
             lock (_dataSetLock)
             {
                 // Pay attention to strict implementation of Weight nullity for parent indexes.
@@ -196,5 +223,61 @@ namespace BabelMetaClassifier.Model
         {
 
         }
+
+        public void ApplySplitPattern(IColumnIndex columnIndex = null)
+        {
+            if (columnIndex == null)
+            {
+                ColumnIndexes.ForEach(ApplySplitPattern);
+                return;
+            }
+
+            // Each key is a specific number of splitted items found at least once, within the cells.
+            // Each value is the number of occurrences found for that specific number.
+            // E.g. for the list {"Mike", "John", "Wolfgang Amadeus", "Pablo Diego José Francisco"}, the dictionary gets the 3 following entries:
+            // (1, 2)
+            // (2, 1)
+            // (4, 1)
+            // Value is always > 0.
+            var ColumnSplitPatternCardinalityOccurrences = new Dictionary<int, int>(); // Used only for the dynamic case.
+            var columnDepth = columnIndex.Depth;
+
+            // A pattern must exist for the current column depth.
+            if (columnIndex.ColumnSplitPatterns.Count <= columnDepth)
+            {
+                return;
+            }
+
+            var splitPattern = columnIndex.ColumnSplitPatterns[columnDepth];
+            var splitPatternSeparatorToArray = new List<String>
+            {
+                splitPattern.Separator,
+
+            }.ToArray();
+            Cells
+                .Where(c => c.CellColumnIndex == columnIndex)
+                .ToList()
+                .ForEach(c =>
+                {
+                    var rawSplittedStrings = c.Value.Split(splitPatternSeparatorToArray, splitPattern.PatternSplitOptions);
+                    var rawSplittedStringsCount = rawSplittedStrings.Count();
+
+                    // Dynamic case: Increment (and create on-the-fly the number of splitted elements.
+                    if (splitPattern.DynamicSplitOccurrences)
+                    {
+                        if (!ColumnSplitPatternCardinalityOccurrences.ContainsKey(rawSplittedStringsCount))
+                        {
+                            ColumnSplitPatternCardinalityOccurrences.Add(rawSplittedStringsCount, 1);
+                        }
+                        else
+                        {
+                            ColumnSplitPatternCardinalityOccurrences[rawSplittedStringsCount]++;
+                        }
+                    }
+
+                    // TODO
+                });
+        }
+        #endregion
     }
 }

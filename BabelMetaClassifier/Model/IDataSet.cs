@@ -55,7 +55,16 @@ namespace BabelMetaClassifier.Model
         /// </summary>
         Dictionary<IColumnIndex, Dictionary<GenericDataClass, double?>> ColumnClassLikelihood { get; set; }
 
+        /// <summary>
+        /// Adds a row of data and generate corresponding cells.
+        /// </summary>
+        /// <param name="row"></param>
         void AddRow(List<String> row);
+
+        /// <summary>
+        /// For split patterns with dynamic split occurrences, parses data to determine each right number of occurrences.
+        /// </summary>
+        void InitializeSplitPatterns();
 
         /// <summary>
         /// Initialize the likelihood that a column index be of given type.
@@ -66,5 +75,11 @@ namespace BabelMetaClassifier.Model
         /// Initialize the likelihood that a column index be of given type.
         /// </summary>
         void InitializeColumnClassLikelihood(IColumnIndex columnIndex = null, GenericDataClass dataClass = null);
+
+        /// <summary>
+        /// Generates the child column indexes for the given column index (or all root column indexes), according to the column split pattern corresponding to its depth.
+        /// </summary>
+        /// <param name="columnIndex"></param>
+        void ApplySplitPattern(IColumnIndex columnIndex = null);
     }
 }

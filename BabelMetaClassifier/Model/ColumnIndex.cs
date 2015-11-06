@@ -23,6 +23,8 @@
  *  THE SOFTWARE. 
  */
 
+using System.Collections.Generic;
+
 namespace BabelMetaClassifier.Model
 {
     public class ColumnIndex : IColumnIndex
@@ -33,6 +35,7 @@ namespace BabelMetaClassifier.Model
             Parent = parent;
         }
 
+        #region Properties
         public int Index { get; set; }
 
         public IColumnIndex Parent { get; set; }
@@ -46,6 +49,10 @@ namespace BabelMetaClassifier.Model
                     : 1 + Parent.Depth;
             }
         }
+        #endregion
+
+        #region Methods
+        public List<SplitPattern> ColumnSplitPatterns { get; set; }
 
         public bool OwnsAsAncestor(IColumnIndex ancestor)
         {
@@ -55,5 +62,25 @@ namespace BabelMetaClassifier.Model
             }
             return Parent != null && Parent.OwnsAsAncestor(ancestor);
         }
+
+        public void CopySplitPatterns(List<SplitPattern> splitPatterns)
+        {
+            if (splitPatterns == null)
+            {
+                return;
+            }
+            
+            ColumnSplitPatterns = new List<SplitPattern>();
+            splitPatterns.ForEach(p => ColumnSplitPatterns.Add(new SplitPattern
+            {
+                DynamicSplitOccurrences = p.DynamicSplitOccurrences,
+                // 'Initialized' property ignored on purpose, must be false.
+                Separator = p.Separator,
+                SplitDisambiguationStrategyWhenTooFewValue = p.SplitDisambiguationStrategyWhenTooFewValue,
+                SplitDisambiguationStrategyWhenTooManyValue = p.SplitDisambiguationStrategyWhenTooManyValue,
+                SplitOccurrences = p.SplitOccurrences,
+            }));
+        }
+        #endregion
     }
 }

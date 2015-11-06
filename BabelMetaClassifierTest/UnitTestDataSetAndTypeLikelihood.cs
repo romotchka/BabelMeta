@@ -34,10 +34,10 @@ namespace BabelMetaClassifierTest
     [TestClass]
     public class UnitTestDataSetAndTypeLikelihood
     {
-        [TestMethod]
-        public void TestMethodPopulateDataSet()
+        private DataSet dataSet = new DataSet();
+
+        private void PopulateRows()
         {
-            var dataSet = new DataSet();
             dataSet.AddRow(new List<string>
             {
                 "EVENEMENT",
@@ -79,7 +79,10 @@ namespace BabelMetaClassifierTest
                 "1948",
                 "",
             });
+        }
 
+        private void PopulateTypes()
+        {
             var timewindow = new Year
             {
                 MinPossibleYear = 1000,
@@ -89,10 +92,17 @@ namespace BabelMetaClassifierTest
             };
 
             dataSet.DataTypes.Add(timewindow);
+        }
 
-            dataSet.InitializeColumnTypeLikelihood(dataSet.ColumnIndexes[0], timewindow); // 0.0
-            dataSet.InitializeColumnTypeLikelihood(dataSet.ColumnIndexes[1], timewindow); // 0.81... (Title is not a year)
-            dataSet.InitializeColumnTypeLikelihood(dataSet.ColumnIndexes[2], timewindow); // 0.16... (Empty string can be a year)
+        [TestMethod]
+        public void TestMethodPopulateDataSet()
+        {
+            PopulateRows();
+            PopulateTypes();
+
+            dataSet.InitializeColumnTypeLikelihood(dataSet.ColumnIndexes[0], dataSet.DataTypes[0]); // 0.0
+            dataSet.InitializeColumnTypeLikelihood(dataSet.ColumnIndexes[1], dataSet.DataTypes[0]); // 0.81... (Title is not a year)
+            dataSet.InitializeColumnTypeLikelihood(dataSet.ColumnIndexes[2], dataSet.DataTypes[0]); // 0.16... (Empty string can be a year)
         }
 
     }

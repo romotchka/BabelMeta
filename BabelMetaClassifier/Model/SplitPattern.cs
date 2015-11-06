@@ -29,15 +29,17 @@ namespace BabelMetaClassifier.Model
 {
     public class SplitPattern
     {
-        private bool _initialized = false;
-
         /// <summary>
         /// Determines when an external process established, heuristically or deterministically, the right property values. 
         /// </summary>
-        public bool Initialized
+        public bool Initialized { get; set; }
+
+        private bool _dynamicSplitOccurrences = true;
+
+        public bool DynamicSplitOccurrences
         {
-            get { return _initialized; }
-            set { _initialized = value; }
+            get { return _dynamicSplitOccurrences; }
+            set { _dynamicSplitOccurrences = value; }
         }
 
         private String _separator = " ";
@@ -58,7 +60,7 @@ namespace BabelMetaClassifier.Model
             }
         }
 
-        private int _splitOccurrences = 1;
+        private int _splitOccurrences = 0;
 
         /// <summary>
         /// n>0: Will perform a maximum of n splits, resulting in n+1 elements.
@@ -74,6 +76,7 @@ namespace BabelMetaClassifier.Model
                     return;
                 }
                 _splitOccurrences = value;
+                Initialized = true;
 
                 // Strategies are pointless for the 'open' split.
                 if (value != 0)
@@ -83,6 +86,19 @@ namespace BabelMetaClassifier.Model
                 SplitDisambiguationStrategyWhenTooManyValue = SplitDisambiguationStrategyWhenTooMany.Idle;
                 SplitDisambiguationStrategyWhenTooFewValue = SplitDisambiguationStrategyWhenTooFew.Idle;
             }
+        }
+
+        private StringSplitOptions _patternSplitOptions = StringSplitOptions.RemoveEmptyEntries;
+
+        /// <summary>
+        /// The parameters for the native Split method. Should be carefully setup depending on the split pattern.
+        /// E.g. for a " " (blank) separator, removing double spaces is likely to be a common strategy.
+        /// E.g. for a "-" (dash) separator, it is conversely more appropriate to leave each dash, even if it generates empty strings.
+        /// </summary>
+        public StringSplitOptions PatternSplitOptions
+        {
+            get { return _patternSplitOptions; }
+            set { _patternSplitOptions = value; }
         }
 
         private SplitDisambiguationStrategyWhenTooMany _splitDisambiguationStrategyWhenTooManyValue = SplitDisambiguationStrategyWhenTooMany.Idle;
@@ -97,6 +113,11 @@ namespace BabelMetaClassifier.Model
         }
 
         private SplitDisambiguationStrategyWhenTooFew _splitDisambiguationStrategyWhenTooFewValue = SplitDisambiguationStrategyWhenTooFew.Idle;
+
+        public SplitPattern()
+        {
+            Initialized = false;
+        }
 
         /// <summary>
         /// What should occur when a particular string contains less elements than expected, according to the pattern seeked.
@@ -113,6 +134,8 @@ namespace BabelMetaClassifier.Model
         Idle,
         ConcatenateRightElements,
         ConcatenateLeftElements,
+        DropRightElements,
+        DropLeftElements,
         GenerateAll,
     }
 

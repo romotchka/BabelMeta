@@ -23,6 +23,8 @@
  *  THE SOFTWARE. 
  */
 
+using System.Collections.Generic;
+
 namespace BabelMetaClassifier.Model
 {
     public interface IColumnIndex
@@ -47,10 +49,21 @@ namespace BabelMetaClassifier.Model
         int Depth { get; }
 
         /// <summary>
+        /// Object-wise copy of parent data set's split patterns, since dynamic split occurrences are tailored to each column.
+        /// </summary>
+        List<SplitPattern> ColumnSplitPatterns { get; set; }
+
+        /// <summary>
         /// Determines whether the current index has the given value in its chain of ancestors.
         /// </summary>
         /// <param name="ancestor"></param>
         /// <returns></returns>
         bool OwnsAsAncestor(IColumnIndex ancestor);
+
+        /// <summary>
+        /// Makes an object-wise copy of the list of split patterns from parent data set.
+        /// </summary>
+        /// <param name="splitPatterns"></param>
+        void CopySplitPatterns(List<SplitPattern> splitPatterns);
     }
 }
