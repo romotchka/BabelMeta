@@ -118,6 +118,9 @@ namespace BabelMetaClassifier.Model
             }
         }
 
+        /// <summary>
+        /// Copies split patterns in all column indexes.
+        /// </summary>
         public void InitializeSplitPatterns()
         {
             // The split already occurred, since it produced child column indexes.
@@ -133,9 +136,6 @@ namespace BabelMetaClassifier.Model
             }
 
             ColumnIndexes.ForEach(i => i.CopySplitPatterns(SplitPatterns));
-
-            // TODO: Compute dynamic split occurrences
-
         }
 
         public void InitializeColumnTypeLikelihood(IColumnIndex columnIndex = null, GenericDataType dataType = null)
@@ -224,6 +224,82 @@ namespace BabelMetaClassifier.Model
 
         }
 
+        private bool SetColumnIndexSplitPatternOccurences(IColumnIndex columnIndex)
+        {
+            if (columnIndex == null)
+            {
+                return false;
+            }
+
+            var columnDepth = columnIndex.Depth;
+
+            // A pattern must exist for the current column depth.
+            if (columnIndex.ColumnSplitPatterns.Count <= columnDepth)
+            {
+                return false;
+            }
+
+            var splitPattern = columnIndex.ColumnSplitPatterns[columnDepth];
+            var splitPatternSeparatorToArray = new List<String>
+                {
+                    splitPattern.Separator,
+
+                }.ToArray();
+
+            if (!splitPattern.DynamicSplitOccurrences)
+            {
+                splitPattern.SplitOccurrences = splitPattern.SplitOccurrences; // This forces Initialization to true.
+                return true;
+            }
+
+            // Each key is a specific number of splitted items - 1 (by convention) found at least once, within the cells.
+            // Each value is the number of occurrences found for that specific number.
+            // E.g. for the list {"Mike", "John", "Wolfgang Amadeus", "Pablo Diego José Francisco"}, the dictionary gets the 3 following entries:
+            // (0, 2)
+            // (1, 1)
+            // (3, 1)
+            // Value is accordingly always > 0.
+            // According to convention, the number of *splits* is the number of words - 1.
+            var columnSplitPatternCardinalityOccurrences = new Dictionary<int, int>();
+
+            Cells
+                .Where(c => c.CellColumnIndex == columnIndex)
+                .ToList()
+                .ForEach(c =>
+                {
+                    var rawSplittedStrings = c.Value.Split(splitPatternSeparatorToArray, splitPattern.PatternSplitOptions);
+                    var rawSplittedStringsSplitsCount = rawSplittedStrings.Count() - 1; // !!! Convention.
+
+                    if (columnSplitPatternCardinalityOccurrences.ContainsKey(rawSplittedStringsSplitsCount))
+                    {
+                        columnSplitPatternCardinalityOccurrences[rawSplittedStringsSplitsCount]++;
+                    }
+                    else
+                    {
+                        columnSplitPatternCardinalityOccurrences.Add(rawSplittedStringsSplitsCount, 1);
+                    }
+                });
+
+            // Now, the most frequent count should be kept.
+            // A strategy has to prevail if there are several split counts equally present (i.e. max does not occur for a single value).
+            var mostFrequentCardinalityOccurrencesCount =
+                columnSplitPatternCardinalityOccurrences.Values.Max();
+
+            splitPattern.SplitOccurrences =
+                (splitPattern.SplitDisambiguationStrategyWhenMultipleMaxCardinalitiesValue ==
+                 SplitDisambiguationStrategyWhenMultipleMaxCardinalities.KeepGreatest)
+                    ? columnSplitPatternCardinalityOccurrences
+                        .Where(e => e.Value == mostFrequentCardinalityOccurrencesCount) // There can be more than one.
+                        .Select(e => e.Key)
+                        .Max()
+                    : columnSplitPatternCardinalityOccurrences
+                        .Where(e => e.Value == mostFrequentCardinalityOccurrencesCount) // There can be more than one.
+                        .Select(e => e.Key)
+                        .Min();
+
+            return true;
+        }
+
         public void ApplySplitPattern(IColumnIndex columnIndex = null)
         {
             if (columnIndex == null)
@@ -232,51 +308,19 @@ namespace BabelMetaClassifier.Model
                 return;
             }
 
-            // Each key is a specific number of splitted items found at least once, within the cells.
-            // Each value is the number of occurrences found for that specific number.
-            // E.g. for the list {"Mike", "John", "Wolfgang Amadeus", "Pablo Diego José Francisco"}, the dictionary gets the 3 following entries:
-            // (1, 2)
-            // (2, 1)
-            // (4, 1)
-            // Value is always > 0.
-            var ColumnSplitPatternCardinalityOccurrences = new Dictionary<int, int>(); // Used only for the dynamic case.
-            var columnDepth = columnIndex.Depth;
-
-            // A pattern must exist for the current column depth.
-            if (columnIndex.ColumnSplitPatterns.Count <= columnDepth)
+            lock (_dataSetLock)
             {
-                return;
+                if (SetColumnIndexSplitPatternOccurences(columnIndex))
+                {
+                    // Create child column indexes.
+
+                    // Create subsequent cells.
+
+                }
             }
 
-            var splitPattern = columnIndex.ColumnSplitPatterns[columnDepth];
-            var splitPatternSeparatorToArray = new List<String>
-            {
-                splitPattern.Separator,
+            // Apply recursively to parent column indexes.                    
 
-            }.ToArray();
-            Cells
-                .Where(c => c.CellColumnIndex == columnIndex)
-                .ToList()
-                .ForEach(c =>
-                {
-                    var rawSplittedStrings = c.Value.Split(splitPatternSeparatorToArray, splitPattern.PatternSplitOptions);
-                    var rawSplittedStringsCount = rawSplittedStrings.Count();
-
-                    // Dynamic case: Increment (and create on-the-fly the number of splitted elements.
-                    if (splitPattern.DynamicSplitOccurrences)
-                    {
-                        if (!ColumnSplitPatternCardinalityOccurrences.ContainsKey(rawSplittedStringsCount))
-                        {
-                            ColumnSplitPatternCardinalityOccurrences.Add(rawSplittedStringsCount, 1);
-                        }
-                        else
-                        {
-                            ColumnSplitPatternCardinalityOccurrences[rawSplittedStringsCount]++;
-                        }
-                    }
-
-                    // TODO
-                });
         }
         #endregion
     }

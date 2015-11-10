@@ -34,8 +34,16 @@ namespace BabelMetaClassifier.Model
         /// </summary>
         public bool Initialized { get; set; }
 
+        public SplitPattern()
+        {
+            Initialized = false;
+        }
+
         private bool _dynamicSplitOccurrences = true;
 
+        /// <summary>
+        /// If true, SplitOccurrences will be set heuristically from parent DataSet parsing.
+        /// </summary>
         public bool DynamicSplitOccurrences
         {
             get { return _dynamicSplitOccurrences; }
@@ -60,31 +68,23 @@ namespace BabelMetaClassifier.Model
             }
         }
 
-        private int _splitOccurrences = 0;
+        private int _splitOccurrences = 1;
 
         /// <summary>
-        /// n>0: Will perform a maximum of n splits, resulting in n+1 elements.
-        /// n=0: Will perform as many splits as possible.
+        /// n >= 0 -> Will perform a maximum of n splits (resulting in n+1 strings).
+        /// For n=0, the action leaves the string 'as is'.
         /// </summary>
         public int SplitOccurrences
         {
             get { return _splitOccurrences; }
             set
             {
+                Initialized = true;
                 if (value < 0)
                 {
                     return;
                 }
                 _splitOccurrences = value;
-                Initialized = true;
-
-                // Strategies are pointless for the 'open' split.
-                if (value != 0)
-                {
-                    return;
-                }
-                SplitDisambiguationStrategyWhenTooManyValue = SplitDisambiguationStrategyWhenTooMany.Idle;
-                SplitDisambiguationStrategyWhenTooFewValue = SplitDisambiguationStrategyWhenTooFew.Idle;
             }
         }
 
@@ -101,7 +101,7 @@ namespace BabelMetaClassifier.Model
             set { _patternSplitOptions = value; }
         }
 
-        private SplitDisambiguationStrategyWhenTooMany _splitDisambiguationStrategyWhenTooManyValue = SplitDisambiguationStrategyWhenTooMany.Idle;
+        private SplitDisambiguationStrategyWhenTooMany _splitDisambiguationStrategyWhenTooManyValue = SplitDisambiguationStrategyWhenTooMany.GenerateAll;
 
         /// <summary>
         /// What should occur when a particular string contains more elements than expected, according to the pattern seeked.
@@ -112,12 +112,7 @@ namespace BabelMetaClassifier.Model
             set { _splitDisambiguationStrategyWhenTooManyValue = value; }
         }
 
-        private SplitDisambiguationStrategyWhenTooFew _splitDisambiguationStrategyWhenTooFewValue = SplitDisambiguationStrategyWhenTooFew.Idle;
-
-        public SplitPattern()
-        {
-            Initialized = false;
-        }
+        private SplitDisambiguationStrategyWhenTooFew _splitDisambiguationStrategyWhenTooFewValue = SplitDisambiguationStrategyWhenTooFew.GenerateAll;
 
         /// <summary>
         /// What should occur when a particular string contains less elements than expected, according to the pattern seeked.
@@ -127,23 +122,53 @@ namespace BabelMetaClassifier.Model
             get { return _splitDisambiguationStrategyWhenTooFewValue; }
             set { _splitDisambiguationStrategyWhenTooFewValue = value; }
         }
+
+        private SplitDisambiguationStrategyWhenMultipleMaxCardinalities _splitDisambiguationStrategyWhenMultipleMaxCardinalitiesValue
+            = SplitDisambiguationStrategyWhenMultipleMaxCardinalities.KeepGreatest;
+
+        /// <summary>
+        /// This strategy parameter is used exclusively in a dynamic context, when the max of split cardinalities is reached for several subgroups of cells.
+        /// KeepGreatest will lead to keep the greatest cardinality value.
+        /// KeepSmallest will lead to keep the smallest cardinality value.
+        /// Example for the following column:
+        /// 
+        /// "bla bla bla"
+        /// "toc toc toc toc toc"
+        /// "bing bang bong"
+        /// "there are more words in this one huh?"
+        /// "the end of the example"
+        /// 
+        /// 2 splits appear 2 times
+        /// 4 splits appear 2 times
+        /// 7 splits appear 1 time
+        /// 
+        /// If KeepGreatest -> 4
+        /// If KeepSmallest -> 2
+        /// </summary>
+        public SplitDisambiguationStrategyWhenMultipleMaxCardinalities SplitDisambiguationStrategyWhenMultipleMaxCardinalitiesValue
+        {
+            get { return _splitDisambiguationStrategyWhenMultipleMaxCardinalitiesValue; }
+            set { _splitDisambiguationStrategyWhenMultipleMaxCardinalitiesValue = value; }
+        }
     }
     
     public enum SplitDisambiguationStrategyWhenTooMany
     {
-        Idle,
         ConcatenateRightElements,
         ConcatenateLeftElements,
-        DropRightElements,
-        DropLeftElements,
         GenerateAll,
     }
 
     public enum SplitDisambiguationStrategyWhenTooFew
     {
-        Idle,
         EmptyStringOnRightElements,
         EmptyStringOnLeftElements,
-        Discard,
+        GenerateAll,
+    }
+
+    public enum SplitDisambiguationStrategyWhenMultipleMaxCardinalities
+    {
+        KeepGreatest,
+        KeepSmallest,
     }
 }
