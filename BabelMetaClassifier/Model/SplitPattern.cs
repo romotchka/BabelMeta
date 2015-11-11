@@ -34,10 +34,25 @@ namespace BabelMetaClassifier.Model
         /// </summary>
         public bool Initialized { get; set; }
 
-        public SplitPattern()
+        /// <summary>
+        /// The constructor is the only way to affect value to _splitOccurrences without having Initialized true.
+        /// </summary>
+        /// <param name="container"></param>
+        /// <param name="splitOccurrences"></param>
+        public SplitPattern(ColumnIndex container = null, int? splitOccurrences = null)
         {
             Initialized = false;
+            Container = container;
+            if (splitOccurrences != null)
+            {
+                _splitOccurrences = (int)splitOccurrences;
+            }
         }
+
+        /// <summary>
+        /// The Container column index should be updated, when split occurrences are set.
+        /// </summary>
+        public ColumnIndex Container { get; private set; }
 
         private bool _dynamicSplitOccurrences = true;
 
@@ -72,19 +87,62 @@ namespace BabelMetaClassifier.Model
 
         /// <summary>
         /// n >= 0 -> Will perform a maximum of n splits (resulting in n+1 strings).
-        /// For n=0, the action leaves the string 'as is'.
+        /// For n = 0, the action leaves the string 'as is'.
         /// </summary>
         public int SplitOccurrences
         {
-            get { return _splitOccurrences; }
+            get
+            {
+                return _splitOccurrences;
+            }
             set
             {
-                Initialized = true;
                 if (value < 0)
                 {
                     return;
                 }
+
+                // One affectation only is permitted.
+                if (Initialized)
+                {
+                    return;
+                }
+
                 _splitOccurrences = value;
+
+                if  (
+                        _splitOccurrences == 0 // Child column index is pointless.
+                        || Container == null 
+                        || Container.MainContainer == null
+                    )
+                {
+                    Initialized = true;
+                    return;
+                }
+
+                // Proceed with child column indexes.
+                var dataSet = Container.MainContainer;
+                for (var i = 0; i <= _splitOccurrences; i++)
+                {
+                    var childColumnIndex = new ColumnIndex(i, dataSet, Container);
+                    dataSet.ColumnIndexes.Add(childColumnIndex);
+                    childColumnIndex.CopySplitPatterns(Container.ColumnSplitPatterns);
+                    
+                    // The first element must now be removed.
+                    if (childColumnIndex.ColumnSplitPatterns.Count > 0)
+                    {
+                        childColumnIndex.ColumnSplitPatterns.RemoveAt(0);
+                    }
+
+                    // Finally, the parent should keep only its first split pattern element.
+                    if (Container.ColumnSplitPatterns.Count > 1)
+                    {
+                        Container.ColumnSplitPatterns.RemoveRange(1,
+                            Container.ColumnSplitPatterns.Count - 1);
+                    }
+                }
+
+                Initialized = true;
             }
         }
 

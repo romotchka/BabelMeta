@@ -80,7 +80,7 @@ namespace BabelMetaClassifier.Model
                     : RowIndexes
                     .Where(i => i.Parent == null)
                     .Max(i => i.Index) + 1;
-                var newRowIndex = new RowIndex(newRowIndexValue);
+                var newRowIndex = new RowIndex(newRowIndexValue, this);
                 RowIndexes.Add(newRowIndex);
                 Debug.WriteLine("DataSet.AddRow, adding row index.");
 
@@ -93,7 +93,7 @@ namespace BabelMetaClassifier.Model
                 // Generate new column indexes if needed.
                 for (var n = currentMaxColumnIndexValue + 1; n < row.Count; n++)
                 {
-                    var columnIndex = new ColumnIndex(n);
+                    var columnIndex = new ColumnIndex(n, this);
                     ColumnIndexes.Add(columnIndex);
                     Debug.WriteLine("DataSet.AddRow, adding column index.");
                 }
@@ -224,6 +224,12 @@ namespace BabelMetaClassifier.Model
 
         }
 
+        /// <summary>
+        /// By construction, the split pattern concerned is always the first element in the column split patterns list.
+        /// See SplitPattern.SplitOccurrences property setter, for details.
+        /// </summary>
+        /// <param name="columnIndex"></param>
+        /// <returns></returns>
         private bool SetColumnIndexSplitPatternOccurences(IColumnIndex columnIndex)
         {
             if (columnIndex == null)
@@ -231,15 +237,13 @@ namespace BabelMetaClassifier.Model
                 return false;
             }
 
-            var columnDepth = columnIndex.Depth;
-
-            // A pattern must exist for the current column depth.
-            if (columnIndex.ColumnSplitPatterns.Count <= columnDepth)
+            // A pattern must exist for the current column depth. 
+            if (columnIndex.ColumnSplitPatterns == null || columnIndex.ColumnSplitPatterns.Count == 0)
             {
                 return false;
             }
 
-            var splitPattern = columnIndex.ColumnSplitPatterns[columnDepth];
+            var splitPattern = columnIndex.ColumnSplitPatterns[0];
             var splitPatternSeparatorToArray = new List<String>
                 {
                     splitPattern.Separator,
@@ -248,7 +252,7 @@ namespace BabelMetaClassifier.Model
 
             if (!splitPattern.DynamicSplitOccurrences)
             {
-                splitPattern.SplitOccurrences = splitPattern.SplitOccurrences; // This forces Initialization to true.
+                splitPattern.SplitOccurrences = splitPattern.SplitOccurrences; // This neutral affetation yet forces Initialization to true.
                 return true;
             }
 
@@ -312,14 +316,12 @@ namespace BabelMetaClassifier.Model
             {
                 if (SetColumnIndexSplitPatternOccurences(columnIndex))
                 {
-                    // Create child column indexes.
-
-                    // Create subsequent cells.
+                    // TODO: Create subsequent cells.
 
                 }
             }
 
-            // Apply recursively to parent column indexes.                    
+            // Apply recursively to child column indexes.                    
 
         }
         #endregion

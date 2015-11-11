@@ -29,16 +29,19 @@ namespace BabelMetaClassifier.Model
 {
     public class ColumnIndex : IColumnIndex
     {
-        public ColumnIndex(int index, IColumnIndex parent = null)
+        public ColumnIndex(int index, IDataSet mainContainer = null, IColumnIndex parent = null)
         {
             Index = index;
             Parent = parent;
+            MainContainer = mainContainer;
         }
 
         #region Properties
         public int Index { get; set; }
 
         public IColumnIndex Parent { get; set; }
+
+        public IDataSet MainContainer { get; set; }
 
         public int Depth
         {
@@ -71,14 +74,14 @@ namespace BabelMetaClassifier.Model
             }
             
             ColumnSplitPatterns = new List<SplitPattern>();
-            splitPatterns.ForEach(p => ColumnSplitPatterns.Add(new SplitPattern
+            splitPatterns.ForEach(p => ColumnSplitPatterns.Add(new SplitPattern(
+                this, 
+                p.SplitOccurrences)
             {
                 DynamicSplitOccurrences = p.DynamicSplitOccurrences,
-                // 'Initialized' property ignored on purpose, must be false.
                 Separator = p.Separator,
                 SplitDisambiguationStrategyWhenTooFewValue = p.SplitDisambiguationStrategyWhenTooFewValue,
                 SplitDisambiguationStrategyWhenTooManyValue = p.SplitDisambiguationStrategyWhenTooManyValue,
-                SplitOccurrences = p.SplitOccurrences,
             }));
         }
         #endregion

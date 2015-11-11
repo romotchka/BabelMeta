@@ -42,8 +42,13 @@ namespace BabelMetaClassifier.Model
         IColumnIndex Parent { get; set; }
 
         /// <summary>
-        /// 0 if the column index has no container.
-        /// Otherwise, 1 + container's depth.
+        /// The data set container.
+        /// </summary>
+        IDataSet MainContainer { get; set; }
+
+        /// <summary>
+        /// 0 if the column index has no parent column index.
+        /// Otherwise, 1 + parent's depth.
         /// </summary>
         /// <returns></returns>
         int Depth { get; }

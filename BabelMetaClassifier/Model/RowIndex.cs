@@ -27,16 +27,19 @@ namespace BabelMetaClassifier.Model
 {
     public class RowIndex : IRowIndex
     {
-        public RowIndex(int index, IRowIndex parent = null)
+        public RowIndex(int index, IDataSet mainContainer = null, IRowIndex parent = null)
         {
             Index = index;
             Parent = parent;
+            MainContainer = mainContainer;
             Weight = 1.0;
         }
 
         public int Index { get; set; }
 
         public IRowIndex Parent { get; set; }
+
+        public IDataSet MainContainer { get; set; }
 
         public int Depth
         {
