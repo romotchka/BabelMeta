@@ -37,8 +37,10 @@ namespace BabelMeta.Model
     {
         private static CatalogContext _instance;
 
-        private CatalogContext() 
+        private CatalogContext()
         {
+            ReferentialIntegrityChecked = false;
+            RedundantKeysChecked = false;
         }
 
         public static CatalogContext Instance
@@ -69,39 +71,15 @@ namespace BabelMeta.Model
 
         internal bool Initialized = false;
 
-        private bool _redundantKeysChecked = false;
-
         /// <summary>
         /// Determines whether redundant keys checking is active.
         /// </summary>
-        internal bool RedundantKeysChecked 
-        {
-            get 
-            { 
-                return _redundantKeysChecked; 
-            }
-            set
-            {
-                _redundantKeysChecked = value;
-            }
-        }
-
-        private bool _referentialIntegrityChecked = false;
+        internal bool RedundantKeysChecked { get; set; }
 
         /// <summary>
         /// Determines whether referential integrity checking between linked entities (e.g. Artists/Works) is active.
         /// </summary>
-        internal bool ReferentialIntegrityChecked
-        {
-            get
-            {
-                return _referentialIntegrityChecked;
-            }
-            set
-            {
-                _referentialIntegrityChecked = value;
-            }
-        }
+        internal bool ReferentialIntegrityChecked { get; set; }
 
         public bool IntegrityChecked
         {

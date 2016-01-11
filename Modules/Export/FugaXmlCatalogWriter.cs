@@ -23,7 +23,6 @@
  *  THE SOFTWARE. 
  */
 
-using System.Windows.Forms;
 using BabelMeta.AppConfig;
 using BabelMeta.Helpers;
 using BabelMeta.Model;
@@ -36,6 +35,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
 
 namespace BabelMeta.Modules.Export
 {
@@ -358,7 +358,14 @@ namespace BabelMeta.Modules.Export
                 }
             }
 
-            i.album.recording_location = album.RecordingLocation.Typo();
+            i.album.recording_location = 
+                (
+                    String.IsNullOrEmpty(album.RecordingLocation)
+                    && FugaXmlConfig.DefaultRecordingLocationLabel != null
+                    && FugaXmlConfig.DefaultRecordingLocationLabel.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName)
+                )
+                ? FugaXmlConfig.DefaultRecordingLocationLabel[CatalogContext.Instance.DefaultLang.ShortName]
+                : album.RecordingLocation.Typo();
 
             if (album.RecordingYear > 0)
             {
@@ -523,7 +530,7 @@ namespace BabelMeta.Modules.Export
 
                 if  (
                         currentWork.Title.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName)
-                        && (
+                        &&  (
                                 parentWork == null
                                 || parentWork.Title.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName)
                             )
@@ -547,7 +554,7 @@ namespace BabelMeta.Modules.Export
                 // TODO asset.extra10
                 // TODO asset.extra10Specified
 
-                ingestionTrack.isrc_code = assetId;
+                ingestionTrack.isrc_code = assetId.ToFugaFormattedIsrc();
 
                 ingestionTrack.keySpecified = (parentWork == null && currentWork.Tonality != null) || (parentWork != null && parentWork.Tonality != null);
 
@@ -612,7 +619,14 @@ namespace BabelMeta.Modules.Export
 
                 // TODO asset.publishers
 
-                ingestionTrack.recording_location = asset.RecordingLocation.Typo();
+                ingestionTrack.recording_location =
+                    (
+                        String.IsNullOrEmpty(asset.RecordingLocation) 
+                        && FugaXmlConfig.DefaultRecordingLocationLabel != null
+                        && FugaXmlConfig.DefaultRecordingLocationLabel.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName)
+                    )
+                    ? FugaXmlConfig.DefaultRecordingLocationLabel[CatalogContext.Instance.DefaultLang.ShortName]
+                    : asset.RecordingLocation.Typo();
 
                 if (asset.RecordingYear != null)
                 {
@@ -736,8 +750,8 @@ namespace BabelMeta.Modules.Export
                             {
                                 continue;
                             }
-                            var tryVolumeIndex = 0;
-                            var tryTrackIndex = 0;
+                            int tryVolumeIndex;
+                            int tryTrackIndex;
                             var convertVolume = int.TryParse(nameElements[nameElementsCount - 2], out tryVolumeIndex);
                             var convertTrack = int.TryParse(nameElements[nameElementsCount - 1], out tryTrackIndex);
                             if  (

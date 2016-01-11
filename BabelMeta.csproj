@@ -108,6 +108,7 @@
     <Compile Include="Modules\Export\DdexCatalogWriter.cs" />
     <Compile Include="Modules\Export\FugaIngestionFileType.cs" />
     <Compile Include="Modules\Export\FugaXmlCatalogWriter.cs" />
+    <Compile Include="Modules\Export\FugaXml\FugaXmlConfig.cs" />
     <Compile Include="Modules\Export\FugaXml\ingestion.designer.cs" />
     <Compile Include="Modules\Export\ICatalogWriter.cs" />
     <Compile Include="Modules\Export\RightsUpJsonCatalogWriter.cs" />

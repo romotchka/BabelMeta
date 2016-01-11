@@ -156,15 +156,7 @@ namespace BabelMeta.Modules.Import
         /// </summary>
         public static TemplatedCatalogReader Instance
         {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new TemplatedCatalogReader();
-
-                }
-                return _instance;
-            }
+            get { return _instance ?? (_instance = new TemplatedCatalogReader()); }
         }
 
         /// <summary>
@@ -711,13 +703,17 @@ namespace BabelMeta.Modules.Import
             }
 
             var exists = (element != null) && ((KeyValuePair<int, object>)element).Value != null;
-            if (exists && !String.IsNullOrEmpty(worksheetName) && _worksheetColumns[worksheetName] != null)
+            if  (
+                    !exists 
+                    || String.IsNullOrEmpty(worksheetName) 
+                    || _worksheetColumns[worksheetName] == null
+                )
             {
-                var index = ((KeyValuePair<int, object>)element).Key;
-                _worksheetColumns[worksheetName][cellValue] = index;
+                return exists;
             }
-
-            return exists;
+            var index = ((KeyValuePair<int, object>)element).Key;
+            _worksheetColumns[worksheetName][cellValue] = index;
+            return true;
         }
 
         /// <summary>
@@ -774,7 +770,7 @@ namespace BabelMeta.Modules.Import
                         var xmlWorksheet = xmlWorkbook
                             .FirstOrDefault(
                                 n =>
-                                n.Name == OfficeXml.Worksheet
+                                String.Compare(n.Name, OfficeXml.Worksheet, StringComparison.Ordinal) == 0
                                 && n.Attributes[OfficeXml.WorksheetName] != null
                                 && String.Compare(n.Attributes[OfficeXml.WorksheetName].InnerText, worksheetName, StringComparison.Ordinal) == 0
                             );

@@ -39,7 +39,9 @@ namespace BabelMeta.Model.Config
             SupplierDefault = String.Empty;
             LabelDefault = String.Empty;
             COwnerDefault = String.Empty;
+            CYearDefault = (short)DateTime.Now.Year;
             POwnerDefault = String.Empty;
+            PYearDefault = (short)DateTime.Now.Year;
             CatalogTierDefault = CatalogTier.Front;
             MainGenreDefault = String.Empty;
             FormatDefault = ProductFormat.Album;
@@ -51,7 +53,9 @@ namespace BabelMeta.Model.Config
             SupplierDefault = (String)info.GetValue("BabelMeta.Model.CatalogSettings.SupplierDefault", typeof(String));
             LabelDefault = (String)info.GetValue("BabelMeta.Model.CatalogSettings.LabelDefault", typeof(String));
             COwnerDefault = (String)info.GetValue("BabelMeta.Model.CatalogSettings.COwnerDefault", typeof(String));
+            CYearDefault = (short)info.GetValue("BabelMeta.Model.CatalogSettings.CYearDefault", typeof(short));
             POwnerDefault = (String)info.GetValue("BabelMeta.Model.CatalogSettings.POwnerDefault", typeof(String));
+            PYearDefault = (short)info.GetValue("BabelMeta.Model.CatalogSettings.PYearDefault", typeof(short));
             CatalogTierDefault = (CatalogTier)info.GetValue("BabelMeta.Model.CatalogSettings.CatalogTierDefault", typeof(CatalogTier));
             MainGenreDefault = (String)info.GetValue("BabelMeta.Model.CatalogSettings.MainGenreDefault", typeof(String));
             FormatDefault = (ProductFormat)info.GetValue("BabelMeta.Model.CatalogSettings.FormatDefault", typeof(ProductFormat));
@@ -63,7 +67,9 @@ namespace BabelMeta.Model.Config
             info.AddValue("BabelMeta.Model.CatalogSettings.SupplierDefault", SupplierDefault);
             info.AddValue("BabelMeta.Model.CatalogSettings.LabelDefault", LabelDefault);
             info.AddValue("BabelMeta.Model.CatalogSettings.COwnerDefault", COwnerDefault);
+            info.AddValue("BabelMeta.Model.CatalogSettings.CYearDefault", CYearDefault);
             info.AddValue("BabelMeta.Model.CatalogSettings.POwnerDefault", POwnerDefault);
+            info.AddValue("BabelMeta.Model.CatalogSettings.PYearDefault", PYearDefault);
             info.AddValue("BabelMeta.Model.CatalogSettings.CatalogTierDefault", CatalogTierDefault);
             info.AddValue("BabelMeta.Model.CatalogSettings.MainGenreDefault", MainGenreDefault);
             info.AddValue("BabelMeta.Model.CatalogSettings.FormatDefault", FormatDefault);
@@ -76,7 +82,11 @@ namespace BabelMeta.Model.Config
 
         public String COwnerDefault { get; set; }
 
+        public short CYearDefault { get; set; }
+
         public String POwnerDefault { get; set; }
+
+        public short PYearDefault { get; set; }
 
         public CatalogTier CatalogTierDefault { get; set; }
 
