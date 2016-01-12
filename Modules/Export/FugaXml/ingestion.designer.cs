@@ -5688,7 +5688,7 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         private List<usage_right_type> usage_rightsField;
 
-        private String workField;
+        private work workField;
 
         private static System.Xml.Serialization.XmlSerializer serializer;
 
@@ -5815,8 +5815,7 @@ namespace BabelMeta.Modules.Export.FugaXml
 
         public String track_version { get; set; }
 
-        public String work { get; set; }
-
+        public work work { get; set; }
 
         public ingestionAlbumTracksClassical_track()
         {
@@ -5827,6 +5826,7 @@ namespace BabelMeta.Modules.Export.FugaXml
             additional_artistsField = new List<artist>();
             primary_artistField = new primary_artist();
             contributorsField = new List<contributor>();
+            workField = new work();
         }
 
         [System.Xml.Serialization.XmlArrayItemAttribute("contributor", IsNullable = false)]
@@ -9152,6 +9152,232 @@ namespace BabelMeta.Modules.Export.FugaXml
         }
 
         public static resources LoadFromFile(String fileName, System.Text.Encoding encoding)
+        {
+            System.IO.FileStream file = null;
+            System.IO.StreamReader sr = null;
+            try
+            {
+                file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
+                sr = new System.IO.StreamReader(file, encoding);
+                String xmlString = sr.ReadToEnd();
+                sr.Close();
+                file.Close();
+                return Deserialize(xmlString);
+            }
+            finally
+            {
+                if ((file != null))
+                {
+                    file.Dispose();
+                }
+                if ((sr != null))
+                {
+                    sr.Dispose();
+                }
+            }
+        }
+        #endregion
+    }
+
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.34230")]
+    [System.SerializableAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    public partial class work
+    {
+        private String nameField;
+
+        private static System.Xml.Serialization.XmlSerializer serializer;
+
+        public String name { get; set; }
+
+        private static System.Xml.Serialization.XmlSerializer Serializer
+        {
+            get
+            {
+                if ((serializer == null))
+                {
+                    serializer = new System.Xml.Serialization.XmlSerializer(typeof(work));
+                }
+                return serializer;
+            }
+        }
+
+        #region Serialize/Deserialize
+        /// <summary>
+        /// Serializes current work object into an XML document
+        /// </summary>
+        /// <returns>String XML value</returns>
+        public virtual String Serialize(System.Text.Encoding encoding)
+        {
+            System.IO.StreamReader streamReader = null;
+            System.IO.MemoryStream memoryStream = null;
+            try
+            {
+                memoryStream = new System.IO.MemoryStream();
+                System.Xml.XmlWriterSettings xmlWriterSettings = new System.Xml.XmlWriterSettings();
+                xmlWriterSettings.Encoding = encoding;
+                System.Xml.XmlWriter xmlWriter = XmlWriter.Create(memoryStream, xmlWriterSettings);
+                Serializer.Serialize(xmlWriter, this);
+                memoryStream.Seek(0, System.IO.SeekOrigin.Begin);
+                streamReader = new System.IO.StreamReader(memoryStream);
+                return streamReader.ReadToEnd();
+            }
+            finally
+            {
+                if ((streamReader != null))
+                {
+                    streamReader.Dispose();
+                }
+                if ((memoryStream != null))
+                {
+                    memoryStream.Dispose();
+                }
+            }
+        }
+
+        public virtual String Serialize()
+        {
+            return Serialize(Encoding.UTF8);
+        }
+
+        /// <summary>
+        /// Deserializes workflow markup into a work object
+        /// </summary>
+        /// <param name="xml">String workflow markup to deserialize</param>
+        /// <param name="obj">Output work object</param>
+        /// <param name="exception">output Exception value if deserialize failed</param>
+        /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
+        public static bool Deserialize(String xml, out work obj, out System.Exception exception)
+        {
+            exception = null;
+            obj = default(work);
+            try
+            {
+                obj = Deserialize(xml);
+                return true;
+            }
+            catch (System.Exception ex)
+            {
+                exception = ex;
+                return false;
+            }
+        }
+
+        public static bool Deserialize(String xml, out work obj)
+        {
+            System.Exception exception = null;
+            return Deserialize(xml, out obj, out exception);
+        }
+
+        public static work Deserialize(String xml)
+        {
+            System.IO.StringReader StringReader = null;
+            try
+            {
+                StringReader = new System.IO.StringReader(xml);
+                return ((work)(Serializer.Deserialize(System.Xml.XmlReader.Create(StringReader))));
+            }
+            finally
+            {
+                if ((StringReader != null))
+                {
+                    StringReader.Dispose();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Serializes current work object into file
+        /// </summary>
+        /// <param name="fileName">full path of outupt xml file</param>
+        /// <param name="exception">output Exception value if failed</param>
+        /// <returns>true if can serialize and save into file; otherwise, false</returns>
+        public virtual bool SaveToFile(String fileName, System.Text.Encoding encoding, out System.Exception exception)
+        {
+            exception = null;
+            try
+            {
+                SaveToFile(fileName, encoding);
+                return true;
+            }
+            catch (System.Exception e)
+            {
+                exception = e;
+                return false;
+            }
+        }
+
+        public virtual bool SaveToFile(String fileName, out System.Exception exception)
+        {
+            return SaveToFile(fileName, Encoding.UTF8, out exception);
+        }
+
+        public virtual void SaveToFile(String fileName)
+        {
+            SaveToFile(fileName, Encoding.UTF8);
+        }
+
+        public virtual void SaveToFile(String fileName, System.Text.Encoding encoding)
+        {
+            System.IO.StreamWriter streamWriter = null;
+            try
+            {
+                String xmlString = Serialize(encoding);
+                streamWriter = new System.IO.StreamWriter(fileName, false, Encoding.UTF8);
+                streamWriter.WriteLine(xmlString);
+                streamWriter.Close();
+            }
+            finally
+            {
+                if ((streamWriter != null))
+                {
+                    streamWriter.Dispose();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Deserializes xml markup from file into a work object
+        /// </summary>
+        /// <param name="fileName">String xml file to load and deserialize</param>
+        /// <param name="obj">Output work object</param>
+        /// <param name="exception">output Exception value if deserialize failed</param>
+        /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
+        public static bool LoadFromFile(String fileName, System.Text.Encoding encoding, out work obj, out System.Exception exception)
+        {
+            exception = null;
+            obj = default(work);
+            try
+            {
+                obj = LoadFromFile(fileName, encoding);
+                return true;
+            }
+            catch (System.Exception ex)
+            {
+                exception = ex;
+                return false;
+            }
+        }
+
+        public static bool LoadFromFile(String fileName, out work obj, out System.Exception exception)
+        {
+            return LoadFromFile(fileName, Encoding.UTF8, out obj, out exception);
+        }
+
+        public static bool LoadFromFile(String fileName, out work obj)
+        {
+            System.Exception exception = null;
+            return LoadFromFile(fileName, out obj, out exception);
+        }
+
+        public static work LoadFromFile(String fileName)
+        {
+            return LoadFromFile(fileName, Encoding.UTF8);
+        }
+
+        public static work LoadFromFile(String fileName, System.Text.Encoding encoding)
         {
             System.IO.FileStream file = null;
             System.IO.StreamReader sr = null;

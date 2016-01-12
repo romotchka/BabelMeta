@@ -207,6 +207,8 @@ namespace BabelMeta.Modules.Export
                 // Generate the empty '.complete' file as requested
                 var complete = new StreamWriter(subfolder + album.Ean + ".complete", false, Encoding.ASCII); // ASCII encoding is to ensure strict 0Kb on disk
                 complete.Close();
+
+                Notify("Album " + album.Ean + " generated.");
             }
 
             return ReturnCode.Ok;
@@ -233,8 +235,10 @@ namespace BabelMeta.Modules.Export
                 Debug.WriteLine(this, "FugaXmlCatalogWriter.GenerateAlbumWiseData, exception=" + ex.Message);
             }
 
-            // TODO i.album.additional_artists
-            // TODO i.album.album_notes
+            i.album.additional_artists = null;
+
+            i.album.album_notes = null;
+
             // TODO i.album.alternate_genre
 
             i.album.alternate_genreSpecified = false;
@@ -343,8 +347,9 @@ namespace BabelMeta.Modules.Export
 
             i.album.parental_advisorySpecified = true;
 
-            // TODO i.album.pricing_intervals
-            // TODO i.album.pricings
+            i.album.pricing_intervals = null;
+
+            i.album.pricings = null;
 
             if (album.PrimaryArtistId > 0)
             {
@@ -375,6 +380,7 @@ namespace BabelMeta.Modules.Export
             i.album.redeliveries = new redeliveries_type
             {
                 redeliver = false,
+                only_to_organizations = null,
             };
 
 
@@ -408,7 +414,7 @@ namespace BabelMeta.Modules.Export
                 Notify(String.Format("Album [{0}]: Missing UPC/EAN.", album.CatalogReference));
             }
 
-            // TODO i.album.usage_rights
+            i.album.usage_rights = null;
 
         }
 
@@ -458,19 +464,24 @@ namespace BabelMeta.Modules.Export
                 if (assetPerformersKeys.Length > 1)
                 {
                     ingestionTrack.additional_artists = new List<artist>();
-                }
-                for (var j = 1; j < assetPerformersKeys.Length; j++)
-                {
-                    var additionalArtist = CatalogContext.Instance.Artists.FirstOrDefault(e =>
-                        e.Id.Equals(assetPerformersKeys[j]));
-                    if (additionalArtist.LastName.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName))
+
+                    for (var j = 1; j < assetPerformersKeys.Length; j++)
                     {
-                        ingestionTrack.additional_artists.Add(new artist
+                        var additionalArtist = CatalogContext.Instance.Artists.FirstOrDefault(e =>
+                            e.Id.Equals(assetPerformersKeys[j]));
+                        if (additionalArtist.LastName.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName))
                         {
-                            name = (additionalArtist.FirstName[CatalogContext.Instance.DefaultLang.ShortName].Typo() + " " + additionalArtist.LastName[CatalogContext.Instance.DefaultLang.ShortName].Typo()).Trim(),
-                            primary_artist = true, // TODO manage primary character for additional artists
-                        });
+                            ingestionTrack.additional_artists.Add(new artist
+                            {
+                                name = (additionalArtist.FirstName[CatalogContext.Instance.DefaultLang.ShortName].Typo() + " " + additionalArtist.LastName[CatalogContext.Instance.DefaultLang.ShortName].Typo()).Trim(),
+                                primary_artist = true, // TODO manage primary character for additional artists
+                            });
+                        }
                     }
+                }
+                else
+                {
+                    ingestionTrack.additional_artists = null;
                 }
 
                 ingestionTrack.allow_preorder_preview = false;
@@ -565,7 +576,7 @@ namespace BabelMeta.Modules.Export
                         : _keyConverter[(Key)(parentWork.Tonality)];
                 }
 
-                // TODO asset.lyrics
+                ingestionTrack.lyrics = String.Empty;
 
                 if (album.Subgenre != null)
                 {
@@ -592,7 +603,7 @@ namespace BabelMeta.Modules.Export
 
                 ingestionTrack.p_line_year = asset.PYear.ToString();
 
-                ingestionTrack.parental_advisory = parental_advisory.@false; // TODO add seting
+                ingestionTrack.parental_advisory = parental_advisory.@false; // TODO add setting
 
                 // TODO asset.preorder_type
 
@@ -658,18 +669,20 @@ namespace BabelMeta.Modules.Export
 
                 ingestionTrack.sequence_number = trackIndex.ToString(CultureInfo.InvariantCulture);
 
-                // TODO asset.track_notes
-                // TODO asset.track_version
-                // TODO asset.usage_rights
+                ingestionTrack.track_notes = String.Empty;
 
-                if  (
-                        parentWork != null 
-                        && parentWork.Title != null 
-                        && parentWork.Title.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName)
-                    )
+                ingestionTrack.track_version = String.Empty;
+
+                ingestionTrack.usage_rights = null;
+
+                ingestionTrack.work = new work
                 {
-                    ingestionTrack.work = parentWork.Title[CatalogContext.Instance.DefaultLang.ShortName].Typo();
-                }
+                    name = parentWork != null
+                           && parentWork.Title != null
+                           && parentWork.Title.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName)
+                        ? parentWork.Title[CatalogContext.Instance.DefaultLang.ShortName].Typo()
+                        : String.Empty,
+                };
 
                 // Add asset
                 i.album.tracks.Items.Add(ingestionTrack);
