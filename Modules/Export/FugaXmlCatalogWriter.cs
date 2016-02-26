@@ -263,13 +263,14 @@ namespace BabelMeta.Modules.Export
                     },
                 };
             }
+            else
+            {
+                i.album.attachments = null;
+            }
 
             i.album.c_line_text = (!String.IsNullOrEmpty(album.CName)) ? album.CName.Typo() : CatalogContext.Instance.Settings.COwnerDefault.Typo();
 
-            if (album.CYear != null)
-            {
-                i.album.c_line_year = album.CYear.ToString();
-            }
+            i.album.c_line_year = album.CYear != null ? album.CYear.ToString() : null;
 
             i.album.catalog_number = album.CatalogReference.Typo();
 
@@ -338,10 +339,7 @@ namespace BabelMeta.Modules.Export
 
             i.album.p_line_text = (!String.IsNullOrEmpty(album.PName)) ? album.PName.Typo() : CatalogContext.Instance.Settings.POwnerDefault.Typo();
 
-            if (album.PYear != null)
-            {
-                i.album.p_line_year = album.PYear.ToString();
-            }
+            i.album.p_line_year = album.PYear != null ? album.PYear.ToString() : null;
 
             i.album.parental_advisory = parental_advisory.@false; // TODO add setting
 
@@ -372,10 +370,7 @@ namespace BabelMeta.Modules.Export
                 ? FugaXmlConfig.DefaultRecordingLocationLabel[CatalogContext.Instance.DefaultLang.ShortName]
                 : album.RecordingLocation.Typo();
 
-            if (album.RecordingYear > 0)
-            {
-                i.album.recording_year = album.RecordingYear.ToString();
-            }
+            i.album.recording_year = album.RecordingYear != null ? album.RecordingYear.ToString() : null;
 
             i.album.redeliveries = new redeliveries_type
             {
@@ -506,34 +501,41 @@ namespace BabelMeta.Modules.Export
 
                 ingestionTrack.classical_catalog = (parentWork == null) ? currentWork.ClassicalCatalog : parentWork.ClassicalCatalog;
 
-                ingestionTrack.contributors = new List<contributor>(); // These represent work-related contributors like typically Composer, Arranger, etc.
-                foreach (var workContributor in currentWork.Contributors)
+                if (currentWork.Contributors != null && currentWork.Contributors.Count > 0)
                 {
-                    Artist artist;
-                    if (artistsBuffer.Exists(a => a.Id.Equals(workContributor.Key)))
+                    ingestionTrack.contributors = new List<contributor>(); // These represent work-related contributors like typically Composer, Arranger, etc.
+                    foreach (var workContributor in currentWork.Contributors)
                     {
-                        // Present in buffer
-                        artist = artistsBuffer.FirstOrDefault(a => a.Id.Equals(workContributor.Key));
-                    }
-                    else
-                    {
-                        // Find then add to buffer
-                        artist = CatalogContext.Instance.Artists.FirstOrDefault(a => a.Id.Equals(workContributor.Key));
-                        artistsBuffer.Add(artist);
-                    }
-                    var role = CatalogContext.Instance.Roles.FirstOrDefault(r => String.Compare(r.Name, workContributor.Value, StringComparison.Ordinal) == 0);
-                    var cRole = (_roleConverter.ContainsKey(role.Reference))
-                        ? _roleConverter[role.Reference]
-                        : contributorRole.ContributingArtist;
-
-                    if (artist.LastName.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName))
-                    {
-                        ingestionTrack.contributors.Add(new contributor
+                        Artist artist;
+                        if (artistsBuffer.Exists(a => a.Id.Equals(workContributor.Key)))
                         {
-                            name = (artist.FirstName[CatalogContext.Instance.DefaultLang.ShortName].Typo() + " " + artist.LastName[CatalogContext.Instance.DefaultLang.ShortName].Typo()).Trim(),
-                            role = cRole,
-                        });
+                            // Present in buffer
+                            artist = artistsBuffer.FirstOrDefault(a => a.Id.Equals(workContributor.Key));
+                        }
+                        else
+                        {
+                            // Find then add to buffer
+                            artist = CatalogContext.Instance.Artists.FirstOrDefault(a => a.Id.Equals(workContributor.Key));
+                            artistsBuffer.Add(artist);
+                        }
+                        var role = CatalogContext.Instance.Roles.FirstOrDefault(r => String.Compare(r.Name, workContributor.Value, StringComparison.Ordinal) == 0);
+                        var cRole = (_roleConverter.ContainsKey(role.Reference))
+                            ? _roleConverter[role.Reference]
+                            : contributorRole.ContributingArtist;
+
+                        if (artist.LastName.ContainsKey(CatalogContext.Instance.DefaultLang.ShortName))
+                        {
+                            ingestionTrack.contributors.Add(new contributor
+                            {
+                                name = (artist.FirstName[CatalogContext.Instance.DefaultLang.ShortName].Typo() + " " + artist.LastName[CatalogContext.Instance.DefaultLang.ShortName].Typo()).Trim(),
+                                role = cRole,
+                            });
+                        }
                     }
+                }
+                else
+                {
+                    ingestionTrack.contributors = null;
                 }
 
                 // TODO asset.country_of_commissioning
@@ -601,7 +603,7 @@ namespace BabelMeta.Modules.Export
 
                 ingestionTrack.p_line_text = asset.PName.Typo();
 
-                ingestionTrack.p_line_year = asset.PYear.ToString();
+                ingestionTrack.p_line_year = asset.PYear != null ? asset.PYear.ToString() : null;
 
                 ingestionTrack.parental_advisory = parental_advisory.@false; // TODO add setting
 
@@ -639,10 +641,7 @@ namespace BabelMeta.Modules.Export
                     ? FugaXmlConfig.DefaultRecordingLocationLabel[CatalogContext.Instance.DefaultLang.ShortName]
                     : asset.RecordingLocation.Typo();
 
-                if (asset.RecordingYear != null)
-                {
-                    ingestionTrack.recording_year = asset.RecordingYear.ToString();
-                }
+                ingestionTrack.recording_year = asset.RecordingYear != null ? asset.RecordingYear.ToString() : null;
 
                 // TODO asset.redeliveries_of_associated
                 var audioFilename = SearchFilename(files, FugaIngestionFileType.AudioTrack, new KeyValuePair<int, int>(volumeIndex, trackIndex));
@@ -660,6 +659,10 @@ namespace BabelMeta.Modules.Export
                             }
                         },
                     };
+                }
+                else
+                {
+                    ingestionTrack.resources = null;
                 }
 
                 // TODO asset.rights_contract_begin_date
